@@ -71,8 +71,8 @@ run_target('clang-check',
 		'-fixit',
 	] + source_files)
 
-test('dtee (no arguments)', find_program('test/noargs-dtee.sh'))
-test('cronic (no arguments)', find_program('test/noargs-cronic.sh'))
-test('dtee --help', find_program('test/help-dtee.sh'))
-test('cronic --help', find_program('test/help-cronic.sh'))
-test('dtee --version', find_program('test/version.sh'))
+test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'))
+test('cronic (no arguments)', find_program('tests/noargs-cronic.sh'))
+test('dtee --help', find_program('tests/help-dtee.sh'))
+test('cronic --help', find_program('tests/help-cronic.sh'))
+test('dtee --version', find_program('tests/version.sh'))
