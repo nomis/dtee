@@ -18,6 +18,7 @@
 #include "cron.h"
 
 #include <sys/types.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <iostream>
@@ -88,7 +89,7 @@ void Cron::terminated(int status, int signum, bool core_dumped) {
 
 int Cron::report() {
 	if (terminated_ && !error_) {
-		return status_;
+		return EXIT_SUCCESS;
 	}
 
 	if (buffered_) {
