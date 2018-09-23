@@ -1,4 +1,4 @@
-.PHONY: all debug compile debug-compile check clean debug-clean distclean install uninstall
+.PHONY: all debug compile debug-compile check analyse clean debug-clean distclean install uninstall
 
 RELEASE_DIR=build/release
 DEBUG_DIR=build/debug
@@ -27,10 +27,14 @@ debug-compile: $(DEBUG_DIR)
 	$(NINJA) -C $(DEBUG_DIR)
 
 check: $(RELEASE_DIR)
+	rm -rf "$(RELEASE_DIR)/meson-logs/coveragereport/"
+	$(NINJA) -C $(RELEASE_DIR) test
+	$(NINJA) -C $(RELEASE_DIR) coverage-html
+
+analyse: $(RELEASE_DIR)
 	$(NINJA) -C $(RELEASE_DIR) cppcheck
 	$(NINJA) -C $(RELEASE_DIR) clang-check
 	$(NINJA) -C $(RELEASE_DIR) scan-build
-	$(NINJA) -C $(RELEASE_DIR) test
 
 clean: $(RELEASE_DIR)
 	$(NINJA) -C $(RELEASE_DIR) clean

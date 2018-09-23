@@ -5,6 +5,7 @@ project('dtee',
 		'warning_level=3',
 		'werror=true',
 		'b_lto=true',
+		'b_coverage=true',
 	],
 	license: 'GPL3+')
 
@@ -50,6 +51,10 @@ executable('dtee',
 	],
 	install: true)
 
+run_command('sh',
+	'-c',
+	'ln -sf dtee ${MESON_BUILD_ROOT}/cronic')
+
 meson.add_install_script('sh',
 	'-c',
 	'ln -s dtee ${DESTDIR}/${MESON_INSTALL_PREFIX}/cronic')
@@ -69,3 +74,9 @@ run_target('clang-check',
 		'-analyze',
 		'-fixit',
 	] + source_files)
+
+test('dtee (no arguments)', find_program('test/noargs-dtee.sh'))
+test('cronic (no arguments)', find_program('test/noargs-cronic.sh'))
+test('dtee --help', find_program('test/help-dtee.sh'))
+test('cronic --help', find_program('test/help-cronic.sh'))
+test('dtee --version', find_program('test/version.sh'))
