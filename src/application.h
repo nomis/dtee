@@ -30,6 +30,8 @@
 
 namespace dtee {
 
+constexpr int SHELL_EXIT_CODE_SIGNAL = 0x80;
+
 class Application {
 public:
 	Application();

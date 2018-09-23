@@ -33,7 +33,7 @@ public:
 	virtual ~Cron();
 	void output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 	void terminated(int status, int signum, bool core_dump) override;
-	int report();
+	void report();
 
 	Cron(Cron&&);
 	Cron& operator=(Cron&&);

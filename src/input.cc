@@ -119,7 +119,7 @@ void Input::fork_prepare() {
 	io_.notify_fork(io_service::fork_event::fork_prepare);
 }
 
-void Input::fork_parent(pid_t pid) {
+int Input::fork_parent(pid_t pid) {
 	io_.notify_fork(io_service::fork_event::fork_parent);
 	out_.close();
 	err_.close();
@@ -156,6 +156,17 @@ void Input::fork_parent(pid_t pid) {
 				break;
 			}
 		}
+	}
+
+	// Replicate original exit status (mostly... the only way to replicate
+	// signals is to use the default action for the signal and send it to
+	// ourselves, but not all of the signals will terminate by default).
+	if (exit_status_ >= 0) {
+		return exit_status_;
+	} else if (exit_signum_ >= 0){
+		return SHELL_EXIT_CODE_SIGNAL + exit_signum_;
+	} else {
+		return EXIT_FAILURE;
 	}
 }
 
@@ -199,16 +210,14 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 				if (ret < 0) {
 					Application::print_error("waitpid", errno);
 				} else {
-					int exit_status = -1;
-					int signum = -1;
 					bool core_dumped = false;
 
 					if (WIFEXITED(wait_status)) {
-						exit_status = WEXITSTATUS(wait_status);
+						exit_status_ = WEXITSTATUS(wait_status);
 					}
 
 					if (WIFSIGNALED(wait_status)) {
-						signum = WTERMSIG(wait_status);
+						exit_signum_ = WTERMSIG(wait_status);
 					}
 
 #ifdef WCOREDUMP
@@ -217,7 +226,7 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 					}
 #endif
 
-					output_->terminated(exit_status, signum, core_dumped);
+					output_->terminated(exit_status_, exit_signum_, core_dumped);
 				}
 
 				terminated_ = true;

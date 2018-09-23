@@ -82,20 +82,21 @@ int Application::run(int argc, const char* const argv[]) {
 	input.fork_prepare();
 	pid_t pid = fork();
 	if (pid > 0) {
-		input.fork_parent(pid);
+		int ret = input.fork_parent(pid);
 
 		if (cron_) {
-			return cron_->report();
+			cron_->report();
 		}
+
+		return ret;
 	} else {
 		if (pid == 0) {
 			input.fork_child();
 		}
 
 		execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
+		return EXIT_FAILURE;
 	}
-
-	return EXIT_FAILURE;
 }
 
 list<shared_ptr<Output>> Application::create_outputs(const variables_map &variables) {

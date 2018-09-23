@@ -91,9 +91,9 @@ void Cron::terminated(int status, int signum, bool core_dumped) {
 	core_dumped_ = core_dumped;
 }
 
-int Cron::report() {
+void Cron::report() {
 	if (terminated_ && !error_) {
-		return EXIT_SUCCESS;
+		return;
 	}
 
 	if (buffered_) {
@@ -129,8 +129,6 @@ int Cron::report() {
 
 	if (status_ >= 0) {
 		Application::print_error(command_ + ": exited with status " + to_string(status_));
-
-		return status_;
 	} else if (signum_ >= 0) {
 		string message = command_ + ": process terminated by signal " + to_string(signum_);
 		const char *sigdesc = strsignal(signum_);
@@ -148,8 +146,6 @@ int Cron::report() {
 	} else {
 		Application::print_error("internal error");
 	}
-
-	return EXIT_FAILURE;
 }
 
 } // namespace dtee

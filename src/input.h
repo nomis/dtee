@@ -35,7 +35,7 @@ public:
 	explicit Input(std::shared_ptr<Output> output);
 	virtual ~Input();
 	void fork_prepare();
-	void fork_parent(pid_t pid);
+	int fork_parent(pid_t pid);
 	void fork_child();
 
 	Input(Input&&);
@@ -54,6 +54,9 @@ private:
 
 	pid_t child_ = -1;
 	bool terminated_ = false;
+	int exit_status_ = -1;
+	int exit_signum_ = -1;
+
 	boost::asio::signal_set signals_;
 	std::vector<char> buffer_; //!< Incoming data
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data
