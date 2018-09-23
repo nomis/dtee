@@ -17,7 +17,7 @@ It will do this by default when executed as `cronic`, providing an alternative
 to [the Bash script of the same name](http://habilis.net/cronic/) but without
 splitting up the output.
 
-(Also, to do `tee` with standard output and standard error at the same time.)
+(Also, to do `tee(1)` with standard output and standard error at the same time.)
 
 ## Limitations
 
@@ -25,7 +25,7 @@ Splitting of standard output and standard error while retaining the order of
 output is performed using three local datagram sockets. It is not possible to
 do this with two pairs of stream sockets. Datagram sockets can only process
 writes as individual packets with a maximum packet size. Therefore, if the
-program being run attempts to `write()` more than this size in one call the
+program being run attempts to `write(2)` more than this size in one call the
 write will fail and the message will be lost.
 
 This is not usually a problem because the default socket buffer size is usually
@@ -33,6 +33,6 @@ much higher than the size programs typically write with. For safety, the socket
 buffer size will be increased to `PIPE_BUF` if the default is smaller than this
 value.
 
-If the process uses `sendfile()` then (on Linux) the writes occur in `PIPE_BUF`
+If the process uses `sendfile(2)` then (on Linux) the writes occur in `PIPE_BUF`
 sized chunks so it works as normal, but why are you using an interactive
 program that is outputting such large quantities of data?
