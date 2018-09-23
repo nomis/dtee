@@ -4,6 +4,7 @@ project('dtee',
 		'cpp_std=c++14',
 		'warning_level=3',
 		'werror=true',
+		'b_lto=true',
 	],
 	license: 'GPL3+')
 
@@ -23,7 +24,6 @@ source_files = [
 test_args = [
 	'-Wshadow',
 	'-g3',
-	'-flto',
 ]
 cc = meson.get_compiler('cpp')
 foreach arg: test_args
