@@ -90,6 +90,10 @@ Input::Input(shared_ptr<Output> output)
 	// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
 	buffer_size *= 2;
 #endif
+
+	if (buffer_size < PIPE_BUF) {
+		buffer_size = PIPE_BUF;
+	}
 	buffer_.resize(buffer_size);
 
 	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
