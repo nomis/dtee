@@ -51,10 +51,6 @@ executable('dtee',
 	],
 	install: true)
 
-run_command('sh',
-	'-c',
-	'ln -sf dtee ${MESON_BUILD_ROOT}/cronic')
-
 meson.add_install_script('sh',
 	'-c',
 	'ln -s dtee ${DESTDIR}/${MESON_INSTALL_PREFIX}/cronic')

@@ -2,7 +2,7 @@
 set -vx
 
 # Ask for help, get exit code 0 and usage information (excluding cron option)
-coproc { ./cronic --help; }
+coproc { exec -a cronic ./dtee --help; }
 PID=$!
 
 USAGE=0
