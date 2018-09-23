@@ -32,3 +32,7 @@ This is not usually a problem because the default socket buffer size is usually
 much higher than the size programs typically write with. For safety, the socket
 buffer size will be increased to `PIPE_BUF` if the default is smaller than this
 value.
+
+If the process uses `sendfile()` then (on Linux) the writes occur in `PIPE_BUF`
+sized chunks so it works as normal, but why are you using an interactive
+program that is outputting such large quantities of data?
