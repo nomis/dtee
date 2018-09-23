@@ -78,7 +78,7 @@ Input::Input(shared_ptr<Output> output)
 	}
 
 	int buffer_size = so_rcvbuf.value();
-#if defined(__linux__)
+#ifdef __linux__
 	// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
 	// From Boost (1.62): "Linux puts additional stuff into the
 	//     buffers so that only about half is actually available to the application.
