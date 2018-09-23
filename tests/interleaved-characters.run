@@ -1,0 +1,108 @@
+#!/bin/bash
+echo -n "T" >&1
+echo -n "h" >&2
+echo -n "e" >&1
+echo -n " " >&2
+echo -n "q" >&1
+echo -n "u" >&2
+echo -n "i" >&1
+echo -n "c" >&2
+echo -n "k" >&1
+echo -n " " >&2
+echo -n "b" >&1
+echo -n "r" >&2
+echo -n "o" >&1
+echo -n "w" >&2
+echo -n "n" >&1
+echo -n " " >&2
+echo -n "f" >&1
+echo -n "o" >&2
+echo -n "x" >&1
+echo -n " " >&2
+echo -n "j" >&1
+echo -n "u" >&2
+echo -n "m" >&1
+echo -n "p" >&2
+echo -n "s" >&1
+echo -n " " >&2
+echo -n "o" >&1
+echo -n "v" >&2
+echo -n "e" >&1
+echo -n "r" >&2
+echo -n " " >&1
+echo -n "t" >&2
+echo -n "h" >&1
+echo -n "e" >&2
+echo -n " " >&1
+echo -n "l" >&2
+echo -n "a" >&1
+echo -n "z" >&2
+echo -n "y" >&1
+echo -n " " >&2
+echo -n "d" >&1
+echo -n "o" >&2
+echo -n "g" >&1
+echo >&2
+echo -n "V" >&1
+echo -n "i" >&2
+echo -n "c" >&1
+echo -n "t" >&2
+echo -n "o" >&1
+echo -n "r" >&2
+echo -n " " >&1
+echo -n "j" >&2
+echo -n "a" >&1
+echo -n "g" >&2
+echo -n "t" >&1
+echo -n " " >&2
+echo -n "z" >&1
+echo -n "w" >&2
+echo -n "ö" >&1
+echo -n "l" >&2
+echo -n "f" >&1
+echo -n " " >&2
+echo -n "B" >&1
+echo -n "o" >&2
+echo -n "x" >&1
+echo -n "k" >&2
+echo -n "ä" >&1
+echo -n "m" >&2
+echo -n "p" >&1
+echo -n "f" >&2
+echo -n "e" >&1
+echo -n "r" >&2
+echo -n " " >&1
+echo -n "q" >&2
+echo -n "u" >&1
+echo -n "e" >&2
+echo -n "r" >&1
+echo -n " " >&2
+echo -n "ü" >&1
+echo -n "b" >&2
+echo -n "e" >&1
+echo -n "r" >&2
+echo -n " " >&1
+echo -n "d" >&2
+echo -n "e" >&1
+echo -n "n" >&2
+echo -n " " >&1
+echo -n "g" >&2
+echo -n "r" >&1
+echo -n "o" >&2
+echo -n "ß" >&1
+echo -n "e" >&2
+echo -n "n" >&1
+echo -n " " >&2
+echo -n "S" >&1
+echo -n "y" >&2
+echo -n "l" >&1
+echo -n "t" >&2
+echo -n "e" >&1
+echo -n "r" >&2
+echo -n " " >&1
+echo -n "D" >&2
+echo -n "e" >&1
+echo -n "i" >&2
+echo -n "c" >&1
+echo -n "h" >&2
+echo >&1
