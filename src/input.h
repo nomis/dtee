@@ -57,7 +57,6 @@ private:
 	boost::asio::signal_set signals_;
 	std::vector<char> buffer_; //!< Incoming data
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data
-	bool data_received_ = false;
 
 	std::shared_ptr<Output> output_;
 };

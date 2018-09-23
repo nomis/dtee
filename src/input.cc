@@ -138,15 +138,14 @@ void Input::fork_parent(pid_t pid) {
 		}
 
 		if (terminated_) {
-			data_received_ = false;
-			io_.poll(ec);
+			size_t events = io_.poll(ec);
 
 			if (ec) {
 				Application::print_error(ec.message());
 				break;
 			}
 
-			if (!data_received_) {
+			if (!events) {
 				break;
 			}
 		} else {
@@ -173,10 +172,8 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 	if (!ec) {
 		if (recv_ep_ == out_ep_) {
 			output_->output(OutputType::STDOUT, buffer_, len);
-			data_received_ = true;
 		} else if (recv_ep_ == err_ep_) {
 			output_->output(OutputType::STDERR, buffer_, len);
-			data_received_ = true;
 		} else {
 			// Data from any other sockets should not be possible and is ignored
 		}
@@ -184,7 +181,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		combined_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		Application::print_error("recvfrom: " + ec.message());
+		Application::print_error("recv: " + ec.message());
 
 		terminated_ = true;
 		io_.stop();
