@@ -52,7 +52,7 @@ executable('dtee',
 
 meson.add_install_script('sh',
 	'-c',
-	'ln -s dtree ${DESTDIR}/${MESON_INSTALL_PREFIX}/cronic')
+	'ln -s dtee ${DESTDIR}/${MESON_INSTALL_PREFIX}/cronic')
 
 run_target('cppcheck',
 	command: [
