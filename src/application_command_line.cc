@@ -141,7 +141,7 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 
 	po::options_description cron_opts;
 	cron_opts.add_options()
-		("cron,n", po::bool_switch(), "operate in cron mode (combine original output but suppress it unless the process outputs an error message or has a non-zero exit status)")
+		("cron,q", po::bool_switch(), "operate in cron mode (combine original output but suppress it unless the process outputs an error message or has a non-zero exit status)")
 		;
 	(cron_mode_ ? hidden_opts : visible_opts).add(cron_opts);
 
