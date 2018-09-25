@@ -87,3 +87,18 @@ test('passthrough stderr', find_program('tests/passthrough-stderr.sh'), env: tes
 test('passthrough stdout and stderr 1', find_program('tests/passthrough-stdout-stderr1.sh'), env: test_env)
 test('passthrough stdout and stderr 2', find_program('tests/passthrough-stdout-stderr2.sh'), env: test_env)
 test('interleaved characters', find_program('tests/interleaved-characters.sh'), env: test_env)
+
+test('file stdout overwrite (new file)', find_program('tests/file-stdout-overwrite-new.sh'), env: test_env)
+test('file stdout overwrite (existing)', find_program('tests/file-stdout-overwrite-existing.sh'), env: test_env)
+test('file stdout append (new file)', find_program('tests/file-stdout-append-new.sh'), env: test_env)
+test('file stdout append (existing)', find_program('tests/file-stdout-append-existing.sh'), env: test_env)
+
+test('file stderr overwrite (new file)', find_program('tests/file-stderr-overwrite-new.sh'), env: test_env)
+test('file stderr overwrite (existing)', find_program('tests/file-stderr-overwrite-existing.sh'), env: test_env)
+test('file stderr append (new file)', find_program('tests/file-stderr-append-new.sh'), env: test_env)
+test('file stderr append (existing)', find_program('tests/file-stderr-append-existing.sh'), env: test_env)
+
+test('file combined overwrite (new file)', find_program('tests/file-combined-overwrite-new.sh'), env: test_env)
+test('file combined overwrite (existing)', find_program('tests/file-combined-overwrite-existing.sh'), env: test_env)
+test('file combined append (new file)', find_program('tests/file-combined-append-new.sh'), env: test_env)
+test('file combined append (existing)', find_program('tests/file-combined-append-existing.sh'), env: test_env)
