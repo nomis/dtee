@@ -71,14 +71,19 @@ run_target('clang-check',
 		'-fixit',
 	] + source_files)
 
-test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'))
-test('cronic (no arguments)', find_program('tests/noargs-cronic.sh'))
-test('dtee --help', find_program('tests/help-dtee.sh'))
-test('cronic --help', find_program('tests/help-cronic.sh'))
-test('dtee --version', find_program('tests/version.sh'))
+test_env = [
+	'LC_ALL=C',
+	'LANG=C',
+]
 
-test('passthrough stdout', find_program('tests/passthrough-stdout.sh'))
-test('passthrough stderr', find_program('tests/passthrough-stderr.sh'))
-test('passthrough stdout and stderr 1', find_program('tests/passthrough-stdout-stderr1.sh'))
-test('passthrough stdout and stderr 2', find_program('tests/passthrough-stdout-stderr2.sh'))
-test('interleaved characters', find_program('tests/interleaved-characters.sh'))
+test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
+test('cronic (no arguments)', find_program('tests/noargs-cronic.sh'), env: test_env)
+test('dtee --help', find_program('tests/help-dtee.sh'), env: test_env)
+test('cronic --help', find_program('tests/help-cronic.sh'), env: test_env)
+test('dtee --version', find_program('tests/version.sh'), env: test_env)
+
+test('passthrough stdout', find_program('tests/passthrough-stdout.sh'), env: test_env)
+test('passthrough stderr', find_program('tests/passthrough-stderr.sh'), env: test_env)
+test('passthrough stdout and stderr 1', find_program('tests/passthrough-stdout-stderr1.sh'), env: test_env)
+test('passthrough stdout and stderr 2', find_program('tests/passthrough-stdout-stderr2.sh'), env: test_env)
+test('interleaved characters', find_program('tests/interleaved-characters.sh'), env: test_env)
