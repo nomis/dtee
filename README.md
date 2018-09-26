@@ -1,6 +1,8 @@
 dtee (double tee)
 =================
 
+![](logo.svg)
+
 ## Description
 
 Run a program with standard output and standard error copied to files
