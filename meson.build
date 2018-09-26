@@ -53,7 +53,7 @@ executable('dtee',
 
 meson.add_install_script('sh',
 	'-c',
-	'ln -s dtee ${DESTDIR}/${MESON_INSTALL_PREFIX}/cronic')
+	'ln -s dtee ${DESTDIR}/${MESON_INSTALL_PREFIX}/cronty')
 
 run_target('cppcheck',
 	command: [
@@ -77,9 +77,9 @@ test_env = [
 ]
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
-test('cronic (no arguments)', find_program('tests/noargs-cronic.sh'), env: test_env)
+test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)
 test('dtee --help', find_program('tests/help-dtee.sh'), env: test_env)
-test('cronic --help', find_program('tests/help-cronic.sh'), env: test_env)
+test('cronty --help', find_program('tests/help-cronty.sh'), env: test_env)
 test('dtee --version', find_program('tests/version.sh'), env: test_env)
 
 test('passthrough stdout', find_program('tests/passthrough-stdout.sh'), env: test_env)

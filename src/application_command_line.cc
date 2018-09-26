@@ -36,7 +36,7 @@ namespace po = boost::program_options;
 namespace dtee {
 
 const string Application::DEFAULT_PROGRAM_NAME {"dtee"};
-const string Application::CRON_MODE_NAME {"cronic"};
+const string Application::CRON_MODE_NAME {"cronty"};
 
 string Application::internal_name_ {DEFAULT_PROGRAM_NAME};
 string Application::display_name_ {DEFAULT_PROGRAM_NAME};

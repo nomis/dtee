@@ -15,8 +15,8 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_CRONIC_H_
-#define DTEE_CRONIC_H_
+#ifndef DTEE_CRON_H_
+#define DTEE_CRON_H_
 
 #include <memory>
 #include <string>
