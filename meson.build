@@ -44,7 +44,6 @@ executable('dtee',
 	],
 	dependencies: [
 		dependency('boost', modules: [
-			'asio',
 			'program_options',
 			'system',
 		]),
