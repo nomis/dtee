@@ -23,6 +23,7 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include <typeinfo>
 #include <vector>
 
 using ::std::string;
@@ -147,6 +148,7 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 	(cron_mode_ ? hidden_opts : visible_opts).add(cron_opts);
 
 	hidden_opts.add_options()
+		("debug-options", po::bool_switch())
 		(BOOST_COMMAND_OPT.c_str(), po::value<vector<string>>()->multitoken())
 		;
 
@@ -171,6 +173,7 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 			.positional(pd)
 			.run(), variables);
 
+
 		if (variables["help"].as<bool>()) {
 			display_usage(visible_opts);
 			exit(EXIT_SUCCESS);
@@ -180,6 +183,11 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 
 		if (variables["version"].as<bool>()) {
 			display_version();
+			exit(EXIT_SUCCESS);
+		}
+
+		if (variables["debug-options"].as<bool>()) {
+			display_variables(variables);
 			exit(EXIT_SUCCESS);
 		}
 
@@ -194,7 +202,7 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 	}
 }
 
-void Application::display_usage(boost::program_options::options_description &options) const {
+void Application::display_usage(po::options_description &options) const {
 	cout << "Usage: " << display_name_ << " [OPTION]... COMMAND [ARG]..." << endl << endl;
 	cout << "Run COMMAND with standard output and standard error copied to each FILE," << endl;
 	if (cron_mode_) {
@@ -215,6 +223,20 @@ void Application::display_version() const {
 	cout << "Licence GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>." << endl;
 	cout << "This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law." << endl;
 	cout << "This is free software: you are free to change and redistribute it." << endl;
+}
+
+void Application::display_variables(const po::variables_map &variables) const {
+	for (const auto& variable : variables) {
+		if (variable.second.defaulted()) {
+			continue;
+		} else if (variable.second.value().type() == typeid(vector<string>)) {
+			for (const auto& value : variable.second.as<vector<string>>()) {
+				cout << variable.first << "=" << value << endl;
+			}
+		} else if (variable.second.value().type() == typeid(bool)) {
+			cout << variable.first << "=" << variable.second.as<bool>() << endl;
+		}
+	}
 }
 
 } // namespace dtee

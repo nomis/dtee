@@ -101,3 +101,9 @@ test('file combined overwrite (new file)', find_program('tests/file-combined-ove
 test('file combined overwrite (existing)', find_program('tests/file-combined-overwrite-existing.sh'), env: test_env)
 test('file combined append (new file)', find_program('tests/file-combined-append-new.sh'), env: test_env)
 test('file combined append (existing)', find_program('tests/file-combined-append-existing.sh'), env: test_env)
+
+test('debug options (none)', find_program('tests/options-none.sh'), env: test_env)
+test('debug options (cron)', find_program('tests/options-cron.sh'), env: test_env)
+test('debug options (1 file)', find_program('tests/options-1-file.sh'), env: test_env)
+test('debug options (2 files)', find_program('tests/options-2-files.sh'), env: test_env)
+test('debug options (3 files)', find_program('tests/options-3-files.sh'), env: test_env)

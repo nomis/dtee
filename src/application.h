@@ -52,6 +52,7 @@ private:
 	void parse_command_line(int argc, const char* const argv[], boost::program_options::variables_map &variables) const;
 	void display_usage(boost::program_options::options_description &options) const;
 	void display_version() const;
+	void display_variables(const boost::program_options::variables_map &variables) const;
 	std::list<std::shared_ptr<Output>> create_outputs(const boost::program_options::variables_map &variables);
 	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
 

@@ -1,0 +1,7 @@
+combined-append=combined_append
+combined-overwrite=combined_overwrite
+debug-options=1
+err-append=stderr_append
+err-overwrite=stderr_overwrite
+out-append=stdout_append
+out-overwrite=stdout_overwrite
