@@ -146,7 +146,7 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 	(cron_mode_ ? hidden_opts : visible_opts).add(cron_opts);
 
 	hidden_opts.add_options()
-		("-", po::value<vector<string>>()->multitoken())
+		(BOOST_COMMAND_OPT.c_str(), po::value<vector<string>>()->multitoken())
 		;
 
 	po::options_description help_opts;
@@ -160,7 +160,7 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 	all_opts.add(visible_opts).add(hidden_opts);
 
 	po::positional_options_description pd;
-	pd.add("-", -1);
+	pd.add(BOOST_COMMAND_OPT.c_str(), -1);
 
 	try {
 		po::store(po::command_line_parser(argc, argv)
