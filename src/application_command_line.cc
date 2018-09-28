@@ -151,8 +151,8 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 
 	po::options_description help_opts;
 	help_opts.add_options()
-		("help,h", po::bool_switch()->default_value(false), "display this help and exit")
-		("version,V", po::bool_switch()->default_value(false), "output version information and exit")
+		("help,h", po::bool_switch(), "display this help and exit")
+		("version,V", po::bool_switch(), "output version information and exit")
 		;
 	visible_opts.add(help_opts);
 
