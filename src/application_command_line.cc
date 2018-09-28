@@ -18,6 +18,7 @@
 #include "application.h"
 
 #include <libgen.h>
+#include <sysexits.h>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -184,12 +185,12 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 
 		if (!variables.count(BOOST_COMMAND_OPT)) {
 			display_usage(visible_opts);
-			exit(EXIT_FAILURE);
+			exit(EX_USAGE);
 		}
 	} catch (std::exception &e) {
 	    cout << display_name_ << ": " << e.what() << endl;
 	    cout << "Try '" << display_name_ << " -h' for more information." << endl;
-	    exit(EXIT_FAILURE);
+	    exit(EX_USAGE);
 	}
 }
 

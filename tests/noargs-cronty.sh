@@ -21,7 +21,7 @@ RET=$?
 echo RET $RET
 echo USAGE $USAGE
 echo CRON $CRON
-if [ $RET -eq 1 ] && [ $USAGE -eq 1 ] && [ $CRON -eq 0 ]; then
+if [ $RET -eq 64 ] && [ $USAGE -eq 1 ] && [ $CRON -eq 0 ]; then
 	exit 0
 fi
 exit 1

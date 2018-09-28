@@ -17,6 +17,7 @@
 */
 #include "application.h"
 
+#include <sysexits.h>
 #include <iostream>
 #include <list>
 #include <memory>
@@ -95,7 +96,7 @@ int Application::run(int argc, const char* const argv[]) {
 		}
 
 		execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
-		return EXIT_FAILURE;
+		return EX_SOFTWARE;
 	}
 }
 
@@ -156,7 +157,7 @@ void Application::execute(const vector<string> &command) {
 	errno = 0;
 	execvpe(argv[0], &argv.data()[1], environ);
 	print_error(argv[0], errno);
-	exit(EXIT_FAILURE);
+	exit(EX_OSERR);
 }
 
 } // namespace dtee
