@@ -16,7 +16,7 @@ output will be combined and written to standard output. The exit code will be
 written to standard error.
 
 It will do this by default when executed as `cronty`, providing an alternative
-to [cronic](http://habilis.net/cronic/) but without splitting up the output.
+to [cronic](https://habilis.net/cronic/) but without splitting up the output.
 
 (Also, to do `tee(1)` with standard output and standard error at the same time.)
 
