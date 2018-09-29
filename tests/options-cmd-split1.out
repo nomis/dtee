@@ -1,0 +1,9 @@
+-=command
+-=-o
+-=filename1
+-=-e
+-=filename2
+-=-c
+-=filename3
+-=another argument
+debug-options=1

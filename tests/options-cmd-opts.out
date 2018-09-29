@@ -1,0 +1,9 @@
+-=command
+-=-o
+-=argument 1
+-=-x
+-=argument 2
+-=-y
+-=argument 3
+-=--help
+debug-options=1

@@ -1,0 +1,7 @@
+-=command
+-=-c
+-=filename3
+-=another argument
+debug-options=1
+err-append=filename2
+out-append=filename1
