@@ -104,6 +104,10 @@ test('file combined append (existing)', find_program('tests/file-combined-append
 
 test('debug options (none)', find_program('tests/options-none.sh'), env: test_env)
 test('debug options (cron)', find_program('tests/options-cron.sh'), env: test_env)
+test('debug options (invalid short options)', find_program('tests/options-invalid-short.sh'), env: test_env)
+test('debug options (invalid short options with arguments)', find_program('tests/options-invalid-short-args.sh'), env: test_env)
+test('debug options (invalid long options)', find_program('tests/options-invalid-long.sh'), env: test_env)
+test('debug options (invalid long options with arguments)', find_program('tests/options-invalid-long-args.sh'), env: test_env)
 test('debug options (1 file)', find_program('tests/options-1-file.sh'), env: test_env)
 test('debug options (2 files)', find_program('tests/options-2-files.sh'), env: test_env)
 test('debug options (3 files)', find_program('tests/options-3-files.sh'), env: test_env)
