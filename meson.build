@@ -132,3 +132,6 @@ test('debug options (end of options signifier stops following options even with 
 test('debug options (end of options signifier stops following options at the start)', find_program('tests/options-cmd-split1.sh'), env: test_env)
 test('debug options (end of options signifier stops following options at the start even with empty command)', find_program('tests/options-cmd-split2.sh'), env: test_env)
 test('debug options (end of options signifier stops following options at the start even with empty command and empty argument)', find_program('tests/options-cmd-split3.sh'), env: test_env)
+
+test('command not found', find_program('tests/command-not-found.sh'), env: test_env)
+test('command not executable', find_program('tests/command-not-executable.sh'), env: test_env)

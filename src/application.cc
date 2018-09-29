@@ -157,7 +157,7 @@ void Application::execute(const vector<string> &command) {
 	errno = 0;
 	execvpe(argv[0], &argv.data()[1], environ);
 	print_error(argv[0], errno);
-	exit(EX_OSERR);
+	exit(EX_NOINPUT);
 }
 
 } // namespace dtee
