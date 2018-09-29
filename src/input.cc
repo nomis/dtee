@@ -19,13 +19,16 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
 #include <limits.h>
 #include <signal.h>
+#include <sysexits.h>
 #include <unistd.h>
 #include <memory>
 #include <string>
 
 #include "application.h"
+#include "exceptions.h"
 #include "temp_directory.h"
 
 using ::std::bind;
@@ -51,7 +54,7 @@ Input::Input(shared_ptr<Output> output)
 	TempDirectory temp_dir("input");
 
 	if (!temp_dir.valid()) {
-		throw std::runtime_error("no temporary directory for sockets");
+		throw FatalError(EX_UNAVAILABLE, "no temporary directory for sockets");
 	}
 
 	string combined_name = temp_dir.register_file("c");
@@ -63,52 +66,56 @@ Input::Input(shared_ptr<Output> output)
 	string err_name = temp_dir.register_file("e");
 	err_ep_ = datagram_protocol::endpoint{err_name};
 
-	combined_.open();
-	combined_.bind(combined_ep);
-	combined_.shutdown(datagram_protocol::socket::shutdown_send);
+	try {
+		combined_.open();
+		combined_.bind(combined_ep);
+		combined_.shutdown(datagram_protocol::socket::shutdown_send);
 
-	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
-	combined_.get_option(so_rcvbuf);
-
-	// Ensure the receive buffer is at least as large as PIPE_BUF
-	if (so_rcvbuf.value() < PIPE_BUF) {
-		datagram_protocol::socket::send_buffer_size so_sndbuf{PIPE_BUF};
-		combined_.set_option(so_sndbuf);
+		datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 		combined_.get_option(so_rcvbuf);
-	}
 
-	int buffer_size = so_rcvbuf.value();
+		// Ensure the receive buffer is at least as large as PIPE_BUF
+		if (so_rcvbuf.value() < PIPE_BUF) {
+			datagram_protocol::socket::send_buffer_size so_sndbuf{PIPE_BUF};
+			combined_.set_option(so_sndbuf);
+			combined_.get_option(so_rcvbuf);
+		}
+
+		int buffer_size = so_rcvbuf.value();
 #ifdef __linux__
-	// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
-	// From Boost (1.62): "Linux puts additional stuff into the
-	//     buffers so that only about half is actually available to the application.
-	//     The retrieved value is divided by 2 here to make it appear as though the
-	//     correct value has been set."
-	//
-	// Boost is wrong because the kernel is not specified as using half the buffer size.
-	// It would be simpler if the kernel didn't return its doubled value either.
-	// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
-	buffer_size *= 2;
+		// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
+		// From Boost (1.62): "Linux puts additional stuff into the
+		//     buffers so that only about half is actually available to the application.
+		//     The retrieved value is divided by 2 here to make it appear as though the
+		//     correct value has been set."
+		//
+		// Boost is wrong because the kernel is not specified as using half the buffer size.
+		// It would be simpler if the kernel didn't return its doubled value either.
+		// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
+		buffer_size *= 2;
 #endif
 
-	if (buffer_size < PIPE_BUF) {
-		buffer_size = PIPE_BUF;
+		if (buffer_size < PIPE_BUF) {
+			buffer_size = PIPE_BUF;
+		}
+		buffer_.resize(buffer_size);
+
+		datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
+
+		out_.open();
+		out_.bind(out_ep_);
+		out_.connect(combined_ep);
+		out_.shutdown(datagram_protocol::socket::shutdown_receive);
+		out_.set_option(so_sndbuf);
+
+		err_.open();
+		err_.bind(err_ep_);
+		err_.connect(combined_ep);
+		err_.shutdown(datagram_protocol::socket::shutdown_receive);
+		err_.set_option(so_sndbuf);
+	} catch (std::exception &e) {
+		throw FatalError(EX_OSERR, e.what());
 	}
-	buffer_.resize(buffer_size);
-
-	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
-
-	out_.open();
-	out_.bind(out_ep_);
-	out_.connect(combined_ep);
-	out_.shutdown(datagram_protocol::socket::shutdown_receive);
-	out_.set_option(so_sndbuf);
-
-	err_.open();
-	err_.bind(err_ep_);
-	err_.connect(combined_ep);
-	err_.shutdown(datagram_protocol::socket::shutdown_receive);
-	err_.set_option(so_sndbuf);
 }
 
 Input::~Input() {

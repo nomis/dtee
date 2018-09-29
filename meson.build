@@ -14,6 +14,7 @@ source_files = [
 	'src/application_command_line.cc',
 	'src/copy.cc',
 	'src/cron.cc',
+	'src/exceptions.cc',
 	'src/file_output.cc',
 	'src/input.cc',
 	'src/stream_output.cc',
@@ -149,3 +150,5 @@ test('cron command exit code 42 (no stderr)', find_program('tests/cron-command-e
 test('cron terminated by signal 2', find_program('tests/cron-command-sigint.sh'), env: test_env)
 test('cron terminated by signal 9', find_program('tests/cron-command-sigkill.sh'), env: test_env)
 test('cron terminated by signal 15', find_program('tests/cron-command-sigterm.sh'), env: test_env)
+
+test('output file not writeable', find_program('tests/file-open-failure.sh'), env: test_env)

@@ -18,6 +18,7 @@
 #include "temp_file.h"
 
 #include <sys/types.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdlib>

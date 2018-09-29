@@ -17,7 +17,9 @@
 */
 #include "application.h"
 
+#include <errno.h>
 #include <sysexits.h>
+#include <system_error>
 #include <iostream>
 #include <list>
 #include <memory>
@@ -26,6 +28,7 @@
 
 #include "copy.h"
 #include "cron.h"
+#include "exceptions.h"
 #include "file_output.h"
 #include "input.h"
 #include "stream_output.h"
@@ -78,25 +81,30 @@ int Application::run(int argc, const char* const argv[]) {
 	parse_command_line(argc, argv, variables);
 	cron_mode_ |= variables["cron"].as<bool>();
 
-	Input input{make_shared<Copy>(create_outputs(variables))}; // FIXME need to catch exceptions
+	try {
+		Input input{make_shared<Copy>(create_outputs(variables))};
 
-	input.fork_prepare();
-	pid_t pid = fork();
-	if (pid > 0) {
-		int ret = input.fork_parent(pid);
+		input.fork_prepare();
+		pid_t pid = fork();
+		if (pid > 0) {
+			int ret = input.fork_parent(pid);
 
-		if (cron_) {
-			cron_->report();
+			if (cron_) {
+				cron_->report();
+			}
+
+			return ret;
+		} else {
+			if (pid == 0) {
+				input.fork_child();
+			}
+
+			execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
+			return EX_SOFTWARE;
 		}
-
-		return ret;
-	} else {
-		if (pid == 0) {
-			input.fork_child();
-		}
-
-		execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
-		return EX_SOFTWARE;
+	} catch (FatalError &e) {
+		print_error(e.what());
+		return e.code();
 	}
 }
 

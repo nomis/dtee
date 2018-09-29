@@ -19,10 +19,13 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include <fcntl.h>
+#include <sysexits.h>
 #include <unistd.h>
 
 #include "application.h"
+#include "exceptions.h"
 
 using ::std::string;
 
@@ -41,7 +44,7 @@ FileOutput::FileOutput(const string &filename, FileOutputType type, bool append)
 	errno = 0;
 	fd_ = open(filename_.c_str(), flags, DEFFILEMODE);
 	if (fd_ < 0) {
-		Application::print_error(filename_, errno);
+		throw FatalError(EX_CANTCREAT, filename_, errno);
 	}
 
 	switch (type) {
