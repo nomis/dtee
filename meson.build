@@ -112,3 +112,7 @@ test('debug options (command with 1 argument)', find_program('tests/options-cmd-
 test('debug options (command with 2 arguments)', find_program('tests/options-cmd-2-args.sh'), env: test_env)
 test('debug options (command with 3 arguments)', find_program('tests/options-cmd-3-args.sh'), env: test_env)
 test('debug options (obscure boost syntax)', find_program('tests/options-cmd-obscure-boost-syntax.sh'), env: test_env)
+test('debug options (empty command with no arguments)', find_program('tests/options-cmd-empty-noargs.sh'), env: test_env)
+test('debug options (empty command with 1 argument)', find_program('tests/options-cmd-empty-1-arg.sh'), env: test_env)
+test('debug options (empty command with 2 arguments)', find_program('tests/options-cmd-empty-2-args.sh'), env: test_env)
+test('debug options (empty command with 3 arguments)', find_program('tests/options-cmd-empty-3-args.sh'), env: test_env)
