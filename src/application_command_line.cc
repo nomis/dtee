@@ -132,22 +132,22 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 
 	visible_opts.add_options()
 		("out-overwrite,O",
-				po::value<vector<string>>()->multitoken()->value_name("FILE"),
+				po::value<vector<string>>()->value_name("FILE"),
 				"copy standard output to the given FILEs")
 		("out-append,o",
-				po::value<vector<string>>()->multitoken()->value_name("FILE"),
+				po::value<vector<string>>()->value_name("FILE"),
 				"append standard output to the given FILEs")
 		("err-overwrite,E",
-				po::value<vector<string>>()->multitoken()->value_name("FILE"),
+				po::value<vector<string>>()->value_name("FILE"),
 				"copy standard error to the given FILEs")
 		("err-append,e",
-				po::value<vector<string>>()->multitoken()->value_name("FILE"),
+				po::value<vector<string>>()->value_name("FILE"),
 				"append standard error to the given FILEs")
 		("combined-overwrite,C",
-				po::value<vector<string>>()->multitoken()->value_name("FILE"),
+				po::value<vector<string>>()->value_name("FILE"),
 				"copy standard output and standard error to the given FILEs")
 		("combined-append,c",
-				po::value<vector<string>>()->multitoken()->value_name("FILE"),
+				po::value<vector<string>>()->value_name("FILE"),
 				"append standard output and standard error to the given FILEs")
 		;
 
@@ -159,7 +159,7 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 
 	hidden_opts.add_options()
 		("debug-options", po::bool_switch())
-		(BOOST_COMMAND_OPT.c_str(), po::value<vector<string>>()->multitoken())
+		(BOOST_COMMAND_OPT.c_str(), po::value<vector<string>>())
 		;
 
 	po::options_description help_opts;

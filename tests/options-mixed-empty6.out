@@ -1,0 +1,7 @@
+-=
+-=-c
+-=filename3
+-=
+debug-options=1
+err-append=filename2
+out-append=filename1
