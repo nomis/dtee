@@ -117,9 +117,8 @@ vector<po::option> Application::end_of_opts_parser(std::vector<std::string> &arg
 }
 
 void Application::parse_command_line(int argc, const char* const argv[], po::variables_map &variables) const {
+	// LCOV_EXCL_START
 	po::options_description visible_opts{"Allowed options"};
-	po::options_description hidden_opts;
-
 	visible_opts.add_options()
 		("out-overwrite,O",
 				po::value<vector<string>>()->value_name("FILE"),
@@ -141,15 +140,15 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 				"append standard output and standard error to the given FILEs")
 		;
 
-	po::options_description cron_opts;
-	cron_opts.add_options()
-		("cron,q", po::bool_switch(), "operate in cron mode (combine original output but suppress it unless the process outputs an error message or has a non-zero exit status)")
-		;
-	(cron_mode_ ? hidden_opts : visible_opts).add(cron_opts);
-
+	po::options_description hidden_opts;
 	hidden_opts.add_options()
 		("debug-options", po::bool_switch())
 		(BOOST_COMMAND_OPT.c_str(), po::value<vector<string>>())
+		;
+
+	po::options_description cron_opts;
+	cron_opts.add_options()
+		("cron,q", po::bool_switch(), "operate in cron mode (combine original output but suppress it unless the process outputs an error message or has a non-zero exit status)")
 		;
 
 	po::options_description help_opts;
@@ -157,6 +156,9 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 		("help,h", po::bool_switch(), "display this help and exit")
 		("version,V", po::bool_switch(), "output version information and exit")
 		;
+	// LCOV_EXCL_STOP
+
+	(cron_mode_ ? hidden_opts : visible_opts).add(cron_opts);
 	visible_opts.add(help_opts);
 
 	po::options_description all_opts;
