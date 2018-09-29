@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" >&1
+echo "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis" >&1
+echo "nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." >&1
+echo "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore" >&1
+echo "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt" >&1
+echo "in culpa qui officia deserunt mollit anim id est laborum." >&1
+exit 0
