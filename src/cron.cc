@@ -125,7 +125,6 @@ void Cron::report() {
 	}
 
 	cout << flush;
-	cerr << endl;
 
 	if (status_ >= 0) {
 		Application::print_error(command_ + ": exited with status " + to_string(status_));

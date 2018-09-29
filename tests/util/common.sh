@@ -2,7 +2,14 @@ TESTDIR="dtee@test"
 mkdir -p "$TESTDIR"
 
 NAME="$(basename "$0")"
-RUN="${0/.sh/.run}"
+NAME="${NAME/.sh}"
+
+# Ensure commands that are run have relative path names in argv[0]
+rm -f "$TESTDIR/$NAME.run"
+if [ -e "${0/.sh/.run}" ]; then
+	ln -s "${0/.sh/.run}" "$TESTDIR/$NAME.run"
+fi
+RUN="$TESTDIR/$NAME.run"
 
 function run_test() {
 	rm -f "$TESTDIR/$NAME.out" "$TESTDIR/$NAME.err"
