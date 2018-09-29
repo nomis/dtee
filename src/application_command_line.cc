@@ -26,12 +26,16 @@
 #include <typeinfo>
 #include <vector>
 
+#include <boost/algorithm/string/predicate.hpp>
+
 using ::std::string;
 using ::std::vector;
 
 using ::std::cout;
 using ::std::endl;
 using ::std::flush;
+
+using ::boost::algorithm::starts_with;
 
 namespace po = boost::program_options;
 
@@ -43,10 +47,12 @@ const string Application::CRON_MODE_NAME {"cronty"};
 string Application::internal_name_ {DEFAULT_PROGRAM_NAME};
 string Application::display_name_ {DEFAULT_PROGRAM_NAME};
 
-// Boost (1.62) is going to consume "--=argument" as a positional argument
-// whether we want it to or not. It will also insist on accepting a long name
-// for positional arguments. To avoid accepting hidden names like "--command",
-// just explicitly use "--" as the name.
+// Boost (1.62) is going to consume "--=argument" as a positional option
+// (or repeat the last option used 😩) whether we want it to or not. It
+// will also insist on accepting a long name for positional arguments.
+// To avoid accepting hidden names like "--command", just explicitly use
+// "--" as the name. The "--=argument" behaviour is checked in the
+// end_of_opts_parser function.
 const string Application::BOOST_COMMAND_OPT {"-"};
 
 void Application::update_name(const string &program_name) {
@@ -73,10 +79,6 @@ vector<po::option> Application::end_of_opts_parser(std::vector<std::string> &arg
 
 	if (i == args.cend()) {
 		capture = false;
-	} else if (*i == "--") {
-		// Standard end of command options signifier
-		capture = true;
-		++i;
 	} else if (i->empty()) {
 		// The empty string implies the end of command options, but Boost also
 		// calls this function for every option with its arguments... trying
@@ -91,7 +93,15 @@ vector<po::option> Application::end_of_opts_parser(std::vector<std::string> &arg
 		// line, or at the end of it, then the capture process will not run.
 		// In that scenario, Boost (1.62) considers it a positional argument
 		// as normal so the command line is still parsed correctly.
-	} else if (i->at(0) != '-') {
+	} else if (starts_with(*i, "--=")) {
+		// Do not allow this because Boost will use the argument for whatever
+		// option that was most recently used or the next positional option.
+		boost::throw_exception(po::unknown_option(*i));
+	} else if (*i == "--") {
+		// Standard end of command options signifier
+		capture = true;
+		++i;
+	} else if (!starts_with(*i, "-")) {
 		// Any unrecognised bare word signifies the end of command options
 		capture = true;
 	} else {
