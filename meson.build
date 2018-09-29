@@ -151,4 +151,7 @@ test('cron terminated by signal 2', find_program('tests/cron-command-sigint.sh')
 test('cron terminated by signal 9', find_program('tests/cron-command-sigkill.sh'), env: test_env)
 test('cron terminated by signal 15', find_program('tests/cron-command-sigterm.sh'), env: test_env)
 
-test('output file not writeable', find_program('tests/file-open-failure.sh'), env: test_env)
+test('output file not openable', find_program('tests/file-open-failure.sh'), env: test_env)
+test('output file not writeable (stdout)', find_program('tests/file-write-failure-stdout.sh'), env: test_env)
+test('output file not writeable (stderr)', find_program('tests/file-write-failure-stderr.sh'), env: test_env)
+test('output file not writeable (combined)', find_program('tests/file-write-failure-combined.sh'), env: test_env)

@@ -56,6 +56,7 @@ private:
 	bool terminated_ = false;
 	int exit_status_ = -1;
 	int exit_signum_ = -1;
+	bool output_failed_ = false;
 
 	boost::asio::signal_set signals_;
 	std::vector<char> buffer_; //!< Incoming data

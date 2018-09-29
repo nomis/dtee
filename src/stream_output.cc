@@ -29,11 +29,13 @@ StreamOutput::StreamOutput(ostream &stream, OutputType type) : stream_(stream), 
 StreamOutput::~StreamOutput() {
 
 }
-void StreamOutput::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+bool StreamOutput::output(OutputType type, const std::vector<char> &buffer, size_t len) {
 	if (type == type_) {
 		stream_.write(buffer.data(), len);
 		stream_.flush();
 	}
+
+	return true;
 }
 
 } // namespace dtee

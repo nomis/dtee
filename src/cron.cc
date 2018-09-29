@@ -51,7 +51,7 @@ void Cron::print_file_error(const string &message, int errno_copy) {
 	Application::print_error(message + " " + file_.name(), errno_copy);
 }
 
-void Cron::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+bool Cron::output(OutputType type, const std::vector<char> &buffer, size_t len) {
 	if (type == OutputType::STDERR) {
 		error_ = true;
 	}
@@ -68,8 +68,10 @@ void Cron::output(OutputType type, const std::vector<char> &buffer, size_t len) 
 		} else {
 			failed_ = false;
 		}
+
+		return !failed_;
 	} else {
-		fallback_->output(type, buffer, len);
+		return fallback_->output(type, buffer, len);
 	}
 }
 

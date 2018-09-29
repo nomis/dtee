@@ -36,7 +36,7 @@ class FileOutput: public Output {
 public:
 	FileOutput(const std::string &filename, FileOutputType type, bool append);
 	virtual ~FileOutput();
-	void output(OutputType type, const std::vector<char> &buffer, size_t len) override;
+	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
 	FileOutput(FileOutput&&);
 	FileOutput& operator=(FileOutput&&);

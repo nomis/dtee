@@ -31,7 +31,7 @@ class Output {
 public:
 	Output() {};
 	virtual ~Output() {};
-	virtual void output(OutputType type, const std::vector<char> &buffer, size_t len) = 0;
+	virtual bool output(OutputType type, const std::vector<char> &buffer, size_t len) = 0;
 	virtual void terminated(int status __attribute__((unused)),
 			int signum __attribute__((unused)),
 			bool core_dumped __attribute__((unused))) {};

@@ -70,7 +70,7 @@ FileOutput::~FileOutput() {
 	}
 }
 
-void FileOutput::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+bool FileOutput::output(OutputType type, const std::vector<char> &buffer, size_t len) {
 	if (!filtered_ || type == type_) {
 		if (fd_ >= 0) {
 			ssize_t written = write(fd_, buffer.data(), len);
@@ -85,6 +85,8 @@ void FileOutput::output(OutputType type, const std::vector<char> &buffer, size_t
 			}
 		}
 	}
+
+	return !failed_;
 }
 
 } // namespace dtee

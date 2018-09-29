@@ -29,7 +29,7 @@ class StreamOutput : public Output {
 public:
 	StreamOutput(std::ostream &stream, OutputType type);
 	virtual ~StreamOutput();
-	void output(OutputType type, const std::vector<char> &buffer, size_t len) override;
+	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
 	StreamOutput(StreamOutput&&);
 	StreamOutput& operator=(StreamOutput&&);

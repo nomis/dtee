@@ -31,7 +31,7 @@ class Cron: public Output {
 public:
 	explicit Cron(std::string command, std::shared_ptr<Output> fallback);
 	virtual ~Cron();
-	void output(OutputType type, const std::vector<char> &buffer, size_t len) override;
+	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 	void terminated(int status, int signum, bool core_dump) override;
 	void report();
 

@@ -32,10 +32,14 @@ Copy::~Copy() {
 
 }
 
-void Copy::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+bool Copy::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+	bool success = true;
+
 	for (auto& output : outputs_) {
-		output->output(type, buffer, len);
+		success &= output->output(type, buffer, len);
 	}
+
+	return success;
 }
 
 void Copy::terminated(int status, int signum, bool core_dumped) {

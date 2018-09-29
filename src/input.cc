@@ -168,7 +168,13 @@ int Input::fork_parent(pid_t pid) {
 	// Replicate original exit status (mostly... the only way to replicate
 	// signals is to use the default action for the signal and send it to
 	// ourselves, but not all of the signals will terminate by default).
-	if (exit_status_ >= 0) {
+	if (exit_status_ == EXIT_SUCCESS) {
+		if (output_failed_) {
+			return EX_IOERR;
+		} else {
+			return EXIT_SUCCESS;
+		}
+	} else if (exit_status_ >= 0) {
 		return exit_status_;
 	} else if (exit_signum_ >= 0){
 		return SHELL_EXIT_CODE_SIGNAL + exit_signum_;
@@ -189,9 +195,9 @@ void Input::fork_child() {
 void Input::handle_receive_from(const error_code &ec, size_t len) {
 	if (!ec) {
 		if (recv_ep_ == out_ep_) {
-			output_->output(OutputType::STDOUT, buffer_, len);
+			output_failed_ |= !output_->output(OutputType::STDOUT, buffer_, len);
 		} else if (recv_ep_ == err_ep_) {
-			output_->output(OutputType::STDERR, buffer_, len);
+			output_failed_ |= !output_->output(OutputType::STDERR, buffer_, len);
 		} else {
 			// Data from any other sockets should not be possible and is ignored
 		}
