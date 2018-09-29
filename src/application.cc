@@ -120,6 +120,8 @@ list<shared_ptr<Output>> Application::create_outputs(const variables_map &variab
 				variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>()[0],
 				make_shared<Copy>(original));
 		outputs.push_back(cron_);
+	} else {
+		outputs.splice(outputs.end(), original);
 	}
 
 	create_file_outputs(outputs, variables, "out-overwrite", FileOutputType::STDOUT, false);
@@ -128,11 +130,6 @@ list<shared_ptr<Output>> Application::create_outputs(const variables_map &variab
 	create_file_outputs(outputs, variables, "out-append", FileOutputType::STDOUT, true);
 	create_file_outputs(outputs, variables, "err-append", FileOutputType::STDERR, true);
 	create_file_outputs(outputs, variables, "combined-append", FileOutputType::COMBINED, true);
-
-	if (!cron_mode_) {
-		// Put the original outputs last so that what you see has already been written to files
-		outputs.splice(outputs.end(), original);
-	}
 
 	return outputs;
 }
