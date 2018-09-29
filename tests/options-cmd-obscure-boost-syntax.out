@@ -1,2 +1,9 @@
-dtee: unrecognised option '--=command'
-Try 'dtee -h' for more information.
+-=command
+-=argument 1
+-=argument 2
+-=argument 3
+combined-append=combined_append
+cron=1
+debug-options=1
+err-append=stderr_append
+out-append=stdout_append
