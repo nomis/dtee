@@ -12,25 +12,25 @@ fi
 RUN="$TESTDIR/$NAME.run"
 
 function run_test() {
-	rm -f "$TESTDIR/$NAME.out" "$TESTDIR/$NAME.err"
-	./dtee "$@" 1>"$TESTDIR/$NAME.out" 2>"$TESTDIR/$NAME.err"
+	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
+	./dtee "$@" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 	RET1=$?
 
-	cmp "$TESTDIR/$NAME.out" "${0/.sh/.out}"
+	cmp "$TESTDIR/$NAME.out.txt" "${0/.sh/.out.txt}"
 	CMP_OUT=$?
-	[ $CMP_OUT -ne 0 ] && diff -U4 "${0/.sh/.out}" "$TESTDIR/$NAME.out"
+	[ $CMP_OUT -ne 0 ] && diff -U4 "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
 
-	cmp "$TESTDIR/$NAME.err" "${0/.sh/.err}"
+	cmp "$TESTDIR/$NAME.err.txt" "${0/.sh/.err.txt}"
 	CMP_ERR=$?
-	[ $CMP_ERR -ne 0 ] && diff -U4 "${0/.sh/.err}" "$TESTDIR/$NAME.err"
+	[ $CMP_ERR -ne 0 ] && diff -U4 "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
 
-	rm -f "$TESTDIR/$NAME.com"
-	./dtee "$@" 1>"$TESTDIR/$NAME.com" 2>&1
+	rm -f "$TESTDIR/$NAME.com.txt"
+	./dtee "$@" 1>"$TESTDIR/$NAME.com.txt" 2>&1
 	RET2=$?
 
-	cmp "$TESTDIR/$NAME.com" "${0/.sh/.com}"
+	cmp "$TESTDIR/$NAME.com.txt" "${0/.sh/.com.txt}"
 	CMP_COM=$?
-	[ $CMP_COM -ne 0 ] && diff -U4 "${0/.sh/.com}" "$TESTDIR/$NAME.com"
+	[ $CMP_COM -ne 0 ] && diff -U4 "${0/.sh/.com.txt}" "$TESTDIR/$NAME.com.txt"
 
 	echo RET1 $RET1
 	echo RET2 $RET2
@@ -45,17 +45,17 @@ function run_test() {
 }
 
 function run_test_once() {
-	rm -f "$TESTDIR/$NAME.out" "$TESTDIR/$NAME.err"
-	./dtee "$@" 1>"$TESTDIR/$NAME.out" 2>"$TESTDIR/$NAME.err"
+	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
+	./dtee "$@" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 	RET=$?
 
-	cmp "$TESTDIR/$NAME.out" "${0/.sh/.out}"
+	cmp "$TESTDIR/$NAME.out.txt" "${0/.sh/.out.txt}"
 	CMP_OUT=$?
-	[ $CMP_OUT -ne 0 ] && diff -U4 "${0/.sh/.out}" "$TESTDIR/$NAME.out"
+	[ $CMP_OUT -ne 0 ] && diff -U4 "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
 
-	cmp "$TESTDIR/$NAME.err" "${0/.sh/.err}"
+	cmp "$TESTDIR/$NAME.err.txt" "${0/.sh/.err.txt}"
 	CMP_ERR=$?
-	[ $CMP_ERR -ne 0 ] && diff -U4 "${0/.sh/.err}" "$TESTDIR/$NAME.err"
+	[ $CMP_ERR -ne 0 ] && diff -U4 "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
 
 	echo RET $RET
 	echo CMP_OUT $CMP_OUT

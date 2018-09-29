@@ -2,17 +2,17 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f "$TESTDIR/$NAME.file.com-append"
-echo Existing line 1 >"$TESTDIR/$NAME.file.com-append"
-echo Existing line 2 >>"$TESTDIR/$NAME.file.com-append"
-echo Existing line 3 >>"$TESTDIR/$NAME.file.com-append"
+rm -f "$TESTDIR/$NAME.file.com-append.txt"
+echo Existing line 1 >"$TESTDIR/$NAME.file.com-append.txt"
+echo Existing line 2 >>"$TESTDIR/$NAME.file.com-append.txt"
+echo Existing line 3 >>"$TESTDIR/$NAME.file.com-append.txt"
 
-run_test_once -c "$TESTDIR/$NAME.file.com-append" "$RUN"
+run_test_once -c "$TESTDIR/$NAME.file.com-append.txt" "$RUN"
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.com-append" "${0/.sh/.file.com-append}"
+cmp "$TESTDIR/$NAME.file.com-append" "${0/.sh/.file.com-append.txt}"
 CMP_COM_A=$?
-[ $CMP_COM_A -ne 0 ] && diff -U4 "${0/.sh/.file.com-append}" "$TESTDIR/$NAME.file.com-append"
+[ $CMP_COM_A -ne 0 ] && diff -U4 "${0/.sh/.file.com-append.txt}" "$TESTDIR/$NAME.file.com-append.txt"
 
 echo RET $RET
 echo CMP_COM_A $CMP_COM_A
