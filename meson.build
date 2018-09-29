@@ -135,3 +135,7 @@ test('debug options (end of options signifier stops following options at the sta
 
 test('command not found', find_program('tests/command-not-found.sh'), env: test_env)
 test('command not executable', find_program('tests/command-not-executable.sh'), env: test_env)
+test('command exit code 42', find_program('tests/command-exit-code.sh'), env: test_env)
+test('command terminated by signal 2', find_program('tests/command-sigint.sh'), env: test_env)
+test('command terminated by signal 9', find_program('tests/command-sigkill.sh'), env: test_env)
+test('command terminated by signal 15', find_program('tests/command-sigterm.sh'), env: test_env)
