@@ -107,3 +107,7 @@ test('debug options (cron)', find_program('tests/options-cron.sh'), env: test_en
 test('debug options (1 file)', find_program('tests/options-1-file.sh'), env: test_env)
 test('debug options (2 files)', find_program('tests/options-2-files.sh'), env: test_env)
 test('debug options (3 files)', find_program('tests/options-3-files.sh'), env: test_env)
+test('debug options (command with no arguments)', find_program('tests/options-cmd-noargs.sh'), env: test_env)
+test('debug options (command with 1 argument)', find_program('tests/options-cmd-1-arg.sh'), env: test_env)
+test('debug options (command with 2 arguments)', find_program('tests/options-cmd-2-args.sh'), env: test_env)
+test('debug options (command with 3 arguments)', find_program('tests/options-cmd-3-args.sh'), env: test_env)
