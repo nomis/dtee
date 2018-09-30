@@ -33,7 +33,6 @@ check: $(RELEASE_DIR)
 
 analyse: $(RELEASE_DIR)
 	$(NINJA) -C $(RELEASE_DIR) cppcheck
-	$(NINJA) -C $(RELEASE_DIR) clang-check
 	$(NINJA) -C $(RELEASE_DIR) scan-build
 
 clean: $(RELEASE_DIR)
