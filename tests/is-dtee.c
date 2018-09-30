@@ -8,7 +8,7 @@
 static int argc_copy = 0;
 static char **argv_copy = NULL;
 
-__attribute__((constructor)) void dtee_test_is_dtee_main_copy(int argc, char **argv) {
+__attribute__((constructor)) static void dtee_test_is_dtee_main_copy(int argc, char **argv) {
 	argc_copy = argc;
 	argv_copy = argv;
 }
