@@ -4,12 +4,12 @@
 
 #include "is-dtee.h"
 
-pid_t getpid(void) {
+uid_t getuid(void) {
 	if (dtee_test_is_dtee()) {
 		return 1;
 	} else {
-		int (*next_getpid)(void) = dlsym(RTLD_NEXT, "getpid");
+		int (*next_getuid)(void) = dlsym(RTLD_NEXT, "getuid");
 
-		return (*next_getpid)();
+		return (*next_getuid)();
 	}
 }

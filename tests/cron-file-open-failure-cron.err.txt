@@ -1,4 +1,4 @@
-dtee: unable to create temporary file /tmp/dtee.1000.1.output.XXXXXX: Read-only file system
+dtee: unable to create temporary file /tmp/dtee.1.1.output.XXXXXX: Read-only file system
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris

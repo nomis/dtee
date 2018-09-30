@@ -80,7 +80,17 @@ test_env = [
 	'LANG=C',
 ]
 
-shared_library('fake-getpid', ['tests/fake-getpid.c'])
+dlfcn_args = [
+	'-D_GNU_SOURCE',
+	'-Wno-pedantic',
+]
+libdl = meson.get_compiler('c').find_library('dl')
+dlfcn_deps = [
+	libdl,
+]
+
+shared_library('fake-getpid', ['tests/fake-getpid.c', 'tests/is-dtee.c'], c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('fake-getuid', ['tests/fake-getuid.c', 'tests/is-dtee.c'], c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'])
 shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'])
 shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'])
