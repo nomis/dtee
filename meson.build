@@ -1,6 +1,7 @@
 project('dtee',
-	'cpp',
+	['c', 'cpp'],
 	default_options: [
+		'c_std=c11',
 		'cpp_std=c++14',
 		'warning_level=3',
 		'werror=true',
@@ -75,6 +76,9 @@ test_env = [
 	'LC_ALL=C',
 	'LANG=C',
 ]
+
+shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'])
+shared_library('fake-getpid', ['tests/fake-getpid.c'])
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
 test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)
@@ -160,3 +164,4 @@ test('cron normal output file not openable', find_program('tests/cron-file-open-
 test('cron normal output file not writeable (stdout)', find_program('tests/cron-file-write-failure-stdout.sh'), env: test_env)
 test('cron normal output file not writeable (stderr)', find_program('tests/cron-file-write-failure-stderr.sh'), env: test_env)
 test('cron normal output file not writeable (combined)', find_program('tests/cron-file-write-failure-combined.sh'), env: test_env)
+test('cron temporary output file not openable', find_program('tests/cron-file-open-failure-cron.sh'), env: test_env)

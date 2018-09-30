@@ -11,10 +11,29 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
+function before_test() {
+	if [ ! -z "$TEST_LD_PRELOAD" ]; then
+		OLD_LD_PRELOAD="$LD_PRELOAD"
+		if [ -z "$OLD_LD_PRELOAD" ]; then
+			export LD_PRELOAD="$TEST_LD_PRELOAD"
+		else
+			export LD_PRELOAD="$TEST_LD_PRELOAD:$OLD_LD_PRELOAD"
+		fi
+	fi
+}
+
+function after_test() {
+	if [ ! -z "$TEST_LD_PRELOAD" ]; then
+		export LD_PRELOAD="$OLD_LD_PRELOAD"
+	fi
+}
+
 function run_test() {
 	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
+	before_test
 	./dtee "$@" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 	RET1=$?
+	after_test
 
 	cmp "$TESTDIR/$NAME.out.txt" "${0/.sh/.out.txt}"
 	CMP_OUT=$?
@@ -25,8 +44,10 @@ function run_test() {
 	[ $CMP_ERR -ne 0 ] && diff -U4 "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
 
 	rm -f "$TESTDIR/$NAME.com.txt"
+	before_test
 	./dtee "$@" 1>"$TESTDIR/$NAME.com.txt" 2>&1
 	RET2=$?
+	after_test
 
 	cmp "$TESTDIR/$NAME.com.txt" "${0/.sh/.com.txt}"
 	CMP_COM=$?
@@ -46,8 +67,10 @@ function run_test() {
 
 function run_test_once() {
 	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
+	before_test
 	./dtee "$@" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 	RET=$?
+	after_test
 
 	cmp "$TESTDIR/$NAME.out.txt" "${0/.sh/.out.txt}"
 	CMP_OUT=$?
