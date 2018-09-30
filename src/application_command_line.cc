@@ -122,22 +122,22 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 	visible_opts.add_options()
 		("out-overwrite,O",
 				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard output to the given FILEs")
+				"copy standard output to FILE")
 		("out-append,o",
 				po::value<vector<string>>()->value_name("FILE"),
-				"append standard output to the given FILEs")
+				"append standard output to FILE")
 		("err-overwrite,E",
 				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard error to the given FILEs")
+				"copy standard error to FILE")
 		("err-append,e",
 				po::value<vector<string>>()->value_name("FILE"),
-				"append standard error to the given FILEs")
+				"append standard error to FILE")
 		("combined-overwrite,C",
 				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard output and standard error to the given FILEs")
+				"copy standard output and error to FILE")
 		("combined-append,c",
 				po::value<vector<string>>()->value_name("FILE"),
-				"append standard output and standard error to the given FILEs")
+				"append standard output and error to FILE")
 		;
 
 	po::options_description hidden_opts;
