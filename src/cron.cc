@@ -70,14 +70,13 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 			}
 
 			vector<char> buffer_copy{buffer.cbegin() + written, buffer.cend()};
-
 			fallback_->output(type, buffer_copy, len - written);
-
 			return false;
 		}
 		return true;
 	} else {
-		return fallback_->output(type, buffer, len);
+		fallback_->output(type, buffer, len);
+		return false;
 	}
 }
 

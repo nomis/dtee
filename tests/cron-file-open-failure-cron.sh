@@ -8,7 +8,7 @@ run_test_once "-q" "$RUN"
 RET=$?
 
 echo RET $RET
-if [ $RET -eq 0 ]; then
+if [ $RET -eq 74 ]; then
 	exit 0
 fi
 exit 1
