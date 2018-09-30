@@ -1,0 +1,2 @@
+dtee: /dev/full: No space left on device
+dtee: dtee@test/cron-file-write-failure-combined.run: exited with status 0
