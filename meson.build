@@ -37,6 +37,9 @@ endforeach
 
 executable('dtee',
 	source_files,
+	c_args: [
+		'-D_POSIX_C_SOURCE=200809L',
+	],
 	cpp_args: [
 		'-D_POSIX_C_SOURCE=200809L',
 
@@ -77,8 +80,10 @@ test_env = [
 	'LANG=C',
 ]
 
-shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'])
 shared_library('fake-getpid', ['tests/fake-getpid.c'])
+shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'])
+shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'])
+shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'])
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
 test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)
@@ -165,3 +170,5 @@ test('cron normal output file not writeable (stdout)', find_program('tests/cron-
 test('cron normal output file not writeable (stderr)', find_program('tests/cron-file-write-failure-stderr.sh'), env: test_env)
 test('cron normal output file not writeable (combined)', find_program('tests/cron-file-write-failure-combined.sh'), env: test_env)
 test('cron temporary output file not openable', find_program('tests/cron-file-open-failure-cron.sh'), env: test_env)
+test('cron temporary output file not writeable', find_program('tests/cron-file-write-failure-cron.sh'), env: test_env)
+test('cron temporary output file not readable', find_program('tests/cron-file-read-failure-cron.sh'), env: test_env)

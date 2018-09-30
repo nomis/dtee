@@ -33,20 +33,20 @@ public:
 	virtual ~Cron();
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 	void terminated(int status, int signum, bool core_dump) override;
-	void report();
+	bool report();
 
 	Cron(Cron&&);
 	Cron& operator=(Cron&&);
 
 private:
 	void print_file_error(const std::string &message, int errno_copy);
+	bool unspool_buffer_file();
 
 	std::string command_; //!< Name of command being executed
 	std::shared_ptr<Output> fallback_; //!< Fallback output if temporary file can't be created
 	TempFile file_; //!< Temporary output file
 
 	bool buffered_; //!< Output is being buffered
-	bool failed_ = false; //!< Failure state of writes to temporary output file
 
 	bool terminated_ = false; //!< Child process terminated
 	bool error_ = false; //!< Error state of child process

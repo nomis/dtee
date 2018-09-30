@@ -33,6 +33,7 @@ using ::std::flush;
 using ::std::shared_ptr;
 using ::std::string;
 using ::std::to_string;
+using ::std::vector;
 
 namespace dtee {
 
@@ -51,7 +52,7 @@ void Cron::print_file_error(const string &message, int errno_copy) {
 	Application::print_error(message + " " + file_.name(), errno_copy);
 }
 
-bool Cron::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 	if (type == OutputType::STDERR) {
 		error_ = true;
 	}
@@ -60,16 +61,21 @@ bool Cron::output(OutputType type, const std::vector<char> &buffer, size_t len) 
 		errno = 0;
 		ssize_t written = write(file_.fd(), buffer.data(), len);
 		if (written != static_cast<ssize_t>(len)) {
-			if (!failed_) {
-				print_file_error("error writing to buffer file", errno);
+			print_file_error("error writing to buffer file", errno);
 
-				failed_ = true;
+			unspool_buffer_file();
+
+			if (written < 0) {
+				written = 0;
 			}
-		} else {
-			failed_ = false;
-		}
 
-		return !failed_;
+			vector<char> buffer_copy{buffer.cbegin() + written, buffer.cend()};
+
+			fallback_->output(type, buffer_copy, len - written);
+
+			return false;
+		}
+		return true;
 	} else {
 		return fallback_->output(type, buffer, len);
 	}
@@ -94,15 +100,14 @@ void Cron::terminated(int status, int signum, bool core_dumped) {
 	core_dumped_ = core_dumped;
 }
 
-void Cron::report() {
-	if (terminated_ && !error_) {
-		return;
-	}
+bool Cron::unspool_buffer_file() {
+	bool success = true;
 
 	if (buffered_) {
 		errno = 0;
 		if (lseek(file_.fd(), 0, SEEK_SET) != 0) {
 			print_file_error("error seeking to start of buffer file", errno);
+			success = false;
 		} else {
 			ssize_t len;
 			do {
@@ -114,20 +119,30 @@ void Cron::report() {
 				if (len < 0) {
 					int errno_copy = errno;
 
-					cout << endl;
 					print_file_error("error reading buffer file", errno_copy);
+					success = false;
 					break;
 				}
 
 				cout.write(buf, len);
 			} while (len > 0);
+
+			cout << flush;
 		}
 
 		file_.close();
 		buffered_ = false;
 	}
 
-	cout << flush;
+	return success;
+}
+
+bool Cron::report() {
+	if (terminated_ && !error_) {
+		return true;
+	}
+
+	bool success = unspool_buffer_file();
 
 	if (status_ >= 0) {
 		Application::print_error(command_ + ": exited with status " + to_string(status_));
@@ -148,6 +163,8 @@ void Cron::report() {
 	} else {
 		Application::print_error("internal error");
 	}
+
+	return success;
 }
 
 } // namespace dtee

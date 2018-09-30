@@ -90,7 +90,11 @@ int Application::run(int argc, const char* const argv[]) {
 			int ret = input.fork_parent(pid);
 
 			if (cron_) {
-				cron_->report();
+				if (!cron_->report()) {
+					if (ret == EXIT_SUCCESS) {
+						ret = EX_IOERR;
+					}
+				}
 			}
 
 			return ret;

@@ -42,7 +42,7 @@ TempFile::TempFile(const string &name) {
 	if (fd_ < 0) {
 		Application::print_error("unable to create temporary file " + pattern, errno);
 	} else {
-		name_ = string(filename.cbegin(), filename.cend());
+		name_ = string(filename.data());
 		unlink(name_.c_str());
 	}
 }
