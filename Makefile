@@ -1,7 +1,8 @@
 .PHONY: all debug compile debug-compile check analyse clean debug-clean distclean install uninstall
 
-RELEASE_DIR=build/release
-DEBUG_DIR=build/debug
+BUILD_DIR=build
+RELEASE_DIR=$(BUILD_DIR)/release
+DEBUG_DIR=$(BUILD_DIR)/debug
 CC=clang
 CXX=clang++
 
@@ -14,11 +15,13 @@ endif
 all: compile
 debug: debug-compile
 
-build:
-	mkdir -p build
-$(RELEASE_DIR): build
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+$(RELEASE_DIR): $(BUILD_DIR)
+	mkdir -p $(RELEASE_DIR)
 	meson --buildtype=release $(RELEASE_DIR) || rm -rf "$(RELEASE_DIR)"
-$(DEBUG_DIR): build
+$(DEBUG_DIR): $(BUILD_DIR)
+	mkdir -p $(DEBUG_DIR)
 	meson --buildtype=debug $(DEBUG_DIR) || rm -rf "$(DEBUG_DIR)"
 
 compile: $(RELEASE_DIR)
@@ -42,7 +45,7 @@ debug-clean: $(DEBUG_DIR)
 	$(NINJA) -C $(DEBUG_DIR) clean
 
 distclean:
-	rm -rf $(RELEASE_DIR) $(DEBUG_DIR)
+	rm -rf $(BUILD_DIR)
 
 install: $(RELEASE_DIR)
 	$(NINJA) -C $(RELEASE_DIR) install
