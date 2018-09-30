@@ -1,6 +1,8 @@
 # Dependencies
 
 ## Build
+
+### Compile
   * [Boost](https://www.boost.org/)
   * [Clang](https://clang.llvm.org/) or [GNU GCC](https://www.gnu.org/software/gcc/)
   * [GNU Make](https://www.gnu.org/software/make/) (optional)
@@ -12,7 +14,7 @@
   * [Clang Static Analyzer](https://clang-analyzer.llvm.org/)
   * [Cppcheck](http://cppcheck.sourceforge.net/)
 
-## Test
+### Test
   * [GNU Bash](https://www.gnu.org/software/bash/) 4.0+
   * [GNU Coreutils](https://www.gnu.org/software/coreutils/)
   * [GNU Diffutils](https://www.gnu.org/software/diffutils/)
