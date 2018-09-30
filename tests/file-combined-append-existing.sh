@@ -10,7 +10,7 @@ echo Existing line 3 >>"$TESTDIR/$NAME.file.com-append.txt"
 run_test_once -c "$TESTDIR/$NAME.file.com-append.txt" "$RUN"
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.com-append" "${0/.sh/.file.com-append.txt}"
+cmp "$TESTDIR/$NAME.file.com-append.txt" "${0/.sh/.file.com-append.txt}"
 CMP_COM_A=$?
 [ $CMP_COM_A -ne 0 ] && diff -U4 "${0/.sh/.file.com-append.txt}" "$TESTDIR/$NAME.file.com-append.txt"
 

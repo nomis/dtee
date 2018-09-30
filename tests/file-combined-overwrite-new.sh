@@ -7,7 +7,7 @@ rm -f "$TESTDIR/$NAME.file.com-overwrite.txt"
 run_test_once -C "$TESTDIR/$NAME.file.com-overwrite.txt" "$RUN"
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.com-overwrite" "${0/.sh/.file.com-overwrite.txt}"
+cmp "$TESTDIR/$NAME.file.com-overwrite.txt" "${0/.sh/.file.com-overwrite.txt}"
 CMP_COM_O=$?
 [ $CMP_COM_O -ne 0 ] && diff -U4 "${0/.sh/.file.com-overwrite.txt}" "$TESTDIR/$NAME.file.com-overwrite.txt"
 
