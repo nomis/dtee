@@ -101,6 +101,7 @@ shared_library('mkostemp-consistent', ['tests/mkostemp-consistent.c'] + test_com
 shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
 test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)
@@ -190,3 +191,5 @@ test('cron temporary output file not openable', find_program('tests/cron-file-op
 test('cron temporary output file not writeable', find_program('tests/cron-file-write-failure-cron.sh'), env: test_env, is_parallel: false)
 test('cron temporary output file not readable', find_program('tests/cron-file-read-failure-cron.sh'), env: test_env, is_parallel: false)
 test('cron temporary output file not seekable', find_program('tests/cron-file-seek-failure-cron.sh'), env: test_env, is_parallel: false)
+
+test('input socket create failure', find_program('tests/input-socket-create-failure.sh'), env: test_env)
