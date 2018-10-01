@@ -89,14 +89,18 @@ dlfcn_deps = [
 	libdl,
 ]
 
-shared_library('fake-getpid', ['tests/fake-getpid.c', 'tests/is-dtee.c'], c_args: dlfcn_args, dependencies: dlfcn_deps)
-shared_library('fake-getuid', ['tests/fake-getuid.c', 'tests/is-dtee.c'], c_args: dlfcn_args, dependencies: dlfcn_deps)
-shared_library('lseek-failure', ['tests/lseek-failure.c', 'tests/is-dtee.c'], c_args: dlfcn_args, dependencies: dlfcn_deps)
-shared_library('lseek64-failure', ['tests/lseek64-failure.c', 'tests/is-dtee.c'], c_args: dlfcn_args + ['-D_LARGEFILE64_SOURCE'], dependencies: dlfcn_deps)
-shared_library('mkostemp-consistent', ['tests/mkostemp-consistent.c'])
-shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'])
-shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'])
-shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'])
+test_common = [
+	'tests/is-dtee.c',
+]
+
+shared_library('fake-getpid', ['tests/fake-getpid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('fake-getuid', ['tests/fake-getuid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('lseek-failure', ['tests/lseek-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('lseek64-failure', ['tests/lseek64-failure.c'] + test_common, c_args: dlfcn_args + ['-D_LARGEFILE64_SOURCE'], dependencies: dlfcn_deps)
+shared_library('mkostemp-consistent', ['tests/mkostemp-consistent.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
 test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)
