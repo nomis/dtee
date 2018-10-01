@@ -27,7 +27,7 @@ using ::std::string;
 namespace dtee {
 
 FatalError::FatalError(int exit_code, const string &message, int errno_copy)
-		: std::runtime_error(errno == 0 ? message : (message + ": " + std::error_code(errno_copy, std::system_category()).message())),
+		: std::runtime_error(errno_copy == 0 ? message : (message + ": " + std::error_code(errno_copy, std::system_category()).message())),
 		  exit_code_(exit_code) {
 
 }
