@@ -24,20 +24,20 @@ namespace dtee {
 
 class TempFile {
 public:
-	TempFile();
 	explicit TempFile(const std::string &name);
 	~TempFile();
 
+	bool open();
 	std::string name();
-	bool valid();
-	void close();
 	inline int fd() { return fd_; }
+	void close();
 
-	TempFile(TempFile&& rhs);
-	TempFile& operator=(TempFile&& rhs);
+	TempFile(const TempFile&) = delete;
+	TempFile& operator=(const TempFile&) = delete;
 
 private:
-	std::string name_; //!< Temporary output filename (deleted)
+	const std::string name_;
+	std::string filename_; //!< Temporary output filename (deleted)
 	int fd_ = -1; //!< Temporary output file
 };
 

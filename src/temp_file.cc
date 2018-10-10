@@ -33,34 +33,32 @@ using ::std::vector;
 
 namespace dtee {
 
-TempFile::TempFile() {
-
-}
-
-TempFile::TempFile(const string &name) {
-	string pattern { "/tmp/" + Application::name() +  "." + to_string(getuid()) + "." + to_string(getpid()) + "." + name + ".XXXXXX" };
-	vector<char> filename {pattern.cbegin(), pattern.cend() + 1};
-
-	errno = 0;
-	fd_ = mkostemp(filename.data(), O_CLOEXEC);
-	if (fd_ < 0) {
-		Application::print_error("unable to create temporary file " + pattern, errno);
-	} else {
-		name_ = string(filename.data());
-		unlink(name_.c_str());
-	}
+TempFile::TempFile(const string &name)
+		: name_(name) {
 }
 
 TempFile::~TempFile() {
 	close();
 }
 
-string TempFile::name() {
-	return name_;
+bool TempFile::open() {
+	string pattern { "/tmp/" + Application::name() +  "." + to_string(getuid()) + "." + to_string(getpid()) + "." + name_ + ".XXXXXX" };
+	vector<char> filename {pattern.cbegin(), pattern.cend() + 1};
+
+	errno = 0;
+	fd_ = mkostemp(filename.data(), O_CLOEXEC);
+	if (fd_ < 0) {
+		Application::print_error("unable to create temporary file " + pattern, errno);
+		return false;
+	} else {
+		filename_ = string(filename.data());
+		unlink(filename_.c_str());
+		return true;
+	}
 }
 
-bool TempFile::valid() {
-	return fd_ >= 0;
+string TempFile::name() {
+	return filename_;
 }
 
 void TempFile::close() {
@@ -68,22 +66,6 @@ void TempFile::close() {
 		::close(fd_);
 	}
 	fd_ = -1;
-}
-
-TempFile::TempFile(TempFile&& rhs)
-		: name_(rhs.name_),
-		  fd_(rhs.fd_) {
-
-}
-
-TempFile& TempFile::operator=(TempFile&& rhs) {
-	name_ = rhs.name_;
-	fd_ = rhs.fd_;
-
-	rhs.name_.clear();
-	rhs.fd_ = -1;
-
-	return *this;
 }
 
 } // namespace dtee

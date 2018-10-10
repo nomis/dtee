@@ -41,7 +41,8 @@ namespace dtee {
 
 Cron::Cron(string command, shared_ptr<Output> fallback)
 		: command_(command),
-		  fallback_(fallback) {
+		  fallback_(fallback),
+		  file_("output") {
 
 }
 
@@ -54,9 +55,8 @@ void Cron::print_file_error(const string &message, int errno_copy) {
 }
 
 bool Cron::open() {
-	file_ = TempFile{"output"};
-	buffered_ = file_.valid();
-	return file_.valid();
+	buffered_ = file_.open();
+	return buffered_;
 }
 
 bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
