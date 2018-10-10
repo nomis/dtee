@@ -205,7 +205,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		combined_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		Application::print_error("socket receive:" + ec.message());
+		Application::print_error("socket receive: " + ec.message());
 
 		terminated_ = true;
 		io_.stop();
