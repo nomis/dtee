@@ -42,6 +42,9 @@ public:
 
 	int run(int argc, const char* const argv[]);
 
+	Application(const Application&) = delete;
+	Application& operator=(const Application&) = delete;
+
 private:
 	static std::vector<boost::program_options::option> end_of_opts_parser(std::vector<std::string> &args);
 	static void create_file_outputs(std::list<std::shared_ptr<Output>> &outputs,

@@ -31,9 +31,6 @@ public:
 	virtual ~StreamOutput();
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
-	StreamOutput(StreamOutput&&);
-	StreamOutput& operator=(StreamOutput&&);
-
 private:
 	std::ostream &stream_;
 	OutputType type_;

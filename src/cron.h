@@ -35,9 +35,6 @@ public:
 	void terminated(int status, int signum, bool core_dump) override;
 	bool report();
 
-	Cron(Cron&&);
-	Cron& operator=(Cron&&);
-
 private:
 	void print_file_error(const std::string &message, int errno_copy);
 	bool unspool_buffer_file();

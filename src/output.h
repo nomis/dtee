@@ -36,8 +36,8 @@ public:
 			int signum __attribute__((unused)),
 			bool core_dumped __attribute__((unused))) {};
 
-	Output(Output&&);
-	Output& operator=(Output&&);
+	Output(const Output&) = delete;
+	Output& operator=(const Output&) = delete;
 };
 
 } // namespace dtee

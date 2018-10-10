@@ -38,9 +38,6 @@ public:
 	virtual ~FileOutput();
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
-	FileOutput(FileOutput&&);
-	FileOutput& operator=(FileOutput&&);
-
 private:
 	bool filtered_;
 	OutputType type_;

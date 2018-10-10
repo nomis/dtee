@@ -30,6 +30,9 @@ public:
 
 	int code() const;
 
+	FatalError(const FatalError&) = default;
+	FatalError& operator=(const FatalError&) = default;
+
 private:
 	int exit_code_;
 };

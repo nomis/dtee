@@ -38,8 +38,8 @@ public:
 	int fork_parent(pid_t pid);
 	void fork_child();
 
-	Input(Input&&);
-	Input& operator=(Input&&);
+	Input(const Input&) = delete;
+	Input& operator=(const Input&) = delete;
 
 private:
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);

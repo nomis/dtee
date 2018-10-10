@@ -31,6 +31,9 @@ public:
 	bool valid();
 	std::string register_file(const std::string &name); //!< Register filenames that will be unlinked before the directory is unlinked
 
+	TempDirectory(const TempDirectory&) = delete;
+	TempDirectory& operator=(const TempDirectory&) = delete;
+
 private:
 	bool created = false;
 	std::string name_;

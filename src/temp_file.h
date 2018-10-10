@@ -32,6 +32,9 @@ public:
 	void close();
 	inline int fd() { return fd_; }
 
+	TempFile(const TempFile&) = delete;
+	TempFile& operator=(const TempFile&) = delete;
+
 private:
 	std::string name_; //!< Temporary output filename (deleted)
 	int fd_ = -1; //!< Temporary output file
