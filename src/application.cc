@@ -28,7 +28,6 @@
 
 #include "copy.h"
 #include "cron.h"
-#include "exceptions.h"
 #include "file_output.h"
 #include "input.h"
 #include "stream_output.h"
@@ -81,34 +80,60 @@ int Application::run(int argc, const char* const argv[]) {
 	parse_command_line(argc, argv, variables);
 	cron_mode_ |= variables["cron"].as<bool>();
 
-	try {
-		Input input{make_shared<Copy>(create_outputs(variables))};
+	shared_ptr<Copy> outputs = make_shared<Copy>(create_outputs(variables));
+	shared_ptr<Input> input = make_shared<Input>(outputs);
 
-		input.fork_prepare();
+	bool outputs_ok = outputs->open();
+	bool input_ok = input->open();
+	int ret_internal = EXIT_SUCCESS;
+
+	if (!outputs_ok) {
+		ret_internal = EX_CANTCREAT;
+
+		if (!cron_mode_) {
+			// If we're running from cron then we have output an error message
+			// for the failed output files but must continue to execute the
+			// requested command.
+			return ret_internal;
+		}
+	}
+
+	if (input_ok) {
+		input->fork_prepare();
 		pid_t pid = fork();
 		if (pid > 0) {
-			int ret = input.fork_parent(pid);
+			int ret_child = input->fork_parent(pid);
 
 			if (cron_) {
 				if (!cron_->report()) {
-					if (ret == EXIT_SUCCESS) {
-						ret = EX_IOERR;
-					}
+					ret_internal = EX_IOERR;
 				}
 			}
 
-			return ret;
+			if (ret_child == EXIT_SUCCESS && ret_internal != EXIT_SUCCESS) {
+				return ret_internal;
+			} else {
+				return ret_child;
+			}
 		} else {
 			if (pid == 0) {
-				input.fork_child();
+				input->fork_child();
 			}
 
 			execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
 			return EX_SOFTWARE;
 		}
-	} catch (FatalError &e) {
-		print_error(e.what());
-		return e.code();
+	} else if (cron_mode_) {
+		// If we're running from cron then we have output an error message
+		// for the failed preparation to handle input but must continue to
+		// execute the requested command. Close open files/sockets first.
+		outputs.reset();
+		input.reset();
+
+		execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
+		return EX_SOFTWARE;
+	} else {
+		return EX_UNAVAILABLE;
 	}
 }
 

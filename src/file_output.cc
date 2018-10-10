@@ -25,28 +25,12 @@
 #include <unistd.h>
 
 #include "application.h"
-#include "exceptions.h"
 
 using ::std::string;
 
 namespace dtee {
 
-FileOutput::FileOutput(const string &filename, FileOutputType type, bool append) : filename_(filename) {
-	// std::fstream can't do O_CLOEXEC
-	int flags = O_WRONLY | O_CREAT | O_CLOEXEC | O_NOCTTY;
-
-	if (append) {
-		flags |= O_APPEND;
-	} else {
-		flags |= O_TRUNC;
-	}
-
-	errno = 0;
-	fd_ = open(filename_.c_str(), flags, DEFFILEMODE);
-	if (fd_ < 0) {
-		throw FatalError(EX_CANTCREAT, filename_, errno);
-	}
-
+FileOutput::FileOutput(const string &filename, FileOutputType type, bool append) : filename_(filename), append_(append) {
 	switch (type) {
 	case FileOutputType::STDOUT:
 		filtered_ = true;
@@ -61,6 +45,27 @@ FileOutput::FileOutput(const string &filename, FileOutputType type, bool append)
 	case FileOutputType::COMBINED:
 		filtered_ = false;
 		break;
+	}
+}
+
+bool FileOutput::open() {
+	// std::fstream can't do O_CLOEXEC
+	int flags = O_WRONLY | O_CREAT | O_CLOEXEC | O_NOCTTY;
+
+	if (append_) {
+		flags |= O_APPEND;
+	} else {
+		flags |= O_TRUNC;
+	}
+
+	errno = 0;
+	fd_ = ::open(filename_.c_str(), flags, DEFFILEMODE);
+	if (fd_ < 0) {
+		Application::print_error(filename_, errno);
+
+		return false;
+	} else {
+		return true;
 	}
 }
 

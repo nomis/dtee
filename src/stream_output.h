@@ -29,6 +29,8 @@ class StreamOutput : public Output {
 public:
 	StreamOutput(std::ostream &stream, OutputType type);
 	virtual ~StreamOutput();
+
+	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
 private:

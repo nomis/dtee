@@ -33,6 +33,10 @@ using ::std::vector;
 
 namespace dtee {
 
+TempFile::TempFile() {
+
+}
+
 TempFile::TempFile(const string &name) {
 	string pattern { "/tmp/" + Application::name() +  "." + to_string(getuid()) + "." + to_string(getpid()) + "." + name + ".XXXXXX" };
 	vector<char> filename {pattern.cbegin(), pattern.cend() + 1};
@@ -64,6 +68,22 @@ void TempFile::close() {
 		::close(fd_);
 	}
 	fd_ = -1;
+}
+
+TempFile::TempFile(TempFile&& rhs)
+		: name_(rhs.name_),
+		  fd_(rhs.fd_) {
+
+}
+
+TempFile& TempFile::operator=(TempFile&& rhs) {
+	name_ = rhs.name_;
+	fd_ = rhs.fd_;
+
+	rhs.name_.clear();
+	rhs.fd_ = -1;
+
+	return *this;
 }
 
 } // namespace dtee

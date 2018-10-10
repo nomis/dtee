@@ -23,6 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <iostream>
+#include <utility>
 
 #include "application.h"
 
@@ -30,6 +31,7 @@ using ::std::cout;
 using ::std::cerr;
 using ::std::endl;
 using ::std::flush;
+using ::std::move;
 using ::std::shared_ptr;
 using ::std::string;
 using ::std::to_string;
@@ -39,9 +41,8 @@ namespace dtee {
 
 Cron::Cron(string command, shared_ptr<Output> fallback)
 		: command_(command),
-		  fallback_(fallback),
-		  file_("output") {
-	buffered_ = file_.valid();
+		  fallback_(fallback) {
+
 }
 
 Cron::~Cron() {
@@ -50,6 +51,12 @@ Cron::~Cron() {
 
 void Cron::print_file_error(const string &message, int errno_copy) {
 	Application::print_error(message + " " + file_.name(), errno_copy);
+}
+
+bool Cron::open() {
+	file_ = TempFile{"output"};
+	buffered_ = file_.valid();
+	return file_.valid();
 }
 
 bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {

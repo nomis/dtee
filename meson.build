@@ -15,7 +15,6 @@ source_files = [
 	'src/application_command_line.cc',
 	'src/copy.cc',
 	'src/cron.cc',
-	'src/exceptions.cc',
 	'src/file_output.cc',
 	'src/input.cc',
 	'src/stream_output.cc',
@@ -193,3 +192,5 @@ test('cron temporary output file not readable', find_program('tests/cron-file-re
 test('cron temporary output file not seekable', find_program('tests/cron-file-seek-failure-cron.sh'), env: test_env, is_parallel: false)
 
 test('input socket create failure', find_program('tests/input-socket-create-failure.sh'), env: test_env)
+
+test('cron input socket create failure', find_program('tests/cron-input-socket-create-failure.sh'), env: test_env)

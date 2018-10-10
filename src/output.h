@@ -31,6 +31,8 @@ class Output {
 public:
 	Output() {};
 	virtual ~Output() {};
+
+	virtual bool open() = 0;
 	virtual bool output(OutputType type, const std::vector<char> &buffer, size_t len) = 0;
 	virtual void terminated(int status __attribute__((unused)),
 			int signum __attribute__((unused)),

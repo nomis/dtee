@@ -34,6 +34,8 @@ class Input {
 public:
 	explicit Input(std::shared_ptr<Output> output);
 	virtual ~Input();
+
+	bool open();
 	void fork_prepare();
 	int fork_parent(pid_t pid);
 	void fork_child();

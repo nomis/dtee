@@ -36,6 +36,8 @@ class FileOutput: public Output {
 public:
 	FileOutput(const std::string &filename, FileOutputType type, bool append);
 	virtual ~FileOutput();
+
+	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
 private:
@@ -43,7 +45,8 @@ private:
 	OutputType type_;
 
 	std::string filename_; //!< Output filename
-	int fd_; //!< Output file
+	bool append_;
+	int fd_ = -1; //!< Output file
 	bool failed_ = false; //!< Failure state of writes to output file
 };
 

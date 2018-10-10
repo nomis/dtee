@@ -28,7 +28,6 @@
 #include <string>
 
 #include "application.h"
-#include "exceptions.h"
 #include "temp_directory.h"
 
 using ::std::bind;
@@ -49,24 +48,28 @@ Input::Input(shared_ptr<Output> output)
 		  err_(io_),
 		  signals_(io_, SIGCHLD),
 		  output_(output) {
+}
+
+bool Input::open() {
 	// There is no equivalent of mkstemp() for local sockets,
 	// so we create them in a temporary directory instead.
 	TempDirectory temp_dir("input");
 
 	if (!temp_dir.valid()) {
-		throw FatalError(EX_UNAVAILABLE, "no temporary directory for sockets");
+		Application::print_error("no temporary directory for sockets");
+		return false;
 	}
 
-	string combined_name = temp_dir.register_file("c");
-	datagram_protocol::endpoint combined_ep{combined_name};
-
-	string out_name = temp_dir.register_file("o");
-	out_ep_ = datagram_protocol::endpoint(out_name);
-
-	string err_name = temp_dir.register_file("e");
-	err_ep_ = datagram_protocol::endpoint{err_name};
-
 	try {
+		string combined_name = temp_dir.register_file("c");
+		datagram_protocol::endpoint combined_ep{combined_name};
+
+		string out_name = temp_dir.register_file("o");
+		out_ep_ = datagram_protocol::endpoint(out_name);
+
+		string err_name = temp_dir.register_file("e");
+		err_ep_ = datagram_protocol::endpoint{err_name};
+
 		combined_.open();
 		combined_.bind(combined_ep);
 		combined_.shutdown(datagram_protocol::socket::shutdown_send);
@@ -114,8 +117,11 @@ Input::Input(shared_ptr<Output> output)
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
 		err_.set_option(so_sndbuf);
 	} catch (std::exception &e) {
-		throw FatalError(EX_OSERR, string("socket ") + e.what());
+		Application::print_error(string("socket ") + e.what());
+		return false;
 	}
+
+	return true;
 }
 
 Input::~Input() {

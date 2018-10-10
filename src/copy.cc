@@ -32,6 +32,16 @@ Copy::~Copy() {
 
 }
 
+bool Copy::open() {
+	bool success = true;
+
+	for (auto& output : outputs_) {
+		success &= output->open();
+	}
+
+	return success;
+}
+
 bool Copy::output(OutputType type, const std::vector<char> &buffer, size_t len) {
 	bool success = true;
 

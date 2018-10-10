@@ -31,6 +31,8 @@ class Cron: public Output {
 public:
 	explicit Cron(std::string command, std::shared_ptr<Output> fallback);
 	virtual ~Cron();
+
+	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 	void terminated(int status, int signum, bool core_dump) override;
 	bool report();
@@ -43,7 +45,7 @@ private:
 	std::shared_ptr<Output> fallback_; //!< Fallback output if temporary file can't be created
 	TempFile file_; //!< Temporary output file
 
-	bool buffered_; //!< Output is being buffered
+	bool buffered_ = false; //!< Output is being buffered
 
 	bool terminated_ = false; //!< Child process terminated
 	bool error_ = false; //!< Error state of child process

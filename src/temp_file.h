@@ -24,6 +24,7 @@ namespace dtee {
 
 class TempFile {
 public:
+	TempFile();
 	explicit TempFile(const std::string &name);
 	~TempFile();
 
@@ -32,8 +33,8 @@ public:
 	void close();
 	inline int fd() { return fd_; }
 
-	TempFile(const TempFile&) = delete;
-	TempFile& operator=(const TempFile&) = delete;
+	TempFile(TempFile&& rhs);
+	TempFile& operator=(TempFile&& rhs);
 
 private:
 	std::string name_; //!< Temporary output filename (deleted)
