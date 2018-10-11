@@ -117,7 +117,7 @@ vector<po::option> Application::end_of_opts_parser(std::vector<std::string> &arg
 }
 
 void Application::parse_command_line(int argc, const char* const argv[], po::variables_map &variables) const {
-	// LCOV_EXCL_START
+	// LCOV_EXCL_BR_START
 	po::options_description visible_opts{"Allowed options"};
 	visible_opts.add_options()
 		("out-overwrite,O",
@@ -156,7 +156,7 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 		("help,h", po::bool_switch(), "display this help and exit")
 		("version,V", po::bool_switch(), "output version information and exit")
 		;
-	// LCOV_EXCL_STOP
+	// LCOV_EXCL_BR_STOP
 
 	(cron_mode_ ? hidden_opts : visible_opts).add(cron_opts);
 	visible_opts.add(help_opts);

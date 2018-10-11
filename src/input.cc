@@ -50,6 +50,10 @@ Input::Input(shared_ptr<Output> output)
 		  output_(output) {
 }
 
+Input::~Input() {
+
+}
+
 bool Input::open() {
 	// There is no equivalent of mkstemp() for local sockets,
 	// so we create them in a temporary directory instead.
@@ -122,10 +126,6 @@ bool Input::open() {
 	}
 
 	return true;
-}
-
-Input::~Input() {
-
 }
 
 void Input::fork_prepare() {

@@ -48,6 +48,12 @@ FileOutput::FileOutput(const string &filename, FileOutputType type, bool append)
 	}
 }
 
+FileOutput::~FileOutput() {
+	if (fd_ >= 0) {
+		close(fd_);
+	}
+}
+
 bool FileOutput::open() {
 	// std::fstream can't do O_CLOEXEC
 	int flags = O_WRONLY | O_CREAT | O_CLOEXEC | O_NOCTTY;
@@ -66,12 +72,6 @@ bool FileOutput::open() {
 		return false;
 	} else {
 		return true;
-	}
-}
-
-FileOutput::~FileOutput() {
-	if (fd_ >= 0) {
-		close(fd_);
 	}
 }
 
