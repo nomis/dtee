@@ -103,6 +103,12 @@ shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common,
 shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 
+executable('test-report',
+	['tests/report.c'],
+	c_args: [
+		'-D_POSIX_C_SOURCE=200809L',
+	])
+
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
 test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)
 test('dtee --help', find_program('tests/help-dtee.sh'), env: test_env)
@@ -197,3 +203,6 @@ test('input socket create and output file open failure', find_program('tests/inp
 
 test('cron input socket create failure', find_program('tests/cron-input-socket-create-failure.sh'), env: test_env)
 test('cron input socket create and output file open failure', find_program('tests/cron-input-and-output-failure.sh'), env: test_env)
+
+test('report arguments and file descriptors', find_program('tests/report.sh'), env: test_env)
+test('cron report arguments and file descriptors', find_program('tests/cron-report.sh'), env: test_env)
