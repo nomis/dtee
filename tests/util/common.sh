@@ -11,21 +11,23 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
+COMMON_TEST_LD_PRELOAD=./libexecvpe-fd-check.so
+
 function before_test() {
+	OLD_LD_PRELOAD="$LD_PRELOAD"
+	NEW_LD_PRELOAD="$COMMON_TEST_LD_PRELOAD"
 	if [ ! -z "$TEST_LD_PRELOAD" ]; then
-		OLD_LD_PRELOAD="$LD_PRELOAD"
-		if [ -z "$OLD_LD_PRELOAD" ]; then
-			export LD_PRELOAD="$TEST_LD_PRELOAD"
-		else
-			export LD_PRELOAD="$TEST_LD_PRELOAD:$OLD_LD_PRELOAD"
-		fi
+		NEW_LD_PRELOAD="$TEST_LD_PRELOAD:$NEW_LD_PRELOAD"
+	fi
+	if [ -z "$OLD_LD_PRELOAD" ]; then
+		export LD_PRELOAD="$NEW_LD_PRELOAD"
+	else
+		export LD_PRELOAD="$NEW_LD_PRELOAD:$OLD_LD_PRELOAD"
 	fi
 }
 
 function after_test() {
-	if [ ! -z "$TEST_LD_PRELOAD" ]; then
-		export LD_PRELOAD="$OLD_LD_PRELOAD"
-	fi
+	export LD_PRELOAD="$OLD_LD_PRELOAD"
 }
 
 function run_test() {
