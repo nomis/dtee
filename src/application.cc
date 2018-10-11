@@ -127,8 +127,8 @@ int Application::run(int argc, const char* const argv[]) {
 		// If we're running from cron then we have output an error message
 		// for the failed preparation to handle input but must continue to
 		// execute the requested command. Close open files/sockets first.
-		outputs.reset();
-		input.reset();
+		outputs.reset(); // Files are opened with O_CLOEXEC so this is unnecessary
+		input.reset(); // Boost (1.62) has no support for SOCK_CLOEXEC
 
 		execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
 		return EX_SOFTWARE;

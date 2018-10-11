@@ -74,7 +74,7 @@ bool Input::open() {
 		string err_name = temp_dir.register_file("e");
 		err_ep_ = datagram_protocol::endpoint{err_name};
 
-		combined_.open();
+		combined_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		combined_.bind(combined_ep);
 		combined_.shutdown(datagram_protocol::socket::shutdown_send);
 
@@ -109,13 +109,13 @@ bool Input::open() {
 
 		datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
 
-		out_.open();
+		out_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		out_.bind(out_ep_);
 		out_.connect(combined_ep);
 		out_.shutdown(datagram_protocol::socket::shutdown_receive);
 		out_.set_option(so_sndbuf);
 
-		err_.open();
+		err_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		err_.bind(err_ep_);
 		err_.connect(combined_ep);
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
