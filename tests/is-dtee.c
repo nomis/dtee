@@ -8,9 +8,9 @@
 
 bool dtee_test_is_dtee(void) {
 	bool is_dtee = false;
-	char buf[PATH_MAX];
+	char buf[PATH_MAX + 1] = { 0 };
 
-	if (readlink("/proc/self/exe", buf, sizeof(buf)) > 0) {
+	if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) > 0) {
 		const char *base_program_name = basename(buf);
 
 		is_dtee = !strcmp(base_program_name, "dtee");
