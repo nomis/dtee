@@ -2,17 +2,17 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f "$TESTDIR/$NAME.file.out-append"
-echo Existing line 1 >"$TESTDIR/$NAME.file.out-append"
-echo Existing line 2 >>"$TESTDIR/$NAME.file.out-append"
-echo Existing line 3 >>"$TESTDIR/$NAME.file.out-append"
+rm -f "$TESTDIR/$NAME.file.out-append.txt"
+echo Existing line 1 >"$TESTDIR/$NAME.file.out-append.txt"
+echo Existing line 2 >>"$TESTDIR/$NAME.file.out-append.txt"
+echo Existing line 3 >>"$TESTDIR/$NAME.file.out-append.txt"
 
-run_test_once -o "$TESTDIR/$NAME.file.out-append" "$RUN"
+run_test_once -o "$TESTDIR/$NAME.file.out-append.txt" "$RUN"
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.out-append" "${0/.sh/.file.out-append}"
+cmp "$TESTDIR/$NAME.file.out-append.txt" "${0/.sh/.file.out-append.txt}"
 CMP_OUT_A=$?
-[ $CMP_OUT_A -ne 0 ] && diff -U4 "${0/.sh/.file.out-append}" "$TESTDIR/$NAME.file.out-append"
+[ $CMP_OUT_A -ne 0 ] && diff -U4 "${0/.sh/.file.out-append.txt}" "$TESTDIR/$NAME.file.out-append.txt"
 
 echo RET $RET
 echo CMP_OUT_A $CMP_OUT_A

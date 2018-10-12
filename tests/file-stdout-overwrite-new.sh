@@ -2,14 +2,14 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f "$TESTDIR/$NAME.file.out-overwrite"
+rm -f "$TESTDIR/$NAME.file.out-overwrite.txt"
 
-run_test_once -O "$TESTDIR/$NAME.file.out-overwrite" "$RUN"
+run_test_once -O "$TESTDIR/$NAME.file.out-overwrite.txt" "$RUN"
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.out-overwrite" "${0/.sh/.file.out-overwrite}"
+cmp "$TESTDIR/$NAME.file.out-overwrite.txt" "${0/.sh/.file.out-overwrite.txt}"
 CMP_OUT_O=$?
-[ $CMP_OUT_O -ne 0 ] && diff -U4 "${0/.sh/.file.out-overwrite}" "$TESTDIR/$NAME.file.out-overwrite"
+[ $CMP_OUT_O -ne 0 ] && diff -U4 "${0/.sh/.file.out-overwrite.txt}" "$TESTDIR/$NAME.file.out-overwrite.txt"
 
 echo RET $RET
 echo CMP_OUT_O $CMP_OUT_O
