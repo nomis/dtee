@@ -206,5 +206,7 @@ test('cron input socket create and output file open failure', find_program('test
 
 test('report arguments and file descriptors', find_program('tests/report.sh'), env: test_env)
 test('report arguments and file descriptors (no stdin)', find_program('tests/report-no-stdin.sh'), env: test_env)
+test('report arguments and file descriptors (extra fd)', find_program('tests/report-extra-fd.sh'), env: test_env)
 test('cron report arguments and file descriptors', find_program('tests/cron-report.sh'), env: test_env)
 test('cron report arguments and file descriptors (no stdin)', find_program('tests/cron-report-no-stdin.sh'), env: test_env)
+test('cron report arguments and file descriptors (extra fd)', find_program('tests/cron-report-extra-fd.sh'), env: test_env)
