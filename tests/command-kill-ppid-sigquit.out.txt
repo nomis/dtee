@@ -1,1 +1,1 @@
-/dev/null
+Killing parent process with signal 3
