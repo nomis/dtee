@@ -79,7 +79,11 @@ test_env = [
 	'LANG=C',
 ]
 
-dlfcn_args = [
+test_c_args = [
+	'-D_POSIX_C_SOURCE=200809L',
+]
+
+dlfcn_args = test_c_args + [
 	'-D_GNU_SOURCE',
 	'-Wno-pedantic',
 ]
@@ -104,11 +108,8 @@ shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common,
 shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 
-executable('test-report',
-	['tests/report.c'],
-	c_args: [
-		'-D_POSIX_C_SOURCE=200809L',
-	])
+executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
+executable('test-report', ['tests/report.c'], c_args: test_c_args)
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
 test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)
@@ -213,3 +214,9 @@ test('report arguments and file descriptors (extra fd)', find_program('tests/rep
 test('cron report arguments and file descriptors', find_program('tests/cron-report.sh'), env: test_env)
 test('cron report arguments and file descriptors (no stdin)', find_program('tests/cron-report-no-stdin.sh'), env: test_env)
 test('cron report arguments and file descriptors (extra fd)', find_program('tests/cron-report-extra-fd.sh'), env: test_env)
+
+test('dtee killed by signal 1', find_program('tests/command-kill-ppid-sighup.sh'), env: test_env)
+test('dtee killed by signal 2', find_program('tests/command-kill-ppid-sigint.sh'), env: test_env)
+test('dtee killed by signal 3', find_program('tests/command-kill-ppid-sigquit.sh'), env: test_env)
+test('dtee killed by signal 9', find_program('tests/command-kill-ppid-sigkill.sh'), env: test_env)
+test('dtee killed by signal 15', find_program('tests/command-kill-ppid-sigterm.sh'), env: test_env)
