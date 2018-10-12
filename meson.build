@@ -205,4 +205,6 @@ test('cron input socket create failure', find_program('tests/cron-input-socket-c
 test('cron input socket create and output file open failure', find_program('tests/cron-input-and-output-failure.sh'), env: test_env)
 
 test('report arguments and file descriptors', find_program('tests/report.sh'), env: test_env)
+test('report arguments and file descriptors (no stdin)', find_program('tests/report-no-stdin.sh'), env: test_env)
 test('cron report arguments and file descriptors', find_program('tests/cron-report.sh'), env: test_env)
+test('cron report arguments and file descriptors (no stdin)', find_program('tests/cron-report-no-stdin.sh'), env: test_env)
