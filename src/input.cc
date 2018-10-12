@@ -60,7 +60,6 @@ bool Input::open() {
 	TempDirectory temp_dir("input");
 
 	if (!temp_dir.valid()) {
-		Application::print_error("no temporary directory for sockets");
 		return false;
 	}
 

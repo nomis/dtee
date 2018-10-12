@@ -97,6 +97,7 @@ shared_library('fake-getpid', ['tests/fake-getpid.c'] + test_common, c_args: dlf
 shared_library('fake-getuid', ['tests/fake-getuid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('lseek-failure', ['tests/lseek-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('lseek64-failure', ['tests/lseek64-failure.c'] + test_common, c_args: dlfcn_args + ['-D_LARGEFILE64_SOURCE'], dependencies: dlfcn_deps)
+shared_library('mkdtemp-failure', ['tests/mkdtemp-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-consistent', ['tests/mkostemp-consistent.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
@@ -198,9 +199,11 @@ test('cron temporary output file not writeable', find_program('tests/cron-file-w
 test('cron temporary output file not readable', find_program('tests/cron-file-read-failure-cron.sh'), env: test_env, is_parallel: false)
 test('cron temporary output file not seekable', find_program('tests/cron-file-seek-failure-cron.sh'), env: test_env, is_parallel: false)
 
+test('input temporary directory create failure', find_program('tests/input-temp-dir-failure.sh'), env: test_env)
 test('input socket create failure', find_program('tests/input-socket-create-failure.sh'), env: test_env)
 test('input socket create and output file open failure', find_program('tests/input-and-output-failure.sh'), env: test_env)
 
+test('cron input temporary directory create failure', find_program('tests/cron-input-temp-dir-failure.sh'), env: test_env)
 test('cron input socket create failure', find_program('tests/cron-input-socket-create-failure.sh'), env: test_env)
 test('cron input socket create and output file open failure', find_program('tests/cron-input-and-output-failure.sh'), env: test_env)
 

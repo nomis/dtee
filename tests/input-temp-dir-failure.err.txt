@@ -1,0 +1,1 @@
+dtee: unable to create temporary directory /tmp/dtee.1.1.input.XXXXXX: Read-only file system
