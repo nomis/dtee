@@ -110,6 +110,7 @@ shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_com
 
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
 executable('test-report', ['tests/report.c'], c_args: test_c_args)
+executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
 test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)

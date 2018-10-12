@@ -131,7 +131,7 @@ void Input::fork_prepare() {
 	io_.notify_fork(io_service::fork_event::fork_prepare);
 }
 
-int Input::fork_parent(pid_t pid) {
+void Input::fork_parent(pid_t pid) {
 	io_.notify_fork(io_service::fork_event::fork_parent);
 	out_.close();
 	err_.close();
@@ -169,10 +169,36 @@ int Input::fork_parent(pid_t pid) {
 			}
 		}
 	}
+}
 
-	// Replicate original exit status (mostly... the only way to replicate
-	// signals is to use the default action for the signal and send it to
-	// ourselves, but not all of the signals will terminate by default).
+int Input::interrupt_signum() {
+	if (interrupt_signum_ >= 0) {
+		return interrupt_signum_;
+	}
+
+	switch (exit_signum_) {
+		// These could be replicated (the default handler is to
+		// terminate) but that behaviour is not strictly accurate,
+		// because we have not received them as a signal.
+#if 0
+	case SIGHUP:
+	case SIGKILL:
+	case SIGPIPE:
+	case SIGALRM:
+	case SIGTERM:
+#endif
+
+	case SIGINT:
+		// Replicate interrupted signal status so that shells
+		// behave correctly if the command is interrupted.
+		return exit_signum_;
+	}
+
+	return -1;
+}
+
+int Input::exit_status() {
+	// Replicate shell style exit status.
 	if (exit_status_ == EXIT_SUCCESS) {
 		if (output_failed_) {
 			return EX_IOERR;

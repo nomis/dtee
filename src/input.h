@@ -37,8 +37,11 @@ public:
 
 	bool open();
 	void fork_prepare();
-	int fork_parent(pid_t pid);
+	void fork_parent(pid_t pid);
 	void fork_child();
+
+	int interrupt_signum();
+	int exit_status();
 
 	Input(const Input&) = delete;
 	Input& operator=(const Input&) = delete;
@@ -65,6 +68,8 @@ private:
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data
 
 	std::shared_ptr<Output> output_;
+
+	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
 };
 
 } // namespace dtee

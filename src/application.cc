@@ -17,8 +17,11 @@
 */
 #include "application.h"
 
+#include <sys/types.h>
 #include <errno.h>
+#include <signal.h>
 #include <sysexits.h>
+#include <unistd.h>
 #include <system_error>
 #include <iostream>
 #include <list>
@@ -102,13 +105,26 @@ int Application::run(int argc, const char* const argv[]) {
 		input->fork_prepare();
 		pid_t pid = fork();
 		if (pid > 0) {
-			int ret_child = input->fork_parent(pid);
+			input->fork_parent(pid);
 
 			if (cron_) {
 				if (!cron_->report()) {
 					ret_internal = EX_IOERR;
 				}
 			}
+
+			int signum = input->interrupt_signum();
+
+			if (signum >= 0) {
+				errno = 0;
+				if (signal(signum, SIG_DFL) == SIG_ERR) {
+					print_error("signal", errno);
+				} else {
+					kill(getpid(), signum);
+				}
+			}
+
+			int ret_child = input->exit_status();
 
 			if (ret_child == EXIT_SUCCESS && ret_internal != EXIT_SUCCESS) {
 				return ret_internal;
