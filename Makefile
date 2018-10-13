@@ -20,13 +20,13 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 $(RELEASE_DIR): $(BUILD_DIR)
 	mkdir -p $(RELEASE_DIR)
-	meson --buildtype=release $(RELEASE_DIR) || rm -rf "$(RELEASE_DIR)"
+	meson --buildtype=release $(RELEASE_DIR) || (rm -rf "$(RELEASE_DIR)"; false)
 $(TEST_DIR): $(BUILD_DIR)
 	mkdir -p $(TEST_DIR)
-	meson --buildtype=release $(TEST_DIR) -Db_coverage=true || rm -rf "$(TEST_DIR)"
+	meson --buildtype=release $(TEST_DIR) -Db_coverage=true || (rm -rf "$(TEST_DIR)"; false)
 $(DEBUG_DIR): $(BUILD_DIR)
 	mkdir -p $(DEBUG_DIR)
-	meson --buildtype=debug $(DEBUG_DIR) || rm -rf "$(DEBUG_DIR)"
+	meson --buildtype=debug $(DEBUG_DIR) || (rm -rf "$(DEBUG_DIR)"; false)
 
 compile: $(RELEASE_DIR)
 	$(NINJA) -C $(RELEASE_DIR)
