@@ -96,7 +96,7 @@ test_common = [
 	'tests/is-dtee.c',
 ]
 
-shared_library('execvpe-fd-check', ['tests/execvpe-fd-check.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('execvp-fd-check', ['tests/execvp-fd-check.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('fake-getpid', ['tests/fake-getpid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('fake-getuid', ['tests/fake-getuid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('lseek-failure', ['tests/lseek-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)

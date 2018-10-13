@@ -33,12 +33,12 @@ static void dtee_test_check_fds(void) {
 	}
 }
 
-int execvpe(const char *filename, char *const argv[], char *const envp[]) {
-	int (*next_execvpe)(const char*, char * const *, char * const *) = dlsym(RTLD_NEXT, "execvpe");
+int execvp(const char *filename, char *const argv[]) {
+	int (*next_execvp)(const char*, char * const *) = dlsym(RTLD_NEXT, "execvp");
 
 	if (dtee_test_is_dtee()) {
 		dtee_test_check_fds();
 	}
 
-	return (*next_execvpe)(filename, argv, envp);
+	return (*next_execvp)(filename, argv);
 }

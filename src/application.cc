@@ -47,8 +47,6 @@ using ::std::cerr;
 using ::std::endl;
 using ::std::flush;
 
-extern char **environ;
-
 namespace dtee {
 
 CommandLine Application::command_line_;
@@ -185,7 +183,7 @@ void Application::execute(const vector<string> &command) {
 	argv.push_back(nullptr);
 
 	errno = 0;
-	execvpe(argv[0], &argv.data()[1], environ);
+	execvp(argv[0], &argv.data()[1]);
 	print_error(argv[0], errno);
 	exit(EX_NOINPUT);
 }
