@@ -77,7 +77,10 @@ int Process::exit_status(int internal_status) {
 	int default_status;
 
 	// Replicate shell style exit status.
-	if (exit_status_ == EXIT_SUCCESS) {
+	if (interrupt_signum_ >= 0) {
+		// This can only happen if kill(getpid(), ...) failed.
+		return SHELL_EXIT_CODE_SIGNAL + interrupt_signum_;
+	} else if (exit_status_ == EXIT_SUCCESS) {
 		default_status = EXIT_SUCCESS;
 	} else if (exit_status_ >= 0) {
 		return exit_status_;
