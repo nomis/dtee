@@ -89,8 +89,8 @@ bool Input::open(bool handle_interrupt_signals) {
 
 		// Ensure the receive buffer is at least as large as PIPE_BUF
 		if (so_rcvbuf.value() < PIPE_BUF) {
-			datagram_protocol::socket::send_buffer_size so_sndbuf{PIPE_BUF};
-			combined_.set_option(so_sndbuf);
+			so_rcvbuf = PIPE_BUF;
+			combined_.set_option(so_rcvbuf);
 			combined_.get_option(so_rcvbuf);
 		}
 

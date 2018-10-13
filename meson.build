@@ -102,6 +102,7 @@ shared_library('fake-getpid', ['tests/fake-getpid.c'] + test_common, c_args: dlf
 shared_library('fake-getuid', ['tests/fake-getuid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('lseek-failure', ['tests/lseek-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('lseek64-failure', ['tests/lseek64-failure.c'] + test_common, c_args: dlfcn_args + ['-D_LARGEFILE64_SOURCE'], dependencies: dlfcn_deps)
+shared_library('mkdtemp-consistent', ['tests/mkdtemp-consistent.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkdtemp-failure', ['tests/mkdtemp-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-consistent', ['tests/mkostemp-consistent.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
@@ -109,6 +110,8 @@ shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common,
 shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-bind-failure', ['tests/socket-bind-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-connect-failure', ['tests/socket-connect-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('socket-getsockopt-fake-rcvbuf', ['tests/socket-getsockopt-fake-rcvbuf.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('socket-setsockopt-monitor', ['tests/socket-setsockopt-monitor.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-shutdown-failure', ['tests/socket-shutdown-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 
@@ -225,6 +228,10 @@ test('cron input socket create and output file open failure', find_program('test
 test('cron input socket bind failure', find_program('tests/cron-input-socket-bind-failure.sh'), env: test_env)
 test('cron input socket connect failure', find_program('tests/cron-input-socket-connect-failure.sh'), env: test_env)
 test('cron input socket shutdown failure', find_program('tests/cron-input-socket-shutdown-failure.sh'), env: test_env)
+
+test('input socket rcvbuf large enough', find_program('tests/input-socket-rcvbuf-large-enough.sh'), env: test_env, is_parallel: false)
+test('input socket rcvbuf minimum size', find_program('tests/input-socket-rcvbuf-minimum-size.sh'), env: test_env, is_parallel: false)
+test('input socket rcvbuf too small', find_program('tests/input-socket-rcvbuf-too-small.sh'), env: test_env, is_parallel: false)
 
 test('report arguments and file descriptors', find_program('tests/report.sh'), env: test_env)
 test('report arguments and file descriptors (no stdin)', find_program('tests/report-no-stdin.sh'), env: test_env)
