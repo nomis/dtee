@@ -32,6 +32,7 @@ debug-compile: $(DEBUG_DIR)
 check: $(RELEASE_DIR)
 	rm -rf "$(RELEASE_DIR)/dtee@test/"
 	rm -rf "$(RELEASE_DIR)/meson-logs/coveragereport/"
+	find "$(RELEASE_DIR)" -name '*.gcda' -exec rm {} \;
 	$(NINJA) -C $(RELEASE_DIR) test
 	$(NINJA) -C $(RELEASE_DIR) coverage-html
 

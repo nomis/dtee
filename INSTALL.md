@@ -16,8 +16,9 @@
 
 ### Test
   * [GNU Bash](https://www.gnu.org/software/bash/) 4.0+
-  * [GNU Coreutils](https://www.gnu.org/software/coreutils/)
-  * [GNU Diffutils](https://www.gnu.org/software/diffutils/)
+  * [GNU Core Utilities](https://www.gnu.org/software/coreutils/)
+  * [GNU Diff Utilities](https://www.gnu.org/software/diffutils/)
+  * [GNU Find Utilities](https://www.gnu.org/software/findutils/)
   * [GNU GCC Gcov](https://gcc.gnu.org/onlinedocs/gcc/Gcov.html)
   * [Lcov](https://github.com/linux-test-project/lcov)
 
