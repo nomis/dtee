@@ -69,7 +69,7 @@ int Application::run(int argc, const char* const argv[]) {
 	shared_ptr<Input> input = make_shared<Input>(outputs);
 
 	bool outputs_ok = outputs->open();
-	bool input_ok = input->open();
+	bool input_ok = input->open(command_line_.cron_mode());
 	int ret_internal = EXIT_SUCCESS;
 
 	if (!outputs_ok) {
@@ -100,12 +100,9 @@ int Application::run(int argc, const char* const argv[]) {
 			int signum = process_->interrupt_signum();
 
 			if (signum >= 0) {
-				errno = 0;
-				if (signal(signum, SIG_DFL) == SIG_ERR) {
-					print_error("signal", errno);
-				} else {
-					kill(getpid(), signum);
-				}
+				input.reset(); // Stop handling signals
+
+				kill(getpid(), signum);
 			}
 
 			return process_->exit_status(ret_internal);

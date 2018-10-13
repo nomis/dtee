@@ -18,8 +18,8 @@
 #include "cron.h"
 
 #include <sys/types.h>
-#include <stdlib.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <iostream>
@@ -101,9 +101,14 @@ void Cron::terminated(int status, int signum, bool core_dumped) {
 		error_ = true;
 	}
 
-	status_ = status;
-	signum_ = signum;
+	exit_status_ = status;
+	exit_signum_ = signum;
 	core_dumped_ = core_dumped;
+}
+
+void Cron::interrupted(int signum) {
+	interrupt_signum_ = signum;
+	error_ = true;
 }
 
 bool Cron::unspool_buffer_file() {
@@ -143,6 +148,18 @@ bool Cron::unspool_buffer_file() {
 	return success;
 }
 
+string Cron::signal_to_string(int signum) {
+	string message = to_string(signum);
+	const char *sigdesc = strsignal(signum);
+
+	if (sigdesc != nullptr) {
+		message += ": ";
+		message += sigdesc;
+	}
+
+	return message;
+}
+
 bool Cron::report() {
 	if (terminated_ && !error_) {
 		return true;
@@ -150,24 +167,20 @@ bool Cron::report() {
 
 	bool success = unspool_buffer_file();
 
-	if (status_ >= 0) {
-		Application::print_error(command_ + ": exited with status " + to_string(status_));
-	} else if (signum_ >= 0) {
-		string message = command_ + ": process terminated by signal " + to_string(signum_);
-		const char *sigdesc = strsignal(signum_);
+	if (interrupt_signum_ >= 0) {
+		Application::print_error("received signal " + signal_to_string(interrupt_signum_));
+	}
 
-		if (sigdesc != nullptr) {
-			message += ": ";
-			message += sigdesc;
-		}
+	if (exit_status_ >= 0) {
+		Application::print_error(command_ + ": exited with status " + to_string(exit_status_));
+	} else if (exit_signum_ >= 0) {
+		string message = command_ + ": process terminated by signal " + signal_to_string(exit_signum_);
 
 		if (core_dumped_) {
 			message += " (core dumped)";
 		}
 
 		Application::print_error(message);
-	} else {
-		Application::print_error("internal error");
 	}
 
 	return success;

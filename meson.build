@@ -222,3 +222,8 @@ test('dtee killed by signal 2', find_program('tests/command-kill-ppid-sigint.sh'
 test('dtee killed by signal 3', find_program('tests/command-kill-ppid-sigquit.sh'), env: test_env)
 test('dtee killed by signal 9', find_program('tests/command-kill-ppid-sigkill.sh'), env: test_env)
 test('dtee killed by signal 15', find_program('tests/command-kill-ppid-sigterm.sh'), env: test_env)
+test('cron dtee killed by signal 1', find_program('tests/cron-command-kill-ppid-sighup.sh'), env: test_env)
+test('cron dtee killed by signal 2', find_program('tests/cron-command-kill-ppid-sigint.sh'), env: test_env)
+test('cron dtee killed by signal 3', find_program('tests/cron-command-kill-ppid-sigquit.sh'), env: test_env)
+test('cron dtee killed by signal 9', find_program('tests/cron-command-kill-ppid-sigkill.sh'), env: test_env)
+test('cron dtee killed by signal 15', find_program('tests/cron-command-kill-ppid-sigterm.sh'), env: test_env)

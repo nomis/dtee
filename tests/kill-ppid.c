@@ -22,5 +22,8 @@ int main(int argc, char *argv[]) {
 	nanosleep(&ts, NULL);
 
 	kill(getppid(), signum);
+
+	// Be deterministic by not exiting before the process handles the signal
+	nanosleep(&ts, NULL);
 	return EXIT_SUCCESS;
 }

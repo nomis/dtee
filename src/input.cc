@@ -48,16 +48,23 @@ Input::Input(shared_ptr<Output> output)
 		  err_(io_),
 		  signals_(io_, SIGCHLD),
 		  output_(output) {
+
 }
 
 Input::~Input() {
 
 }
 
-bool Input::open() {
+bool Input::open(bool handle_interrupt_signals) {
 	// There is no equivalent of mkstemp() for local sockets,
 	// so we create them in a temporary directory instead.
 	TempDirectory temp_dir("input");
+
+	if (handle_interrupt_signals) {
+		signals_.add(SIGHUP);
+		signals_.add(SIGINT);
+		signals_.add(SIGTERM);
+	}
 
 	if (!temp_dir.valid()) {
 		return false;
@@ -234,14 +241,18 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 					output_->terminated(exit_status, exit_signum, core_dumped);
 				}
 
-				terminated_ = true;
-				io_.stop();
-			} else {
-				signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));
+				signals_.remove(signal_number);
 			}
+		} else {
+			output_->interrupted(signal_number);
+			//signals_.remove(signal_number);
 		}
-	}
 
+		terminated_ = true;
+		io_.stop();
+
+		signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));
+	}
 }
 
 } // namespace dtee

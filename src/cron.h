@@ -35,9 +35,12 @@ public:
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 	void terminated(int status, int signum, bool core_dump) override;
+	void interrupted(int signum) override;
 	bool report();
 
 private:
+	static std::string signal_to_string(int signum);
+
 	void print_file_error(const std::string &message, int errno_copy);
 	bool unspool_buffer_file();
 
@@ -49,9 +52,10 @@ private:
 
 	bool terminated_ = false; //!< Child process terminated
 	bool error_ = false; //!< Error state of child process
-	int status_ = -1; //!< Exit status of child process
-	int signum_ = -1; //!< Termination signal of child process
+	int exit_status_ = -1; //!< Exit status of child process
+	int exit_signum_ = -1; //!< Termination signal of child process
 	bool core_dumped_ = false; //!< Child process produced a core dump
+	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
 };
 
 } // namespace dtee

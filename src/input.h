@@ -35,7 +35,7 @@ public:
 	explicit Input(std::shared_ptr<Output> output);
 	virtual ~Input();
 
-	bool open();
+	bool open(bool handle_interrupt_signals);
 	void fork_prepare();
 	bool fork_parent(pid_t pid);
 	void fork_child();

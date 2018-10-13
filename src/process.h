@@ -32,6 +32,7 @@ public:
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 	void terminated(int status, int signum, bool core_dump) override;
+	void interrupted(int signum) override;
 
 	int interrupt_signum();
 	int exit_status(int internal_status);
@@ -40,6 +41,7 @@ private:
 	bool terminated_ = false; //!< Child process terminated
 	int exit_status_ = -1; //!< Exit status of child process
 	int exit_signum_ = -1; //!< Termination signal of child process
+	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
 };
 
 } // namespace dtee

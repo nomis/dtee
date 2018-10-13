@@ -18,6 +18,7 @@
 #include "process.h"
 
 #include <stdlib.h>
+#include <sysexits.h>
 #include <vector>
 
 #include "signal.h"
@@ -41,13 +42,22 @@ void Process::terminated(int status, int signum, bool core_dump __attribute__((u
 	exit_signum_ = signum;
 }
 
+void Process::interrupted(int signum) {
+	interrupt_signum_ = signum;
+}
+
 int Process::interrupt_signum() {
+	if (interrupt_signum_ >= 0) {
+		return interrupt_signum_;
+	}
+
 	switch (exit_signum_) {
 		// These could be replicated (the default handler is to
 		// terminate) but that behaviour is not strictly accurate,
 		// because we have not received them as a signal.
 #if 0
 	case SIGHUP:
+	case SIGQUIT:
 	case SIGKILL:
 	case SIGPIPE:
 	case SIGALRM:
@@ -74,7 +84,7 @@ int Process::exit_status(int internal_status) {
 	} else if (exit_signum_ >= 0){
 		return SHELL_EXIT_CODE_SIGNAL + exit_signum_;
 	} else {
-		default_status = EXIT_FAILURE;
+		default_status = EX_SOFTWARE;
 	}
 
 	if (internal_status != EXIT_SUCCESS) {

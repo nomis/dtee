@@ -1,0 +1,1 @@
+Killing parent process with signal 2

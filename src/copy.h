@@ -34,6 +34,7 @@ public:
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 	void terminated(int status, int signum, bool core_dumped) override;
+	void interrupted(int signum) override;
 
 private:
 	std::list<std::shared_ptr<Output>> outputs_;

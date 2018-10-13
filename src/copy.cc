@@ -58,4 +58,10 @@ void Copy::terminated(int status, int signum, bool core_dumped) {
 	}
 }
 
+void Copy::interrupted(int signum) {
+	for (auto& output : outputs_) {
+		output->interrupted(signum);
+	}
+}
+
 } // namespace dtee
