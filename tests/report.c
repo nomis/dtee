@@ -7,30 +7,31 @@
 #include <unistd.h>
 
 static bool std_report(int fd, const char *name, const char *message) {
+	bool ok = true;
 	char buf[1] = { 0 };
 
 	errno = 0;
 	if (fcntl(fd, F_GETFL) != -1) {
 		ssize_t rlen = read(fd, buf, 1);
 		ssize_t wlen = write(fd, message, strlen(message));
-		printf("fd %s open read=%zd (%02x) write=%zd\n", name, rlen, buf[0], wlen);
-		fflush(stdout);
-		return true;
+		ok &= printf("fd %s open read=%zd (%02x) write=%zd\n", name, rlen, buf[0], wlen) > 0;
+		ok &= !fflush(stdout);
 	} else {
-		printf("fd %s closed errno=%d\n", name, errno);
-		fflush(stdout);
-		return false;
+		ok &= printf("fd %s closed errno=%d\n", name, errno) > 0;
+		ok &= !fflush(stdout);
 	}
+
+	return ok;
 }
 
 int main(int argc, char *argv[]) {
 	bool ok = true;
 
-	printf("argc=%d\n", argc);
+	ok &= printf("argc=%d\n", argc) > 0;
 	for (int i = 0; i < argc; i++) {
-		printf("argv[%d]=%s\n", i, argv[i]);
+		ok &= printf("argv[%d]=%s\n", i, argv[i]) > 0;
 	}
-	fflush(stdout);
+	ok &= !fflush(stdout);
 
 	ok &= std_report(STDIN_FILENO, "STDIN_FILENO", "I\n");
 	ok &= std_report(STDOUT_FILENO, "STDOUT_FILENO", "O\n");
@@ -47,9 +48,8 @@ int main(int argc, char *argv[]) {
 			break;
 
 		default:
-			printf("unknown open fd %d\n", fd);
-			fflush(stdout);
-			ok = false;
+			ok &= printf("unknown open fd %d\n", fd) > 0;
+			ok &= !fflush(stdout);
 			break;
 		}
 	}
