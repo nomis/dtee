@@ -11,11 +11,13 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
-COMMON_TEST_LD_PRELOAD=./libexecvp-fd-check.so
+COMMON_TEST_LD_PRELOAD=(./libexecvp-fd-check.so)
 
 function before_test() {
 	OLD_LD_PRELOAD="$LD_PRELOAD"
-	NEW_LD_PRELOAD="$COMMON_TEST_LD_PRELOAD"
+	OIFS="$IFS" IFS=:
+	NEW_LD_PRELOAD="${COMMON_TEST_LD_PRELOAD[*]}"
+	IFS="$OIFS"
 	if [ ! -z "$TEST_LD_PRELOAD" ]; then
 		NEW_LD_PRELOAD="$TEST_LD_PRELOAD:$NEW_LD_PRELOAD"
 	fi
