@@ -48,6 +48,10 @@ using ::std::cerr;
 using ::std::endl;
 using ::std::flush;
 
+#ifdef GCOV_ENABLED
+extern "C" void __gcov_flush(void);
+#endif
+
 namespace dtee {
 
 CommandLine Application::command_line_;
@@ -101,7 +105,11 @@ int Application::run(int argc, const char* const argv[]) {
 
 			if (signum >= 0) {
 				input.reset(); // Stop handling signals
-
+#ifdef GCOV_ENABLED
+				// LCOV_EXCL_START
+				__gcov_flush();
+				// LCOV_EXCL_STOP
+#endif
 				kill(getpid(), signum);
 			}
 

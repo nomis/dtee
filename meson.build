@@ -36,16 +36,13 @@ endforeach
 
 executable('dtee',
 	source_files,
-	c_args: [
-		'-D_POSIX_C_SOURCE=200809L',
-	],
 	cpp_args: [
 		'-D_POSIX_C_SOURCE=200809L',
 
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
 		'-DBOOST_DISABLE_THREADS',
 		'-DBOOST_ASIO_DISABLE_THREADS',
-	],
+	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
 	dependencies: [
 		dependency('boost', modules: [
 			'program_options',
