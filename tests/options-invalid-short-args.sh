@@ -2,7 +2,7 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-run_test_once "--debug-options" "-a" "your" "-b" "are" "-b" "to" "us"
+run_test "--debug-options" "-a" "your" "-b" "are" "-b" "to" "us"
 RET=$?
 
 echo RET $RET

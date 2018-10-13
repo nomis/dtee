@@ -4,7 +4,7 @@ set -vx
 
 # If the input socket cannot be created, execute the command without dtee processing
 TEST_LD_PRELOAD="./libsocket-unix-failure.so:./libfake-getpid.so:./libfake-getuid.so"
-run_test_once "-q" "$RUN"
+run_test "-q" "$RUN"
 RET=$?
 
 echo RET $RET

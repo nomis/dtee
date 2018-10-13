@@ -2,9 +2,11 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f "$TESTDIR/$NAME.file.out-overwrite.txt"
+function test_prepare() {
+	rm -f "$TESTDIR/$NAME.file.out-overwrite.txt"
+}
 
-run_test_once -O "$TESTDIR/$NAME.file.out-overwrite.txt" "$RUN"
+run_test -O "$TESTDIR/$NAME.file.out-overwrite.txt" "$RUN"
 RET=$?
 
 cmp "$TESTDIR/$NAME.file.out-overwrite.txt" "${0/.sh/.file.out-overwrite.txt}"

@@ -5,7 +5,7 @@ set -vx
 rm -f command_not_executable
 (umask 0111; touch command_not_executable)
 
-run_test_once "./command_not_executable"
+run_test "./command_not_executable"
 RET=$?
 
 echo RET $RET

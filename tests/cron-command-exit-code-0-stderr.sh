@@ -2,7 +2,7 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-run_test_once "-q" "$RUN"
+run_test "-q" "$RUN"
 RET=$?
 
 echo RET $RET

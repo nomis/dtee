@@ -2,12 +2,14 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f "$TESTDIR/$NAME.file.err-append"
-echo Existing line 1 >"$TESTDIR/$NAME.file.err-append"
-echo Existing line 2 >>"$TESTDIR/$NAME.file.err-append"
-echo Existing line 3 >>"$TESTDIR/$NAME.file.err-append"
+function test_prepare() {
+	rm -f "$TESTDIR/$NAME.file.err-append"
+	echo Existing line 1 >"$TESTDIR/$NAME.file.err-append"
+	echo Existing line 2 >>"$TESTDIR/$NAME.file.err-append"
+	echo Existing line 3 >>"$TESTDIR/$NAME.file.err-append"
+}
 
-run_test_once -e "$TESTDIR/$NAME.file.err-append" "$RUN"
+run_test -e "$TESTDIR/$NAME.file.err-append" "$RUN"
 RET=$?
 
 cmp "$TESTDIR/$NAME.file.err-append" "${0/.sh/.file.err-append}"

@@ -4,7 +4,7 @@ set -vx
 
 # If the temporary output file cannot be written, it should fallback to using stdout/stderr as normal
 TEST_LD_PRELOAD="./libmkostemp-readonly.so:./libfake-getpid.so:./libfake-getuid.so"
-run_test_once "-q" "$RUN"
+run_test "-q" "$RUN"
 RET=$?
 
 # Output errors prevent a 0 exit status

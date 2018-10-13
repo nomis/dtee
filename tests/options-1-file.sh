@@ -2,7 +2,7 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-run_test_once \
+run_test \
 	"-o" "stdout_append" \
 	"-e" "stderr_append" \
 	"-c" "combined_append" \

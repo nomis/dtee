@@ -3,7 +3,7 @@ set -vx
 . "$(dirname "$0")"/util/common.sh
 
 (umask 0333; touch file_not_writeable)
-run_test_once "-q" "-o" "file_not_writeable" "true"
+run_test "-q" "-o" "file_not_writeable" "true"
 RET=$?
 
 echo RET $RET

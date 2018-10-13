@@ -2,7 +2,7 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-run_test_once "./command_not_found"
+run_test "./command_not_found"
 RET=$?
 
 echo RET $RET

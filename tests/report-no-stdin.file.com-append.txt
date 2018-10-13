@@ -1,1 +1,1 @@
-report-no-stdin.file.com-overwrite.txt
+report-no-stdin.com.txt

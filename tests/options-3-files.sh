@@ -3,7 +3,7 @@ set -vx
 . "$(dirname "$0")"/util/common.sh
 
 # Numbers are out of order to check they're not being sorted
-run_test_once \
+run_test \
 	"-o" "stdout_append2" \
 	"-e" "stderr_append3" \
 	"-c" "combined_append3" \

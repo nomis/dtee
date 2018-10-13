@@ -2,9 +2,11 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f "$TESTDIR/$NAME.file.out-append.txt"
+function test_prepare() {
+	rm -f "$TESTDIR/$NAME.file.out-append.txt"
+}
 
-run_test_once -o "$TESTDIR/$NAME.file.out-append.txt" "$RUN"
+run_test -o "$TESTDIR/$NAME.file.out-append.txt" "$RUN"
 RET=$?
 
 cmp "$TESTDIR/$NAME.file.out-append.txt" "${0/.sh/.file.out-append.txt}"

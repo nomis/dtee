@@ -2,9 +2,11 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f "$TESTDIR/$NAME.file.err-overwrite"
+function test_prepare() {
+	rm -f "$TESTDIR/$NAME.file.err-overwrite"
+}
 
-run_test_once -E "$TESTDIR/$NAME.file.err-overwrite" "$RUN"
+run_test -E "$TESTDIR/$NAME.file.err-overwrite" "$RUN"
 RET=$?
 
 cmp "$TESTDIR/$NAME.file.err-overwrite" "${0/.sh/.file.err-overwrite}"

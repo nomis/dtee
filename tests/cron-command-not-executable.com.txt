@@ -1,0 +1,2 @@
+./dtee: ./cron_command_not_executable: Permission denied
+./dtee: ./cron_command_not_executable: exited with status 66

@@ -2,7 +2,7 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-run_test_once ./test-kill-ppid 9
+run_test ./test-kill-ppid 9
 RET=$?
 
 eval $(./test-waitpid ./dtee ./dtee ./test-kill-ppid 9)

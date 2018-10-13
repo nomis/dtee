@@ -2,7 +2,7 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-run_test_once "-c" "/dev/full" "$RUN"
+run_test "-c" "/dev/full" "$RUN"
 RET=$?
 
 echo RET $RET

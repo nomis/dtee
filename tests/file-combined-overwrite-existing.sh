@@ -2,10 +2,12 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f "$TESTDIR/$NAME.file.com-overwrite.txt"
-echo Existing line >"$TESTDIR/$NAME.file.com-overwrite.txt"
+function test_prepare() {
+	rm -f "$TESTDIR/$NAME.file.com-overwrite.txt"
+	echo Existing line >"$TESTDIR/$NAME.file.com-overwrite.txt"
+}
 
-run_test_once -C "$TESTDIR/$NAME.file.com-overwrite.txt" "$RUN"
+run_test -C "$TESTDIR/$NAME.file.com-overwrite.txt" "$RUN"
 RET=$?
 
 cmp "$TESTDIR/$NAME.file.com-overwrite.txt" "${0/.sh/.file.com-overwrite.txt}"

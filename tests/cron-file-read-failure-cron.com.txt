@@ -1,0 +1,2 @@
+./dtee: error reading buffer file /tmp/dtee.1.1.output.XXXXXX: Bad file descriptor
+./dtee: dtee@test/cron-file-read-failure-cron.run: exited with status 0

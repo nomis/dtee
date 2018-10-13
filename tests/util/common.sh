@@ -13,6 +13,8 @@ RUN="$TESTDIR/$NAME.run"
 
 COMMON_TEST_LD_PRELOAD=(./libexecvp-fd-check.so)
 
+TEST_NO_STDIN=0
+
 function before_test() {
 	OLD_LD_PRELOAD="$LD_PRELOAD"
 	OIFS="$IFS" IFS=:
@@ -33,9 +35,22 @@ function after_test() {
 }
 
 function run_test() {
+	rm -f "$TESTDIR/$NAME.in.txt"
+	if [ -e "${0/.sh/.in.txt}" ]; then
+		ln -s "${0/.sh/.in.txt}" "$TESTDIR/$NAME.in.txt"
+	else
+		ln -s /dev/null "$TESTDIR/$NAME.in.txt"
+	fi
+
+	declare -f test_prepare >/dev/null && test_prepare
+
 	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
 	before_test
-	./dtee "$@" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+	if [ $TEST_NO_STDIN -eq 0 ]; then
+		./dtee "$@" <"$TESTDIR/$NAME.in.txt" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+	else
+		./dtee "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+	fi
 	RET1=$?
 	after_test
 
@@ -47,15 +62,24 @@ function run_test() {
 	CMP_ERR=$?
 	[ $CMP_ERR -ne 0 ] && diff -U4 "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
 
+	declare -f test_cleanup >/dev/null && test_cleanup
+	declare -f test_prepare >/dev/null && test_prepare
+
 	rm -f "$TESTDIR/$NAME.com.txt"
 	before_test
-	./dtee "$@" 1>"$TESTDIR/$NAME.com.txt" 2>&1
+	if [ $TEST_NO_STDIN -eq 0 ]; then
+		./dtee "$@" <"$TESTDIR/$NAME.in.txt" 1>"$TESTDIR/$NAME.com.txt" 2>&1
+	else
+		./dtee "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
+	fi
 	RET2=$?
 	after_test
 
 	cmp "$TESTDIR/$NAME.com.txt" "${0/.sh/.com.txt}"
 	CMP_COM=$?
 	[ $CMP_COM -ne 0 ] && diff -U4 "${0/.sh/.com.txt}" "$TESTDIR/$NAME.com.txt"
+
+	declare -f test_cleanup >/dev/null && test_cleanup
 
 	echo RET1 $RET1
 	echo RET2 $RET2
@@ -67,29 +91,4 @@ function run_test() {
 	fi
 
 	return $RET1
-}
-
-function run_test_once() {
-	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
-	before_test
-	./dtee "$@" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
-	RET=$?
-	after_test
-
-	cmp "$TESTDIR/$NAME.out.txt" "${0/.sh/.out.txt}"
-	CMP_OUT=$?
-	[ $CMP_OUT -ne 0 ] && diff -U4 "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
-
-	cmp "$TESTDIR/$NAME.err.txt" "${0/.sh/.err.txt}"
-	CMP_ERR=$?
-	[ $CMP_ERR -ne 0 ] && diff -U4 "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
-
-	echo RET $RET
-	echo CMP_OUT $CMP_OUT
-	echo CMP_ERR $CMP_ERR
-	if [ $CMP_OUT -ne 0 ] || [ $CMP_ERR -ne 0 ]; then
-	        exit 1
-	fi
-
-	return $RET
 }

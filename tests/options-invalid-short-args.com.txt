@@ -1,0 +1,1 @@
+options-invalid-short-args.out.txt
