@@ -89,21 +89,13 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 
 void Cron::terminated(int status, int signum, bool core_dumped) {
 	terminated_ = true;
-
-	if (status >= 0) {
-		if (status != EXIT_SUCCESS) {
-			error_ = true;
-		}
-	} else if (signum >= 0) {
-		error_ = true;
-	} else {
-		// The process terminated without an exit status and not by a signal?
-		error_ = true;
-	}
-
 	exit_status_ = status;
 	exit_signum_ = signum;
 	core_dumped_ = core_dumped;
+
+	if (status != EXIT_SUCCESS) {
+		error_ = true;
+	}
 }
 
 void Cron::interrupted(int signum) {
