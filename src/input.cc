@@ -245,7 +245,7 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 			}
 		} else {
 			output_->interrupted(signal_number);
-			//signals_.remove(signal_number);
+			signals_.remove(signal_number);
 		}
 
 		terminated_ = true;
