@@ -5,7 +5,7 @@
 ### Compile
   * [Boost](https://www.boost.org/)
   * [Clang](https://clang.llvm.org/) or [GNU GCC](https://www.gnu.org/software/gcc/)
-  * [GNU Make](https://www.gnu.org/software/make/) (optional)
+  * [GNU Make](https://www.gnu.org/software/make/) 3.80+ (optional)
   * [Meson](https://mesonbuild.com/) 0.48+
     * [Ninja](https://ninja-build.org/)
     * [Python 3](https://www.python.org/)

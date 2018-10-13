@@ -1,8 +1,8 @@
-.PHONY: all debug compile test-compile debug-compile check analyse clean distclean install uninstall
+.PHONY: all debug compile debug-compile check coverage analyse clean distclean install uninstall
 
 BUILD_DIR=build
 RELEASE_DIR=$(BUILD_DIR)/release
-TEST_DIR=$(BUILD_DIR)/test
+COVERAGE_DIR=$(BUILD_DIR)/coverage
 DEBUG_DIR=$(BUILD_DIR)/debug
 CC=clang
 CXX=clang++
@@ -16,46 +16,57 @@ endif
 all: compile
 debug: debug-compile
 
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
-$(RELEASE_DIR): $(BUILD_DIR)
-	mkdir -p $(RELEASE_DIR)
-	meson --buildtype=release $(RELEASE_DIR) || (rm -rf "$(RELEASE_DIR)"; false)
-$(TEST_DIR): $(BUILD_DIR)
-	mkdir -p $(TEST_DIR)
-	meson --buildtype=release $(TEST_DIR) -Db_coverage=true || (rm -rf "$(TEST_DIR)"; false)
-$(DEBUG_DIR): $(BUILD_DIR)
-	mkdir -p $(DEBUG_DIR)
-	meson --buildtype=debug $(DEBUG_DIR) || (rm -rf "$(DEBUG_DIR)"; false)
+$(BUILD_DIR)/:
+	mkdir $(BUILD_DIR)/
+$(RELEASE_DIR)/: | $(BUILD_DIR)/
+	rm -rf "$(RELEASE_DIR)/"
+	mkdir $(RELEASE_DIR)/
+	meson --buildtype=release $(RELEASE_DIR)/ || (rm -rf "$(RELEASE_DIR)/"; false)
+$(COVERAGE_DIR)/: | $(BUILD_DIR)/
+	rm -rf "$(COVERAGE_DIR)/"
+	mkdir $(COVERAGE_DIR)/
+	meson --buildtype=release $(COVERAGE_DIR)/ -Db_coverage=true || (rm -rf "$(COVERAGE_DIR)/"; false)
+$(DEBUG_DIR)/: | $(BUILD_DIR)/
+	rm -rf "$(DEBUG_DIR)/"
+	mkdir $(DEBUG_DIR)/
+	meson --buildtype=debug $(DEBUG_DIR)/ || (rm -rf "$(DEBUG_DIR)/"; false)
 
-compile: $(RELEASE_DIR)
-	$(NINJA) -C $(RELEASE_DIR)
-test-compile: $(TEST_DIR)
-	$(NINJA) -C $(TEST_DIR)
-debug-compile: $(DEBUG_DIR)
-	$(NINJA) -C $(DEBUG_DIR)
+compile: | $(RELEASE_DIR)/
+	$(NINJA) -C $(RELEASE_DIR)/
+debug-compile: | $(DEBUG_DIR)/
+	$(NINJA) -C $(DEBUG_DIR)/
 
-check: test-compile
-	rm -rf "$(TEST_DIR)/dtee@test/"
-	rm -rf "$(TEST_DIR)/meson-logs/coveragereport/"
-	find "$(TEST_DIR)" -name '*.gcda' -exec rm {} \;
-	$(NINJA) -C $(TEST_DIR) test
-	$(NINJA) -C $(TEST_DIR) coverage-html
+check: | $(RELEASE_DIR)/
+	$(NINJA) -C $(RELEASE_DIR)/ test
 
-analyse: $(RELEASE_DIR)
-	$(NINJA) -C $(RELEASE_DIR) cppcheck
-	$(NINJA) -C $(RELEASE_DIR) scan-build
+coverage: | $(COVERAGE_DIR)/
+	$(NINJA) -C $(COVERAGE_DIR)/
+	rm -rf "$(COVERAGE_DIR)/dtee@test/"
+	find "$(COVERAGE_DIR)/" -name '*.gcda' -exec rm {} \;
+	$(NINJA) -C $(COVERAGE_DIR)/ test
+	rm -rf "$(COVERAGE_DIR)/meson-logs/coveragereport/"
+	$(NINJA) -C $(COVERAGE_DIR)/ coverage-html
+
+analyse: | $(RELEASE_DIR)/
+	$(NINJA) -C $(RELEASE_DIR)/ cppcheck
+	$(NINJA) -C $(RELEASE_DIR)/ scan-build
 
 clean:
-	[ -d $(RELEASE_DIR) ] && $(NINJA) -C $(RELEASE_DIR) clean
-	[ -d $(TESTE_DIR) ] && $(NINJA) -C $(TEST_DIR) clean
-	[ -d $(DEBUG_DIR) ] && $(NINJA) -C $(DEBUG_DIR) clean
+ifneq ($(wildcard $(RELEASE_DIR)/),)
+	$(NINJA) -C $(RELEASE_DIR)/ clean
+endif
+ifneq ($(wildcard $(COVERAGE_DIR)/),)
+	$(NINJA) -C $(COVERAGE_DIR)/ clean
+endif
+ifneq ($(wildcard $(DEBUG_DIR)/),)
+	$(NINJA) -C $(DEBUG_DIR)/ clean
+endif
 
 distclean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)/
 
-install: $(RELEASE_DIR)
-	$(NINJA) -C $(RELEASE_DIR) install
+install: | $(RELEASE_DIR)/
+	$(NINJA) -C $(RELEASE_DIR)/ install
 
-uninstall: $(RELEASE_DIR)
-	$(NINJA) -C $(RELEASE_DIR) uninstall
+uninstall: | $(RELEASE_DIR)/
+	$(NINJA) -C $(RELEASE_DIR)/ uninstall
