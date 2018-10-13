@@ -217,6 +217,7 @@ test('input socket connect failure', find_program('tests/input-socket-connect-fa
 test('input socket connect failure 2', find_program('tests/input-socket-connect-failure-2.sh'), env: test_env)
 test('input socket shutdown failure', find_program('tests/input-socket-shutdown-failure.sh'), env: test_env)
 test('input socket shutdown failure 2', find_program('tests/input-socket-shutdown-failure-2.sh'), env: test_env)
+test('input socket shutdown failure 3', find_program('tests/input-socket-shutdown-failure-3.sh'), env: test_env)
 
 test('cron input temporary directory create failure', find_program('tests/cron-input-temp-dir-failure.sh'), env: test_env)
 test('cron input socket create failure', find_program('tests/cron-input-socket-create-failure.sh'), env: test_env)
