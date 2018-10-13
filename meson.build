@@ -107,6 +107,9 @@ shared_library('mkostemp-consistent', ['tests/mkostemp-consistent.c'] + test_com
 shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('socket-bind-failure', ['tests/socket-bind-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('socket-connect-failure', ['tests/socket-connect-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('socket-shutdown-failure', ['tests/socket-shutdown-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
@@ -204,11 +207,23 @@ test('cron temporary output file not seekable', find_program('tests/cron-file-se
 
 test('input temporary directory create failure', find_program('tests/input-temp-dir-failure.sh'), env: test_env)
 test('input socket create failure', find_program('tests/input-socket-create-failure.sh'), env: test_env)
+test('input socket create failure 2', find_program('tests/input-socket-create-failure-2.sh'), env: test_env)
+test('input socket create failure 3', find_program('tests/input-socket-create-failure-3.sh'), env: test_env)
 test('input socket create and output file open failure', find_program('tests/input-and-output-failure.sh'), env: test_env)
+test('input socket bind failure', find_program('tests/input-socket-bind-failure.sh'), env: test_env)
+test('input socket bind failure 2', find_program('tests/input-socket-bind-failure-2.sh'), env: test_env)
+test('input socket bind failure 3', find_program('tests/input-socket-bind-failure-3.sh'), env: test_env)
+test('input socket connect failure', find_program('tests/input-socket-connect-failure.sh'), env: test_env)
+test('input socket connect failure 2', find_program('tests/input-socket-connect-failure-2.sh'), env: test_env)
+test('input socket shutdown failure', find_program('tests/input-socket-shutdown-failure.sh'), env: test_env)
+test('input socket shutdown failure 2', find_program('tests/input-socket-shutdown-failure-2.sh'), env: test_env)
 
 test('cron input temporary directory create failure', find_program('tests/cron-input-temp-dir-failure.sh'), env: test_env)
 test('cron input socket create failure', find_program('tests/cron-input-socket-create-failure.sh'), env: test_env)
 test('cron input socket create and output file open failure', find_program('tests/cron-input-and-output-failure.sh'), env: test_env)
+test('cron input socket bind failure', find_program('tests/cron-input-socket-bind-failure.sh'), env: test_env)
+test('cron input socket connect failure', find_program('tests/cron-input-socket-connect-failure.sh'), env: test_env)
+test('cron input socket shutdown failure', find_program('tests/cron-input-socket-shutdown-failure.sh'), env: test_env)
 
 test('report arguments and file descriptors', find_program('tests/report.sh'), env: test_env)
 test('report arguments and file descriptors (no stdin)', find_program('tests/report-no-stdin.sh'), env: test_env)
