@@ -52,7 +52,7 @@ void CommandLine::update_name(const string &program_name) {
 	vector<char> program_name_copy{program_name.cbegin(), program_name.cend() + 1};
 	const char *base_program_name = basename(program_name_copy.data());
 
-	display_name_ = base_program_name;
+	display_name_ = program_name;
 	if (base_program_name == CRON_MODE_NAME) {
 		cron_mode_ = true;
 

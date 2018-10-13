@@ -1,1 +1,1 @@
-dtee: dtee@test/cron-command-exit-code-42-stderr.run: exited with status 42
+./dtee: dtee@test/cron-command-exit-code-42-stderr.run: exited with status 42

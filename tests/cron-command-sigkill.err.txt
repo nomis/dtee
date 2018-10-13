@@ -1,1 +1,1 @@
-dtee: dtee@test/cron-command-sigkill.run: process terminated by signal 9: Killed
+./dtee: dtee@test/cron-command-sigkill.run: process terminated by signal 9: Killed

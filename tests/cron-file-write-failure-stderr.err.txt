@@ -1,2 +1,2 @@
-dtee: /dev/full: No space left on device
-dtee: dtee@test/cron-file-write-failure-stderr.run: exited with status 0
+./dtee: /dev/full: No space left on device
+./dtee: dtee@test/cron-file-write-failure-stderr.run: exited with status 0

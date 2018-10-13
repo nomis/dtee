@@ -1,2 +1,2 @@
-dtee: unrecognised option '-a'
-Try 'dtee -h' for more information.
+./dtee: unrecognised option '-a'
+Try './dtee -h' for more information.

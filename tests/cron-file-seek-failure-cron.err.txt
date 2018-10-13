@@ -1,2 +1,2 @@
-dtee: error seeking to start of buffer file /tmp/dtee.1.1.output.XXXXXX: Invalid argument
-dtee: dtee@test/cron-file-seek-failure-cron.run: exited with status 0
+./dtee: error seeking to start of buffer file /tmp/dtee.1.1.output.XXXXXX: Invalid argument
+./dtee: dtee@test/cron-file-seek-failure-cron.run: exited with status 0

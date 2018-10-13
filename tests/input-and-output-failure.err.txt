@@ -1,2 +1,2 @@
-dtee: file_not_writeable: Permission denied
-dtee: socket open: Address family not supported by protocol
+./dtee: file_not_writeable: Permission denied
+./dtee: socket open: Address family not supported by protocol

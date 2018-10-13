@@ -10,7 +10,7 @@ CRON=0
 while read -r line; do
 	echo LINE "$line"
 	case "$line" in
-	"Usage:"*) USAGE=1 ;;
+	"Usage: ./dtee "*) USAGE=1 ;;
 	*"operate in cron mode"*) CRON=1 ;;
 	esac
 done <&$COPROC

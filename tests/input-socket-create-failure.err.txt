@@ -1,1 +1,1 @@
-dtee: socket open: Address family not supported by protocol
+./dtee: socket open: Address family not supported by protocol
