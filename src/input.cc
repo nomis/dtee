@@ -131,7 +131,7 @@ void Input::fork_prepare() {
 	io_.notify_fork(io_service::fork_event::fork_prepare);
 }
 
-void Input::fork_parent(pid_t pid) {
+bool Input::fork_parent(pid_t pid) {
 	io_.notify_fork(io_service::fork_event::fork_parent);
 	out_.close();
 	err_.close();
@@ -169,49 +169,8 @@ void Input::fork_parent(pid_t pid) {
 			}
 		}
 	}
-}
 
-int Input::interrupt_signum() {
-	if (interrupt_signum_ >= 0) {
-		return interrupt_signum_;
-	}
-
-	switch (exit_signum_) {
-		// These could be replicated (the default handler is to
-		// terminate) but that behaviour is not strictly accurate,
-		// because we have not received them as a signal.
-#if 0
-	case SIGHUP:
-	case SIGKILL:
-	case SIGPIPE:
-	case SIGALRM:
-	case SIGTERM:
-#endif
-
-	case SIGINT:
-		// Replicate interrupted signal status so that shells
-		// behave correctly if the command is interrupted.
-		return exit_signum_;
-	}
-
-	return -1;
-}
-
-int Input::exit_status() {
-	// Replicate shell style exit status.
-	if (exit_status_ == EXIT_SUCCESS) {
-		if (output_failed_) {
-			return EX_IOERR;
-		} else {
-			return EXIT_SUCCESS;
-		}
-	} else if (exit_status_ >= 0) {
-		return exit_status_;
-	} else if (exit_signum_ >= 0){
-		return SHELL_EXIT_CODE_SIGNAL + exit_signum_;
-	} else {
-		return EXIT_FAILURE;
-	}
+	return !output_failed_;
 }
 
 void Input::fork_child() {
@@ -255,13 +214,15 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 					Application::print_error("waitpid", errno);
 				} else {
 					bool core_dumped = false;
+					int exit_status = -1;
+					int exit_signum = -1;
 
 					if (WIFEXITED(wait_status)) {
-						exit_status_ = WEXITSTATUS(wait_status);
+						exit_status = WEXITSTATUS(wait_status);
 					}
 
 					if (WIFSIGNALED(wait_status)) {
-						exit_signum_ = WTERMSIG(wait_status);
+						exit_signum = WTERMSIG(wait_status);
 					}
 
 #ifdef WCOREDUMP
@@ -270,7 +231,7 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 					}
 #endif
 
-					output_->terminated(exit_status_, exit_signum_, core_dumped);
+					output_->terminated(exit_status, exit_signum, core_dumped);
 				}
 
 				terminated_ = true;

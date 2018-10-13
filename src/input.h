@@ -37,11 +37,8 @@ public:
 
 	bool open();
 	void fork_prepare();
-	void fork_parent(pid_t pid);
+	bool fork_parent(pid_t pid);
 	void fork_child();
-
-	int interrupt_signum();
-	int exit_status();
 
 	Input(const Input&) = delete;
 	Input& operator=(const Input&) = delete;
@@ -59,8 +56,6 @@ private:
 
 	pid_t child_ = -1;
 	bool terminated_ = false;
-	int exit_status_ = -1;
-	int exit_signum_ = -1;
 	bool output_failed_ = false;
 
 	boost::asio::signal_set signals_;
@@ -68,8 +63,6 @@ private:
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data
 
 	std::shared_ptr<Output> output_;
-
-	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
 };
 
 } // namespace dtee

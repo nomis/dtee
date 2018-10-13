@@ -34,6 +34,7 @@
 #include "cron.h"
 #include "file_output.h"
 #include "input.h"
+#include "process.h"
 #include "stream_output.h"
 
 using ::std::list;
@@ -86,7 +87,9 @@ int Application::run(int argc, const char* const argv[]) {
 		input->fork_prepare();
 		pid_t pid = fork();
 		if (pid > 0) {
-			input->fork_parent(pid);
+			if (!input->fork_parent(pid)) {
+				ret_internal = EX_IOERR;
+			}
 
 			if (cron_) {
 				if (!cron_->report()) {
@@ -94,7 +97,7 @@ int Application::run(int argc, const char* const argv[]) {
 				}
 			}
 
-			int signum = input->interrupt_signum();
+			int signum = process_->interrupt_signum();
 
 			if (signum >= 0) {
 				errno = 0;
@@ -105,13 +108,7 @@ int Application::run(int argc, const char* const argv[]) {
 				}
 			}
 
-			int ret_child = input->exit_status();
-
-			if (ret_child == EXIT_SUCCESS && ret_internal != EXIT_SUCCESS) {
-				return ret_internal;
-			} else {
-				return ret_child;
-			}
+			return process_->exit_status(ret_internal);
 		} else {
 			if (pid == 0) {
 				input->fork_child();
@@ -138,6 +135,9 @@ list<shared_ptr<Output>> Application::create_outputs() {
 	list<shared_ptr<Output>> outputs;
 	list<shared_ptr<Output>> original;
 
+	process_ = make_shared<Process>();
+	outputs.push_back(process_);
+
 	original.push_back(make_shared<StreamOutput>(cout, OutputType::STDOUT));
 	original.push_back(make_shared<StreamOutput>(cerr, OutputType::STDERR));
 
@@ -147,6 +147,7 @@ list<shared_ptr<Output>> Application::create_outputs() {
 				make_shared<Copy>(original));
 		outputs.push_back(cron_);
 	} else {
+		cron_ = nullptr;
 		outputs.splice(outputs.end(), original);
 	}
 

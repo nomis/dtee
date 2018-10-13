@@ -26,10 +26,9 @@
 #include "cron.h"
 #include "output.h"
 #include "file_output.h"
+#include "process.h"
 
 namespace dtee {
-
-constexpr int SHELL_EXIT_CODE_SIGNAL = 0x80;
 
 class Application {
 public:
@@ -53,6 +52,7 @@ private:
 
 	static CommandLine command_line_;
 
+	std::shared_ptr<Process> process_;
 	std::shared_ptr<Cron> cron_;
 };
 
