@@ -35,7 +35,6 @@ public:
 	TempDirectory& operator=(const TempDirectory&) = delete;
 
 private:
-	bool created = false;
 	std::string name_;
 	std::vector<std::string> files_;
 };
