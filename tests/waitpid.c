@@ -31,6 +31,8 @@ int main(int argc, char *argv[]) {
 			printf("WCOREDUMP=%d\n", WCOREDUMP(wstatus) ? 1 : 0);
 #endif
 			return EXIT_SUCCESS;
+		} else {
+			perror("waitpid");
 		}
 	} else if (pid == 0) {
 		dup2(null, STDIN_FILENO);
