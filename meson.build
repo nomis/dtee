@@ -6,7 +6,6 @@ project('dtee',
 		'warning_level=3',
 		'werror=true',
 		'b_lto=true',
-		'b_coverage=true',
 	],
 	license: 'GPL3+')
 
