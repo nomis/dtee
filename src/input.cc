@@ -239,9 +239,8 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 #endif
 
 					output_->terminated(exit_status, exit_signum, core_dumped);
+					signals_.remove(signal_number);
 				}
-
-				signals_.remove(signal_number);
 			}
 		} else {
 			output_->interrupted(signal_number);
