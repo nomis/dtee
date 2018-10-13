@@ -5,8 +5,16 @@ set -vx
 run_test_once "$RUN"
 RET=$?
 
+eval $(./test-waitpid ./dtee ./dtee "$RUN")
+RET2=$?
+
 echo RET $RET
-if [ $RET -eq $((128 + 15)) ]; then
+echo RET2 $RET
+echo WIFEXITED $WIFEXITED
+echo WEXITSTATUS $WEXITSTATUS
+echo WIFSIGNALED $WIFSIGNALED
+echo WTERMSIG $WTERMSIG
+if [ $RET -eq $((128 + 15)) ] && [ $RET2 -eq 0 ] && [ $WIFSIGNALED -eq 0 ]; then
 	exit 0
 fi
 exit 1
