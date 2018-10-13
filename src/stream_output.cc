@@ -17,8 +17,13 @@
 */
 #include "stream_output.h"
 
+#include <ostream>
+#include <string>
+#include <vector>
+
 using ::std::ostream;
 using ::std::string;
+using ::std::vector;
 
 namespace dtee {
 
@@ -34,7 +39,7 @@ bool StreamOutput::open() {
 	return true;
 }
 
-bool StreamOutput::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+bool StreamOutput::output(OutputType type, const vector<char> &buffer, size_t len) {
 	if (type == type_) {
 		stream_.write(buffer.data(), len);
 		stream_.flush();

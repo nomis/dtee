@@ -17,10 +17,10 @@ source_files = [
 	'src/cron.cc',
 	'src/file_output.cc',
 	'src/input.cc',
+	'src/main.cc',
 	'src/stream_output.cc',
 	'src/temp_directory.cc',
 	'src/temp_file.cc',
-	'src/main.cc',
 ]
 
 test_args = [

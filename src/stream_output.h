@@ -25,7 +25,7 @@
 
 namespace dtee {
 
-class StreamOutput : public Output {
+class StreamOutput: public Output {
 public:
 	StreamOutput(std::ostream &stream, OutputType type);
 	virtual ~StreamOutput();
