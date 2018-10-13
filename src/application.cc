@@ -22,13 +22,14 @@
 #include <signal.h>
 #include <sysexits.h>
 #include <unistd.h>
-#include <system_error>
 #include <iostream>
 #include <list>
 #include <memory>
 #include <string>
+#include <system_error>
 #include <vector>
 
+#include "command_line.h"
 #include "copy.h"
 #include "cron.h"
 #include "file_output.h"
@@ -46,28 +47,16 @@ using ::std::cerr;
 using ::std::endl;
 using ::std::flush;
 
-using ::boost::program_options::variables_map;
-
 extern char **environ;
 
 namespace dtee {
 
-Application::Application() {
-
-}
-
-Application::~Application() {
-
-}
-
-string Application::name() {
-	return internal_name_;
-}
+CommandLine Application::command_line_;
 
 void Application::print_error(const string &message, int errno_copy) {
 	cout << flush;
 
-	cerr << display_name_ << ": " << message;
+	cerr << command_line_.display_name() << ": " << message;
 	if (errno_copy != 0) {
 		cerr << ": " << std::error_code(errno_copy, std::system_category()).message();
 	}
@@ -75,15 +64,9 @@ void Application::print_error(const string &message, int errno_copy) {
 }
 
 int Application::run(int argc, const char* const argv[]) {
-	if (argc > 0) {
-		update_name(argv[0]);
-	}
+	command_line_.parse(argc, argv);
 
-	variables_map variables;
-	parse_command_line(argc, argv, variables);
-	cron_mode_ |= variables["cron"].as<bool>();
-
-	shared_ptr<Copy> outputs = make_shared<Copy>(create_outputs(variables));
+	shared_ptr<Copy> outputs = make_shared<Copy>(create_outputs());
 	shared_ptr<Input> input = make_shared<Input>(outputs);
 
 	bool outputs_ok = outputs->open();
@@ -93,7 +76,7 @@ int Application::run(int argc, const char* const argv[]) {
 	if (!outputs_ok) {
 		ret_internal = EX_CANTCREAT;
 
-		if (!cron_mode_) {
+		if (!command_line_.cron_mode()) {
 			// If we're running from cron then we have output an error message
 			// for the failed output files but must continue to execute the
 			// requested command.
@@ -136,56 +119,53 @@ int Application::run(int argc, const char* const argv[]) {
 				input->fork_child();
 			}
 
-			execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
+			execute(command_line_.command());
 			return EX_SOFTWARE;
 		}
-	} else if (cron_mode_) {
+	} else if (command_line_.cron_mode()) {
 		// If we're running from cron then we have output an error message
 		// for the failed preparation to handle input but must continue to
 		// execute the requested command. Close open files/sockets first.
 		outputs.reset(); // Files are opened with O_CLOEXEC so this is unnecessary
 		input.reset(); // Boost (1.62) has no support for SOCK_CLOEXEC
 
-		execute(variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>());
+		execute(command_line_.command());
 		return EX_SOFTWARE;
 	} else {
 		return EX_UNAVAILABLE;
 	}
 }
 
-list<shared_ptr<Output>> Application::create_outputs(const variables_map &variables) {
+list<shared_ptr<Output>> Application::create_outputs() {
 	list<shared_ptr<Output>> outputs;
 	list<shared_ptr<Output>> original;
 
 	original.push_back(make_shared<StreamOutput>(cout, OutputType::STDOUT));
 	original.push_back(make_shared<StreamOutput>(cerr, OutputType::STDERR));
 
-	if (cron_mode_) {
+	if (command_line_.cron_mode()) {
 		cron_ = make_shared<Cron>(
-				variables[BOOST_COMMAND_OPT].as<std::vector<std::string>>()[0],
+				command_line_.command()[0],
 				make_shared<Copy>(original));
 		outputs.push_back(cron_);
 	} else {
 		outputs.splice(outputs.end(), original);
 	}
 
-	create_file_outputs(outputs, variables, "out-overwrite", FileOutputType::STDOUT, false);
-	create_file_outputs(outputs, variables, "err-overwrite", FileOutputType::STDERR, false);
-	create_file_outputs(outputs, variables, "combined-overwrite", FileOutputType::COMBINED, false);
-	create_file_outputs(outputs, variables, "out-append", FileOutputType::STDOUT, true);
-	create_file_outputs(outputs, variables, "err-append", FileOutputType::STDERR, true);
-	create_file_outputs(outputs, variables, "combined-append", FileOutputType::COMBINED, true);
+	create_file_outputs(outputs, "out-overwrite", FileOutputType::STDOUT, false);
+	create_file_outputs(outputs, "err-overwrite", FileOutputType::STDERR, false);
+	create_file_outputs(outputs, "combined-overwrite", FileOutputType::COMBINED, false);
+	create_file_outputs(outputs, "out-append", FileOutputType::STDOUT, true);
+	create_file_outputs(outputs, "err-append", FileOutputType::STDERR, true);
+	create_file_outputs(outputs, "combined-append", FileOutputType::COMBINED, true);
 
 	return outputs;
 }
 
 void Application::create_file_outputs(list<shared_ptr<Output>> &outputs,
-		const variables_map &variables,
 		const string &name, FileOutputType type, bool append) {
-	if (variables.count(name)) {
-		for (const auto& filename : variables[name].as<vector<string>>()) {
-			outputs.push_back(make_shared<FileOutput>(filename, type, append));
-		}
+	for (const auto& filename : command_line_.list(name)) {
+		outputs.push_back(make_shared<FileOutput>(filename, type, append));
 	}
 }
 

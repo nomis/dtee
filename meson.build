@@ -12,7 +12,7 @@ project('dtee',
 
 source_files = [
 	'src/application.cc',
-	'src/application_command_line.cc',
+	'src/command_line.cc',
 	'src/copy.cc',
 	'src/cron.cc',
 	'src/file_output.cc',

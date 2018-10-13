@@ -15,9 +15,10 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "application.h"
+#include "command_line.h"
 
 #include <libgen.h>
+#include <stdlib.h>
 #include <sysexits.h>
 #include <cstdlib>
 #include <cstring>
@@ -37,36 +38,31 @@ namespace po = boost::program_options;
 
 namespace dtee {
 
-const string Application::DEFAULT_PROGRAM_NAME {"dtee"};
-const string Application::CRON_MODE_NAME {"cronty"};
-
-string Application::internal_name_ {DEFAULT_PROGRAM_NAME};
-string Application::display_name_ {DEFAULT_PROGRAM_NAME};
+const string CommandLine::DEFAULT_PROGRAM_NAME {"dtee"};
+const string CommandLine::CRON_MODE_NAME {"cronty"};
 
 // Boost (1.62) is going to consume "--=argument" as a positional option
 // whether we want it to or not. It will also insist on accepting a long
 // name for positional arguments. To avoid having hidden names like
 // "--command", just explicitly use "--" as the name. 😩
-const string Application::BOOST_COMMAND_OPT {"-"};
+const string CommandLine::BOOST_COMMAND_OPT {"-"};
 
-void Application::update_name(const string &program_name) {
+void CommandLine::update_name(const string &program_name) {
 	// Make a copy because basename() modifies its argument
-	vector<char> program_name_copy { program_name.cbegin(), program_name.cend() + 1};
+	vector<char> program_name_copy{program_name.cbegin(), program_name.cend() + 1};
 	const char *base_program_name = basename(program_name_copy.data());
 
 	display_name_ = base_program_name;
-	if (display_name_ == CRON_MODE_NAME) {
+	if (base_program_name == CRON_MODE_NAME) {
 		cron_mode_ = true;
 
 		// This is the only alternative internal name allowed
 		// because it's used to construct temporary files.
 		internal_name_ = CRON_MODE_NAME;
-	} else {
-		cron_mode_ = false;
 	}
 }
 
-vector<po::option> Application::end_of_opts_parser(std::vector<std::string> &args) {
+vector<po::option> CommandLine::end_of_opts_parser(std::vector<std::string> &args) {
 	vector<po::option> result;
 	vector<string>::const_iterator i{args.cbegin()};
 	bool capture;
@@ -116,7 +112,11 @@ vector<po::option> Application::end_of_opts_parser(std::vector<std::string> &arg
     return result;
 }
 
-void Application::parse_command_line(int argc, const char* const argv[], po::variables_map &variables) const {
+void CommandLine::parse(int argc, const char* const argv[]) {
+	if (argc > 0) {
+		update_name(argv[0]);
+	}
+
 	// LCOV_EXCL_BR_START
 	po::options_description visible_opts{"Allowed options"};
 	visible_opts.add_options()
@@ -173,27 +173,27 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 			.extra_style_parser(end_of_opts_parser)
 			.options(all_opts)
 			.positional(pd)
-			.run(), variables);
+			.run(), *this);
 
 
-		if (variables["help"].as<bool>()) {
+		if (at("help").as<bool>()) {
 			display_usage(visible_opts);
 			exit(EXIT_SUCCESS);
 		}
 
-		po::notify(variables);
+		po::notify(*this);
 
-		if (variables["version"].as<bool>()) {
+		if (at("version").as<bool>()) {
 			display_version();
 			exit(EXIT_SUCCESS);
 		}
 
-		if (variables["debug-options"].as<bool>()) {
-			display_variables(variables);
+		if (at("debug-options").as<bool>()) {
+			display_variables();
 			exit(EXIT_SUCCESS);
 		}
 
-		if (!variables.count(BOOST_COMMAND_OPT)) {
+		if (!count(BOOST_COMMAND_OPT)) {
 			display_usage(visible_opts);
 			exit(EX_USAGE);
 		}
@@ -202,12 +202,14 @@ void Application::parse_command_line(int argc, const char* const argv[], po::var
 	    cout << "Try '" << display_name_ << " -h' for more information." << endl;
 	    exit(EX_USAGE);
 	}
+
+	cron_mode_ |= flag("cron");
 }
 
-void Application::display_usage(po::options_description &options) const {
+void CommandLine::display_usage(po::options_description &options) const {
 	cout << "Usage: " << display_name_ << " [OPTION]... COMMAND [ARG]..." << endl << endl;
 	cout << "Run COMMAND with standard output and standard error copied to each FILE," << endl;
-	if (cron_mode_) {
+	if (cron_mode()) {
 		cout << "suppressing all normal output unless the process outputs an error message" << endl;
 		cout << "or has a non-zero exit status whereupon the original output will be combined" << endl;
 		cout << "and written to standard output. The exit code will be written to standard" << endl;
@@ -219,7 +221,7 @@ void Application::display_usage(po::options_description &options) const {
 	cout << options << endl;
 }
 
-void Application::display_version() const {
+void CommandLine::display_version() const {
 	cout << DEFAULT_PROGRAM_NAME << " - run a program with standard output and standard error copied to files" << endl;
 	cout << "Copyright 2018  Simon Arlott" << endl;
 	cout << "Licence GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>." << endl;
@@ -227,8 +229,8 @@ void Application::display_version() const {
 	cout << "This is free software: you are free to change and redistribute it." << endl;
 }
 
-void Application::display_variables(const po::variables_map &variables) const {
-	for (const auto& variable : variables) {
+void CommandLine::display_variables() const {
+	for (const auto& variable : *this) {
 		if (variable.second.defaulted()) {
 			continue;
 		} else if (variable.second.value().type() == typeid(vector<string>)) {
@@ -238,6 +240,20 @@ void Application::display_variables(const po::variables_map &variables) const {
 		} else if (variable.second.value().type() == typeid(bool)) {
 			cout << variable.first << "=" << variable.second.as<bool>() << endl;
 		}
+	}
+}
+
+bool CommandLine::flag(const string &name) const {
+	return operator[](name).as<bool>();
+}
+
+const vector<string>& CommandLine::list(const string &name) const {
+	const auto& value = operator[](name);
+
+	if (!value.empty()) {
+		return value.as<vector<string>>();
+	} else {
+		return empty_list_;
 	}
 }
 
