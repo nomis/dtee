@@ -1,1 +1,1 @@
-./dtee: ./command_not_executable: exited with status 66
+./dtee: ./cron_command_not_executable: exited with status 66

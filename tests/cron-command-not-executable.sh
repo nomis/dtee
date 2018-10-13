@@ -2,10 +2,10 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-rm -f command_not_executable
-(umask 0111; touch command_not_executable)
+rm -f cron_command_not_executable
+(umask 0111; touch cron_command_not_executable)
 
-run_test_once "-q" "./command_not_executable"
+run_test_once "-q" "./cron_command_not_executable"
 RET=$?
 
 echo RET $RET
