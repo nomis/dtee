@@ -23,12 +23,16 @@ source_files = [
 	'src/temp_file.cc',
 ]
 
-test_args = [
+compile_args = [
 	'-Wshadow',
 	'-g3',
 ]
+c = meson.get_compiler('c')
 cc = meson.get_compiler('cpp')
-foreach arg: test_args
+foreach arg: compile_args
+	if c.has_argument(arg)
+		add_project_arguments(arg, language: 'c')
+	endif
 	if cc.has_argument(arg)
 		add_project_arguments(arg, language: 'cpp')
 	endif
