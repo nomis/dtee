@@ -185,6 +185,7 @@ test('command not executable', find_program('tests/command-not-executable.sh'), 
 test('command exit code 42', find_program('tests/command-exit-code.sh'), env: test_env)
 test('command terminated by signal 1', find_program('tests/command-sighup.sh'), env: test_env)
 test('command terminated by signal 2', find_program('tests/command-sigint.sh'), env: test_env)
+test('command terminated by signal 3', find_program('tests/command-sigquit.sh'), env: test_env)
 test('command terminated by signal 9', find_program('tests/command-sigkill.sh'), env: test_env)
 test('command terminated by signal 15', find_program('tests/command-sigterm.sh'), env: test_env)
 
@@ -196,6 +197,8 @@ test('cron command exit code 0 (no stderr)', find_program('tests/cron-command-ex
 test('cron command exit code 42 (no stderr)', find_program('tests/cron-command-exit-code-42-no-stderr.sh'), env: test_env)
 test('cron command terminated by signal 1', find_program('tests/cron-command-sighup.sh'), env: test_env)
 test('cron command terminated by signal 2', find_program('tests/cron-command-sigint.sh'), env: test_env)
+test('cron command terminated by signal 3 (coredump)', find_program('tests/cron-command-sigquit-coredump.sh'), env: test_env)
+test('cron command terminated by signal 3 (no coredump)', find_program('tests/cron-command-sigquit-no-coredump.sh'), env: test_env)
 test('cron command terminated by signal 9', find_program('tests/cron-command-sigkill.sh'), env: test_env)
 test('cron command terminated by signal 15', find_program('tests/cron-command-sigterm.sh'), env: test_env)
 

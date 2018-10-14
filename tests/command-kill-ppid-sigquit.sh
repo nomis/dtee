@@ -2,6 +2,9 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
+# Disable core dumps (this may not work on Linux)
+ulimit -H -c 0 || exit 1
+ulimit -S -c 0 || exit 1
 run_test ./test-kill-ppid 3
 RET=$?
 
