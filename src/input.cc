@@ -172,7 +172,7 @@ bool Input::fork_parent(pid_t pid) {
 			size_t events = io_.poll(ec);
 
 			if (ec) {
-				Application::print_error(ec.message());
+				Application::print_error("asio poll", ec.message());
 				break;
 			}
 
@@ -183,7 +183,7 @@ bool Input::fork_parent(pid_t pid) {
 			io_.run(ec);
 
 			if (ec) {
-				Application::print_error(ec.message());
+				Application::print_error("asio run", ec.message());
 				break;
 			}
 		}
