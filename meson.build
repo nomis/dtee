@@ -121,6 +121,7 @@ executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
 executable('test-report', ['tests/report.c'], c_args: test_c_args)
 executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)
+executable('test-writes-of-n-bytes', ['tests/writes-of-n-bytes.c'], c_args: test_c_args)
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
 test('cronty (no arguments)', find_program('tests/noargs-cronty.sh'), env: test_env)
@@ -148,6 +149,10 @@ test('file combined overwrite (new file)', find_program('tests/file-combined-ove
 test('file combined overwrite (existing)', find_program('tests/file-combined-overwrite-existing.sh'), env: test_env)
 test('file combined append (new file)', find_program('tests/file-combined-append-new.sh'), env: test_env)
 test('file combined append (existing)', find_program('tests/file-combined-append-existing.sh'), env: test_env)
+
+test('write 0 bytes', find_program('tests/write-0-bytes.sh'), env: test_env)
+test('writes of PIPE_BUF bytes', find_program('tests/writes-of-PIPE_BUF-bytes.sh'), env: test_env)
+test('cron writes of PIPE_BUF bytes', find_program('tests/cron-writes-of-PIPE_BUF-bytes.sh'), env: test_env)
 
 test('debug options (none)', find_program('tests/options-none.sh'), env: test_env)
 test('debug options (cron)', find_program('tests/options-cron.sh'), env: test_env)
