@@ -6,17 +6,16 @@
 #include <limits.h>
 
 #include "is-dtee.h"
+#include "is-fd-unix-socket.h"
 
 int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen) {
 	int (*next_setsockopt)(int, int, int, const void *, socklen_t) = dlsym(RTLD_NEXT, "setsockopt");
 
 	if (dtee_test_is_dtee()) {
-		struct sockaddr_storage addr = { .ss_family = AF_UNSPEC };
-		socklen_t addrlen = sizeof(addr);
+		struct sockaddr_un addr;
 
-		if (getsockname(sockfd, (struct sockaddr*)&addr, &addrlen) == 0) {
-			if (addr.ss_family == AF_UNIX && level == SOL_SOCKET) {
-				struct sockaddr_un *un_addr = (struct sockaddr_un*)&addr;
+		if (dtee_test_is_fd_unix_socket(sockfd, &addr)) {
+			if (level == SOL_SOCKET) {
 				const char *name = NULL;
 				const char *value_str = NULL;
 				int value = 0;
@@ -52,10 +51,10 @@ int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t
 				if (name != NULL) {
 					if (value_str != NULL) {
 						fprintf(stderr, "socket-setsockopt-monitor: setsockopt(\"%s\", SOL_SOCKET, %s, %s, ...)\n",
-							un_addr->sun_path, name, value_str);
+							addr.sun_path, name, value_str);
 					} else {
 						fprintf(stderr, "socket-setsockopt-monitor: setsockopt(\"%s\", SOL_SOCKET, %s, %u, ...)\n",
-							un_addr->sun_path, name, value);
+							addr.sun_path, name, value);
 					}
 					fflush(stderr);
 				}

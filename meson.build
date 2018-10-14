@@ -95,6 +95,7 @@ dlfcn_deps = [
 
 test_common = [
 	'tests/is-dtee.c',
+	'tests/is-fd-unix-socket.c',
 ]
 
 shared_library('execvp-fd-check', ['tests/execvp-fd-check.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)

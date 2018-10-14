@@ -6,27 +6,30 @@
 #include <stdlib.h>
 
 #include "is-dtee.h"
+#include "is-fd-unix-socket.h"
 
 int shutdown(int sockfd, int how) {
 	int (*next_shutdown)(int, int) = dlsym(RTLD_NEXT, "shutdown");
 
 	if (dtee_test_is_dtee()) {
-		static unsigned long allowed = 0;
-		static bool first = true;
-		const char *allowed_str = getenv("DTEE_TEST_SOCKET_SHUTDOWN_FAILURE_ALLOW");
+		if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
+			static unsigned long allowed = 0;
+			static bool first = true;
+			const char *allowed_str = getenv("DTEE_TEST_SOCKET_SHUTDOWN_FAILURE_ALLOW");
 
-		if (first) {
-			if (allowed_str != NULL) {
-				allowed = strtoul(allowed_str, NULL, 10);
+			if (first) {
+				if (allowed_str != NULL) {
+					allowed = strtoul(allowed_str, NULL, 10);
+				}
+				first = false;
 			}
-			first = false;
-		}
 
-		if (allowed) {
-			--allowed;
-		} else {
-			errno = ENOTCONN;
-			return -1;
+			if (allowed) {
+				--allowed;
+			} else {
+				errno = ENOTCONN;
+				return -1;
+			}
 		}
 	}
 

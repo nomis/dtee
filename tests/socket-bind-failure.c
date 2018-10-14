@@ -6,30 +6,29 @@
 #include <stdlib.h>
 
 #include "is-dtee.h"
+#include "is-fd-unix-socket.h"
 
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 	int (*next_bind)(int, const struct sockaddr *, socklen_t) = dlsym(RTLD_NEXT, "bind");
 
 	if (dtee_test_is_dtee()) {
-		if (addrlen >= ((u_int8_t*)&addr->sa_family - (u_int8_t*)addr) + sizeof(addr->sa_family)) {
-			if (addr->sa_family == AF_UNIX) {
-				static unsigned long allowed = 0;
-				static bool first = true;
-				const char *allowed_str = getenv("DTEE_TEST_SOCKET_BIND_FAILURE_ALLOW");
+		if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
+			static unsigned long allowed = 0;
+			static bool first = true;
+			const char *allowed_str = getenv("DTEE_TEST_SOCKET_BIND_FAILURE_ALLOW");
 
-				if (first) {
-					if (allowed_str != NULL) {
-						allowed = strtoul(allowed_str, NULL, 10);
-					}
-					first = false;
+			if (first) {
+				if (allowed_str != NULL) {
+					allowed = strtoul(allowed_str, NULL, 10);
 				}
+				first = false;
+			}
 
-				if (allowed) {
-					--allowed;
-				} else {
-					errno = EACCES;
-					return -1;
-				}
+			if (allowed) {
+				--allowed;
+			} else {
+				errno = EACCES;
+				return -1;
 			}
 		}
 	}
