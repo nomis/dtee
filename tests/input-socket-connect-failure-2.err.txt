@@ -1,1 +1,1 @@
-./dtee: stderr socket connect: Permission denied
+./dtee: stderr socket: connect: Permission denied

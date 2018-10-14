@@ -18,6 +18,7 @@
 #ifndef DTEE_APPLICATION_H_
 #define DTEE_APPLICATION_H_
 
+#include <exception>
 #include <list>
 #include <memory>
 #include <string>
@@ -36,7 +37,9 @@ public:
 	~Application() {};
 
 	static std::string name() { return command_line_.internal_name(); }
+	static void print_error(const std::string &message, const std::string &cause);
 	static void print_error(const std::string &message, int errno_copy = 0);
+	static void print_error(const std::string &message, const std::exception &e);
 
 	int run(int argc, const char* const argv[]);
 

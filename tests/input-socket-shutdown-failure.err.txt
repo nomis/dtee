@@ -1,1 +1,1 @@
-./dtee: input socket shutdown: Transport endpoint is not connected
+./dtee: input socket: shutdown: Transport endpoint is not connected

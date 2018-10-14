@@ -95,7 +95,7 @@ bool Input::open(bool handle_interrupt_signals) {
 			input_.get_option(so_rcvbuf);
 		}
 	} catch (std::exception &e) {
-		Application::print_error(string("input socket ") + e.what());
+		Application::print_error("input socket", e);
 		return false;
 	}
 
@@ -128,7 +128,7 @@ bool Input::open(bool handle_interrupt_signals) {
 		out_.shutdown(datagram_protocol::socket::shutdown_receive);
 		out_.set_option(so_sndbuf);
 	} catch (std::exception &e) {
-		Application::print_error(string("stdout socket ") + e.what());
+		Application::print_error("stdout socket", e);
 		return false;
 	}
 
@@ -139,7 +139,7 @@ bool Input::open(bool handle_interrupt_signals) {
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
 		err_.set_option(so_sndbuf);
 	} catch (std::exception &e) {
-		Application::print_error(string("stderr socket ") + e.what());
+		Application::print_error("stderr socket", e);
 		return false;
 	}
 
@@ -214,7 +214,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		input_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		Application::print_error("socket receive: " + ec.message());
+		Application::print_error("socket receive", ec.message());
 
 		terminated_ = true;
 		io_.stop();

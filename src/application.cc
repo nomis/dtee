@@ -22,6 +22,7 @@
 #include <signal.h>
 #include <sysexits.h>
 #include <unistd.h>
+#include <exception>
 #include <iostream>
 #include <list>
 #include <memory>
@@ -37,6 +38,7 @@
 #include "process.h"
 #include "stream_output.h"
 
+using ::std::exception;
 using ::std::list;
 using ::std::make_shared;
 using ::std::shared_ptr;
@@ -56,14 +58,25 @@ namespace dtee {
 
 CommandLine Application::command_line_;
 
-void Application::print_error(const string &message, int errno_copy) {
+void Application::print_error(const string &message, const string &cause) {
 	cout << flush;
-
 	cerr << command_line_.display_name() << ": " << message;
-	if (errno_copy != 0) {
-		cerr << ": " << std::error_code(errno_copy, std::system_category()).message();
+	if (!cause.empty()) {
+		cerr << ": " << cause;
 	}
 	cerr << endl;
+}
+
+void Application::print_error(const string &message, int errno_copy) {
+	if (errno_copy != 0) {
+		print_error(message, std::error_code(errno_copy, std::system_category()).message());
+	} else {
+		print_error(message, "");
+	}
+}
+
+void Application::print_error(const string &message, const exception &e) {
+	print_error(message, e.what());
 }
 
 int Application::run(int argc, const char* const argv[]) {

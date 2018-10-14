@@ -120,9 +120,7 @@ bool Cron::unspool_buffer_file() {
 				len = read(file_.fd(), buf, sizeof(buf));
 
 				if (len < 0) {
-					int errno_copy = errno;
-
-					print_file_error("error reading buffer file", errno_copy);
+					print_file_error("error reading buffer file", errno);
 					success = false;
 					break;
 				}
@@ -164,15 +162,15 @@ bool Cron::report() {
 	}
 
 	if (exit_status_ >= 0) {
-		Application::print_error(command_ + ": exited with status " + to_string(exit_status_));
+		Application::print_error(command_, "exited with status " + to_string(exit_status_));
 	} else if (exit_signum_ >= 0) {
-		string message = command_ + ": process terminated by signal " + signal_to_string(exit_signum_);
+		string message = "process terminated by signal " + signal_to_string(exit_signum_);
 
 		if (core_dumped_) {
 			message += " (core dumped)";
 		}
 
-		Application::print_error(message);
+		Application::print_error(command_, message);
 	}
 
 	return success;
