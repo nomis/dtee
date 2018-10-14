@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "allow-n-times.h"
 #include "is-dtee.h"
 
 int socket(int domain, int type, int protocol) {
@@ -14,18 +15,8 @@ int socket(int domain, int type, int protocol) {
 		if (domain == AF_UNIX) {
 			static unsigned long allowed = 0;
 			static bool first = true;
-			const char *allowed_str = getenv("DTEE_TEST_SOCKET_UNIX_FAILURE_ALLOW");
 
-			if (first) {
-				if (allowed_str != NULL) {
-					allowed = strtoul(allowed_str, NULL, 10);
-				}
-				first = false;
-			}
-
-			if (allowed) {
-				--allowed;
-			} else {
+			if (!dtee_test_allow_n_times("DTEE_TEST_SOCKET_UNIX_FAILURE_ALLOW", &first, &allowed)) {
 				errno = EAFNOSUPPORT;
 				return -1;
 			}

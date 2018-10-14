@@ -94,6 +94,7 @@ dlfcn_deps = [
 ]
 
 test_common = [
+	'tests/allow-n-times.c',
 	'tests/is-dtee.c',
 	'tests/is-fd-unix-socket.c',
 ]
