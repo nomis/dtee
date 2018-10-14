@@ -36,13 +36,14 @@ compile: | $(RELEASE_DIR)/
 debug-compile: | $(DEBUG_DIR)/
 	$(NINJA) -C $(DEBUG_DIR)/
 
-check: | $(RELEASE_DIR)/
+check: compile
+	rm -rf "$(COVERAGE_DIR)/dtee@test/"
 	$(NINJA) -C $(RELEASE_DIR)/ test
 
 coverage: | $(COVERAGE_DIR)/
 	$(NINJA) -C $(COVERAGE_DIR)/
-	rm -rf "$(COVERAGE_DIR)/dtee@test/"
 	find "$(COVERAGE_DIR)/" -name '*.gcda' -exec rm {} \;
+	rm -rf "$(COVERAGE_DIR)/dtee@test/"
 	$(NINJA) -C $(COVERAGE_DIR)/ test
 	rm -rf "$(COVERAGE_DIR)/meson-logs/coveragereport/"
 	$(NINJA) -C $(COVERAGE_DIR)/ coverage-html
