@@ -35,11 +35,10 @@ function after_test() {
 }
 
 function run_test() {
-	rm -f "$TESTDIR/$NAME.in.txt"
 	if [ -e "${0/.sh/.in.txt}" ]; then
-		ln -s "${0/.sh/.in.txt}" "$TESTDIR/$NAME.in.txt"
+		STDIN_FILE="${0/.sh/.in.txt}"
 	else
-		ln -s /dev/null "$TESTDIR/$NAME.in.txt"
+		STDIN_FILE="/dev/null"
 	fi
 
 	declare -f test_prepare >/dev/null && test_prepare
@@ -47,7 +46,7 @@ function run_test() {
 	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
 	before_test
 	if [ $TEST_NO_STDIN -eq 0 ]; then
-		./dtee "$@" <"$TESTDIR/$NAME.in.txt" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+		./dtee "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 	else
 		./dtee "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 	fi
@@ -68,7 +67,7 @@ function run_test() {
 	rm -f "$TESTDIR/$NAME.com.txt"
 	before_test
 	if [ $TEST_NO_STDIN -eq 0 ]; then
-		./dtee "$@" <"$TESTDIR/$NAME.in.txt" 1>"$TESTDIR/$NAME.com.txt" 2>&1
+		./dtee "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
 	else
 		./dtee "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
 	fi
