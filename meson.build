@@ -55,9 +55,11 @@ executable('dtee',
 	],
 	install: true)
 
-meson.add_install_script('sh',
-	'-c',
-	'ln -s dtee ${DESTDIR}/${MESON_INSTALL_PREFIX}/cronty')
+custom_target('cronty',
+	command: [find_program('ln'), '-s', 'dtee', 'cronty'],
+	output: 'cronty',
+	install: true,
+	install_dir: get_option('bindir'))
 
 run_target('cppcheck',
 	command: [

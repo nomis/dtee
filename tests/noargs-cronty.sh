@@ -2,7 +2,7 @@
 set -vx
 
 # Provide no arguments, get exit code 1 and usage information (excluding cron option)
-coproc { exec -a ./cronty ./dtee; }
+coproc { exec ./cronty; }
 PID=$!
 
 USAGE=0
