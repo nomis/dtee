@@ -43,7 +43,7 @@ namespace p = ::std::placeholders;
 namespace dtee {
 
 Input::Input(shared_ptr<Output> output)
-		: combined_(io_),
+		: input_(io_),
 		  out_(io_),
 		  err_(io_),
 		  signals_(io_, SIGCHLD),
@@ -70,8 +70,8 @@ bool Input::open(bool handle_interrupt_signals) {
 		return false;
 	}
 
-	const string combined_name = temp_dir.register_file("c");
-	const datagram_protocol::endpoint combined_ep{combined_name};
+	const string input_name = temp_dir.register_file("i");
+	const datagram_protocol::endpoint input_ep{input_name};
 
 	const string out_name = temp_dir.register_file("o");
 	out_ep_ = datagram_protocol::endpoint(out_name);
@@ -82,17 +82,17 @@ bool Input::open(bool handle_interrupt_signals) {
 	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 
 	try {
-		combined_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
-		combined_.bind(combined_ep);
-		combined_.shutdown(datagram_protocol::socket::shutdown_send);
+		input_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
+		input_.bind(input_ep);
+		input_.shutdown(datagram_protocol::socket::shutdown_send);
 
-		combined_.get_option(so_rcvbuf);
+		input_.get_option(so_rcvbuf);
 
 		// Ensure the receive buffer is at least as large as PIPE_BUF
 		if (so_rcvbuf.value() < PIPE_BUF) {
 			so_rcvbuf = PIPE_BUF;
-			combined_.set_option(so_rcvbuf);
-			combined_.get_option(so_rcvbuf);
+			input_.set_option(so_rcvbuf);
+			input_.get_option(so_rcvbuf);
 		}
 	} catch (std::exception &e) {
 		Application::print_error(string("input socket ") + e.what());
@@ -124,7 +124,7 @@ bool Input::open(bool handle_interrupt_signals) {
 	try {
 		out_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		out_.bind(out_ep_);
-		out_.connect(combined_ep);
+		out_.connect(input_ep);
 		out_.shutdown(datagram_protocol::socket::shutdown_receive);
 		out_.set_option(so_sndbuf);
 	} catch (std::exception &e) {
@@ -135,7 +135,7 @@ bool Input::open(bool handle_interrupt_signals) {
 	try {
 		err_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		err_.bind(err_ep_);
-		err_.connect(combined_ep);
+		err_.connect(input_ep);
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
 		err_.set_option(so_sndbuf);
 	} catch (std::exception &e) {
@@ -157,7 +157,7 @@ bool Input::fork_parent(pid_t pid) {
 
 	child_ = pid;
 
-	combined_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
+	input_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
 			bind(&Input::handle_receive_from, this, p::_1, p::_2));
 
 	signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));
@@ -194,7 +194,7 @@ bool Input::fork_parent(pid_t pid) {
 
 void Input::fork_child() {
 	io_.notify_fork(io_service::fork_event::fork_child);
-	combined_.close();
+	input_.close();
 	dup2(out_.native_handle(), STDOUT_FILENO);
 	out_.close();
 	dup2(err_.native_handle(), STDERR_FILENO);
@@ -211,7 +211,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 			// Data from any other sockets should not be possible and is ignored
 		}
 
-		combined_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
+		input_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
 		Application::print_error("socket receive: " + ec.message());

@@ -48,7 +48,7 @@ private:
 	void handle_signal(const boost::system::error_code &ec, int signal_number);
 
 	boost::asio::io_service io_;
-	boost::asio::local::datagram_protocol::socket combined_; //!< Incoming socket for data from child process
+	boost::asio::local::datagram_protocol::socket input_; //!< Incoming socket for data from child process
 	boost::asio::local::datagram_protocol::socket out_; //!< Standard output of child process
 	boost::asio::local::datagram_protocol::socket err_; //!< Standard error of child process
 	boost::asio::local::datagram_protocol::endpoint out_ep_; //!< Endpoint name for child process standard output
