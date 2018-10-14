@@ -117,6 +117,7 @@ shared_library('socket-setsockopt-monitor', ['tests/socket-setsockopt-monitor.c'
 shared_library('socket-shutdown-failure', ['tests/socket-shutdown-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 
+executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
 executable('test-report', ['tests/report.c'], c_args: test_c_args)
 executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)

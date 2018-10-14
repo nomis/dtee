@@ -1,1 +1,1 @@
-./dtee: dtee@test/cron-command-sigint.run: process terminated by signal 2: Interrupt
+./dtee: ./test-kill-pid: process terminated by signal 2: Interrupt

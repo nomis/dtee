@@ -1,1 +1,1 @@
-passthrough-stdout-stderr1.err.txt
+/dev/null

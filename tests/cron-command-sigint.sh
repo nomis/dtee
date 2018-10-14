@@ -2,10 +2,10 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
-run_test "-q" "$RUN"
+run_test "-q" ./test-kill-pid 2
 RET=$?
 
-eval $(./test-waitpid ./dtee ./dtee "-q" "$RUN")
+eval $(./test-waitpid ./dtee ./dtee "-q" ./test-kill-pid 2)
 RET2=$?
 
 echo RET $RET
