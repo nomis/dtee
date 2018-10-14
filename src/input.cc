@@ -70,21 +70,22 @@ bool Input::open(bool handle_interrupt_signals) {
 		return false;
 	}
 
+	const string combined_name = temp_dir.register_file("c");
+	const datagram_protocol::endpoint combined_ep{combined_name};
+
+	const string out_name = temp_dir.register_file("o");
+	out_ep_ = datagram_protocol::endpoint(out_name);
+
+	const string err_name = temp_dir.register_file("e");
+	err_ep_ = datagram_protocol::endpoint{err_name};
+
+	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
+
 	try {
-		string combined_name = temp_dir.register_file("c");
-		datagram_protocol::endpoint combined_ep{combined_name};
-
-		string out_name = temp_dir.register_file("o");
-		out_ep_ = datagram_protocol::endpoint(out_name);
-
-		string err_name = temp_dir.register_file("e");
-		err_ep_ = datagram_protocol::endpoint{err_name};
-
 		combined_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		combined_.bind(combined_ep);
 		combined_.shutdown(datagram_protocol::socket::shutdown_send);
 
-		datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 		combined_.get_option(so_rcvbuf);
 
 		// Ensure the receive buffer is at least as large as PIPE_BUF
@@ -93,41 +94,52 @@ bool Input::open(bool handle_interrupt_signals) {
 			combined_.set_option(so_rcvbuf);
 			combined_.get_option(so_rcvbuf);
 		}
+	} catch (std::exception &e) {
+		Application::print_error(string("input socket ") + e.what());
+		return false;
+	}
 
-		int buffer_size = so_rcvbuf.value();
+	int buffer_size = so_rcvbuf.value();
 #ifdef __linux__
-		// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
-		// From Boost (1.62): "Linux puts additional stuff into the
-		//     buffers so that only about half is actually available to the application.
-		//     The retrieved value is divided by 2 here to make it appear as though the
-		//     correct value has been set."
-		//
-		// Boost is wrong because the kernel is not specified as using half the buffer size.
-		// It would be simpler if the kernel didn't return its doubled value either.
-		// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
-		buffer_size *= 2;
+	// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
+	// From Boost (1.62): "Linux puts additional stuff into the
+	//     buffers so that only about half is actually available to the application.
+	//     The retrieved value is divided by 2 here to make it appear as though the
+	//     correct value has been set."
+	//
+	// Boost is wrong because the kernel is not specified as using half the buffer size.
+	// It would be simpler if the kernel didn't return its doubled value either.
+	// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
+	buffer_size *= 2;
 #endif
 
-		if (buffer_size < PIPE_BUF) {
-			buffer_size = PIPE_BUF;
-		}
-		buffer_.resize(buffer_size);
+	if (buffer_size < PIPE_BUF) {
+		buffer_size = PIPE_BUF;
+	}
+	buffer_.resize(buffer_size);
 
-		datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
 
+	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
+
+	try {
 		out_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		out_.bind(out_ep_);
 		out_.connect(combined_ep);
 		out_.shutdown(datagram_protocol::socket::shutdown_receive);
 		out_.set_option(so_sndbuf);
+	} catch (std::exception &e) {
+		Application::print_error(string("stdout socket ") + e.what());
+		return false;
+	}
 
+	try {
 		err_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		err_.bind(err_ep_);
 		err_.connect(combined_ep);
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
 		err_.set_option(so_sndbuf);
 	} catch (std::exception &e) {
-		Application::print_error(string("socket ") + e.what());
+		Application::print_error(string("stderr socket ") + e.what());
 		return false;
 	}
 

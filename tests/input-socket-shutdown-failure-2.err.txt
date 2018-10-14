@@ -1,1 +1,1 @@
-input-socket-shutdown-failure.err.txt
+./dtee: stdout socket shutdown: Transport endpoint is not connected

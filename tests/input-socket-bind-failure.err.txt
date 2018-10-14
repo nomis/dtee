@@ -1,1 +1,1 @@
-./dtee: socket bind: Permission denied
+./dtee: input socket bind: Permission denied

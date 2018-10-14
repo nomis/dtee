@@ -1,4 +1,4 @@
-./dtee: socket shutdown: Transport endpoint is not connected
+./dtee: input socket shutdown: Transport endpoint is not connected
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis

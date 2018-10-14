@@ -1,1 +1,1 @@
-input-socket-bind-failure.err.txt
+./dtee: stderr socket bind: Permission denied

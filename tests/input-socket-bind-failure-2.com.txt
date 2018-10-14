@@ -1,1 +1,1 @@
-input-socket-bind-failure.com.txt
+./dtee: stdout socket bind: Permission denied
