@@ -52,7 +52,7 @@ int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optl
 	int (*next_getsockopt)(int, int, int, void *, socklen_t *) = dlsym(RTLD_NEXT, "getsockopt");
 
 	if (dtee_test_is_dtee()) {
-		struct sockaddr_storage addr;
+		struct sockaddr_storage addr = { .ss_family = AF_UNSPEC };
 		socklen_t addrlen = sizeof(addr);
 
 		if (getsockname(sockfd, (struct sockaddr*)&addr, &addrlen) == 0) {

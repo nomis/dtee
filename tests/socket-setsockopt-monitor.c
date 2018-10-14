@@ -11,7 +11,7 @@ int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t
 	int (*next_setsockopt)(int, int, int, const void *, socklen_t) = dlsym(RTLD_NEXT, "setsockopt");
 
 	if (dtee_test_is_dtee()) {
-		struct sockaddr_storage addr;
+		struct sockaddr_storage addr = { .ss_family = AF_UNSPEC };
 		socklen_t addrlen = sizeof(addr);
 
 		if (getsockname(sockfd, (struct sockaddr*)&addr, &addrlen) == 0) {
