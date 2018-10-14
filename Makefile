@@ -25,7 +25,7 @@ $(RELEASE_DIR)/: | $(BUILD_DIR)/
 $(COVERAGE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(COVERAGE_DIR)/"
 	mkdir $(COVERAGE_DIR)/
-	meson --buildtype=release $(COVERAGE_DIR)/ -Db_coverage=true || (rm -rf "$(COVERAGE_DIR)/"; false)
+	meson --buildtype=debug $(COVERAGE_DIR)/ -Db_coverage=true || (rm -rf "$(COVERAGE_DIR)/"; false)
 $(DEBUG_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(DEBUG_DIR)/"
 	mkdir $(DEBUG_DIR)/

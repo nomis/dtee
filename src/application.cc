@@ -201,6 +201,12 @@ void Application::execute(const vector<string> &command) {
 	}
 	argv.push_back(nullptr);
 
+#ifdef GCOV_ENABLED
+	// LCOV_EXCL_START
+	__gcov_flush();
+	// LCOV_EXCL_STOP
+#endif
+
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
 	print_error(argv[0], errno);
