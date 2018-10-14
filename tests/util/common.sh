@@ -13,6 +13,7 @@ RUN="$TESTDIR/$NAME.run"
 
 COMMON_TEST_LD_PRELOAD=(./libexecvp-fd-check.so)
 
+TEST_EXEC=./dtee
 TEST_NO_STDIN=0
 
 function before_test() {
@@ -46,9 +47,9 @@ function run_test() {
 	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
 	before_test
 	if [ $TEST_NO_STDIN -eq 0 ]; then
-		./dtee "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 	else
-		./dtee "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 	fi
 	RET1=$?
 	after_test
@@ -67,9 +68,9 @@ function run_test() {
 	rm -f "$TESTDIR/$NAME.com.txt"
 	before_test
 	if [ $TEST_NO_STDIN -eq 0 ]; then
-		./dtee "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
+		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
 	else
-		./dtee "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
+		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
 	fi
 	RET2=$?
 	after_test

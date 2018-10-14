@@ -1,0 +1,1 @@
+./cronty: dtee@test/cronty-command-exit-code-0-stderr.run: exited with status 0
