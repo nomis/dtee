@@ -38,14 +38,16 @@ namespace po = boost::program_options;
 
 namespace dtee {
 
-const string CommandLine::DEFAULT_PROGRAM_NAME {"dtee"};
-const string CommandLine::CRON_MODE_NAME {"cronty"};
+const string CommandLine::DEFAULT_PROGRAM_NAME{"dtee"};
+const string CommandLine::CRON_MODE_NAME{"cronty"};
+string CommandLine::internal_name_{CommandLine::DEFAULT_PROGRAM_NAME};
+string CommandLine::display_name_{CommandLine::DEFAULT_PROGRAM_NAME};
 
 // Boost (1.62) is going to consume "--=argument" as a positional option
 // whether we want it to or not. It will also insist on accepting a long
 // name for positional arguments. To avoid having hidden names like
 // "--command", just explicitly use "--" as the name. 😩
-const string CommandLine::BOOST_COMMAND_OPT {"-"};
+const string CommandLine::BOOST_COMMAND_OPT{"-"};
 
 void CommandLine::update_name(const string &program_name) {
 	// Make a copy because basename() modifies its argument

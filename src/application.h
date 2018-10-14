@@ -36,7 +36,6 @@ public:
 	Application() {};
 	~Application() {};
 
-	static std::string name() { return command_line_.internal_name(); }
 	static void print_error(const std::string &message, const std::string &cause);
 	static void print_error(const std::string &message, int errno_copy = 0);
 	static void print_error(const std::string &message, const std::exception &e);
@@ -47,14 +46,13 @@ public:
 	Application& operator=(const Application&) = delete;
 
 private:
-	static void create_file_outputs(std::list<std::shared_ptr<Output>> &outputs,
+	void create_file_outputs(std::list<std::shared_ptr<Output>> &outputs,
 			const std::string &name, FileOutputType type, bool append);
 
 	std::list<std::shared_ptr<Output>> create_outputs();
 	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
 
-	static CommandLine command_line_;
-
+	CommandLine command_line_;
 	std::shared_ptr<Process> process_;
 	std::shared_ptr<Cron> cron_;
 };

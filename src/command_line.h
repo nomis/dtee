@@ -30,8 +30,8 @@ public:
 	CommandLine() {};
 	~CommandLine() {};
 
-	std::string internal_name() const { return internal_name_; }
-	std::string display_name() const { return display_name_; }
+	static std::string internal_name() { return internal_name_; }
+	static std::string display_name() { return display_name_; }
 
 	void parse(int argc, const char* const argv[]);
 
@@ -55,9 +55,9 @@ private:
 	static const std::string DEFAULT_PROGRAM_NAME;
 	static const std::string CRON_MODE_NAME;
 	static const std::string BOOST_COMMAND_OPT;
+	static std::string internal_name_;
+	static std::string display_name_;
 
-	std::string internal_name_{DEFAULT_PROGRAM_NAME};
-	std::string display_name_{DEFAULT_PROGRAM_NAME};
 	const std::vector<std::string> empty_list_{};
 	bool cron_mode_ = false;
 };

@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "application.h"
+#include "command_line.h"
 
 using ::std::string;
 using ::std::to_string;
@@ -34,7 +35,7 @@ using ::std::vector;
 namespace dtee {
 
 TempDirectory::TempDirectory(const string &name) {
-	string pattern { "/tmp/" + Application::name() +  "." + to_string(getuid()) + "." + to_string(getpid()) + "." + name + ".XXXXXX" };
+	string pattern { "/tmp/" + CommandLine::internal_name() +  "." + to_string(getuid()) + "." + to_string(getpid()) + "." + name + ".XXXXXX" };
 	vector<char> filename {pattern.cbegin(), pattern.cend() + 1};
 	char *temp_dir;
 

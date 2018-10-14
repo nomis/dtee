@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "application.h"
+#include "command_line.h"
 
 using ::std::string;
 using ::std::to_string;
@@ -42,7 +43,7 @@ TempFile::~TempFile() {
 }
 
 bool TempFile::open() {
-	string pattern { "/tmp/" + Application::name() +  "." + to_string(getuid()) + "." + to_string(getpid()) + "." + name_ + ".XXXXXX" };
+	string pattern { "/tmp/" + CommandLine::internal_name() +  "." + to_string(getuid()) + "." + to_string(getpid()) + "." + name_ + ".XXXXXX" };
 	vector<char> filename {pattern.cbegin(), pattern.cend() + 1};
 
 	errno = 0;

@@ -56,11 +56,9 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-CommandLine Application::command_line_;
-
 void Application::print_error(const string &message, const string &cause) {
 	cout << flush;
-	cerr << command_line_.display_name() << ": " << message;
+	cerr << CommandLine::display_name() << ": " << message;
 	if (!cause.empty()) {
 		cerr << ": " << cause;
 	}
