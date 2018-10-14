@@ -9,6 +9,11 @@
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
 
+static int dtee_test_shutdown_failure(int sockfd __attribute__((unused)), int how __attribute__((unused))) {
+	errno = ENOTCONN;
+	return -1;
+}
+
 int shutdown(int sockfd, int how) {
 	int (*next_shutdown)(int, int) = dlsym(RTLD_NEXT, "shutdown");
 
@@ -18,8 +23,7 @@ int shutdown(int sockfd, int how) {
 			static bool first = true;
 
 			if (!dtee_test_allow_n_times("DTEE_TEST_SOCKET_SHUTDOWN_FAILURE_ALLOW", &first, &allowed)) {
-				errno = ENOTCONN;
-				return -1;
+				next_shutdown = dtee_test_shutdown_failure;
 			}
 		}
 	}

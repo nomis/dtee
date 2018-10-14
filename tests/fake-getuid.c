@@ -4,12 +4,16 @@
 
 #include "is-dtee.h"
 
-uid_t getuid(void) {
-	if (dtee_test_is_dtee()) {
-		return 1;
-	} else {
-		int (*next_getuid)(void) = dlsym(RTLD_NEXT, "getuid");
+static uid_t dtee_test_fake_getuid(void) {
+	return 1;
+}
 
-		return (*next_getuid)();
+uid_t getuid(void) {
+	uid_t (*next_getuid)(void) = dlsym(RTLD_NEXT, "getuid");
+
+	if (dtee_test_is_dtee()) {
+		next_getuid = dtee_test_fake_getuid;
 	}
+
+	return (*next_getuid)();
 }

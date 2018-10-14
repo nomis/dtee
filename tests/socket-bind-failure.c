@@ -9,6 +9,11 @@
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
 
+static int dtee_test_bind_failure(int sockfd __attribute__((unused)), const struct sockaddr *addr __attribute__((unused)), socklen_t addrlen __attribute__((unused))) {
+	errno = EACCES;
+	return -1;
+}
+
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 	int (*next_bind)(int, const struct sockaddr *, socklen_t) = dlsym(RTLD_NEXT, "bind");
 
@@ -18,8 +23,7 @@ int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 			static bool first = true;
 
 			if (!dtee_test_allow_n_times("DTEE_TEST_SOCKET_BIND_FAILURE_ALLOW", &first, &allowed)) {
-				errno = EACCES;
-				return -1;
+				next_bind = dtee_test_bind_failure;
 			}
 		}
 	}

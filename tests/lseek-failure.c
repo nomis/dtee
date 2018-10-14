@@ -5,13 +5,17 @@
 
 #include "is-dtee.h"
 
-off_t lseek(int fd, off_t offset, int whence) {
-	if (dtee_test_is_dtee()) {
-		errno = EINVAL;
-		return -1;
-	} else {
-		off_t (*next_lseek)(int, off_t, int) = dlsym(RTLD_NEXT, "lseek");
+static off_t dtee_test_lseek_failure(int fd __attribute__((unused)), off_t offset __attribute__((unused)), int whence __attribute__((unused))) {
+	errno = EINVAL;
+	return -1;
+}
 
-		return (*next_lseek)(fd, offset, whence);
+off_t lseek(int fd, off_t offset, int whence) {
+	off_t (*next_lseek)(int, off_t, int) = dlsym(RTLD_NEXT, "lseek");
+
+	if (dtee_test_is_dtee()) {
+		next_lseek = dtee_test_lseek_failure;
 	}
+
+	return (*next_lseek)(fd, offset, whence);
 }
