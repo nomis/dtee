@@ -99,6 +99,7 @@ test_common = [
 	'tests/is-fd-unix-socket.c',
 ]
 
+shared_library('dup2-failure', ['tests/dup2-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('execvp-fd-check', ['tests/execvp-fd-check.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('fake-getpid', ['tests/fake-getpid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('fake-getuid', ['tests/fake-getuid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
@@ -263,3 +264,6 @@ test('cron dtee killed by signal 2', find_program('tests/cron-command-kill-ppid-
 test('cron dtee killed by signal 3', find_program('tests/cron-command-kill-ppid-sigquit.sh'), env: test_env)
 test('cron dtee killed by signal 9', find_program('tests/cron-command-kill-ppid-sigkill.sh'), env: test_env)
 test('cron dtee killed by signal 15', find_program('tests/cron-command-kill-ppid-sigterm.sh'), env: test_env)
+
+test('dup2 failure', find_program('tests/dup2-failure.sh'), env: test_env)
+test('cron dup2 failure', find_program('tests/cron-dup2-failure.sh'), env: test_env)

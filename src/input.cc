@@ -195,9 +195,17 @@ bool Input::fork_parent(pid_t pid) {
 void Input::fork_child() {
 	io_.notify_fork(io_service::fork_event::fork_child);
 	input_.close();
-	dup2(out_.native_handle(), STDOUT_FILENO);
+
+	errno = 0;
+	if (dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
+		Application::print_error("stdout dup2", errno);
+	}
 	out_.close();
-	dup2(err_.native_handle(), STDERR_FILENO);
+
+	errno = 0;
+	if (dup2(err_.native_handle(), STDERR_FILENO) < 0) {
+		Application::print_error("stderr dup2", errno);
+	}
 	err_.close();
 }
 
