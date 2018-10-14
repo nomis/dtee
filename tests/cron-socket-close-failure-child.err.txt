@@ -1,0 +1,1 @@
+./dtee: dtee@test/cron-socket-close-failure-child.run: exited with status 0

@@ -151,9 +151,19 @@ void Input::fork_prepare() {
 }
 
 bool Input::fork_parent(pid_t pid) {
+	error_code ec;
+
 	io_.notify_fork(io_service::fork_event::fork_parent);
-	out_.close();
-	err_.close();
+
+	out_.close(ec);
+	if (ec) {
+		Application::print_error("stdout socket close", ec.message());
+	}
+
+	err_.close(ec);
+	if (ec) {
+		Application::print_error("stderr socket close", ec.message());
+	}
 
 	child_ = pid;
 
@@ -162,7 +172,6 @@ bool Input::fork_parent(pid_t pid) {
 
 	signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));
 
-	error_code ec;
 	while (1) {
 		if (io_.stopped()) {
 			io_.reset();
@@ -193,20 +202,34 @@ bool Input::fork_parent(pid_t pid) {
 }
 
 void Input::fork_child() {
+	error_code ec;
+
 	io_.notify_fork(io_service::fork_event::fork_child);
-	input_.close();
 
 	errno = 0;
 	if (dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
 		Application::print_error("stdout dup2", errno);
 	}
-	out_.close();
 
 	errno = 0;
 	if (dup2(err_.native_handle(), STDERR_FILENO) < 0) {
 		Application::print_error("stderr dup2", errno);
 	}
-	err_.close();
+
+	input_.close(ec);
+	if (ec) {
+		Application::print_error("input socket close", ec.message());
+	}
+
+	out_.close(ec);
+	if (ec) {
+		Application::print_error("stdout socket close", ec.message());
+	}
+
+	err_.close(ec);
+	if (ec) {
+		Application::print_error("stderr socket close", ec.message());
+	}
 }
 
 void Input::handle_receive_from(const error_code &ec, size_t len) {

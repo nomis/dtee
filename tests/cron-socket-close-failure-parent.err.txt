@@ -1,0 +1,3 @@
+./dtee: stdout socket close: Input/output error
+./dtee: stderr socket close: Input/output error
+./dtee: dtee@test/cron-socket-close-failure-parent.run: exited with status 0

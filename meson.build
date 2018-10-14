@@ -114,6 +114,7 @@ shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'] + test_common, c
 shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-bind-failure', ['tests/socket-bind-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('socket-close-failure', ['tests/socket-close-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-connect-failure', ['tests/socket-connect-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-getsockopt-fake-rcvbuf', ['tests/socket-getsockopt-fake-rcvbuf.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-setsockopt-monitor', ['tests/socket-setsockopt-monitor.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
@@ -272,4 +273,8 @@ test('cron dtee killed by signal 9', find_program('tests/cron-command-kill-ppid-
 test('cron dtee killed by signal 15', find_program('tests/cron-command-kill-ppid-sigterm.sh'), env: test_env)
 
 test('dup2 failure', find_program('tests/dup2-failure.sh'), env: test_env)
+test('socket close failure (child)', find_program('tests/socket-close-failure-child.sh'), env: test_env)
+test('socket close failure (parent)', find_program('tests/socket-close-failure-parent.sh'), env: test_env)
 test('cron dup2 failure', find_program('tests/cron-dup2-failure.sh'), env: test_env)
+test('cron socket close failure (child)', find_program('tests/cron-socket-close-failure-child.sh'), env: test_env)
+test('cron socket close failure (parent)', find_program('tests/cron-socket-close-failure-parent.sh'), env: test_env)
