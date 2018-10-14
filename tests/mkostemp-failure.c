@@ -1,6 +1,6 @@
+// Don't include <stdlib.h> because libc6 will define an inline mkostemp() redirect to mkostemp64()
 #include <dlfcn.h>
 #include <errno.h>
-#include <stdlib.h>
 
 #include "is-dtee.h"
 
