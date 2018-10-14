@@ -25,8 +25,9 @@ int main(int argc, char *argv[]) {
 			value = strtoul(env_rlimit_core, NULL, 10);
 #ifdef __linux__
 			// If kernel.core_pattern is a pipe and fs.suid_dumpable is non-zero,
-			// then core dumps happen even if RLIMIT_CORE is 0. However, they don't
-			// happen if RLIMIT_CORE is the special value of 1.
+			// then core dumps happen even if RLIMIT_CORE is 0 or the executable is
+			// not readable. However, they don't happen if RLIMIT_CORE is the special
+			// value of 1.
 
 			if (value == 0) {
 				value = 1;
