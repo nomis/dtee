@@ -124,7 +124,7 @@ shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_com
 
 executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
-executable('test-report', ['tests/report.c'], c_args: test_c_args)
+executable('test-report', ['tests/report.c', 'tests/is-fd-unix-socket.c'], c_args: test_c_args)
 executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)
 executable('test-writes-of-n-bytes', ['tests/writes-of-n-bytes.c'], c_args: test_c_args)
 

@@ -10,6 +10,7 @@ function test_prepare() {
 COMMON_TEST_LD_PRELOAD=("${COMMON_TEST_LD_PRELOAD[@]/.\/libexecvp-fd-check.so}")
 TEST_NO_STDIN=1
 
+TEST_LD_PRELOAD="./libmkdtemp-consistent.so:./libfake-getpid.so:./libfake-getuid.so"
 run_test \
 	-o "$TESTDIR/$NAME.file.out-append.txt" -O "$TESTDIR/$NAME.file.out-overwrite.txt" \
 	-e "$TESTDIR/$NAME.file.err-append.txt" -E "$TESTDIR/$NAME.file.err-overwrite.txt" \

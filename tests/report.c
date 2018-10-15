@@ -1,3 +1,5 @@
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdbool.h>
@@ -5,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+#include "is-fd-unix-socket.h"
 
 static bool std_report(int fd, const char *name, const char *message) {
 	bool ok = true;
@@ -14,7 +18,13 @@ static bool std_report(int fd, const char *name, const char *message) {
 	if (fcntl(fd, F_GETFL) != -1) {
 		ssize_t rlen = read(fd, buf, 1);
 		ssize_t wlen = write(fd, message, strlen(message));
-		ok &= printf("fd %s open read=%zd (%02x) write=%zd\n", name, rlen, buf[0], wlen) > 0;
+		struct sockaddr_un addr;
+
+		ok &= printf("fd %s open read=%zd (%02x) write=%zd", name, rlen, buf[0], wlen) > 0;
+		if (dtee_test_is_fd_unix_socket(fd, &addr)) {
+			ok &= printf(" sockname=%s", addr.sun_path) > 0;
+		}
+		ok &= printf("\n") > 0;
 		ok &= !fflush(stdout);
 	} else {
 		ok &= printf("fd %s closed errno=%d\n", name, errno) > 0;
