@@ -56,7 +56,7 @@ executable('dtee',
 	install: true)
 
 custom_target('cronty',
-	command: [find_program('ln'), '-s', 'dtee', 'cronty'],
+	command: [find_program('ln'), '-s', '-f', 'dtee', 'cronty'],
 	output: 'cronty',
 	install: true,
 	install_dir: get_option('bindir'))
