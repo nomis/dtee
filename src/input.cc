@@ -58,7 +58,7 @@ Input::~Input() {
 bool Input::open(bool handle_interrupt_signals) {
 	// There is no equivalent of mkstemp() for local sockets,
 	// so we create them in a temporary directory instead.
-	TempDirectory temp_dir("input");
+	TempDirectory temp_dir{"input"};
 
 	if (handle_interrupt_signals) {
 		signals_.add(SIGHUP);
@@ -74,7 +74,7 @@ bool Input::open(bool handle_interrupt_signals) {
 	const datagram_protocol::endpoint input_ep{input_name};
 
 	const string out_name = temp_dir.register_file("o");
-	out_ep_ = datagram_protocol::endpoint(out_name);
+	out_ep_ = datagram_protocol::endpoint{out_name};
 
 	const string err_name = temp_dir.register_file("e");
 	err_ep_ = datagram_protocol::endpoint{err_name};
