@@ -17,26 +17,25 @@
 */
 #include "temp_directory.h"
 
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <cstdlib>
 #include <string>
 #include <vector>
 
 #include "application.h"
-#include "command_line.h"
+#include "temp_file.h"
 
 using ::std::string;
-using ::std::to_string;
 using ::std::vector;
 
 namespace dtee {
 
 TempDirectory::TempDirectory(const string &name) {
-	string pattern { "/tmp/" + CommandLine::internal_name() +  "." + to_string(getuid()) + "." + to_string(getpid()) + "." + name + ".XXXXXX" };
-	vector<char> filename {pattern.cbegin(), pattern.cend() + 1};
+	const string pattern = temp_filename_pattern(name);
+	vector<char> filename{pattern.cbegin(), pattern.cend() + 1};
 	char *temp_dir;
 
 	errno = 0;

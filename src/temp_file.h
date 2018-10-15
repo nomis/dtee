@@ -22,10 +22,14 @@
 
 namespace dtee {
 
+std::string temp_filename_pattern(const std::string &name);
+
 class TempFile {
 public:
 	explicit TempFile(const std::string &name);
 	~TempFile();
+
+	static std::string template_filename(const std::string &name);
 
 	bool open();
 	std::string name();

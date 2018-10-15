@@ -49,6 +49,7 @@ executable('dtee',
 	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
 	dependencies: [
 		dependency('boost', modules: [
+			'filesystem',
 			'program_options',
 			'system',
 		]),
