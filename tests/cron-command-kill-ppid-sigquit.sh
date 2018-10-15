@@ -2,13 +2,20 @@
 set -vx
 . "$(dirname "$0")"/util/common.sh
 
+export DTEE_TEST_MONITOR_OUTPUT="$TESTDIR/$NAME.canary"
+
+function test_prepare() {
+        rm -f "$DTEE_TEST_MONITOR_OUTPUT"
+}
+
 # Disable core dumps (this may not work on Linux)
 ulimit -H -c 0 || exit 1
 ulimit -S -c 0 || exit 1
-run_test -q ./test-kill-ppid 3
+run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 3
 RET=$?
 
-eval $(./test-waitpid ./dtee ./dtee -q ./test-kill-ppid 3)
+test_prepare
+eval $(./test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 3)
 RET2=$?
 
 echo RET $RET
