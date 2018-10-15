@@ -16,6 +16,11 @@ COMMON_TEST_LD_PRELOAD=(./libexecvp-fd-check.so)
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
 
+# Use a consistent and isolated temporary directory
+rm -rf "$TESTDIR/$NAME.tmp"
+mkdir -p "$TESTDIR/$NAME.tmp"
+export TMPDIR="./$TESTDIR/$NAME.tmp"
+
 function before_test() {
 	OLD_LD_PRELOAD="$LD_PRELOAD"
 	OIFS="$IFS" IFS=:

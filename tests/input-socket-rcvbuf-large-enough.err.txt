@@ -1,2 +1,2 @@
-socket-setsockopt-monitor: setsockopt("/tmp/dtee.1.1.input.XXXXXX/o", SOL_SOCKET, SO_SNDBUF, PIPE_BUF*4, ...)
-socket-setsockopt-monitor: setsockopt("/tmp/dtee.1.1.input.XXXXXX/e", SOL_SOCKET, SO_SNDBUF, PIPE_BUF*4, ...)
+socket-setsockopt-monitor: setsockopt("./dtee@test/input-socket-rcvbuf-large-enough.tmp/dtee.1.1.input.XXXXXX/o", SOL_SOCKET, SO_SNDBUF, PIPE_BUF*4, ...)
+socket-setsockopt-monitor: setsockopt("./dtee@test/input-socket-rcvbuf-large-enough.tmp/dtee.1.1.input.XXXXXX/e", SOL_SOCKET, SO_SNDBUF, PIPE_BUF*4, ...)

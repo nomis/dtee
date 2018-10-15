@@ -226,9 +226,9 @@ test('cron normal output file not writeable (stdout)', find_program('tests/cron-
 test('cron normal output file not writeable (stderr)', find_program('tests/cron-file-write-failure-stderr.sh'), env: test_env)
 test('cron normal output file not writeable (combined)', find_program('tests/cron-file-write-failure-combined.sh'), env: test_env)
 test('cron temporary output file not openable', find_program('tests/cron-file-open-failure-cron.sh'), env: test_env)
-test('cron temporary output file not writeable', find_program('tests/cron-file-write-failure-cron.sh'), env: test_env, is_parallel: false)
-test('cron temporary output file not readable', find_program('tests/cron-file-read-failure-cron.sh'), env: test_env, is_parallel: false)
-test('cron temporary output file not seekable', find_program('tests/cron-file-seek-failure-cron.sh'), env: test_env, is_parallel: false)
+test('cron temporary output file not writeable', find_program('tests/cron-file-write-failure-cron.sh'), env: test_env)
+test('cron temporary output file not readable', find_program('tests/cron-file-read-failure-cron.sh'), env: test_env)
+test('cron temporary output file not seekable', find_program('tests/cron-file-seek-failure-cron.sh'), env: test_env)
 
 test('input temporary directory create failure', find_program('tests/input-temp-dir-failure.sh'), env: test_env)
 test('input socket create failure', find_program('tests/input-socket-create-failure.sh'), env: test_env)
@@ -251,9 +251,9 @@ test('cron input socket bind failure', find_program('tests/cron-input-socket-bin
 test('cron input socket connect failure', find_program('tests/cron-input-socket-connect-failure.sh'), env: test_env)
 test('cron input socket shutdown failure', find_program('tests/cron-input-socket-shutdown-failure.sh'), env: test_env)
 
-test('input socket rcvbuf large enough', find_program('tests/input-socket-rcvbuf-large-enough.sh'), env: test_env, is_parallel: false)
-test('input socket rcvbuf minimum size', find_program('tests/input-socket-rcvbuf-minimum-size.sh'), env: test_env, is_parallel: false)
-test('input socket rcvbuf too small', find_program('tests/input-socket-rcvbuf-too-small.sh'), env: test_env, is_parallel: false)
+test('input socket rcvbuf large enough', find_program('tests/input-socket-rcvbuf-large-enough.sh'), env: test_env)
+test('input socket rcvbuf minimum size', find_program('tests/input-socket-rcvbuf-minimum-size.sh'), env: test_env)
+test('input socket rcvbuf too small', find_program('tests/input-socket-rcvbuf-too-small.sh'), env: test_env)
 
 test('report arguments and file descriptors', find_program('tests/report.sh'), env: test_env)
 test('report arguments and file descriptors (no stdin)', find_program('tests/report-no-stdin.sh'), env: test_env)

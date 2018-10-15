@@ -1,4 +1,4 @@
-./dtee: unable to create temporary file /tmp/dtee.1.1.output.XXXXXX: Read-only file system
+./dtee: unable to create temporary file ./dtee@test/cron-input-and-output-failure.tmp/dtee.1.1.output.XXXXXX: Read-only file system
 ./dtee: input socket: open: Address family not supported by protocol
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
