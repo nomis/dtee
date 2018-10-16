@@ -22,7 +22,10 @@ static bool std_report(int fd, const char *name, const char *message) {
 
 		ok &= printf("fd %s open read=%zd (%02x) write=%zd", name, rlen, buf[0], wlen) > 0;
 		if (dtee_test_is_fd_unix_socket(fd, &addr)) {
-			ok &= printf(" sockname=%s", addr.sun_path) > 0;
+			char path[sizeof(addr.sun_path) + 1] = { 0 };
+
+			memcpy(path, &addr.sun_path, sizeof(addr.sun_path));
+			ok &= printf(" sockname=%s", path) > 0;
 		}
 		ok &= printf("\n") > 0;
 		ok &= !fflush(stdout);

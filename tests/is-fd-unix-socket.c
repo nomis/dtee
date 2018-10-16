@@ -11,6 +11,9 @@ bool dtee_test_is_fd_unix_socket(int fd, struct sockaddr_un *addr) {
 
 	if (addr == NULL) {
 		addr = &buf;
+	} else {
+		memset(addr, 0, sizeof(*addr));
+		addr->sun_family = AF_UNSPEC;
 	}
 
 	if (getsockname(fd, (struct sockaddr*)addr, &addrlen) == 0) {
