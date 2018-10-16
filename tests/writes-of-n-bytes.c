@@ -15,9 +15,10 @@ static void append(const char *text) {
 }
 
 int main(int argc, char *argv[]) {
+	int fd;
 	int bytes;
 
-	if (argc != 3) {
+	if (argc != 4) {
 		return EXIT_FAILURE;
 	}
 
@@ -242,14 +243,22 @@ int main(int argc, char *argv[]) {
 	append("Aenean scelerisque, odio non accumsan fringilla, est ligula luctus purus, a auctor nunc felis id nunc. Maecenas metus.\n");
 	assert(strlen(message) == MAX_SIZE);
 
-	if (!strcmp(argv[1], "PIPE_BUF")) {
+	if (!strcmp(argv[1], "STDOUT_FILENO")) {
+		fd = STDOUT_FILENO;
+	} else if (!strcmp(argv[1], "STDERR_FILENO")) {
+		fd = STDERR_FILENO;
+	} else {
+		abort();
+	}
+
+	if (!strcmp(argv[2], "PIPE_BUF")) {
 		bytes = PIPE_BUF;
 	} else {
-		bytes = strtol(argv[1], NULL, 10);
+		bytes = strtol(argv[2], NULL, 10);
 	}
 
 	if (bytes == 0) {
-		if (write(STDOUT_FILENO, "", 0) != 0) {
+		if (write(fd, "", 0) != 0) {
 			return EX_IOERR;
 		}
 	} else {
@@ -260,7 +269,7 @@ int main(int argc, char *argv[]) {
 				bytes = MAX_SIZE - written;
 			}
 
-			if (write(STDOUT_FILENO, &message[written], bytes) != bytes) {
+			if (write(fd, &message[written], bytes) != bytes) {
 				return EX_IOERR;
 			}
 
@@ -270,5 +279,5 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Alter exit status in cron mode so that it will output the message
-	return strtol(argv[2], NULL, 10) == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+	return strtol(argv[3], NULL, 10) == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }

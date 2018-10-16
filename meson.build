@@ -155,9 +155,12 @@ test('file combined overwrite (existing)', find_program('tests/file-combined-ove
 test('file combined append (new file)', find_program('tests/file-combined-append-new.sh'), env: test_env)
 test('file combined append (existing)', find_program('tests/file-combined-append-existing.sh'), env: test_env)
 
-test('write 0 bytes', find_program('tests/write-0-bytes.sh'), env: test_env)
-test('writes of PIPE_BUF bytes', find_program('tests/writes-of-PIPE_BUF-bytes.sh'), env: test_env)
-test('cron writes of PIPE_BUF bytes', find_program('tests/cron-writes-of-PIPE_BUF-bytes.sh'), env: test_env)
+test('write 0 bytes (stdout)', find_program('tests/write-0-bytes-stdout.sh'), env: test_env)
+test('write 0 bytes (stderr)', find_program('tests/write-0-bytes-stderr.sh'), env: test_env)
+test('writes of PIPE_BUF bytes (stdout)', find_program('tests/writes-of-PIPE_BUF-bytes-stdout.sh'), env: test_env)
+test('writes of PIPE_BUF bytes (stderr)', find_program('tests/writes-of-PIPE_BUF-bytes-stderr.sh'), env: test_env)
+test('cron writes of PIPE_BUF bytes (stdout)', find_program('tests/cron-writes-of-PIPE_BUF-bytes-stdout.sh'), env: test_env)
+test('cron writes of PIPE_BUF bytes (stderr)', find_program('tests/cron-writes-of-PIPE_BUF-bytes-stderr.sh'), env: test_env)
 
 test('debug options (none)', find_program('tests/options-none.sh'), env: test_env)
 test('debug options (cron)', find_program('tests/options-cron.sh'), env: test_env)
