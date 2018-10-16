@@ -37,8 +37,8 @@ compile: | $(RELEASE_DIR)/
 debug-compile: | $(DEBUG_DIR)/
 	$(NINJA) -C $(DEBUG_DIR)/
 
-check: compile
-	rm -rf "$(COVERAGE_DIR)/dtee@test/"
+check: | $(RELEASE_DIR)/
+	rm -rf "$(RELEASE_DIR)/dtee@test/"
 	$(NINJA) -C $(RELEASE_DIR)/ test
 
 coverage: | $(COVERAGE_DIR)/
