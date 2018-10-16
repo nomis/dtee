@@ -33,7 +33,6 @@
 using ::std::bind;
 using ::std::shared_ptr;
 using ::std::string;
-using ::std::to_string;
 using ::boost::asio::local::datagram_protocol;
 using ::boost::asio::io_service;
 using ::boost::system::error_code;
@@ -234,12 +233,22 @@ void Input::fork_child() {
 
 void Input::handle_receive_from(const error_code &ec, size_t len) {
 	if (!ec) {
+		// It is not practical to prevent the same endpoint path from
+		// being used by a new socket (especially if it is a relative
+		// path) after it has been unlinked because multiple binds are
+		// only prevented for the file inode not the path. However, it
+		// will not be possible to make additional connections to the
+		// input socket after it has been unlinked (even if the same
+		// path is created).
 		if (recv_ep_ == out_ep_) {
 			output_failed_ |= !output_->output(OutputType::STDOUT, buffer_, len);
 		} else if (recv_ep_ == err_ep_) {
 			output_failed_ |= !output_->output(OutputType::STDERR, buffer_, len);
 		} else {
-			// Data from any other sockets should not be possible and is ignored
+			// Ignore data from any other sockets
+#ifdef GCOV_ENABLED
+			recv_ep_ = datagram_protocol::endpoint{};
+#endif
 		}
 
 		input_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,

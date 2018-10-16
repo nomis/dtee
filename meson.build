@@ -114,6 +114,7 @@ shared_library('mkostemp-consistent', ['tests/mkostemp-consistent.c'] + test_com
 shared_library('mkostemp-failure', ['tests/mkostemp-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-readonly', ['tests/mkostemp-readonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('socket-add-extra-source', ['tests/socket-add-extra-source.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-bind-failure', ['tests/socket-bind-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-close-failure', ['tests/socket-close-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('socket-connect-failure', ['tests/socket-connect-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
@@ -257,6 +258,8 @@ test('cron input socket shutdown failure', find_program('tests/cron-input-socket
 test('input socket rcvbuf large enough', find_program('tests/input-socket-rcvbuf-large-enough.sh'), env: test_env)
 test('input socket rcvbuf minimum size', find_program('tests/input-socket-rcvbuf-minimum-size.sh'), env: test_env)
 test('input socket rcvbuf too small', find_program('tests/input-socket-rcvbuf-too-small.sh'), env: test_env)
+
+test('input socket message from unknown source', find_program('tests/input-socket-extra-source.sh'), env: test_env)
 
 test('report arguments and file descriptors', find_program('tests/report.sh'), env: test_env)
 test('report arguments and file descriptors (no stdin)', find_program('tests/report-no-stdin.sh'), env: test_env)
