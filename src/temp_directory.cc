@@ -17,8 +17,6 @@
 */
 #include "temp_directory.h"
 
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <errno.h>
 #include <unistd.h>
 #include <cstdlib>
@@ -26,7 +24,7 @@
 #include <vector>
 
 #include "application.h"
-#include "temp_file.h"
+#include "temp_filename_pattern.h"
 
 using ::std::string;
 using ::std::vector;

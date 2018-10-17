@@ -21,6 +21,7 @@ source_files = [
 	'src/stream_output.cc',
 	'src/temp_directory.cc',
 	'src/temp_file.cc',
+	'src/temp_filename_pattern.cc',
 ]
 
 compile_args = [

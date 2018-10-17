@@ -21,36 +21,16 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdlib>
-#if __cplusplus >= 201703L
-# include <filesystem>
-#endif
 #include <string>
 #include <vector>
 
-#if __cplusplus < 201703L
-# include <boost/filesystem.hpp>
-#endif
-#include <boost/format.hpp>
-
 #include "application.h"
-#include "command_line.h"
+#include "temp_filename_pattern.h"
 
-#if __cplusplus < 201703L
-using ::boost::filesystem::temp_directory_path;
-#endif
-using ::boost::format;
-#if __cplusplus >= 201703L
-using ::std::filesystem::temp_directory_path;
-#endif
 using ::std::string;
 using ::std::vector;
 
 namespace dtee {
-
-string temp_filename_pattern(const string &name) {
-	const string pattern_file{(format("%s.%d.%d.%s.XXXXXX") % CommandLine::internal_name() % getuid() % getpid() % name).str()};
-	return temp_directory_path().append(pattern_file).string();
-}
 
 TempFile::TempFile(const string &name)
 		: name_(name) {
