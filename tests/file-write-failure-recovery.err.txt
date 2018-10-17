@@ -1,0 +1,6 @@
+./dtee: dtee@test/file-write-failure-recovery.file.out-overwrite1.txt: No space left on device
+./dtee: dtee@test/file-write-failure-recovery.file.out-overwrite1.txt: No space left on device
+./dtee: dtee@test/file-write-failure-recovery.file.out-overwrite1.txt: No space left on device
+./dtee: dtee@test/file-write-failure-recovery.file.out-overwrite1.txt: No space left on device
+./dtee: dtee@test/file-write-failure-recovery.file.out-overwrite1.txt: No space left on device
+./dtee: dtee@test/file-write-failure-recovery.file.out-overwrite1.txt: No space left on device

@@ -107,6 +107,7 @@ shared_library('dup2-failure', ['tests/dup2-failure.c'] + test_common, c_args: d
 shared_library('execvp-fd-check', ['tests/execvp-fd-check.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('fake-getpid', ['tests/fake-getpid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('fake-getuid', ['tests/fake-getuid.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
+shared_library('file-write-failure-recovery', ['tests/file-write-failure-recovery.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('lseek-failure', ['tests/lseek-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('lseek64-failure', ['tests/lseek64-failure.c'] + test_common, c_args: dlfcn_args + ['-D_LARGEFILE64_SOURCE'], dependencies: dlfcn_deps)
 shared_library('mkdtemp-consistent', ['tests/mkdtemp-consistent.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
@@ -234,6 +235,10 @@ test('cron temporary output file not openable', find_program('tests/cron-file-op
 test('cron temporary output file not writeable', find_program('tests/cron-file-write-failure-cron.sh'), env: test_env)
 test('cron temporary output file not readable', find_program('tests/cron-file-read-failure-cron.sh'), env: test_env)
 test('cron temporary output file not seekable', find_program('tests/cron-file-seek-failure-cron.sh'), env: test_env)
+
+test('output file writes fail and recover', find_program('tests/file-write-failure-recovery.sh'), env: test_env)
+test('cron normal output file writes fail and recover (exit code 0)', find_program('tests/cron-file-write-failure-recovery-exit-0.sh'), env: test_env)
+test('cron normal output file writes fail and recover (exit code 42)', find_program('tests/cron-file-write-failure-recovery-exit-42.sh'), env: test_env)
 
 test('input temporary directory create failure', find_program('tests/input-temp-dir-failure.sh'), env: test_env)
 test('input socket create failure', find_program('tests/input-socket-create-failure.sh'), env: test_env)
