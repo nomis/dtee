@@ -27,7 +27,9 @@ using ::std::vector;
 
 namespace dtee {
 
-StreamOutput::StreamOutput(ostream &stream, OutputType type) : stream_(stream), type_(type) {
+StreamOutput::StreamOutput(ostream &stream, OutputType type)
+	: stream_(stream),
+	  type_(type) {
 
 }
 

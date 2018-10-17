@@ -24,7 +24,8 @@ using ::std::string;
 namespace dtee {
 
 /* cppcheck-suppress passedByValue symbolName=outputs */
-Copy::Copy(std::list<std::shared_ptr<Output>> outputs) : outputs_(outputs) {
+Copy::Copy(std::list<std::shared_ptr<Output>> outputs)
+	: outputs_(outputs) {
 
 }
 

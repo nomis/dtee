@@ -30,7 +30,9 @@ using ::std::string;
 
 namespace dtee {
 
-FileOutput::FileOutput(const string &filename, FileOutputType type, bool append) : filename_(filename), append_(append) {
+FileOutput::FileOutput(const string &filename, FileOutputType type, bool append)
+	: filename_(filename),
+	  append_(append) {
 	switch (type) {
 	case FileOutputType::STDOUT:
 		filtered_ = true;
