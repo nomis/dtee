@@ -6,8 +6,4 @@ set -vx
 run_test "--debug-options" "--" "command" "-o" "filename1" "-e" "filename2" "-c" "filename3" "another argument"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 0 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET 0

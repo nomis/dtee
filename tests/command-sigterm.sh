@@ -8,13 +8,6 @@ RET=$?
 eval $(./test-waitpid ./dtee ./dtee ./test-kill-pid 15)
 RET2=$?
 
-echo RET $RET
-echo RET2 $RET
-echo WIFEXITED $WIFEXITED
-echo WEXITSTATUS $WEXITSTATUS
-echo WIFSIGNALED $WIFSIGNALED
-echo WTERMSIG $WTERMSIG
-if [ $RET -eq $((128 + 15)) ] && [ $RET2 -eq 0 ] && [ $WIFSIGNALED -eq 0 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $((128 + 15)) \
+	RET2 0 \
+	WIFSIGNALED 0

@@ -18,13 +18,7 @@ test_prepare
 eval $(./test-waitpid ./dtee ./dtee -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 3)
 RET2=$?
 
-echo RET $RET
-echo RET2 $RET
-echo WIFEXITED $WIFEXITED
-echo WEXITSTATUS $WEXITSTATUS
-echo WIFSIGNALED $WIFSIGNALED
-echo WTERMSIG $WTERMSIG
-if [ $RET -eq $((128 + 3)) ] && [ $RET2 -eq 0 ] && [ $WIFSIGNALED -eq 1 ] && [ $WTERMSIG -eq 3 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $((128 + 3)) \
+	RET2 0 \
+	WIFSIGNALED 1 \
+	WTERMSIG 3

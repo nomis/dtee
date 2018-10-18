@@ -33,14 +33,10 @@ CMP_COM_A=$?
 cmp_files "${0/.sh/.file.com-overwrite.txt}" "$TESTDIR/$NAME.file.com-overwrite.txt"
 CMP_COM_O=$?
 
-echo RET $RET
-echo CMP_OUT_A $CMP_OUT_A
-echo CMP_OUT_O $CMP_OUT_O
-echo CMP_ERR_A $CMP_ERR_A
-echo CMP_ERR_O $CMP_ERR_O
-echo CMP_COM_A $CMP_COM_A
-echo CMP_COM_O $CMP_COM_O
-if [ $RET -eq 0 ] && [ $CMP_OUT_A -eq 0 ] && [ $CMP_OUT_O -eq 0 ] && [ $CMP_ERR_A -eq 0 ] && [ $CMP_ERR_O -eq 0 ] && [ $CMP_COM_A -eq 0 ] && [ $CMP_COM_O -eq 0 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET 0 \
+	CMP_OUT_A 0 \
+	CMP_OUT_O 0 \
+	CMP_ERR_A 0 \
+	CMP_ERR_O 0 \
+	CMP_COM_A 0 \
+	CMP_COM_O 0

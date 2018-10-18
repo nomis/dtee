@@ -6,8 +6,4 @@ set -vx
 run_test "-o" "file_not_writeable" "$RUN"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 73 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_CANTCREAT

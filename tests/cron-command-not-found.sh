@@ -5,8 +5,4 @@ set -vx
 run_test "-q" "./command_not_found"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 66 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_NOINPUT

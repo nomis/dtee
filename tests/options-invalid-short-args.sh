@@ -5,8 +5,4 @@ set -vx
 run_test "--debug-options" "-a" "your" "-b" "are" "-b" "to" "us"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 64 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_USAGE

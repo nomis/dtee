@@ -19,10 +19,6 @@ CMP_OUT1_O=$?
 cmp_files "${0/.sh/.file.out-overwrite2.txt}" "$TESTDIR/$NAME.file.out-overwrite2.txt"
 CMP_OUT2_O=$?
 
-echo RET $RET
-echo CMP_OUT1_O $CMP_OUT1_O
-echo CMP_OUT2_O $CMP_OUT2_O
-if [ $RET -eq 74 ] && [ $CMP_OUT1_O -eq 0 ] && [ $CMP_OUT2_O ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_IOERR \
+	CMP_OUT1_O 0 \
+	CMP_OUT2_O 0

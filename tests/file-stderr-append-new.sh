@@ -12,9 +12,5 @@ RET=$?
 cmp_files "${0/.sh/.file.err-append}" "$TESTDIR/$NAME.file.err-append"
 CMP_ERR_A=$?
 
-echo RET $RET
-echo CMP_ERR_A $CMP_ERR_A
-if [ $RET -eq 0 ] && [ $CMP_ERR_A -eq 0 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET 0 \
+	CMP_ERR_A 0

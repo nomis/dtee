@@ -1,5 +1,6 @@
 #!/bin/bash
 set -vx
+. "$(dirname "$0")"/util/common.sh
 
 # Ask for the version, get exit code 0 and version information
 coproc { ./dtee --version; }
@@ -20,11 +21,7 @@ done <&$COPROC
 wait $PID
 RET=$?
 
-echo RET $RET
-echo INFO $INFO
-echo COPYRIGHT $COPYRIGHT
-echo LICENCE $LICENCE
-if [ $RET -eq 0 ] && [ $INFO -eq 1 ] && [ $COPYRIGHT -eq 1 ] && [ $LICENCE -eq 1 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET 0 \
+	INFO 1 \
+	COPYRIGHT 1 \
+	LICENCE 1

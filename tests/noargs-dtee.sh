@@ -1,7 +1,8 @@
 #!/bin/bash
 set -vx
+. "$(dirname "$0")"/util/common.sh
 
-# Provide no arguments, get exit code 1 and usage information (including cron option)
+# Provide no arguments, get exit code 64 and usage information (including cron option)
 coproc { ./dtee; }
 PID=$!
 
@@ -18,10 +19,6 @@ done <&$COPROC
 wait $PID
 RET=$?
 
-echo RET $RET
-echo USAGE $USAGE
-echo CRON $CRON
-if [ $RET -eq 64 ] && [ $USAGE -eq 1 ] && [ $CRON -eq 1 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_USAGE \
+	USAGE 1 \
+	CRON 1

@@ -8,8 +8,4 @@ rm -f cron_command_not_executable
 run_test "-q" "./cron_command_not_executable"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 66 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_NOINPUT

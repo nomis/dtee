@@ -21,6 +21,23 @@ rm -rf "$TESTDIR/$NAME.tmp"
 mkdir -p "$TESTDIR/$NAME.tmp"
 export TMPDIR="./$TESTDIR/$NAME.tmp"
 
+# /usr/include/sysexits.h
+EX_USAGE=64
+EX_DATAERR=65
+EX_NOINPUT=66
+EX_NOUSER=67
+EX_NOHOST=68
+EX_UNAVAILABLE=69
+EX_SOFTWARE=70
+EX_OSERR=71
+EX_OSFILE=72
+EX_CANTCREAT=73
+EX_IOERR=74
+EX_TEMPFAIL=75
+EX_PROTOCOL=76
+EX_NOPERM=77
+EX_CONFIG=78
+
 function before_test() {
 	OLD_LD_PRELOAD="$LD_PRELOAD"
 	OIFS="$IFS" IFS=:
@@ -45,6 +62,38 @@ function cmp_files() {
 	CMP=$?
 	[ $CMP -ne 0 ] && diff -U4 "$1" "$2"
 	return $CMP
+}
+
+function check_variables() {
+	CV_EXIT_CODE="$1"
+	CV_OPERATOR="$2"
+	CV_OK=1
+	shift 2
+
+	while [ -n "$1" ]; do
+		echo "$1" actual "${!1}" expected "$2"
+		if [ ! "${!1}" $CV_OPERATOR "$2" ]; then
+			CV_OK=0
+		fi
+		shift 2
+	done
+
+	if [ $CV_OK -eq 1 ]; then
+		exit "$CV_EXIT_CODE"
+	fi
+}
+
+function check_variables_eq() {
+	check_variables 0 -eq "$@"
+}
+
+function variables_must_eq() {
+	check_variables_eq "$@"
+	exit 1
+}
+
+function check_variables_ne() {
+	check_variables 1 -ne "$@"
 }
 
 function run_test() {
@@ -90,14 +139,8 @@ function run_test() {
 
 	declare -f test_cleanup >/dev/null && test_cleanup
 
-	echo RET1 $RET1
 	echo RET2 $RET2
-	echo CMP_OUT $CMP_OUT
-	echo CMP_ERR $CMP_ERR
-	echo CMP_COM $CMP_COM
-	if [ $RET1 -ne $RET2 ] || [ $CMP_OUT -ne 0 ] || [ $CMP_ERR -ne 0 ] || [ $CMP_COM -ne 0 ]; then
-	        exit 1
-	fi
+	check_variables_ne RET1 $RET2 CMP_OUT 0 CMP_ERR 0 CMP_COM 0
 
 	return $RET1
 }

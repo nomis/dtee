@@ -12,8 +12,4 @@ run_test \
 	"--debug-options"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 0 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET 0

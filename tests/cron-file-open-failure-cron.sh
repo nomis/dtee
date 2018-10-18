@@ -8,8 +8,4 @@ run_test "-q" "$RUN"
 RET=$?
 
 # Output errors prevent a 0 exit status
-echo RET $RET
-if [ $RET -eq 74 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_IOERR

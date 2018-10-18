@@ -6,8 +6,4 @@ set -vx
 run_test "--debug-options" "-o" "stdout_append" "--=command" "-e" "stderr_append" "--=argument 1" "-c" "combined_append" "--=argument 2" "-q" "--=argument 3"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 0 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET 0

@@ -1,5 +1,6 @@
 #!/bin/bash
 set -vx
+. "$(dirname "$0")"/util/common.sh
 
 # Ask for help, get exit code 0 and usage information (including cron option)
 coproc { ./dtee --help; }
@@ -18,10 +19,6 @@ done <&$COPROC
 wait $PID
 RET=$?
 
-echo RET $RET
-echo USAGE $USAGE
-echo CRON $CRON
-if [ $RET -eq 0 ] && [ $USAGE -eq 1 ] && [ $CRON -eq 1 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET 0 \
+	USAGE 1 \
+	CRON 1

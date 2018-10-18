@@ -6,8 +6,4 @@ TEST_LD_PRELOAD="./libsocket-unix-failure.so:./libfake-getpid.so:./libfake-getui
 run_test "$RUN"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 69 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_UNAVAILABLE

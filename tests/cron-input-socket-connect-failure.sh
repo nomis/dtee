@@ -7,8 +7,4 @@ TEST_LD_PRELOAD="./libsocket-connect-failure.so:./libfake-getpid.so:./libfake-ge
 run_test "-q" "$RUN"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 0 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET 0

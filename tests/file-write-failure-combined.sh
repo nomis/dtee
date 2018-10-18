@@ -5,8 +5,4 @@ set -vx
 run_test "-c" "/dev/full" "$RUN"
 RET=$?
 
-echo RET $RET
-if [ $RET -eq 74 ]; then
-	exit 0
-fi
-exit 1
+variables_must_eq RET $EX_IOERR
