@@ -15,29 +15,23 @@ run_test \
 	-q ./test-report 'Hello World!' ETAOIN SHRDLU
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.out-append.txt" "${0/.sh/.file.out-append.txt}"
+cmp_files "${0/.sh/.file.out-append.txt}" "$TESTDIR/$NAME.file.out-append.txt"
 CMP_OUT_A=$?
-[ $CMP_OUT_A -ne 0 ] && diff -U4 "${0/.sh/.file.out-append.txt}" "$TESTDIR/$NAME.file.out-append.txt"
 
-cmp "$TESTDIR/$NAME.file.out-overwrite.txt" "${0/.sh/.file.out-overwrite.txt}"
+cmp_files "${0/.sh/.file.out-overwrite.txt}" "$TESTDIR/$NAME.file.out-overwrite.txt"
 CMP_OUT_O=$?
-[ $CMP_OUT_O -ne 0 ] && diff -U4 "${0/.sh/.file.out-overwrite.txt}" "$TESTDIR/$NAME.file.out-overwrite.txt"
 
-cmp "$TESTDIR/$NAME.file.err-append.txt" "${0/.sh/.file.err-append.txt}"
+cmp_files "${0/.sh/.file.err-append.txt}" "$TESTDIR/$NAME.file.err-append.txt"
 CMP_ERR_A=$?
-[ $CMP_ERR_A -ne 0 ] && diff -U4 "${0/.sh/.file.err-append.txt}" "$TESTDIR/$NAME.file.err-append.txt"
 
-cmp "$TESTDIR/$NAME.file.err-overwrite.txt" "${0/.sh/.file.err-overwrite.txt}"
+cmp_files "${0/.sh/.file.err-overwrite.txt}" "$TESTDIR/$NAME.file.err-overwrite.txt"
 CMP_ERR_O=$?
-[ $CMP_ERR_O -ne 0 ] && diff -U4 "${0/.sh/.file.err-overwrite.txt}" "$TESTDIR/$NAME.file.err-overwrite.txt"
 
-cmp "$TESTDIR/$NAME.file.com-append.txt" "${0/.sh/.file.com-append.txt}"
+cmp_files "${0/.sh/.file.com-append.txt}" "$TESTDIR/$NAME.file.com-append.txt"
 CMP_COM_A=$?
-[ $CMP_COM_A -ne 0 ] && diff -U4 "${0/.sh/.file.com-append.txt}" "$TESTDIR/$NAME.file.com-append.txt"
 
-cmp "$TESTDIR/$NAME.file.com-overwrite.txt" "${0/.sh/.file.com-overwrite.txt}"
+cmp_files "${0/.sh/.file.com-overwrite.txt}" "$TESTDIR/$NAME.file.com-overwrite.txt"
 CMP_COM_O=$?
-[ $CMP_COM_O -ne 0 ] && diff -U4 "${0/.sh/.file.com-overwrite.txt}" "$TESTDIR/$NAME.file.com-overwrite.txt"
 
 echo RET $RET
 echo CMP_OUT_A $CMP_OUT_A

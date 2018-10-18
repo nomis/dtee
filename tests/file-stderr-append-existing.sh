@@ -12,9 +12,8 @@ function test_prepare() {
 run_test -e "$TESTDIR/$NAME.file.err-append" "$RUN"
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.err-append" "${0/.sh/.file.err-append}"
+cmp_files "${0/.sh/.file.err-append}" "$TESTDIR/$NAME.file.err-append"
 CMP_ERR_A=$?
-[ $CMP_ERR_A -ne 0 ] && diff -U4 "${0/.sh/.file.err-append}" "$TESTDIR/$NAME.file.err-append"
 
 echo RET $RET
 echo CMP_ERR_A $CMP_ERR_A

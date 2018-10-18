@@ -9,9 +9,8 @@ function test_prepare() {
 run_test -E "$TESTDIR/$NAME.file.err-overwrite.txt" ./test-writes-of-n-bytes STDERR_FILENO 0 0
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.err-overwrite.txt" "${0/.sh/.file.err-overwrite.txt}"
+cmp_files "${0/.sh/.file.err-overwrite.txt}" "$TESTDIR/$NAME.file.err-overwrite.txt"
 CMP_ERR_O=$?
-[ $CMP_ERR_O -ne 0 ] && diff -U4 "${0/.sh/.file.err-overwrite.txt}" "$TESTDIR/$NAME.file.err-overwrite.txt"
 
 echo RET $RET
 echo CMP_ERR_O $CMP_ERR_O

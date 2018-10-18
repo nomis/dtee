@@ -10,9 +10,8 @@ function test_prepare() {
 run_test -C "$TESTDIR/$NAME.file.com-overwrite.txt" "$RUN"
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.com-overwrite.txt" "${0/.sh/.file.com-overwrite.txt}"
+cmp_files "${0/.sh/.file.com-overwrite.txt}" "$TESTDIR/$NAME.file.com-overwrite.txt"
 CMP_COM_O=$?
-[ $CMP_COM_O -ne 0 ] && diff -U4 "${0/.sh/.file.com-overwrite.txt}" "$TESTDIR/$NAME.file.com-overwrite.txt"
 
 echo RET $RET
 echo CMP_COM_O $CMP_COM_O

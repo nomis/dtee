@@ -9,9 +9,8 @@ function test_prepare() {
 run_test -o "$TESTDIR/$NAME.file.out-append.txt" "$RUN"
 RET=$?
 
-cmp "$TESTDIR/$NAME.file.out-append.txt" "${0/.sh/.file.out-append.txt}"
+cmp_files "${0/.sh/.file.out-append.txt}" "$TESTDIR/$NAME.file.out-append.txt"
 CMP_OUT_A=$?
-[ $CMP_OUT_A -ne 0 ] && diff -U4 "${0/.sh/.file.out-append.txt}" "$TESTDIR/$NAME.file.out-append.txt"
 
 echo RET $RET
 echo CMP_OUT_A $CMP_OUT_A

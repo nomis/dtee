@@ -40,6 +40,13 @@ function after_test() {
 	export LD_PRELOAD="$OLD_LD_PRELOAD"
 }
 
+function cmp_files() {
+	cmp "$1" "$2"
+	CMP=$?
+	[ $CMP -ne 0 ] && diff -U4 "$1" "$2"
+	return $CMP
+}
+
 function run_test() {
 	if [ -e "${0/.sh/.in.txt}" ]; then
 		STDIN_FILE="${0/.sh/.in.txt}"
@@ -59,13 +66,11 @@ function run_test() {
 	RET1=$?
 	after_test
 
-	cmp "$TESTDIR/$NAME.out.txt" "${0/.sh/.out.txt}"
+	cmp_files "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
 	CMP_OUT=$?
-	[ $CMP_OUT -ne 0 ] && diff -U4 "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
 
-	cmp "$TESTDIR/$NAME.err.txt" "${0/.sh/.err.txt}"
+	cmp_files "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
 	CMP_ERR=$?
-	[ $CMP_ERR -ne 0 ] && diff -U4 "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
 
 	declare -f test_cleanup >/dev/null && test_cleanup
 	declare -f test_prepare >/dev/null && test_prepare
@@ -80,9 +85,8 @@ function run_test() {
 	RET2=$?
 	after_test
 
-	cmp "$TESTDIR/$NAME.com.txt" "${0/.sh/.com.txt}"
+	cmp_files "${0/.sh/.com.txt}" "$TESTDIR/$NAME.com.txt"
 	CMP_COM=$?
-	[ $CMP_COM -ne 0 ] && diff -U4 "${0/.sh/.com.txt}" "$TESTDIR/$NAME.com.txt"
 
 	declare -f test_cleanup >/dev/null && test_cleanup
 
