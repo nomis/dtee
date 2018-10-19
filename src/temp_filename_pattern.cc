@@ -33,8 +33,8 @@
 
 #if __cplusplus < 201703L
 using ::boost::filesystem::temp_directory_path;
-using ::boost::format;
 #endif
+using ::boost::format;
 #if __cplusplus >= 201703L
 using ::std::filesystem::temp_directory_path;
 #endif
