@@ -1,5 +1,4 @@
 #!/bin/bash
-set -vx
 . "$(dirname "$0")"/util/common.sh
 
 # Allow the first two sockets to work

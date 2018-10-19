@@ -1,5 +1,4 @@
 #!/bin/bash
-set -vx
 . "$(dirname "$0")"/util/common.sh
 
 # Provide no arguments, get exit code 64 and usage information (excluding cron option)

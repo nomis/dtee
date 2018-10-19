@@ -75,6 +75,7 @@ function cmp_files() {
 }
 
 function check_variables() {
+	set +x
 	CV_EXIT_CODE="$1"
 	CV_OPERATOR="$2"
 	CV_OK=1
@@ -89,20 +90,25 @@ function check_variables() {
 	done
 
 	if [ $CV_OK -eq 1 ]; then
+		set -x
 		exit "$CV_EXIT_CODE"
 	fi
+	set -x
 }
 
 function check_variables_eq() {
+	set +x
 	check_variables $TEST_EX_OK -eq "$@"
 }
 
 function variables_must_eq() {
+	set +x
 	check_variables_eq "$@"
 	exit $TEST_EX_FAIL
 }
 
 function check_variables_ne() {
+	set +x
 	check_variables $TEST_EX_FAIL -ne "$@"
 }
 
@@ -154,3 +160,5 @@ function run_test() {
 
 	return $RET1
 }
+
+set -x

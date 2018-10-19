@@ -1,5 +1,4 @@
 #!/bin/bash
-set -vx
 . "$(dirname "$0")"/util/common.sh
 
 # If the temporary output file cannot be opened, it should fallback to using stdout/stderr as normal
