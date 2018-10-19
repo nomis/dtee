@@ -17,16 +17,19 @@
 */
 #include "temp_file.h"
 
-#include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdlib>
 #include <string>
 #include <vector>
 
+#include <boost/format.hpp>
+
 #include "application.h"
 #include "temp_filename_pattern.h"
+#include "to_string.h"
 
+using ::boost::format;
 using ::std::string;
 using ::std::vector;
 
@@ -47,7 +50,7 @@ bool TempFile::open() {
 	errno = 0;
 	fd_ = mkostemp(filename.data(), O_CLOEXEC);
 	if (fd_ < 0) {
-		Application::print_error("unable to create temporary file " + pattern, errno);
+		Application::print_error(format("unable to create temporary file %1%: %2%") % pattern % errno_to_string());
 		return false;
 	} else {
 		filename_ = string(filename.data());

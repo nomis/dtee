@@ -17,15 +17,18 @@
 */
 #include "temp_directory.h"
 
-#include <errno.h>
 #include <unistd.h>
 #include <cstdlib>
 #include <string>
 #include <vector>
 
+#include <boost/format.hpp>
+
 #include "application.h"
 #include "temp_filename_pattern.h"
+#include "to_string.h"
 
+using ::boost::format;
 using ::std::string;
 using ::std::vector;
 
@@ -39,7 +42,7 @@ TempDirectory::TempDirectory(const string &name) {
 	errno = 0;
 	temp_dir = mkdtemp(filename.data());
 	if (temp_dir == nullptr) {
-		Application::print_error("unable to create temporary directory " + pattern, errno);
+		Application::print_error(format("unable to create temporary directory %1%: %2%") % pattern % errno_to_string());
 	} else {
 		name_ = temp_dir;
 	}

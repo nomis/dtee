@@ -46,7 +46,7 @@ namespace dtee {
 //   mkdtemp: The last six characters of template must be "XXXXXX" and these are replaced with a string that makes the directory name unique.
 //   mkostemp: The last six characters of template must be "XXXXXX" and these are replaced with a string that makes the filename unique.
 string temp_filename_pattern(const string &name) {
-	const string pattern_file{(format("%s.%d.%d.%s.XXXXXX") % CommandLine::internal_name() % getuid() % getpid() % name).str()};
+	const string pattern_file{str(format("%s.%d.%d.%s.XXXXXX") % CommandLine::internal_name() % getuid() % getpid() % name)};
 	return temp_directory_path().append(pattern_file).string();
 }
 

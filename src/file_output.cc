@@ -19,13 +19,16 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <errno.h>
 #include <fcntl.h>
 #include <sysexits.h>
 #include <unistd.h>
+#include <cerrno>
+
+#include <boost/format.hpp>
 
 #include "application.h"
 
+using ::boost::format;
 using ::std::string;
 
 namespace dtee {
@@ -56,6 +59,10 @@ FileOutput::~FileOutput() {
 	}
 }
 
+void FileOutput::print_file_error(string cause) {
+	Application::print_error(format("%1%: %2%") % filename_ % cause);
+}
+
 bool FileOutput::open() {
 	// std::fstream can't do O_CLOEXEC
 	int flags = O_WRONLY | O_CREAT | O_CLOEXEC | O_NOCTTY;
@@ -69,7 +76,7 @@ bool FileOutput::open() {
 	errno = 0;
 	fd_ = ::open(filename_.c_str(), flags, DEFFILEMODE);
 	if (fd_ < 0) {
-		Application::print_error(filename_, errno);
+		print_file_error();
 
 		return false;
 	} else {
@@ -83,7 +90,7 @@ bool FileOutput::output(OutputType type, const std::vector<char> &buffer, size_t
 			ssize_t written = write(fd_, buffer.data(), len);
 			if (written != static_cast<ssize_t>(len)) {
 				if (!failed_) {
-					Application::print_error(filename_, errno);
+					print_file_error();
 
 					failed_ = true;
 				}

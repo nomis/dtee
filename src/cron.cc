@@ -18,23 +18,25 @@
 #include "cron.h"
 
 #include <sys/types.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <utility>
 
-#include "application.h"
+#include <boost/format.hpp>
 
+#include "application.h"
+#include "to_string.h"
+
+using ::boost::format;
 using ::std::cout;
 using ::std::cerr;
 using ::std::endl;
 using ::std::flush;
-using ::std::move;
 using ::std::shared_ptr;
 using ::std::string;
-using ::std::to_string;
 using ::std::vector;
 
 namespace dtee {
@@ -50,8 +52,8 @@ Cron::~Cron() {
 
 }
 
-void Cron::print_file_error(const string &message, int errno_copy) {
-	Application::print_error(message + " " + file_.name(), errno_copy);
+void Cron::print_file_error(format message, string cause) {
+	Application::print_error(message % file_.name() % cause);
 }
 
 bool Cron::open() {
@@ -68,7 +70,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 		errno = 0;
 		ssize_t written = write(file_.fd(), buffer.data(), len);
 		if (written != static_cast<ssize_t>(len)) {
-			print_file_error("error writing to buffer file", errno);
+			print_file_error(format("error writing to buffer file %1%: %2%"));
 
 			unspool_buffer_file();
 
@@ -109,7 +111,7 @@ bool Cron::unspool_buffer_file() {
 	if (buffered_) {
 		errno = 0;
 		if (lseek(file_.fd(), 0, SEEK_SET) != 0) {
-			print_file_error("error seeking to start of buffer file", errno);
+			print_file_error(format("error seeking to start of buffer file %1%: %2%"));
 			success = false;
 		} else {
 			ssize_t len;
@@ -120,7 +122,7 @@ bool Cron::unspool_buffer_file() {
 				len = read(file_.fd(), buf, sizeof(buf));
 
 				if (len < 0) {
-					print_file_error("error reading buffer file", errno);
+					print_file_error(format("error reading buffer file %1%: %2%"));
 					success = false;
 					break;
 				}
@@ -138,18 +140,6 @@ bool Cron::unspool_buffer_file() {
 	return success;
 }
 
-string Cron::signal_to_string(int signum) {
-	string message = to_string(signum);
-	const char *sigdesc = strsignal(signum);
-
-	if (sigdesc != nullptr) {
-		message += ": ";
-		message += sigdesc;
-	}
-
-	return message;
-}
-
 bool Cron::report() {
 	if (terminated_ && !error_) {
 		return true;
@@ -158,19 +148,17 @@ bool Cron::report() {
 	bool success = unspool_buffer_file();
 
 	if (interrupt_signum_ >= 0) {
-		Application::print_error("received signal " + signal_to_string(interrupt_signum_));
+		Application::print_error(format("received signal %1%") % signal_to_string(interrupt_signum_));
 	}
 
 	if (exit_status_ >= 0) {
-		Application::print_error(command_, "exited with status " + to_string(exit_status_));
+		Application::print_error(format("%1%: exited with status %2%") % command_ % exit_status_);
 	} else if (exit_signum_ >= 0) {
-		string message = "process terminated by signal " + signal_to_string(exit_signum_);
-
 		if (core_dumped_) {
-			message += " (core dumped)";
+			Application::print_error(format("%1%: process terminated by signal %2% (core dumped)") % command_ % signal_to_string(exit_signum_));
+		} else {
+			Application::print_error(format("%1%: process terminated by signal %2%") % command_ % signal_to_string(exit_signum_));
 		}
-
-		Application::print_error(command_, message);
 	}
 
 	return success;

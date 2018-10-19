@@ -23,6 +23,8 @@
 #include <memory>
 #include <string>
 
+#include <boost/format.hpp>
+
 #include "command_line.h"
 #include "cron.h"
 #include "output.h"
@@ -36,9 +38,7 @@ public:
 	Application() {};
 	~Application() {};
 
-	static void print_error(const std::string &message, const std::string &cause);
-	static void print_error(const std::string &message, int errno_copy = 0);
-	static void print_error(const std::string &message, const std::exception &e);
+	static void print_error(const boost::format &message);
 
 	int run(int argc, const char* const argv[]);
 
@@ -48,7 +48,6 @@ public:
 private:
 	void create_file_outputs(std::list<std::shared_ptr<Output>> &outputs,
 			const std::string &name, FileOutputType type, bool append);
-
 	std::list<std::shared_ptr<Output>> create_outputs();
 	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
 

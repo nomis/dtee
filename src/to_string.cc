@@ -15,46 +15,32 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_FILE_OUTPUT_H_
-#define DTEE_FILE_OUTPUT_H_
+#include "to_string.h"
 
-#include <memory>
+#include <cstring>
 #include <string>
-#include <vector>
+#include <system_error>
 
 #include <boost/format.hpp>
 
-#include "output.h"
-#include "to_string.h"
+using ::boost::format;
+using ::std::string;
+using ::std::to_string;
 
 namespace dtee {
 
-enum class FileOutputType {
-	STDOUT,
-	STDERR,
-	COMBINED,
-};
+string errno_to_string(int errno_copy) {
+	return std::error_code(errno_copy, std::system_category()).message();
+}
 
-class FileOutput: public Output {
-public:
-	FileOutput(const std::string &filename, FileOutputType type, bool append);
-	virtual ~FileOutput();
+string signal_to_string(int signum) {
+	const char *sigdesc = strsignal(signum);
 
-	bool open() override;
-	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
-
-private:
-	void print_file_error(std::string cause = errno_to_string());
-
-	bool filtered_;
-	OutputType type_;
-
-	std::string filename_; //!< Output filename
-	bool append_;
-	int fd_ = -1; //!< Output file
-	bool failed_ = false; //!< Failure state of writes to output file
-};
+	if (sigdesc != nullptr) {
+		return str(format("%1%: %2%") % signum % sigdesc);
+	} else {
+		return to_string(signum);
+	}
+}
 
 } // namespace dtee
-
-#endif

@@ -18,10 +18,9 @@
 #include "application.h"
 
 #include <sys/types.h>
-#include <errno.h>
-#include <signal.h>
 #include <sysexits.h>
 #include <unistd.h>
+#include <csignal>
 #include <exception>
 #include <iostream>
 #include <list>
@@ -30,6 +29,8 @@
 #include <system_error>
 #include <vector>
 
+#include <boost/format.hpp>
+
 #include "command_line.h"
 #include "copy.h"
 #include "cron.h"
@@ -37,18 +38,19 @@
 #include "input.h"
 #include "process.h"
 #include "stream_output.h"
+#include "to_string.h"
 
+using ::boost::format;
+using ::std::cout;
+using ::std::cerr;
+using ::std::endl;
 using ::std::exception;
+using ::std::flush;
 using ::std::list;
 using ::std::make_shared;
 using ::std::shared_ptr;
 using ::std::string;
 using ::std::vector;
-
-using ::std::cout;
-using ::std::cerr;
-using ::std::endl;
-using ::std::flush;
 
 #ifdef GCOV_ENABLED
 extern "C" void __gcov_flush(void);
@@ -56,25 +58,9 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-void Application::print_error(const string &message, const string &cause) {
+void Application::print_error(const format &message) {
 	cout << flush;
-	cerr << CommandLine::display_name() << ": " << message;
-	if (!cause.empty()) {
-		cerr << ": " << cause;
-	}
-	cerr << endl;
-}
-
-void Application::print_error(const string &message, int errno_copy) {
-	if (errno_copy != 0) {
-		print_error(message, std::error_code(errno_copy, std::system_category()).message());
-	} else {
-		print_error(message, "");
-	}
-}
-
-void Application::print_error(const string &message, const exception &e) {
-	print_error(message, e.what());
+	cerr << CommandLine::display_name() << ": " << str(message) << endl;
 }
 
 int Application::run(int argc, const char* const argv[]) {
@@ -207,7 +193,7 @@ void Application::execute(const vector<string> &command) {
 
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
-	print_error(argv[0], errno);
+	print_error(format("%1%: %2%") % argv[0] % errno_to_string());
 	exit(EX_NOINPUT);
 }
 

@@ -19,13 +19,18 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <errno.h>
-#include <limits.h>
-#include <signal.h>
 #include <sysexits.h>
 #include <unistd.h>
+#include <cerrno>
+#include <climits>
+#include <csignal>
+#include <exception>
 #include <memory>
 #include <string>
+
+#include <boost/asio.hpp>
+#include <boost/format.hpp>
+#include <boost/system/error_code.hpp>
 
 #include "application.h"
 #include "temp_directory.h"
@@ -35,6 +40,7 @@ using ::std::shared_ptr;
 using ::std::string;
 using ::boost::asio::local::datagram_protocol;
 using ::boost::asio::io_service;
+using ::boost::format;
 using ::boost::system::error_code;
 
 namespace p = ::std::placeholders;
@@ -52,6 +58,18 @@ Input::Input(shared_ptr<Output> output)
 
 Input::~Input() {
 
+}
+
+void Input::print_socket_error(format message, const error_code &ec) {
+	Application::print_error(message % ec.message());
+}
+
+void Input::print_socket_error(format message, const std::exception &e) {
+	Application::print_error(message % e.what());
+}
+
+void Input::print_system_error(format message, std::string cause) {
+	Application::print_error(message % cause);
 }
 
 bool Input::open(bool handle_interrupt_signals) {
@@ -94,7 +112,7 @@ bool Input::open(bool handle_interrupt_signals) {
 			input_.get_option(so_rcvbuf);
 		}
 	} catch (std::exception &e) {
-		Application::print_error("input socket", e);
+		print_socket_error(format("input socket: %1%"), e);
 		return false;
 	}
 
@@ -117,7 +135,6 @@ bool Input::open(bool handle_interrupt_signals) {
 	}
 	buffer_.resize(buffer_size);
 
-
 	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
 
 	try {
@@ -127,7 +144,7 @@ bool Input::open(bool handle_interrupt_signals) {
 		out_.shutdown(datagram_protocol::socket::shutdown_receive);
 		out_.set_option(so_sndbuf);
 	} catch (std::exception &e) {
-		Application::print_error("stdout socket", e);
+		print_socket_error(format("stdout socket: %1%"), e);
 		return false;
 	}
 
@@ -138,7 +155,7 @@ bool Input::open(bool handle_interrupt_signals) {
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
 		err_.set_option(so_sndbuf);
 	} catch (std::exception &e) {
-		Application::print_error("stderr socket", e);
+		print_socket_error(format("stderr socket: %1%"), e);
 		return false;
 	}
 
@@ -156,12 +173,12 @@ bool Input::fork_parent(pid_t pid) {
 
 	out_.close(ec);
 	if (ec) {
-		Application::print_error("stdout socket close", ec.message());
+		print_socket_error(format("stdout socket close: %1%"), ec);
 	}
 
 	err_.close(ec);
 	if (ec) {
-		Application::print_error("stderr socket close", ec.message());
+		print_socket_error(format("stderr socket close: %1%"), ec);
 	}
 
 	child_ = pid;
@@ -180,7 +197,7 @@ bool Input::fork_parent(pid_t pid) {
 			size_t events = io_.poll(ec);
 
 			if (ec) {
-				Application::print_error("asio poll", ec.message());
+				print_socket_error(format("asio poll: %1%"), ec);
 				break;
 			}
 
@@ -191,7 +208,7 @@ bool Input::fork_parent(pid_t pid) {
 			io_.run(ec);
 
 			if (ec) {
-				Application::print_error("asio run", ec.message());
+				print_socket_error(format("asio run: %1%"), ec);
 				break;
 			}
 		}
@@ -207,27 +224,27 @@ void Input::fork_child() {
 
 	errno = 0;
 	if (dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
-		Application::print_error("stdout dup2", errno);
+		print_system_error(format("stdout dup2: %1%"));
 	}
 
 	errno = 0;
 	if (dup2(err_.native_handle(), STDERR_FILENO) < 0) {
-		Application::print_error("stderr dup2", errno);
+		print_system_error(format("stderr dup2: %1%"));
 	}
 
 	input_.close(ec);
 	if (ec) {
-		Application::print_error("input socket close", ec.message());
+		print_socket_error(format("input socket close: %1%"), ec);
 	}
 
 	out_.close(ec);
 	if (ec) {
-		Application::print_error("stdout socket close", ec.message());
+		print_socket_error(format("stdout socket close: %1%"), ec);
 	}
 
 	err_.close(ec);
 	if (ec) {
-		Application::print_error("stderr socket close", ec.message());
+		print_socket_error(format("stderr socket close: %1%"), ec);
 	}
 }
 
@@ -254,7 +271,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		input_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		Application::print_error("socket receive", ec.message());
+		print_socket_error(format("socket receive: %1%"), ec);
 
 		terminated_ = true;
 		io_.stop();
@@ -270,7 +287,7 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 			pid_t ret = waitpid(child_, &wait_status, WNOHANG);
 			if (ret != 0) {
 				if (ret < 0) {
-					Application::print_error("waitpid", errno);
+					print_system_error(format("waitpid: %1%"));
 				} else {
 					bool core_dumped = false;
 					int exit_status = -1;

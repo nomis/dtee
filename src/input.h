@@ -19,14 +19,18 @@
 #define DTEE_INPUT_H_
 
 #include <sys/types.h>
+#include <exception>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/asio.hpp>
+#include <boost/format.hpp>
+#include <boost/system/error_code.hpp>
 
 #include "input.h"
 #include "output.h"
+#include "to_string.h"
 
 namespace dtee {
 
@@ -46,6 +50,9 @@ public:
 private:
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);
 	void handle_signal(const boost::system::error_code &ec, int signal_number);
+	void print_socket_error(boost::format message, const boost::system::error_code &ec);
+	void print_socket_error(boost::format message, const std::exception &e);
+	void print_system_error(boost::format message, std::string cause = errno_to_string());
 
 	boost::asio::io_service io_;
 	boost::asio::local::datagram_protocol::socket input_; //!< Incoming socket for data from child process
