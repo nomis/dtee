@@ -12,5 +12,5 @@ RET=$?
 cmp_files "${0/.sh/.file.out-overwrite.txt}" "$TESTDIR/$NAME.file.out-overwrite.txt"
 CMP_OUT_O=$?
 
-variables_must_eq RET 1 \
+variables_must_eq RET $EXIT_FAILURE \
 	CMP_OUT_O 0

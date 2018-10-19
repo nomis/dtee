@@ -15,5 +15,5 @@ RET=$?
 cmp_files "${0/.sh/.file.com-append.txt}" "$TESTDIR/$NAME.file.com-append.txt"
 CMP_COM_A=$?
 
-variables_must_eq RET 0 \
+variables_must_eq RET $EXIT_SUCCESS \
 	CMP_COM_A 0

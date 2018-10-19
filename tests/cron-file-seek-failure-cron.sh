@@ -7,5 +7,5 @@ TEST_LD_PRELOAD="./libmkostemp-consistent.so:./liblseek-failure.so:./liblseek64-
 run_test "-q" "$RUN"
 RET=$?
 
-# Output errors prevent a 0 exit status
+# Output errors prevent a success exit status
 variables_must_eq RET $EX_IOERR

@@ -6,4 +6,4 @@ set -vx
 run_test "--debug-options" "" "-o" "" "-e" "filename"
 RET=$?
 
-variables_must_eq RET 0
+variables_must_eq RET $EXIT_SUCCESS

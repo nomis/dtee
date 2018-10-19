@@ -10,4 +10,4 @@ TEST_LD_PRELOAD="./libsocket-setsockopt-monitor.so:./libsocket-getsockopt-fake-r
 run_test "$RUN"
 RET=$?
 
-variables_must_eq RET 0
+variables_must_eq RET $EXIT_SUCCESS

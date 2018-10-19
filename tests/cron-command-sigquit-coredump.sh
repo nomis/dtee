@@ -3,8 +3,8 @@ set -vx
 . "$(dirname "$0")"/util/common.sh
 
 # Increase core size to unlimited and then the command will set it again
-ulimit -H -c unlimited || exit 1
-ulimit -S -c unlimited || exit 1
+ulimit -H -c unlimited || exit $TEST_EX_SKIP
+ulimit -S -c unlimited || exit $TEST_EX_SKIP
 export DTEE_TEST_RLIMIT_CORE=RLIM_INFINITY
 
 run_test "-q" ./test-kill-pid 3

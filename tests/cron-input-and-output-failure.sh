@@ -7,4 +7,4 @@ TEST_LD_PRELOAD="./libmkostemp-failure.so:./libsocket-unix-failure.so:./libfake-
 run_test "-q" "$RUN"
 RET=$?
 
-variables_must_eq RET 0
+variables_must_eq RET $EXIT_SUCCESS

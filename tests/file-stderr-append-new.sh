@@ -12,5 +12,5 @@ RET=$?
 cmp_files "${0/.sh/.file.err-append}" "$TESTDIR/$NAME.file.err-append"
 CMP_ERR_A=$?
 
-variables_must_eq RET 0 \
+variables_must_eq RET $EXIT_SUCCESS \
 	CMP_ERR_A 0

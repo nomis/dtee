@@ -8,9 +8,9 @@ function test_prepare() {
         rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
-# Disable core dumps (this may not work on Linux)
-ulimit -H -c 0 || exit 1
-ulimit -S -c 0 || exit 1
+# Disable core dumps (this may not have the desired effect on Linux)
+ulimit -H -c 0 || exit $TEST_EX_SKIP
+ulimit -S -c 0 || exit $TEST_EX_SKIP
 run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 3
 RET=$?
 

@@ -12,5 +12,5 @@ RET=$?
 cmp_files "${0/.sh/.file.err-overwrite.txt}" "$TESTDIR/$NAME.file.err-overwrite.txt"
 CMP_ERR_O=$?
 
-variables_must_eq RET 0 \
+variables_must_eq RET $EXIT_SUCCESS \
 	CMP_ERR_O 0

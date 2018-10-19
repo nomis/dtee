@@ -19,6 +19,6 @@ done <&$COPROC
 wait $PID
 RET=$?
 
-variables_must_eq RET 0 \
+variables_must_eq RET $EXIT_SUCCESS \
 	USAGE 1 \
 	CRON 0

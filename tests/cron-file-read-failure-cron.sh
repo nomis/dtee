@@ -7,5 +7,5 @@ TEST_LD_PRELOAD="./libmkostemp-writeonly.so:./libfake-getpid.so:./libfake-getuid
 run_test "-q" "$RUN"
 RET=$?
 
-# Output errors prevent a 0 exit status
+# Output errors prevent a success exit status
 variables_must_eq RET $EX_IOERR

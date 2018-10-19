@@ -36,7 +36,7 @@ CMP_COM_A=$?
 cmp_files "${0/.sh/.file.com-overwrite.txt}" "$TESTDIR/$NAME.file.com-overwrite.txt"
 CMP_COM_O=$?
 
-variables_must_eq RET 0 \
+variables_must_eq RET $EXIT_SUCCESS \
 	CMP_OUT_A 0 \
 	CMP_OUT_O 0 \
 	CMP_ERR_A 0 \

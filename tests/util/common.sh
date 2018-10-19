@@ -21,7 +21,17 @@ rm -rf "$TESTDIR/$NAME.tmp"
 mkdir -p "$TESTDIR/$NAME.tmp"
 export TMPDIR="./$TESTDIR/$NAME.tmp"
 
+# GNU standard
+TEST_EX_OK=0
+TEST_EX_FAIL=1
+TEST_EX_SKIP=77
+
+# C standard
+EXIT_SUCCESS=0
+EXIT_FAILURE=1
+
 # /usr/include/sysexits.h
+EX_OK=0
 EX_USAGE=64
 EX_DATAERR=65
 EX_NOINPUT=66
@@ -84,16 +94,16 @@ function check_variables() {
 }
 
 function check_variables_eq() {
-	check_variables 0 -eq "$@"
+	check_variables $TEST_EX_OK -eq "$@"
 }
 
 function variables_must_eq() {
 	check_variables_eq "$@"
-	exit 1
+	exit $TEST_EX_FAIL
 }
 
 function check_variables_ne() {
-	check_variables 1 -ne "$@"
+	check_variables $TEST_EX_FAIL -ne "$@"
 }
 
 function run_test() {
