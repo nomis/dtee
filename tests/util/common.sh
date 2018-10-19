@@ -76,40 +76,31 @@ function cmp_files() {
 
 function check_variables() {
 	set +x
-	CV_EXIT_CODE="$1"
-	CV_OPERATOR="$2"
-	CV_OK=1
-	shift 2
+	CV_RET=0
 
 	while [ -n "$1" ]; do
-		echo "$1" actual "${!1}" expected "$2"
-		if [ ! "${!1}" $CV_OPERATOR "$2" ]; then
-			CV_OK=0
+		CV_ACTUAL="$1"
+		CV_EXPECTED="$2"
+		echo "$CV_ACTUAL" actual "${!CV_ACTUAL}" expected "$CV_EXPECTED"
+		if [ ${!CV_ACTUAL} -ne $CV_EXPECTED ]; then
+			CV_RET=1
 		fi
 		shift 2
 	done
 
-	if [ $CV_OK -eq 1 ]; then
-		set -x
-		exit "$CV_EXIT_CODE"
-	fi
 	set -x
-}
-
-function check_variables_eq() {
-	set +x
-	check_variables $TEST_EX_OK -eq "$@"
+	return $CV_RET
 }
 
 function variables_must_eq() {
 	set +x
-	check_variables_eq "$@"
-	exit $TEST_EX_FAIL
+	check_variables "$@" || exit $TEST_EX_FAIL
+	exit $TEXT_EX_OK
 }
 
-function check_variables_ne() {
+function check_variables_eq() {
 	set +x
-	check_variables $TEST_EX_FAIL -ne "$@"
+	check_variables "$@" || exit $TEST_EX_FAIL
 }
 
 function run_test() {
@@ -156,7 +147,7 @@ function run_test() {
 	declare -f test_cleanup >/dev/null && test_cleanup
 
 	echo RET2 $RET2
-	check_variables_ne RET1 $RET2 CMP_OUT 0 CMP_ERR 0 CMP_COM 0
+	check_variables_eq RET1 $RET2 CMP_OUT 0 CMP_ERR 0 CMP_COM 0
 
 	return $RET1
 }
