@@ -1,0 +1,4 @@
+Parent process exited
+Reopened input socket ./dtee@test/security-recreate-input-socket.tmp/dtee.1.1.input.XXXXXX/i
+printf/fflush: Connection refused
+recv: Resource temporarily unavailable

@@ -15,6 +15,7 @@ COMMON_TEST_LD_PRELOAD=(./libexecvp-fd-check.so)
 
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
+TEST_EXTRA_OUTPUT=0
 
 # Use a consistent and isolated temporary directory
 rm -rf "$TESTDIR/$NAME.tmp"
@@ -113,13 +114,25 @@ function run_test() {
 	declare -f test_prepare >/dev/null && test_prepare
 
 	rm -f "$TESTDIR/$NAME.out.txt" "$TESTDIR/$NAME.err.txt"
-	before_test
-	if [ $TEST_NO_STDIN -eq 0 ]; then
-		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
-	else
-		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		rm -f "$TESTDIR/$NAME.extra-out.txt"
 	fi
-	RET1=$?
+	before_test
+	if [ $TEST_NO_STDIN -eq 1  ]; then
+		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+		RET1=$?
+	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		coproc { DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 3>&1 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"; }
+		PID=$!
+
+		cat <&$COPROC >"$TESTDIR/$NAME.extra-out.txt"
+
+		wait $PID
+		RET1=$?
+	else
+		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
+		RET1=$?
+	fi
 	after_test
 
 	cmp_files "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
@@ -128,26 +141,51 @@ function run_test() {
 	cmp_files "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
 	CMP_ERR=$?
 
+	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		cmp_files "${0/.sh/.extra-out.txt}" "$TESTDIR/$NAME.extra-out.txt"
+		CMP_EXTRA_OUT1=$?
+	fi
+
 	declare -f test_cleanup >/dev/null && test_cleanup
 	declare -f test_prepare >/dev/null && test_prepare
 
-	rm -f "$TESTDIR/$NAME.com.txt"
-	before_test
-	if [ $TEST_NO_STDIN -eq 0 ]; then
-		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
-	else
-		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
+	rm -f "$TESTDIR/$NAME.com.txt" "$TESTDIR/$NAME.extra-out.txt"
+	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		rm -f "$TESTDIR/$NAME.extra-out.txt"
 	fi
-	RET2=$?
+	before_test
+	if [ $TEST_NO_STDIN -eq 1  ]; then
+		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
+		RET2=$?
+	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		coproc { DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 3>&1 1>"$TESTDIR/$NAME.com.txt" 2>&1; }
+		PID=$!
+
+		cat <&$COPROC >"$TESTDIR/$NAME.extra-out.txt"
+
+		wait $PID
+		RET2=$?
+	else
+		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
+		RET2=$?
+	fi
 	after_test
 
 	cmp_files "${0/.sh/.com.txt}" "$TESTDIR/$NAME.com.txt"
 	CMP_COM=$?
 
+	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		cmp_files "${0/.sh/.extra-out.txt}" "$TESTDIR/$NAME.extra-out.txt"
+		CMP_EXTRA_OUT2=$?
+	fi
+
 	declare -f test_cleanup >/dev/null && test_cleanup
 
 	echo RET2 $RET2
 	check_variables_eq RET1 $RET2 CMP_OUT 0 CMP_ERR 0 CMP_COM 0
+	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		check_variables_eq CMP_EXTRA_OUT1 0 CMP_EXTRA_OUT2 0
+	fi
 
 	return $RET1
 }

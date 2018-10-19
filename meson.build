@@ -129,6 +129,7 @@ shared_library('socket-unix-failure', ['tests/socket-unix-failure.c'] + test_com
 executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
 executable('test-report', ['tests/report.c', 'tests/is-fd-unix-socket.c'], c_args: test_c_args)
+executable('test-security-recreate-input-socket', ['tests/security-recreate-input-socket.c'], c_args: test_c_args)
 executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)
 executable('test-writes-of-n-bytes', ['tests/writes-of-n-bytes.c'], c_args: test_c_args)
 
@@ -292,3 +293,5 @@ test('socket close failure (parent)', find_program('tests/socket-close-failure-p
 test('cron dup2 failure', find_program('tests/cron-dup2-failure.sh'), env: test_env)
 test('cron socket close failure (child)', find_program('tests/cron-socket-close-failure-child.sh'), env: test_env)
 test('cron socket close failure (parent)', find_program('tests/cron-socket-close-failure-parent.sh'), env: test_env)
+
+test('security recreate the input socket after the parent process exits', find_program('tests/security-recreate-input-socket.sh'), env: test_env)
