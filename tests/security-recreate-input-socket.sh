@@ -7,10 +7,10 @@ function test_prepare() {
         rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
-COMMON_TEST_LD_PRELOAD=("${COMMON_TEST_LD_PRELOAD[@]/.\/libexecvp-fd-check.so}")
+COMMON_TEST_LD_PRELOAD=("${COMMON_TEST_LD_PRELOAD[@]/.\/libtest-execvp-fd-check.so}")
 TEST_EXTRA_OUTPUT=1
 
-TEST_LD_PRELOAD="./libmkdtemp-consistent.so:./libfake-getpid.so:./libfake-getuid.so"
+TEST_LD_PRELOAD="./libtest-mkdtemp-consistent.so:./libtest-fake-getpid.so:./libtest-fake-getuid.so"
 # It should not be possible to recreate the input socket and receive output from a command
 run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-security-recreate-input-socket
 RET=$?

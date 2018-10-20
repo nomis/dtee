@@ -5,7 +5,7 @@ function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file.com-overwrite.txt"
 }
 
-TEST_LD_PRELOAD="./libdup2-failure.so"
+TEST_LD_PRELOAD="./libtest-dup2-failure.so"
 run_test -C "$TESTDIR/$NAME.file.com-overwrite.txt" "$RUN"
 RET=$?
 

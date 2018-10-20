@@ -11,7 +11,7 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
-COMMON_TEST_LD_PRELOAD=(./libexecvp-fd-check.so)
+COMMON_TEST_LD_PRELOAD=(./libtest-execvp-fd-check.so)
 
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0

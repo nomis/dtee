@@ -8,9 +8,9 @@ function test_prepare() {
 # Cause socket close to fail in the child process
 export DTEE_TEST_SOCKET_CLOSE_FAILURE_CHILD=1
 
-COMMON_TEST_LD_PRELOAD=("${COMMON_TEST_LD_PRELOAD[@]/.\/libexecvp-fd-check.so}")
+COMMON_TEST_LD_PRELOAD=("${COMMON_TEST_LD_PRELOAD[@]/.\/libtest-execvp-fd-check.so}")
 
-TEST_LD_PRELOAD="./libsocket-close-failure.so"
+TEST_LD_PRELOAD="./libtest-socket-close-failure.so"
 run_test -C "$TESTDIR/$NAME.file.com-overwrite.txt" "$RUN"
 RET=$?
 
