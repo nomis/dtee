@@ -77,14 +77,14 @@ bool Input::open(bool handle_interrupt_signals) {
 	// so we create them in a temporary directory instead.
 	TempDirectory temp_dir{"input"};
 
+	if (!temp_dir.valid()) {
+		return false;
+	}
+
 	if (handle_interrupt_signals) {
 		signals_.add(SIGHUP);
 		signals_.add(SIGINT);
 		signals_.add(SIGTERM);
-	}
-
-	if (!temp_dir.valid()) {
-		return false;
 	}
 
 	const string input_name = temp_dir.register_file("i");
