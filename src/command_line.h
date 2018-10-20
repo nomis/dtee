@@ -25,7 +25,7 @@
 
 namespace dtee {
 
-class CommandLine: private boost::program_options::variables_map {
+class CommandLine {
 public:
 	CommandLine() {};
 	~CommandLine() {};
@@ -58,6 +58,7 @@ private:
 	static std::string internal_name_;
 	static std::string display_name_;
 
+	boost::program_options::variables_map variables_;
 	const std::vector<std::string> empty_list_{};
 	bool cron_mode_ = false;
 };

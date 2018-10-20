@@ -175,27 +175,27 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 			.extra_style_parser(end_of_opts_parser)
 			.options(all_opts)
 			.positional(pd)
-			.run(), *this);
+			.run(), variables_);
 
 
-		if (at("help").as<bool>()) {
+		if (variables_["help"].as<bool>()) {
 			display_usage(visible_opts);
 			exit(EXIT_SUCCESS);
 		}
 
-		po::notify(*this);
+		po::notify(variables_);
 
-		if (at("version").as<bool>()) {
+		if (variables_["version"].as<bool>()) {
 			display_version();
 			exit(EXIT_SUCCESS);
 		}
 
-		if (at("debug-options").as<bool>()) {
+		if (variables_["debug-options"].as<bool>()) {
 			display_variables();
 			exit(EXIT_SUCCESS);
 		}
 
-		if (!count(BOOST_COMMAND_OPT)) {
+		if (command().empty()) {
 			display_usage(visible_opts);
 			exit(EX_USAGE);
 		}
@@ -232,7 +232,7 @@ void CommandLine::display_version() const {
 }
 
 void CommandLine::display_variables() const {
-	for (const auto& variable : *this) {
+	for (const auto& variable : variables_) {
 		if (variable.second.defaulted()) {
 			continue;
 		} else if (variable.second.value().type() == typeid(vector<string>)) {
@@ -246,11 +246,11 @@ void CommandLine::display_variables() const {
 }
 
 bool CommandLine::flag(const string &name) const {
-	return operator[](name).as<bool>();
+	return variables_[name].as<bool>();
 }
 
 const vector<string>& CommandLine::list(const string &name) const {
-	const auto& value = operator[](name);
+	const auto& value = variables_[name];
 
 	if (!value.empty()) {
 		return value.as<vector<string>>();
