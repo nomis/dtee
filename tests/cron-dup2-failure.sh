@@ -6,6 +6,7 @@ function test_prepare() {
 }
 
 TEST_LD_PRELOAD="./libtest-dup2-failure.so"
+# There will be no output received by dtee if dup2 fails
 run_test -q -C "$TESTDIR/$NAME.file.com-overwrite.txt" "$RUN"
 RET=$?
 
