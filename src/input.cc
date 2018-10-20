@@ -194,6 +194,7 @@ bool Input::fork_parent(pid_t pid) {
 
 			if (ec) {
 				print_socket_error(format("asio poll: %1%"), ec);
+				io_error_ = true;
 				break;
 			}
 
@@ -205,6 +206,7 @@ bool Input::fork_parent(pid_t pid) {
 
 			if (ec) {
 				print_socket_error(format("asio run: %1%"), ec);
+				io_error_ = true;
 				break;
 			}
 		}
