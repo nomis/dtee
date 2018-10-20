@@ -45,6 +45,10 @@ using ::boost::system::error_code;
 
 namespace p = ::std::placeholders;
 
+#ifdef GCOV_ENABLED
+extern "C" void __gcov_flush(void);
+#endif
+
 namespace dtee {
 
 Input::Input(shared_ptr<Output> output)
@@ -262,7 +266,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		} else {
 			// Ignore data from any other sockets
 #ifdef GCOV_ENABLED
-			recv_ep_ = datagram_protocol::endpoint{};
+			__gcov_flush(); // LCOV_EXCL_LINE
 #endif
 		}
 
