@@ -21,7 +21,7 @@ static ssize_t dtee_test_recv_failure(int sockfd, void *buf, size_t len, int fla
 }
 
 static ssize_t dtee_test_recvfrom_failure(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen) {
-	ssize_t (*next_recvfrom)(int, void *, size_t, int, struct sockaddr*, socklen_t *) = dlsym(RTLD_NEXT, "recvfrom");
+	ssize_t (*next_recvfrom)(int, void *, size_t, int, struct sockaddr *, socklen_t *) = dlsym(RTLD_NEXT, "recvfrom");
 
 	if (len > MAX_BUFFER_SIZE) {
 		len = MAX_BUFFER_SIZE;
@@ -59,7 +59,7 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags) {
 }
 
 ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen) {
-	ssize_t (*next_recvfrom)(int, void *, size_t, int, struct sockaddr*, socklen_t *) = dlsym(RTLD_NEXT, "recvfrom");
+	ssize_t (*next_recvfrom)(int, void *, size_t, int, struct sockaddr *, socklen_t *) = dlsym(RTLD_NEXT, "recvfrom");
 
 	if (dtee_test_is_dtee()) {
 		if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
