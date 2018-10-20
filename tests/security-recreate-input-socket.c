@@ -98,21 +98,22 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
 	// Write data after the parent process has exited
 	const char *message = "Test message\n";
-	if (printf("%s", message) != (ssize_t)strlen(message) || fflush(stdout) == EOF) {
+	ssize_t len = strlen(message);
+	if (printf("%s", message) != len || fflush(stdout) == EOF) {
 		fprintf(output, "printf/fflush: %s\n", strerror(errno));
 		fflush(output);
 	}
 
 	// Try to read the data we sent (non-blocking)
 	char buf[1024] = { 0 };
-	int len = recv(input_fd, buf, sizeof(buf) - 1, MSG_DONTWAIT);
+	len = recv(input_fd, buf, sizeof(buf) - 1, MSG_DONTWAIT);
 	if (len < 0) {
 		fprintf(output, "recv: %s\n", strerror(errno));
 		fflush(output);
 		return EXIT_FAILURE;
 	}
 
-	fprintf(output, "Received %d bytes\n", len);
+	fprintf(output, "Received %zd bytes\n", len);
 	fprintf(output, "%s", buf);
 	fclose(output);
 	return EXIT_SUCCESS;

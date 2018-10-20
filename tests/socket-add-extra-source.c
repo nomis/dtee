@@ -74,7 +74,8 @@ int execvp(const char *filename, char *const argv[]) {
 			printf("socket-add-extra-source: inserting additional message\n");
 			fflush(stdout);
 
-			if (write(extra_fd, message, strlen(message)) != (ssize_t)strlen(message)) {
+			int len = strlen(message);
+			if (write(extra_fd, message, strlen(message)) != len) {
 				perror("socket-add-extra-source: write");
 				fflush(stderr);
 			} else {

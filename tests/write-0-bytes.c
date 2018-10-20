@@ -21,14 +21,16 @@ int main(int argc, char *argv[]) {
 	}
 
 	const char *before = "Before\n";
-	if (write(fd, before, strlen(before)) != (ssize_t)strlen(before)) {
+	int len = strlen(before);
+	if (write(fd, before, strlen(before)) != len) {
 		return EX_IOERR;
 	}
 	if (write(fd, "", 0) != 0) {
 		return EX_IOERR;
 	}
 	const char *after = "After\n";
-	if (write(fd, after, strlen(after)) != (ssize_t)strlen(after)) {
+	len = strlen(after);
+	if (write(fd, after, strlen(after)) != len) {
 		return EX_IOERR;
 	}
 
