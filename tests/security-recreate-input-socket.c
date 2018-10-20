@@ -17,7 +17,8 @@ static int recreate_input_socket(FILE *output) {
 	socklen_t peerlen = sizeof(peer);
 
 	if (getpeername(STDOUT_FILENO, (struct sockaddr*)&peer, &peerlen) < 0) {
-		perror("getpeername");
+		fprintf(output, "getpeername: %s\n", strerror(errno));
+		fflush(output);
 		exit(EXIT_FAILURE);
 	}
 	char path[sizeof(peer.sun_path) + 1] = { 0 };
