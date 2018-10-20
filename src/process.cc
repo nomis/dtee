@@ -52,18 +52,6 @@ int Process::interrupt_signum() {
 	}
 
 	switch (exit_signum_) {
-		// These could be replicated (the default handler is to
-		// terminate) but that behaviour is not strictly accurate,
-		// because we have not received them as a signal.
-#if 0
-	case SIGHUP:
-	case SIGQUIT:
-	case SIGKILL:
-	case SIGPIPE:
-	case SIGALRM:
-	case SIGTERM:
-#endif
-
 	case SIGINT:
 		// Replicate interrupted signal status so that shells
 		// behave correctly if the command is interrupted.
