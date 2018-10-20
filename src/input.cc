@@ -283,31 +283,29 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 
 			errno = 0;
 			pid_t ret = waitpid(child_, &wait_status, WNOHANG);
-			if (ret != 0) {
-				if (ret < 0) {
-					print_system_error(format("waitpid: %1%"));
-				} else {
-					bool core_dumped = false;
-					int exit_status = -1;
-					int exit_signum = -1;
+			if (ret < 0) {
+				print_system_error(format("waitpid: %1%"));
+			} else if (ret != 0) {
+				bool core_dumped = false;
+				int exit_status = -1;
+				int exit_signum = -1;
 
-					if (WIFEXITED(wait_status)) {
-						exit_status = WEXITSTATUS(wait_status);
-					}
+				if (WIFEXITED(wait_status)) {
+					exit_status = WEXITSTATUS(wait_status);
+				}
 
-					if (WIFSIGNALED(wait_status)) {
-						exit_signum = WTERMSIG(wait_status);
-					}
+				if (WIFSIGNALED(wait_status)) {
+					exit_signum = WTERMSIG(wait_status);
+				}
 
 #ifdef WCOREDUMP
-					if (WCOREDUMP(wait_status)) {
-						core_dumped = true;
-					}
+				if (WCOREDUMP(wait_status)) {
+					core_dumped = true;
+				}
 #endif
 
-					output_->terminated(exit_status, exit_signum, core_dumped);
-					signals_.remove(signal_number);
-				}
+				output_->terminated(exit_status, exit_signum, core_dumped);
+				signals_.remove(signal_number);
 			}
 		} else {
 			output_->interrupted(signal_number);
