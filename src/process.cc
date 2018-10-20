@@ -47,7 +47,11 @@ void Process::interrupted(int signum) {
 }
 
 int Process::interrupt_signum() {
-	if (interrupt_signum_ >= 0) {
+	switch (interrupt_signum_) {
+		// Replicate these signals that caused us to terminate.
+	case SIGHUP:
+	case SIGINT:
+	case SIGTERM:
 		return interrupt_signum_;
 	}
 

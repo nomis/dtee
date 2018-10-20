@@ -2,7 +2,6 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <signal.h>
-#include <unistd.h>
 
 #include "is-dtee.h"
 

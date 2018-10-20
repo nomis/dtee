@@ -126,8 +126,10 @@ shared_library('test-socket-recv-failure', ['tests/socket-recv-failure.c'], c_ar
 shared_library('test-socket-setsockopt-monitor', ['tests/socket-setsockopt-monitor.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket])
 shared_library('test-socket-shutdown-failure', ['tests/socket-shutdown-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket])
 shared_library('test-socket-unix-failure', ['tests/socket-unix-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee])
+shared_library('test-waitpid-failure', ['tests/waitpid-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 
 executable('test-lorem-ipsum-late-exit', ['tests/lorem-ipsum-late-exit.c'], c_args: test_c_args)
+executable('test-lorem-ipsum-wait-exit', ['tests/lorem-ipsum-wait-exit.c'], c_args: test_c_args)
 executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
 executable('test-report', ['tests/report.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
@@ -306,5 +308,10 @@ test('socket close failure (parent)', find_program('tests/socket-close-failure-p
 test('cron dup2 failure', find_program('tests/cron-dup2-failure.sh'), env: test_env)
 test('cron socket close failure (child)', find_program('tests/cron-socket-close-failure-child.sh'), env: test_env)
 test('cron socket close failure (parent)', find_program('tests/cron-socket-close-failure-parent.sh'), env: test_env)
+
+test('waitpid failure (no children)', find_program('tests/waitpid-failure-no-children.sh'), env: test_env)
+test('waitpid failure (no change)', find_program('tests/waitpid-failure-no-change.sh'), env: test_env)
+test('cron waitpid failure (no children)', find_program('tests/cron-waitpid-failure-no-children.sh'), env: test_env)
+test('cron waitpid failure (no change)', find_program('tests/cron-waitpid-failure-no-change.sh'), env: test_env)
 
 test('security recreate the input socket after the parent process exits', find_program('tests/security-recreate-input-socket.sh'), env: test_env)

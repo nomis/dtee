@@ -283,9 +283,14 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 
 			errno = 0;
 			pid_t ret = waitpid(child_, &wait_status, WNOHANG);
-			if (ret < 0) {
-				print_system_error(format("waitpid: %1%"));
-			} else if (ret != 0) {
+			if (ret <= 0) {
+				if (ret != 0) {
+					print_system_error(format("waitpid: %1%"));
+				}
+
+				output_->interrupted(SIGCHLD);
+				io_error_ = true;
+			} else {
 				bool core_dumped = false;
 				int exit_status = -1;
 				int exit_signum = -1;
