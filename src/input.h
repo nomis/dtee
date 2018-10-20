@@ -62,7 +62,6 @@ private:
 	boost::asio::local::datagram_protocol::endpoint err_ep_; //!< Endpoint name for child process standard error
 
 	pid_t child_ = -1;
-	bool stop_ = false;
 	bool io_error_ = false;
 
 	boost::asio::signal_set signals_;

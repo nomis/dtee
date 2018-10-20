@@ -188,33 +188,29 @@ bool Input::fork_parent(pid_t pid) {
 
 	signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));
 
-	while (1) {
-		if (io_.stopped()) {
-			io_.reset();
+	do {
+		io_.run(ec);
+
+		if (ec) {
+			print_socket_error(format("asio run: %1%"), ec);
+			io_error_ = true;
+			break;
 		}
+	} while (!io_.stopped());
 
-		if (stop_) {
-			size_t events = io_.poll(ec);
+	size_t events;
+	do {
+		io_.reset();
+		events = io_.poll(ec);
 
-			if (ec) {
-				print_socket_error(format("asio poll: %1%"), ec);
-				io_error_ = true;
-				break;
-			}
-
-			if (!events) {
-				break;
-			}
-		} else {
-			io_.run(ec);
-
-			if (ec) {
-				print_socket_error(format("asio run: %1%"), ec);
-				io_error_ = true;
-				break;
-			}
+		if (ec) {
+			print_socket_error(format("asio poll: %1%"), ec);
+			io_error_ = true;
+			break;
 		}
-	}
+	} while (events > 0);
+
+	signals_.clear();
 
 	return !io_error_;
 }
@@ -277,7 +273,6 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 
 		output_->interrupted();
 		io_error_ = true;
-		stop_ = true;
 		io_.stop();
 	}
 }
@@ -323,10 +318,8 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 			signals_.remove(signal_number);
 		}
 
-		stop_ = true;
-		io_.stop();
-
 		signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));
+		io_.stop();
 	}
 }
 
