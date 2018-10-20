@@ -23,13 +23,10 @@ standard output and standard error at the same time.)
 
 ## Limitations
 
-Splitting of standard output and standard error while retaining the order of
-output is performed using three local datagram sockets. It is not possible to
-do this with two pairs of stream sockets. Datagram sockets can only process
-writes as individual packets with a maximum packet size. Therefore, if the
-program being run attempts to [`write(2)`](http://man7.org/linux/man-pages/man2/write.2.html)
-more than this size in one call the write will fail and the message will be
-lost.
+Datagram sockets can only process writes as individual packets with a maximum
+packet size. Therefore, if the program being run attempts to [`write(2)`](http://man7.org/linux/man-pages/man2/write.2.html)
+more than this size in one call the write will fail and part of the output will
+be lost.
 
 This is not usually a problem because the default socket buffer size is usually
 much higher than the size programs typically write with. For safety, the socket
@@ -40,3 +37,5 @@ If the process uses [`sendfile(2)`](http://man7.org/linux/man-pages/man2/sendfil
 then (on Linux) the writes occur in [`PIPE_BUF`](http://man7.org/linux/man-pages/man0/limits.h.0p.html)
 sized chunks so it works as normal, but why are you using an interactive program
 that outputs such large quantities of data?
+
+For more details read the [architecture](ARCHITECTURE.md) document.
