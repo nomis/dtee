@@ -1,1 +1,1 @@
-/dev/null
+write-0-bytes-stdout.out.txt

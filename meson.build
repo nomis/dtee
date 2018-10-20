@@ -132,6 +132,7 @@ executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
 executable('test-report', ['tests/report.c', 'tests/is-fd-unix-socket.c'], c_args: test_c_args)
 executable('test-security-recreate-input-socket', ['tests/security-recreate-input-socket.c'], c_args: test_c_args)
 executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)
+executable('test-write-0-bytes', ['tests/write-0-bytes.c'], c_args: test_c_args)
 executable('test-writes-of-n-bytes', ['tests/writes-of-n-bytes.c'], c_args: test_c_args)
 
 test('dtee (no arguments)', find_program('tests/noargs-dtee.sh'), env: test_env)
@@ -165,6 +166,8 @@ test('write 0 bytes (stdout)', find_program('tests/write-0-bytes-stdout.sh'), en
 test('write 0 bytes (stderr)', find_program('tests/write-0-bytes-stderr.sh'), env: test_env)
 test('writes of PIPE_BUF bytes (stdout)', find_program('tests/writes-of-PIPE_BUF-bytes-stdout.sh'), env: test_env)
 test('writes of PIPE_BUF bytes (stderr)', find_program('tests/writes-of-PIPE_BUF-bytes-stderr.sh'), env: test_env)
+test('cron write 0 bytes (stdout)', find_program('tests/cron-write-0-bytes-stdout.sh'), env: test_env)
+test('cron write 0 bytes (stderr)', find_program('tests/cron-write-0-bytes-stderr.sh'), env: test_env)
 test('cron writes of PIPE_BUF bytes (stdout)', find_program('tests/cron-writes-of-PIPE_BUF-bytes-stdout.sh'), env: test_env)
 test('cron writes of PIPE_BUF bytes (stderr)', find_program('tests/cron-writes-of-PIPE_BUF-bytes-stderr.sh'), env: test_env)
 

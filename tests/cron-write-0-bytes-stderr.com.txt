@@ -1,0 +1,3 @@
+Before
+After
+./dtee: ./test-write-0-bytes: exited with status 0

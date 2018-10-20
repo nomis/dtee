@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 	int bytes;
 
 	if (argc != 4) {
-		return EXIT_FAILURE;
+		return EX_USAGE;
 	}
 
 	append("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mollis libero ligula, vel euismod tellus ultricies in. Praesent egestas volutpat euismod. Nunc at turpis posuere, pellentesque eros id, cursus tellus. Sed lectus sem, hendrerit ut ex ut, varius pretium dui. Aenean porta lorem vel justo condimentum fermentum. Vivamus suscipit placerat est eu pretium. Suspendisse pellentesque, lorem sit amet laoreet volutpat, felis purus dictum neque, interdum vulputate mi neque vitae nibh. Sed id faucibus tellus, sit amet laoreet magna.\n");
@@ -257,26 +257,21 @@ int main(int argc, char *argv[]) {
 		bytes = strtol(argv[2], NULL, 10);
 	}
 
-	if (bytes == 0) {
-		if (write(fd, "", 0) != 0) {
+	assert(bytes > 0);
+	int written = 0;
+
+	while (written < MAX_SIZE) {
+		if (bytes > MAX_SIZE - written) {
+			bytes = MAX_SIZE - written;
+		}
+
+		if (write(fd, &message[written], bytes) != bytes) {
 			return EX_IOERR;
 		}
-	} else {
-		int written = 0;
 
-		while (written < MAX_SIZE) {
-			if (bytes > MAX_SIZE - written) {
-				bytes = MAX_SIZE - written;
-			}
-
-			if (write(fd, &message[written], bytes) != bytes) {
-				return EX_IOERR;
-			}
-
-			written += bytes;
-		}
-		assert(written == MAX_SIZE);
+		written += bytes;
 	}
+	assert(written == MAX_SIZE);
 
 	// Alter exit status in cron mode so that it will output the message
 	return strtol(argv[3], NULL, 10) == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
