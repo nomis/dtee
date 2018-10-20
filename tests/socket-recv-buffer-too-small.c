@@ -28,7 +28,6 @@ static ssize_t dtee_test_recvfrom_failure(int sockfd, void *buf, size_t len, int
 	}
 
 	return (*next_recvfrom)(sockfd, buf, len, flags, src_addr, addrlen);
-
 }
 
 static ssize_t dtee_test_recvmsg_failure(int sockfd, struct msghdr *msg, int flags) {
@@ -45,7 +44,6 @@ static ssize_t dtee_test_recvmsg_failure(int sockfd, struct msghdr *msg, int fla
 	}
 
 	return (*next_recvmsg)(sockfd, msg, flags);
-
 }
 
 ssize_t recv(int sockfd, void *buf, size_t len, int flags) {

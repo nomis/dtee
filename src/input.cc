@@ -193,7 +193,7 @@ bool Input::fork_parent(pid_t pid) {
 			io_.reset();
 		}
 
-		if (terminated_) {
+		if (stop_) {
 			size_t events = io_.poll(ec);
 
 			if (ec) {
@@ -214,7 +214,7 @@ bool Input::fork_parent(pid_t pid) {
 		}
 	}
 
-	return !output_failed_;
+	return !io_error_;
 }
 
 void Input::fork_child() {
@@ -258,9 +258,9 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		// input socket after it has been unlinked (even if the same
 		// path is created).
 		if (recv_ep_ == out_ep_) {
-			output_failed_ |= !output_->output(OutputType::STDOUT, buffer_, len);
+			io_error_ |= !output_->output(OutputType::STDOUT, buffer_, len);
 		} else if (recv_ep_ == err_ep_) {
-			output_failed_ |= !output_->output(OutputType::STDERR, buffer_, len);
+			io_error_ |= !output_->output(OutputType::STDERR, buffer_, len);
 		} else {
 			// Ignore data from any other sockets
 #ifdef GCOV_ENABLED
@@ -273,7 +273,8 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 	} else {
 		print_socket_error(format("socket receive: %1%"), ec);
 
-		terminated_ = true;
+		io_error_ = true;
+		stop_ = true;
 		io_.stop();
 	}
 }
@@ -316,7 +317,7 @@ void Input::handle_signal(const error_code &ec, int signal_number) {
 			signals_.remove(signal_number);
 		}
 
-		terminated_ = true;
+		stop_ = true;
 		io_.stop();
 
 		signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));

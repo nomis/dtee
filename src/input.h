@@ -62,8 +62,8 @@ private:
 	boost::asio::local::datagram_protocol::endpoint err_ep_; //!< Endpoint name for child process standard error
 
 	pid_t child_ = -1;
-	bool terminated_ = false;
-	bool output_failed_ = false;
+	bool stop_ = false;
+	bool io_error_ = false;
 
 	boost::asio::signal_set signals_;
 	std::vector<char> buffer_; //!< Incoming data
