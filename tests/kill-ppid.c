@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sysexits.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -15,7 +16,7 @@ int main(int argc, char *argv[]) {
 	pid_t ppid = getppid();
 
 	if (argc != 2) {
-		return EXIT_FAILURE;
+		return EX_USAGE;
 	}
 
 	signum = strtol(argv[1], NULL, 10);

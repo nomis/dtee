@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sysexits.h>
 #include <unistd.h>
 
 int main(int argc, char *argv[]) {
@@ -12,7 +13,7 @@ int main(int argc, char *argv[]) {
 	int signum;
 
 	if (argc != 2) {
-		return EXIT_FAILURE;
+		return EX_USAGE;
 	}
 
 	if (env_rlimit_core != NULL) {
