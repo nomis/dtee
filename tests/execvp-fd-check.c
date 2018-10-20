@@ -18,14 +18,16 @@ static void dtee_test_check_fds(void) {
 		case STDOUT_FILENO:
 		case STDERR_FILENO:
 			if (!open || cloexec) {
-				fprintf(stderr, "fd %d is not open\n", fd);
+				fprintf(stderr, "execvp-fd-check: fd %d is not open\n", fd);
+				fflush(stderr);
 				abort();
 			}
 			break;
 
 		default:
 			if (open && !cloexec) {
-				fprintf(stderr, "fd %d is open and will not be closed on exec\n", fd);
+				fprintf(stderr, "execvp-fd-check: fd %d is open and will not be closed on exec\n", fd);
+				fflush(stderr);
 				abort();
 			}
 			break;
