@@ -103,9 +103,7 @@ int Application::run(int argc, const char* const argv[]) {
 			if (signum >= 0) {
 				input.reset(); // Stop handling signals
 #ifdef GCOV_ENABLED
-				// LCOV_EXCL_START
-				__gcov_flush();
-				// LCOV_EXCL_STOP
+				__gcov_flush(); // LCOV_EXCL_LINE
 #endif
 				kill(getpid(), signum);
 			}
@@ -186,9 +184,7 @@ void Application::execute(const vector<string> &command) {
 	argv.push_back(nullptr);
 
 #ifdef GCOV_ENABLED
-	// LCOV_EXCL_START
-	__gcov_flush();
-	// LCOV_EXCL_STOP
+	__gcov_flush(); // LCOV_EXCL_LINE
 #endif
 
 	errno = 0;
