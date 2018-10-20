@@ -29,10 +29,6 @@ Copy::Copy(std::list<std::shared_ptr<Output>> outputs)
 
 }
 
-Copy::~Copy() {
-
-}
-
 bool Copy::open() {
 	bool success = true;
 

@@ -56,10 +56,6 @@ Input::Input(shared_ptr<Output> output)
 
 }
 
-Input::~Input() {
-
-}
-
 void Input::print_socket_error(format message, const error_code &ec) {
 	Application::print_error(message % ec.message());
 }

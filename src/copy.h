@@ -29,7 +29,7 @@ namespace dtee {
 class Copy: public Output {
 public:
 	explicit Copy(std::list<std::shared_ptr<Output>> outputs);
-	~Copy();
+	~Copy() {};
 
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;

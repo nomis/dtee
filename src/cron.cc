@@ -48,10 +48,6 @@ Cron::Cron(string command, shared_ptr<Output> fallback)
 
 }
 
-Cron::~Cron() {
-
-}
-
 void Cron::print_file_error(format message, string cause) {
 	Application::print_error(message % file_.name() % cause);
 }

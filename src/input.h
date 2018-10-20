@@ -37,7 +37,7 @@ namespace dtee {
 class Input {
 public:
 	explicit Input(std::shared_ptr<Output> output);
-	~Input();
+	~Input() {};
 
 	bool open(bool handle_interrupt_signals);
 	void fork_prepare();
