@@ -128,6 +128,7 @@ shared_library('test-socket-setsockopt-monitor', ['tests/socket-setsockopt-monit
 shared_library('test-socket-shutdown-failure', ['tests/socket-shutdown-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 shared_library('test-socket-unix-failure', ['tests/socket-unix-failure.c'] + test_common, c_args: dlfcn_args, dependencies: dlfcn_deps)
 
+executable('test-lorem-ipsum-late-exit', ['tests/lorem-ipsum-late-exit.c'], c_args: test_c_args)
 executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
 executable('test-report', ['tests/report.c', 'tests/is-fd-unix-socket.c'], c_args: test_c_args)
@@ -267,6 +268,7 @@ test('cron input socket create failure', find_program('tests/cron-input-socket-c
 test('cron input socket create and output file open failure', find_program('tests/cron-input-and-output-failure.sh'), env: test_env)
 test('cron input socket bind failure', find_program('tests/cron-input-socket-bind-failure.sh'), env: test_env)
 test('cron input socket connect failure', find_program('tests/cron-input-socket-connect-failure.sh'), env: test_env)
+test('cron input socket receive failure', find_program('tests/cron-input-socket-recv-failure.sh'), env: test_env)
 test('cron input socket shutdown failure', find_program('tests/cron-input-socket-shutdown-failure.sh'), env: test_env)
 
 test('input socket rcvbuf large enough', find_program('tests/input-socket-rcvbuf-large-enough.sh'), env: test_env)

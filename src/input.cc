@@ -273,6 +273,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 	} else {
 		print_socket_error(format("socket receive: %1%"), ec);
 
+		output_->interrupted();
 		io_error_ = true;
 		stop_ = true;
 		io_.stop();

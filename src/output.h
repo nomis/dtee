@@ -37,7 +37,7 @@ public:
 	virtual void terminated(int status __attribute__((unused)),
 			int signum __attribute__((unused)),
 			bool core_dumped __attribute__((unused))) {};
-	virtual void interrupted(int signum __attribute__((unused))) {};
+	virtual void interrupted(int signum __attribute__((unused)) = -1) {};
 
 	Output(const Output&) = delete;
 	Output& operator=(const Output&) = delete;
