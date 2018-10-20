@@ -17,11 +17,11 @@
 */
 #include "process.h"
 
-#include <stdlib.h>
 #include <sysexits.h>
+#include <csignal>
+#include <cstdlib>
 #include <vector>
 
-#include "signal.h"
 
 namespace dtee {
 
