@@ -4,7 +4,7 @@
 export DTEE_TEST_MONITOR_OUTPUT="$TESTDIR/$NAME.canary"
 
 function test_prepare() {
-        rm -f "$DTEE_TEST_MONITOR_OUTPUT"
+	 rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
 COMMON_TEST_LD_PRELOAD=("${COMMON_TEST_LD_PRELOAD[@]/.\/libtest-execvp-fd-check.so}")

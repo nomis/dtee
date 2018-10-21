@@ -4,7 +4,7 @@
 export DTEE_TEST_MONITOR_OUTPUT="$TESTDIR/$NAME.canary"
 
 function test_prepare() {
-        rm -f "$DTEE_TEST_MONITOR_OUTPUT"
+	 rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
 export DTEE_TEST_WAITPID_FAILURE_TYPE=NO_CHILDREN

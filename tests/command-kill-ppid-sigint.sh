@@ -4,7 +4,7 @@
 export DTEE_TEST_MONITOR_OUTPUT="$TESTDIR/$NAME.canary"
 
 function test_prepare() {
-        rm -f "$DTEE_TEST_MONITOR_OUTPUT"
+	 rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
 run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 2

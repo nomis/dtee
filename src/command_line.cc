@@ -96,7 +96,7 @@ vector<po::option> CommandLine::end_of_opts_parser(std::vector<std::string> &arg
 		capture = false;
 	}
 
-    if (capture) {
+	if (capture) {
 		while (i != args.cend()) {
 			po::option opt;
 
@@ -111,7 +111,7 @@ vector<po::option> CommandLine::end_of_opts_parser(std::vector<std::string> &arg
 		args.clear();
 	}
 
-    return result;
+	return result;
 }
 
 void CommandLine::parse(int argc, const char* const argv[]) {
@@ -200,9 +200,9 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 			exit(EX_USAGE);
 		}
 	} catch (std::exception &e) {
-	    cout << display_name_ << ": " << e.what() << endl;
-	    cout << "Try '" << display_name_ << " -h' for more information." << endl;
-	    exit(EX_USAGE);
+		cout << display_name_ << ": " << e.what() << endl;
+		cout << "Try '" << display_name_ << " -h' for more information." << endl;
+		exit(EX_USAGE);
 	}
 
 	cron_mode_ |= flag("cron");
