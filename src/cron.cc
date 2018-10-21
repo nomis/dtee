@@ -58,8 +58,11 @@ bool Cron::open() {
 }
 
 bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
+	bool success = true;
+
 	if (type == OutputType::STDERR) {
 		error_ = true;
+		success = unspool_buffer_file();
 	}
 
 	if (buffered_) {
@@ -76,12 +79,13 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 
 			vector<char> buffer_copy{buffer.cbegin() + written, buffer.cend()};
 			fallback_->output(type, buffer_copy, len - written);
-			return false;
+			success = false;
 		}
-		return true;
 	} else {
-		return fallback_->output(type, buffer, len);
+		success &= fallback_->output(type, buffer, len);
 	}
+
+	return success;
 }
 
 void Cron::terminated(int status, int signum, bool core_dumped) {
@@ -98,6 +102,11 @@ void Cron::terminated(int status, int signum, bool core_dumped) {
 void Cron::interrupted(int signum) {
 	interrupt_signum_ = signum;
 	error_ = true;
+
+	// The return status of this is ignored, so an I/O error won't be
+	// recorded but if we've been interrupted then the exit status has
+	// already been altered.
+	unspool_buffer_file();
 }
 
 bool Cron::unspool_buffer_file() {

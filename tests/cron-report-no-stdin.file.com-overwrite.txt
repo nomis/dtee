@@ -1,1 +1,10 @@
-cron-report-no-stdin.out.txt
+argc=4
+argv[0]=./test-report
+argv[1]=Hello World!
+argv[2]=ETAOIN
+argv[3]=SHRDLU
+fd STDIN_FILENO closed errno=9
+O
+fd STDOUT_FILENO open read=0 (00) write=2 sockname=./dtee@test/cron-report-no-stdin.tmp/dtee.1.1.input.XXXXXX/o
+E
+fd STDER_FILENO open read=0 (00) write=2 sockname=./dtee@test/cron-report-no-stdin.tmp/dtee.1.1.input.XXXXXX/e

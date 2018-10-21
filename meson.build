@@ -328,4 +328,5 @@ test('pipe write failure (stderr)', find_program('tests/pipe-write-failure-stder
 test('pipe write failure (file)', find_program('tests/pipe-write-failure-file.sh'), env: test_env)
 test('cron pipe write failure (stdout)', find_program('tests/cron-pipe-write-failure-stdout.sh'), env: test_env)
 test('cron pipe write failure (stderr)', find_program('tests/cron-pipe-write-failure-stderr.sh'), env: test_env)
+test('cron pipe write failure (stderr but no output)', find_program('tests/cron-pipe-write-failure-stderr2.sh'), env: test_env)
 test('cron pipe write failure (file)', find_program('tests/cron-pipe-write-failure-file.sh'), env: test_env)

@@ -1,1 +1,2 @@
-./dtee: ./test-closed-pipe-writer: exited with status 0
+Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
+./dtee: received signal 13: Broken pipe

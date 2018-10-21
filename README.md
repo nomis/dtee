@@ -10,10 +10,9 @@ while maintaining the original standard output and standard error as normal.
 
 ## Purpose
 
-To run programs from cron, suppressing all normal output unless the process
-outputs an error message or has a non-zero exit status whereupon the original
-output will be combined and written to standard output. The exit code will be
-written to standard error.
+To run programs from cron, suppressing all output unless the process outputs an
+error message or has a non-zero exit status whereupon the original output will
+be written as normal and the exit code will be appended to standard error.
 
 It will do this by default when executed as `cronty`, providing an alternative
 to [cronic](https://habilis.net/cronic/) but without splitting up the output.

@@ -15,7 +15,8 @@ RET=$?
 eval $(TEST_WAITPID_CLOSED_STDERR=1 ./test-waitpid ./dtee ./dtee -q "$RUN")
 RET2=$?
 
-variables_must_eq RET $((128 + 13)) \
+# If SIGPIPE is received while outputting the final report of the process
+# status, the signal is ignored so the return value will be unchanged.
+variables_must_eq RET 42 \
 	RET2 0 \
-	WIFSIGNALED 1 \
-	WTERMSIG 13
+	WIFSIGNALED 0

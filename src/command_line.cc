@@ -150,7 +150,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 
 	po::options_description cron_opts;
 	cron_opts.add_options()
-		("cron,q", po::bool_switch(), "operate in cron mode (combine original output but suppress it unless the process outputs an error message or has a non-zero exit status)")
+		("cron,q", po::bool_switch(), "operate in cron mode (suppress output unless the process outputs an error message or has a non-zero exit status)")
 		;
 
 	po::options_description help_opts;
@@ -212,10 +212,9 @@ void CommandLine::display_usage(po::options_description &options) const {
 	cout << "Usage: " << display_name_ << " [OPTION]... COMMAND [ARG]..." << endl << endl;
 	cout << "Run COMMAND with standard output and standard error copied to each FILE," << endl;
 	if (cron_mode()) {
-		cout << "suppressing all normal output unless the process outputs an error message" << endl;
-		cout << "or has a non-zero exit status whereupon the original output will be combined" << endl;
-		cout << "and written to standard output. The exit code will be written to standard" << endl;
-		cout << "error." << endl;
+		cout << "suppressing all output unless the process outputs an error message or has a" << endl;
+		cout << "non-zero exit status whereupon the original output will be written as normal" << endl;
+		cout << "and the exit code will be appended to standard error." << endl;
 	} else {
 		cout << "while maintaining the original standard output and standard error as normal." << endl;
 	}
