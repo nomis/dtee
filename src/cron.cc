@@ -62,7 +62,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 
 	if (type == OutputType::STDERR) {
 		error_ = true;
-		success = unspool_buffer_file();
+		success &= unspool_buffer_file();
 	}
 
 	if (buffered_) {
