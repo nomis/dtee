@@ -16,6 +16,8 @@ COMMON_TEST_LD_PRELOAD=(./libtest-execvp-fd-check.so)
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
 TEST_EXTRA_OUTPUT=0
+TEST_CLOSED_STDOUT=0
+TEST_CLOSED_STDERR=0
 
 # Use a consistent and isolated temporary directory
 rm -rf "$TESTDIR/$NAME.tmp"
@@ -124,7 +126,7 @@ function run_test() {
 		rm -f "$TESTDIR/$NAME.extra-out.txt"
 	fi
 	before_test
-	if [ $TEST_NO_STDIN -eq 1  ]; then
+	if [ $TEST_NO_STDIN -eq 1 ]; then
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
@@ -136,21 +138,54 @@ function run_test() {
 
 		wait $PID
 		RET1=$?
+	elif [ $TEST_CLOSED_STDOUT -eq 1 ]; then
+		# Start a subshell that waits for a line before proceeding
+		coproc { read -r; "$TEST_EXEC" "$@" <"$STDIN_FILE" 2>"$TESTDIR/$NAME.err.txt"; }
+		PID=$!
+		# Close read pipe (stdout) and then write a line (stdin) to signal the subshell
+		exec {COPROC[0]}<&-
+		echo >&${COPROC[1]}
+
+		wait $PID
+		RET1=$?
+	elif [ $TEST_CLOSED_STDERR -eq 1 ]; then
+		# Start a subshell that waits for a line before proceeding (swap stdout and stderr)
+		coproc { read -r; "$TEST_EXEC" "$@" <"$STDIN_FILE" 2>&1 1>"$TESTDIR/$NAME.out.txt"; }
+		# Close read pipe (stderr) and then write a line (stdin) to signal the subshell
+		PID=$!
+		exec {COPROC[0]}<&-
+		echo >&${COPROC[1]}
+
+		wait $PID
+		RET1=$?
 	else
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
 	fi
 	after_test
 
-	cmp_files "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
-	CMP_OUT=$?
+	if [ $TEST_CLOSED_STDOUT -ne 1 ]; then
+		cmp_files "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
+		CMP_OUT=$?
+	fi
 
-	cmp_files "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
-	CMP_ERR=$?
+	if [ $TEST_CLOSED_STDERR -ne 1 ]; then
+		cmp_files "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
+		CMP_ERR=$?
+	fi
 
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		cmp_files "${0/.sh/.extra-out.txt}" "$TESTDIR/$NAME.extra-out.txt"
 		CMP_EXTRA_OUT1=$?
+	fi
+
+	# Only run these once because combined output is meaningless
+	if [ $TEST_CLOSED_STDOUT -eq 1 ]; then
+		check_variables_eq CMP_ERR 0
+		return $RET1
+	elif [ $TEST_CLOSED_STDERR -eq 1 ]; then
+		check_variables_eq CMP_OUT 0
+		return $RET1
 	fi
 
 	declare -f test_cleanup >/dev/null && test_cleanup
@@ -162,7 +197,7 @@ function run_test() {
 		mkfifo "$TESTDIR/$NAME.extra-out.fifo"
 	fi
 	before_test
-	if [ $TEST_NO_STDIN -eq 1  ]; then
+	if [ $TEST_NO_STDIN -eq 1 ]; then
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
 		RET2=$?
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then

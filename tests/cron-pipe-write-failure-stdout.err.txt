@@ -1,0 +1,1 @@
+./dtee: dtee@test/cron-pipe-write-failure-stdout.run: exited with status 0

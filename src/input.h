@@ -49,7 +49,9 @@ public:
 
 private:
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);
-	void handle_signal(const boost::system::error_code &ec, int signal_number);
+	void handle_child_exited(const boost::system::error_code &ec, int signal_number);
+	void handle_interrupt_signals(const boost::system::error_code &ec, int signal_number);
+	void handle_pipe_signal(const boost::system::error_code &ec, int signal_number);
 	void print_socket_error(boost::format message, const boost::system::error_code &ec);
 	void print_socket_error(boost::format message, const std::exception &e);
 	void print_system_error(boost::format message, std::string cause = errno_to_string());
@@ -64,7 +66,9 @@ private:
 	pid_t child_ = -1;
 	bool io_error_ = false;
 
-	boost::asio::signal_set signals_;
+	boost::asio::signal_set child_exited_;
+	boost::asio::signal_set interrupt_signals_;
+	boost::asio::signal_set pipe_signal_;
 	std::vector<char> buffer_; //!< Incoming data
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data
 

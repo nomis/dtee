@@ -55,7 +55,9 @@ Input::Input(shared_ptr<Output> output)
 		: input_(io_),
 		  out_(io_),
 		  err_(io_),
-		  signals_(io_, SIGCHLD),
+		  child_exited_(io_, SIGCHLD),
+		  interrupt_signals_(io_),
+		  pipe_signal_(io_),
 		  output_(output) {
 
 }
@@ -82,9 +84,10 @@ bool Input::open(bool handle_interrupt_signals) {
 	}
 
 	if (handle_interrupt_signals) {
-		signals_.add(SIGHUP);
-		signals_.add(SIGINT);
-		signals_.add(SIGTERM);
+		interrupt_signals_.add(SIGHUP);
+		interrupt_signals_.add(SIGINT);
+		interrupt_signals_.add(SIGTERM);
+		pipe_signal_.add(SIGPIPE);
 	}
 
 	const string input_name = temp_dir.register_file("i");
@@ -186,7 +189,9 @@ bool Input::fork_parent(pid_t pid) {
 	input_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
 			bind(&Input::handle_receive_from, this, p::_1, p::_2));
 
-	signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));
+	child_exited_.async_wait(bind(&Input::handle_child_exited, this, p::_1, p::_2));
+	interrupt_signals_.async_wait(bind(&Input::handle_interrupt_signals, this, p::_1, p::_2));
+	pipe_signal_.async_wait(bind(&Input::handle_pipe_signal, this, p::_1, p::_2));
 
 	do {
 		io_.run(ec);
@@ -210,7 +215,7 @@ bool Input::fork_parent(pid_t pid) {
 		}
 	} while (events > 0);
 
-	signals_.clear();
+	interrupt_signals_.clear();
 
 	return !io_error_;
 }
@@ -277,48 +282,59 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 	}
 }
 
-void Input::handle_signal(const error_code &ec, int signal_number) {
+void Input::handle_child_exited(const error_code &ec, int signal_number) {
 	if (!ec) {
-		if (signal_number == SIGCHLD) {
-			int wait_status;
+		int wait_status;
 
-			errno = 0;
-			pid_t ret = waitpid(child_, &wait_status, WNOHANG);
-			if (ret <= 0) {
-				if (ret != 0) {
-					print_system_error(format("waitpid: %1%"));
-				}
+		errno = 0;
+		pid_t ret = waitpid(child_, &wait_status, WNOHANG);
+		if (ret <= 0) {
+			if (ret != 0) {
+				print_system_error(format("waitpid: %1%"));
+			}
 
-				output_->interrupted(SIGCHLD);
-				io_error_ = true;
-			} else {
-				bool core_dumped = false;
-				int exit_status = -1;
-				int exit_signum = -1;
+			output_->interrupted(signal_number);
+			io_error_ = true;
+		} else {
+			bool core_dumped = false;
+			int exit_status = -1;
+			int exit_signum = -1;
 
-				if (WIFEXITED(wait_status)) {
-					exit_status = WEXITSTATUS(wait_status);
-				}
+			if (WIFEXITED(wait_status)) {
+				exit_status = WEXITSTATUS(wait_status);
+			}
 
-				if (WIFSIGNALED(wait_status)) {
-					exit_signum = WTERMSIG(wait_status);
-				}
+			if (WIFSIGNALED(wait_status)) {
+				exit_signum = WTERMSIG(wait_status);
+			}
 
 #ifdef WCOREDUMP
-				if (WCOREDUMP(wait_status)) {
-					core_dumped = true;
-				}
+			if (WCOREDUMP(wait_status)) {
+				core_dumped = true;
+			}
 #endif
 
-				output_->terminated(exit_status, exit_signum, core_dumped);
-				signals_.remove(signal_number);
-			}
-		} else {
-			output_->interrupted(signal_number);
-			signals_.remove(signal_number);
+			output_->terminated(exit_status, exit_signum, core_dumped);
 		}
 
-		signals_.async_wait(bind(&Input::handle_signal, this, p::_1, p::_2));
+		child_exited_.clear();
+		io_.stop();
+	}
+}
+
+void Input::handle_interrupt_signals(const error_code &ec, int signal_number) {
+	if (!ec) {
+		output_->interrupted(signal_number);
+		interrupt_signals_.remove(signal_number);
+		interrupt_signals_.async_wait(bind(&Input::handle_interrupt_signals, this, p::_1, p::_2));
+		io_.stop();
+	}
+}
+
+void Input::handle_pipe_signal(const error_code &ec, int signal_number) {
+	if (!ec) {
+		output_->interrupted(signal_number);
+		pipe_signal_.async_wait(bind(&Input::handle_pipe_signal, this, p::_1, p::_2));
 		io_.stop();
 	}
 }

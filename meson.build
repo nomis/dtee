@@ -320,3 +320,8 @@ test('cron waitpid failure (no change)', find_program('tests/cron-waitpid-failur
 
 test('security recreate the input socket after the parent process exits', find_program('tests/security-recreate-input-socket.sh'), env: test_env)
 test('security recreate the output socket after the child process exits', find_program('tests/security-recreate-output-socket.sh'), env: test_env)
+
+test('pipe write failure (stdout)', find_program('tests/pipe-write-failure-stdout.sh'), env: test_env)
+test('pipe write failure (stderr)', find_program('tests/pipe-write-failure-stderr.sh'), env: test_env)
+test('cron pipe write failure (stdout)', find_program('tests/cron-pipe-write-failure-stdout.sh'), env: test_env)
+test('cron pipe write failure (stderr)', find_program('tests/cron-pipe-write-failure-stderr.sh'), env: test_env)

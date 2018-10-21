@@ -51,6 +51,7 @@ int Process::interrupt_signum() {
 		// Replicate these signals that caused us to terminate.
 	case SIGHUP:
 	case SIGINT:
+	case SIGPIPE:
 	case SIGTERM:
 		return interrupt_signum_;
 	}
