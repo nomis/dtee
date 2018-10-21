@@ -1,8 +1,15 @@
 #!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
-TEST_CLOSED_STDERR=1
-run_test -q "$RUN"
+function test_prepare() {
+	rm -f "$TESTDIR/$NAME.canary"
+	FIFO=$(make_fifo "err")
+	./test-closed-pipe-reader "$TESTDIR/$NAME.canary" <"$FIFO" &
+}
+
+FIFO=$(make_fifo "err")
+TEST_ALT_STDERR="$FIFO"
+run_test -q ./test-closed-pipe-writer "$TESTDIR/$NAME.canary" "$RUN"
 RET=$?
 
 eval $(TEST_WAITPID_CLOSED_STDERR=1 ./test-waitpid ./dtee ./dtee -q "$RUN")

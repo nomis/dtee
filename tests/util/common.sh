@@ -16,8 +16,8 @@ COMMON_TEST_LD_PRELOAD=(./libtest-execvp-fd-check.so)
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
 TEST_EXTRA_OUTPUT=0
-TEST_CLOSED_STDOUT=0
-TEST_CLOSED_STDERR=0
+TEST_ALT_STDOUT=
+TEST_ALT_STDERR=
 
 # Use a consistent and isolated temporary directory
 rm -rf "$TESTDIR/$NAME.tmp"
@@ -91,7 +91,11 @@ function check_variables() {
 		CV_ACTUAL="$1"
 		CV_EXPECTED="$2"
 		echo "$CV_ACTUAL" actual "${!CV_ACTUAL}" expected "$CV_EXPECTED"
-		if [ ${!CV_ACTUAL} -ne $CV_EXPECTED ]; then
+		if [ -z "${!CV_ACTUAL}" ]; then
+			CV_RET=1
+		elif [ -z "$CV_EXPECTED" ]; then
+			CV_RET=1
+		elif [ ${!CV_ACTUAL} -ne $CV_EXPECTED ]; then
 			CV_RET=1
 		fi
 		shift 2
@@ -138,25 +142,11 @@ function run_test() {
 
 		wait $PID
 		RET1=$?
-	elif [ $TEST_CLOSED_STDOUT -eq 1 ]; then
-		# Start a subshell that waits for a line before proceeding
-		coproc { read -r; "$TEST_EXEC" "$@" <"$STDIN_FILE" 2>"$TESTDIR/$NAME.err.txt"; }
-		PID=$!
-		# Close read pipe (stdout) and then write a line (stdin) to signal the subshell
-		exec {COPROC[0]}<&-
-		echo >&${COPROC[1]}
-
-		wait $PID
+	elif [ -n "$TEST_ALT_STDOUT" ]; then
+		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TEST_ALT_STDOUT" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
-	elif [ $TEST_CLOSED_STDERR -eq 1 ]; then
-		# Start a subshell that waits for a line before proceeding (swap stdout and stderr)
-		coproc { read -r; "$TEST_EXEC" "$@" <"$STDIN_FILE" 2>&1 1>"$TESTDIR/$NAME.out.txt"; }
-		# Close read pipe (stderr) and then write a line (stdin) to signal the subshell
-		PID=$!
-		exec {COPROC[0]}<&-
-		echo >&${COPROC[1]}
-
-		wait $PID
+	elif [ -n "$TEST_ALT_STDERR" ]; then
+		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TEST_ALT_STDERR"
 		RET1=$?
 	else
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
@@ -164,12 +154,12 @@ function run_test() {
 	fi
 	after_test
 
-	if [ $TEST_CLOSED_STDOUT -ne 1 ]; then
+	if [ -z "$TEST_ALT_STDOUT" ]; then
 		cmp_files "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
 		CMP_OUT=$?
 	fi
 
-	if [ $TEST_CLOSED_STDERR -ne 1 ]; then
+	if [ -z "$TEST_ALT_STDERR" ]; then
 		cmp_files "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
 		CMP_ERR=$?
 	fi
@@ -180,10 +170,10 @@ function run_test() {
 	fi
 
 	# Only run these once because combined output is meaningless
-	if [ $TEST_CLOSED_STDOUT -eq 1 ]; then
+	if [ -n "$TEST_ALT_STDOUT" ]; then
 		check_variables_eq CMP_ERR 0
 		return $RET1
-	elif [ $TEST_CLOSED_STDERR -eq 1 ]; then
+	elif [ -n "$TEST_ALT_STDERR" ]; then
 		check_variables_eq CMP_OUT 0
 		return $RET1
 	fi
