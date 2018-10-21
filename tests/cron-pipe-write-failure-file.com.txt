@@ -1,0 +1,3 @@
+./dtee: dtee@test/cron-pipe-write-failure-file.file.fifo: Broken pipe
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+./dtee: received signal 13: Broken pipe

@@ -1,0 +1,4 @@
+#!/bin/bash
+# Only write one line because there is no guarantee we'll be able to write
+# everything before SIGPIPE takes effect and dtee stops reading
+exec ./test-lorem-ipsum-late-exit 1

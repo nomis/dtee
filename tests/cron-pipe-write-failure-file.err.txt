@@ -1,0 +1,2 @@
+./dtee: dtee@test/cron-pipe-write-failure-file.file.fifo: Broken pipe
+./dtee: received signal 13: Broken pipe

@@ -130,6 +130,8 @@ shared_library('test-socket-shutdown-failure', ['tests/socket-shutdown-failure.c
 shared_library('test-socket-unix-failure', ['tests/socket-unix-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee])
 shared_library('test-waitpid-failure', ['tests/waitpid-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 
+executable('test-closed-pipe-reader', ['tests/closed-pipe-reader.c'], c_args: test_c_args)
+executable('test-closed-pipe-writer', ['tests/closed-pipe-writer.c'], c_args: test_c_args)
 executable('test-lorem-ipsum-late-exit', ['tests/lorem-ipsum-late-exit.c'], c_args: test_c_args)
 executable('test-lorem-ipsum-wait-exit', ['tests/lorem-ipsum-wait-exit.c'], c_args: test_c_args)
 executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
@@ -323,5 +325,7 @@ test('security recreate the output socket after the child process exits', find_p
 
 test('pipe write failure (stdout)', find_program('tests/pipe-write-failure-stdout.sh'), env: test_env)
 test('pipe write failure (stderr)', find_program('tests/pipe-write-failure-stderr.sh'), env: test_env)
+test('pipe write failure (file)', find_program('tests/pipe-write-failure-file.sh'), env: test_env)
 test('cron pipe write failure (stdout)', find_program('tests/cron-pipe-write-failure-stdout.sh'), env: test_env)
 test('cron pipe write failure (stderr)', find_program('tests/cron-pipe-write-failure-stderr.sh'), env: test_env)
+test('cron pipe write failure (file)', find_program('tests/cron-pipe-write-failure-file.sh'), env: test_env)
