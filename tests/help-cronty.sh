@@ -2,7 +2,8 @@
 . "$(dirname "$0")"/util/common.sh
 
 # Ask for help, get exit code 0 and usage information (excluding cron option)
-coproc { exec ./cronty --help; }
+FIFO=$(make_fifo "out")
+./cronty --help >"$FIFO" &
 PID=$!
 
 USAGE=0
@@ -13,7 +14,7 @@ while read -r line; do
 	"Usage: ./cronty "*) USAGE=1 ;;
 	*"operate in cron mode"*) CRON=1 ;;
 	esac
-done <&$COPROC
+done <"$FIFO"
 
 wait $PID
 RET=$?

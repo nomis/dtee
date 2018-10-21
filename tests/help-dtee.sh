@@ -2,7 +2,8 @@
 . "$(dirname "$0")"/util/common.sh
 
 # Ask for help, get exit code 0 and usage information (including cron option)
-coproc { ./dtee --help; }
+FIFO=$(make_fifo "out")
+./dtee --help >"$FIFO" &
 PID=$!
 
 USAGE=0
@@ -13,7 +14,7 @@ while read -r line; do
 	"Usage: ./dtee "*) USAGE=1 ;;
 	*"operate in cron mode"*) CRON=1 ;;
 	esac
-done <&$COPROC
+done <"$FIFO"
 
 wait $PID
 RET=$?

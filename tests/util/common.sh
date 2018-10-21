@@ -75,6 +75,12 @@ function cmp_files() {
 	return $CMP
 }
 
+function make_fifo() {
+	rm -f "$TESTDIR/$NAME.$1.fifo"
+	mkfifo "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
+	echo "$TESTDIR/$NAME.$1.fifo"
+}
+
 function check_variables() {
 	set +x
 	CV_RET=0
@@ -122,10 +128,11 @@ function run_test() {
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
-		coproc { DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 3>&1 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"; }
+		FIFO=$(make_fifo "extra-out")
+		DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt" 3>"$FIFO" &
 		PID=$!
 
-		cat <&$COPROC >"$TESTDIR/$NAME.extra-out.txt"
+		cat <"$FIFO" >"$TESTDIR/$NAME.extra-out.txt"
 
 		wait $PID
 		RET1=$?
@@ -152,16 +159,18 @@ function run_test() {
 	rm -f "$TESTDIR/$NAME.com.txt" "$TESTDIR/$NAME.extra-out.txt"
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		rm -f "$TESTDIR/$NAME.extra-out.txt"
+		mkfifo "$TESTDIR/$NAME.extra-out.fifo"
 	fi
 	before_test
 	if [ $TEST_NO_STDIN -eq 1  ]; then
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
 		RET2=$?
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
-		coproc { DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 3>&1 1>"$TESTDIR/$NAME.com.txt" 2>&1; }
+		FIFO=$(make_fifo "extra-out")
+		DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1 3>"$FIFO" &
 		PID=$!
 
-		cat <&$COPROC >"$TESTDIR/$NAME.extra-out.txt"
+		cat <"$FIFO" >"$TESTDIR/$NAME.extra-out.txt"
 
 		wait $PID
 		RET2=$?

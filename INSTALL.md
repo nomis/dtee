@@ -15,7 +15,7 @@
   * [Cppcheck](http://cppcheck.sourceforge.net/)
 
 ### Test
-  * [GNU Bash](https://www.gnu.org/software/bash/) 4.0+
+  * [GNU Bash](https://www.gnu.org/software/bash/)
   * [GNU Core Utilities](https://www.gnu.org/software/coreutils/)
   * [GNU Diff Utilities](https://www.gnu.org/software/diffutils/)
   * [GNU Find Utilities](https://www.gnu.org/software/findutils/)

@@ -2,7 +2,8 @@
 . "$(dirname "$0")"/util/common.sh
 
 # Provide no arguments, get exit code 64 and usage information (including cron option)
-coproc { ./dtee; }
+FIFO=$(make_fifo "out")
+./dtee >"$FIFO" &
 PID=$!
 
 USAGE=0
@@ -13,7 +14,7 @@ while read -r line; do
 	"Usage: ./dtee "*) USAGE=1 ;;
 	*"operate in cron mode"*) CRON=1 ;;
 	esac
-done <&$COPROC
+done <"$FIFO"
 
 wait $PID
 RET=$?

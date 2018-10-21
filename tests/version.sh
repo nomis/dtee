@@ -2,7 +2,8 @@
 . "$(dirname "$0")"/util/common.sh
 
 # Ask for the version, get exit code 0 and version information
-coproc { ./dtee --version; }
+FIFO=$(make_fifo "out")
+./dtee --version >"$FIFO" &
 PID=$!
 
 INFO=0
@@ -15,7 +16,7 @@ while read -r line; do
 	"Copyright "*) COPYRIGHT=1 ;;
 	"Licence GPLv3+"*) LICENCE=1 ;;
 	esac
-done <&$COPROC
+done <"$FIFO"
 
 wait $PID
 RET=$?
