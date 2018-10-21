@@ -7,4 +7,4 @@ run_test "-q" "$RUN"
 RET=$?
 
 # Output errors prevent a success exit status
-variables_must_eq RET $EX_IOERR
+variables_must_eq RET $EX_CANTCREAT

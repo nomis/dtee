@@ -80,8 +80,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 		}
 		return true;
 	} else {
-		fallback_->output(type, buffer, len);
-		return false;
+		return fallback_->output(type, buffer, len);
 	}
 }
 
