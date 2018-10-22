@@ -27,6 +27,8 @@
 #include <typeinfo>
 #include <vector>
 
+#include "version.h"
+
 using ::std::string;
 using ::std::vector;
 
@@ -227,7 +229,7 @@ void CommandLine::display_usage(const po::options_description &options) const {
 }
 
 void CommandLine::display_version() const {
-	cout << DEFAULT_PROGRAM_NAME << " - run a program with standard output and standard error copied to files" << endl;
+	cout << DEFAULT_PROGRAM_NAME << " " << VERSION << endl;
 	cout << "Copyright 2018  Simon Arlott" << endl;
 	cout << "Licence GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>." << endl;
 	cout << "This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law." << endl;

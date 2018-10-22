@@ -7,7 +7,10 @@ project('dtee',
 		'werror=true',
 		'b_lto=true',
 	],
-	license: 'GPL3+')
+	version: '0.0.0',
+	license: 'GPL3+',
+	meson_version: '>=0.48.0',
+)
 
 source_files = [
 	'src/application.cc',
@@ -23,6 +26,7 @@ source_files = [
 	'src/temp_file.cc',
 	'src/temp_filename_pattern.cc',
 	'src/to_string.cc',
+	vcs_tag(input: 'src/version.h.in', output: 'version.h', fallback: meson.project_version() + '-unknown'),
 ]
 
 compile_args = [
