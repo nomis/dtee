@@ -28,6 +28,7 @@
 #include <boost/format.hpp>
 #include <boost/system/error_code.hpp>
 
+#include "command_line.h"
 #include "input.h"
 #include "output.h"
 #include "to_string.h"
@@ -36,10 +37,10 @@ namespace dtee {
 
 class Input {
 public:
-	explicit Input(std::shared_ptr<Output> output);
+	Input(const CommandLine &command_line, std::shared_ptr<Output> output);
 	~Input() {};
 
-	bool open(bool handle_interrupt_signals);
+	bool open();
 	void fork_prepare();
 	bool fork_parent(pid_t pid);
 	void fork_child();
@@ -68,11 +69,14 @@ private:
 
 	boost::asio::signal_set child_exited_;
 	boost::asio::signal_set interrupt_signals_;
+	boost::asio::signal_set ignored_signals_;
 	boost::asio::signal_set pipe_signal_;
 	std::vector<char> buffer_; //!< Incoming data
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data
 
 	std::shared_ptr<Output> output_;
+	bool handle_signals_;
+	bool ignore_sigint_;
 };
 
 } // namespace dtee

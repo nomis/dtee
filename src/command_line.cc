@@ -140,6 +140,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 		("combined-append,c",
 				po::value<vector<string>>()->value_name("FILE"),
 				"append standard output and error to FILE")
+		("ignore-interrupts,i", po::bool_switch(), "ignore interrupt signals")
 		;
 
 	po::options_description hidden_opts;

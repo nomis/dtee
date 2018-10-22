@@ -1,0 +1,20 @@
+#!/bin/bash
+kill -INT $PPID
+echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" >&1
+echo "Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison" >&2
+kill -INT $PPID
+echo "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis" >&1
+echo "frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo," >&2
+kill -INT $PPID
+echo "nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." >&1
+echo "pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris" >&2
+kill -INT $PPID
+echo "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore" >&1
+echo "commodo fatback meatball proident. Do commodo tongue jerky doner. Pork loin" >&2
+kill -INT $PPID
+echo "eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt" >&1
+echo "occaecat sunt swine deserunt. Proident turkey dolor est duis qui jowl magna" >&2
+kill -INT $PPID
+echo "in culpa qui officia deserunt mollit anim id est laborum." >&1
+echo "elit ham hock enim boudin brisket laborum t-bone. Drumstick sirloin pig." >&2
+kill -INT $PPID

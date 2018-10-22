@@ -51,15 +51,17 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-Input::Input(shared_ptr<Output> output)
+Input::Input(const CommandLine &command_line, shared_ptr<Output> output)
 		: input_(io_),
 		  out_(io_),
 		  err_(io_),
 		  child_exited_(io_, SIGCHLD),
 		  interrupt_signals_(io_),
+		  ignored_signals_(io_),
 		  pipe_signal_(io_),
 		  output_(output) {
-
+	handle_signals_ = command_line.cron_mode();
+	ignore_sigint_ = command_line.ignore_interrupts();
 }
 
 void Input::print_socket_error(format message, const error_code &ec) {
@@ -74,7 +76,7 @@ void Input::print_system_error(format message, std::string cause) {
 	Application::print_error(message % cause);
 }
 
-bool Input::open(bool handle_interrupt_signals) {
+bool Input::open() {
 	// There is no equivalent of mkstemp() for local sockets,
 	// so we create them in a temporary directory instead.
 	TempDirectory temp_dir{"input"};
@@ -83,11 +85,19 @@ bool Input::open(bool handle_interrupt_signals) {
 		return false;
 	}
 
-	if (handle_interrupt_signals) {
+	if (handle_signals_) {
 		interrupt_signals_.add(SIGHUP);
-		interrupt_signals_.add(SIGINT);
 		interrupt_signals_.add(SIGTERM);
+
+		if (!ignore_sigint_) {
+			interrupt_signals_.add(SIGINT);
+		}
+
 		pipe_signal_.add(SIGPIPE);
+	}
+
+	if (ignore_sigint_) {
+		ignored_signals_.add(SIGINT);
 	}
 
 	const string input_name = temp_dir.register_file("i");

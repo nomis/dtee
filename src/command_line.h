@@ -39,6 +39,7 @@ public:
 	const std::vector<std::string>& list(const std::string &name) const;
 
 	bool cron_mode() const { return cron_mode_; }
+	bool ignore_interrupts() const { return flag("ignore-interrupts"); }
 	const std::vector<std::string>& command() const { return list(BOOST_COMMAND_OPT); };
 
 	CommandLine(const CommandLine&) = delete;

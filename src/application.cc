@@ -67,10 +67,10 @@ int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
 
 	shared_ptr<Copy> outputs = make_shared<Copy>(create_outputs());
-	shared_ptr<Input> input = make_shared<Input>(outputs);
+	shared_ptr<Input> input = make_shared<Input>(command_line_, outputs);
 
 	bool outputs_ok = outputs->open();
-	bool input_ok = input->open(command_line_.cron_mode());
+	bool input_ok = input->open();
 	int ret_internal = EXIT_SUCCESS;
 
 	if (!outputs_ok) {
@@ -125,9 +125,10 @@ int Application::run(int argc, const char* const argv[]) {
 	if (command_line_.cron_mode()) {
 		// If we're running from cron then we have output an error message
 		// for the failed preparation to handle input but must continue to
-		// execute the requested command. Close open files/sockets first.
+		// execute the requested command. Close open files/sockets and
+		// remove signal handlers first.
 		outputs.reset(); // Files are opened with O_CLOEXEC so this is unnecessary
-		input.reset(); // Boost (1.62) has no support for SOCK_CLOEXEC
+		input.reset(); // Stop handling signals and close sockets
 
 		execute(command_line_.command());
 		return EX_SOFTWARE;
