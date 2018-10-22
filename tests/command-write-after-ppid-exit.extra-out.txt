@@ -1,0 +1,2 @@
+fd STDOUT_FILENO write=-1 errno=111 sockname=./dtee@test/command-write-after-ppid-exit.tmp/dtee.1.1.input.XXXXXX/o
+fd STDERR_FILENO write=-1 errno=111 sockname=./dtee@test/command-write-after-ppid-exit.tmp/dtee.1.1.input.XXXXXX/e

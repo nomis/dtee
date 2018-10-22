@@ -135,7 +135,7 @@ executable('test-closed-pipe-writer', ['tests/closed-pipe-writer.c'], c_args: te
 executable('test-lorem-ipsum-late-exit', ['tests/lorem-ipsum-late-exit.c'], c_args: test_c_args)
 executable('test-lorem-ipsum-wait-exit', ['tests/lorem-ipsum-wait-exit.c'], c_args: test_c_args)
 executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
-executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args)
+executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
 executable('test-report', ['tests/report.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
 executable('test-security-recreate-input-socket', ['tests/security-recreate-input-socket.c'], c_args: test_c_args)
 executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)
@@ -330,3 +330,5 @@ test('cron pipe write failure (stdout)', find_program('tests/cron-pipe-write-fai
 test('cron pipe write failure (stderr)', find_program('tests/cron-pipe-write-failure-stderr.sh'), env: test_env)
 test('cron pipe write failure (stderr but no output)', find_program('tests/cron-pipe-write-failure-stderr2.sh'), env: test_env)
 test('cron pipe write failure (file)', find_program('tests/cron-pipe-write-failure-file.sh'), env: test_env)
+
+test('command writes to stdout/stderr after dtee exits', find_program('tests/command-write-after-ppid-exit.sh'), env: test_env)
