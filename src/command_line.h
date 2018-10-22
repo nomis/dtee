@@ -49,7 +49,7 @@ private:
 	static std::vector<boost::program_options::option> end_of_opts_parser(std::vector<std::string> &args);
 
 	void update_name(const std::string &program_name);
-	void display_usage(boost::program_options::options_description &options) const;
+	void display_usage(const boost::program_options::options_description &options) const;
 	void display_version() const;
 	void display_variables() const;
 

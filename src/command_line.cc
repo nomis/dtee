@@ -120,7 +120,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 	}
 
 	// LCOV_EXCL_BR_START
-	po::options_description visible_opts{"Allowed options"};
+	po::options_description visible_opts{"Output files"};
 	visible_opts.add_options()
 		("out-overwrite,O",
 				po::value<vector<string>>()->value_name("FILE"),
@@ -140,7 +140,6 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 		("combined-append,c",
 				po::value<vector<string>>()->value_name("FILE"),
 				"append standard output and error to FILE")
-		("ignore-interrupts,i", po::bool_switch(), "ignore interrupt signals")
 		;
 
 	po::options_description hidden_opts;
@@ -149,35 +148,39 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 		(BOOST_COMMAND_OPT.c_str(), po::value<vector<string>>())
 		;
 
-	po::options_description cron_opts;
-	cron_opts.add_options()
+	po::options_description mode_opts{"Options"};
+	mode_opts.add_options()
+		("ignore-interrupts,i", po::bool_switch(), "ignore interrupt signals")
+		;
+
+	(cron_mode_ ? hidden_opts : mode_opts).add_options()
 		("cron,q", po::bool_switch(), "operate in cron mode (suppress output unless the process outputs an error message or has a non-zero exit status)")
 		;
 
-	po::options_description help_opts;
-	help_opts.add_options()
+	po::options_description misc_opts{"Miscellaneous"};
+	misc_opts.add_options()
 		("help,h", po::bool_switch(), "display this help and exit")
 		("version,V", po::bool_switch(), "output version information and exit")
 		;
-	// LCOV_EXCL_BR_STOP
 
-	(cron_mode_ ? hidden_opts : visible_opts).add(cron_opts);
-	visible_opts.add(help_opts);
+	visible_opts.add(mode_opts);
+	visible_opts.add(misc_opts);
 
 	po::options_description all_opts;
-	all_opts.add(visible_opts).add(hidden_opts);
+	all_opts.add(visible_opts);
+	all_opts.add(hidden_opts);
 
-	po::positional_options_description pd;
-	pd.add(BOOST_COMMAND_OPT.c_str(), -1);
+	po::positional_options_description positional_opts;
+	positional_opts.add(BOOST_COMMAND_OPT.c_str(), -1);
+	// LCOV_EXCL_BR_STOP
 
 	try {
 		po::store(po::command_line_parser(argc, argv)
 			.style(po::command_line_style::unix_style & ~po::command_line_style::allow_guessing)
 			.extra_style_parser(end_of_opts_parser)
 			.options(all_opts)
-			.positional(pd)
+			.positional(positional_opts)
 			.run(), variables_);
-
 
 		if (variables_["help"].as<bool>()) {
 			display_usage(visible_opts);
@@ -209,7 +212,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 	cron_mode_ |= flag("cron");
 }
 
-void CommandLine::display_usage(po::options_description &options) const {
+void CommandLine::display_usage(const po::options_description &options) const {
 	cout << "Usage: " << display_name_ << " [OPTION]... COMMAND [ARG]..." << endl << endl;
 	cout << "Run COMMAND with standard output and standard error copied to each FILE," << endl;
 	if (cron_mode()) {
