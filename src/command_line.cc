@@ -124,24 +124,24 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 	// LCOV_EXCL_BR_START
 	po::options_description visible_opts{"Output files"};
 	visible_opts.add_options()
-		("out-overwrite,O",
-				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard output to FILE")
 		("out-append,o",
 				po::value<vector<string>>()->value_name("FILE"),
 				"append standard output to FILE")
-		("err-overwrite,E",
+		("out-overwrite,O",
 				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard error to FILE")
+				"copy standard output to FILE")
 		("err-append,e",
 				po::value<vector<string>>()->value_name("FILE"),
 				"append standard error to FILE")
-		("combined-overwrite,C",
+		("err-overwrite,E",
 				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard output and error to FILE")
+				"copy standard error to FILE")
 		("combined-append,c",
 				po::value<vector<string>>()->value_name("FILE"),
 				"append standard output and error to FILE")
+		("combined-overwrite,C",
+				po::value<vector<string>>()->value_name("FILE"),
+				"copy standard output and error to FILE")
 		;
 
 	po::options_description hidden_opts;
