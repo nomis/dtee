@@ -1,27 +1,9 @@
-# Dependencies
+The [meson](https://mesonbuild.com/) build system is used to build and install dtee.
+	meson build/release               # configure dtee build using the build/release directory
+	ninja -C build/release            # compile
+	ninja -C build/release test       # run the tests
+	ninja -C build/release install    # install to default locations
 
-## Build
+A `Makefile` that calls `meson` and `ninja` is provided for convenience.
 
-### Compile
-  * [Boost](https://www.boost.org/)
-  * [Clang](https://clang.llvm.org/) or [GNU GCC](https://www.gnu.org/software/gcc/)
-  * [GNU Make](https://www.gnu.org/software/make/) 3.80+ (optional)
-  * [Meson](https://mesonbuild.com/) 0.48+
-    * [Ninja](https://ninja-build.org/)
-    * [Python 3](https://www.python.org/)
-
-### Static Analysis
-  * [Clang Static Analyzer](https://clang-analyzer.llvm.org/)
-  * [Cppcheck](http://cppcheck.sourceforge.net/)
-
-### Test
-  * [GNU Bash](https://www.gnu.org/software/bash/)
-  * [GNU Core Utilities](https://www.gnu.org/software/coreutils/)
-  * [GNU Diff Utilities](https://www.gnu.org/software/diffutils/)
-  * [GNU Find Utilities](https://www.gnu.org/software/findutils/)
-  * [GNU GCC Gcov](https://gcc.gnu.org/onlinedocs/gcc/Gcov.html)
-  * [Lcov](https://github.com/linux-test-project/lcov)
-
-## Runtime
-  * [Boost](https://www.boost.org/)
-  * UNIX domain sockets
+See [the list of dependencies](docs/dependencies.rst) for more information.
