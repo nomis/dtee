@@ -33,6 +33,7 @@ Contents
    architecture
    dependencies
    limitations
+   install
    manual
 
 Resources

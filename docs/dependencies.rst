@@ -1,6 +1,9 @@
 Dependencies
 ============
 
+The following tools and libraries are required as part of the build process, to
+run dtee or to produce documentation.
+
 Build
 -----
 
@@ -28,11 +31,11 @@ Test
   * `GNU GCC Gcov <https://gcc.gnu.org/onlinedocs/gcc/Gcov.html>`_
   * `Lcov <https://github.com/linux-test-project/lcov>`_
 
-Documentation
--------------
-  * `Sphinx <https://www.sphinx-doc.org/>`_ 1.3+
-
 Runtime
 -------
   * `Boost <https://www.boost.org/>`_
   * UNIX domain sockets
+
+Documentation
+-------------
+  * `Sphinx <https://www.sphinx-doc.org/>`_ 1.3+
