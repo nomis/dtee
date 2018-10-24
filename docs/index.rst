@@ -32,8 +32,8 @@ Contents
 
    architecture
    dependencies
-   manual
    limitations
+   manual
 
 Resources
 ---------
