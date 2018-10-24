@@ -19,7 +19,7 @@ To run programs from cron, suppressing all output unless the process outputs an
 error message or has a non-zero exit status whereupon the original output will
 be written as normal and the exit code will be appended to standard error.
 
-It will do this by default when executed as ``cronty``, providing an alternative
+It will do this by default when invoked as ``cronty``, providing an alternative
 to |cronic|_ but without splitting up the output.
 
 (Also, to do |tee(1)|_ with standard output and standard error at the same time.)

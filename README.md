@@ -14,7 +14,7 @@ To run programs from cron, suppressing all output unless the process outputs an
 error message or has a non-zero exit status whereupon the original output will
 be written as normal and the exit code will be appended to standard error.
 
-It will do this by default when executed as `cronty`, providing an alternative
+It will do this by default when invoked as `cronty`, providing an alternative
 to [`cronic`](https://habilis.net/cronic/) but without splitting up the output.
 
 (Also, to do [`tee(1)`](http://man7.org/linux/man-pages/man1/tee.1.html) with
