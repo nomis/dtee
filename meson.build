@@ -9,7 +9,7 @@ project('dtee',
 	],
 	version: '0.0.0',
 	license: 'GPL3+',
-	meson_version: '>=0.48.0',
+	meson_version: '>=0.41.0',
 )
 
 source_files = [
