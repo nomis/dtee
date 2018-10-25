@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 	const char *monitor_stdout = getenv("DTEE_TEST_MONITOR_OUTPUT");
 	struct stat stdout_stat = { .st_size = 0 };
 	const char *extra_stdout = getenv("DTEE_TEST_EXTRA_OUTPUT_FD");
-	FILE *extra_output;
+	FILE *extra_output = NULL;
 	pid_t ppid = getppid();
 
 	if (argc != 2) {
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 		nanosleep(&ts, NULL);
 	}
 
-	if (extra_stdout != NULL) {
+	if (extra_output != NULL) {
 		std_report(extra_output, STDOUT_FILENO, "STDOUT_FILENO", "O");
 		std_report(extra_output, STDERR_FILENO, "STDERR_FILENO", "E");
 	}
