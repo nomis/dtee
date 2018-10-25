@@ -3,6 +3,7 @@
 #include <sys/un.h>
 #include <dlfcn.h>
 #include <stdio.h>
+#include <string.h>
 #include <limits.h>
 
 #include "is-dtee.h"
