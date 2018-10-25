@@ -34,8 +34,8 @@ static ssize_t dtee_test_recvmsg_failure(int sockfd, struct msghdr *msg, int fla
 	ssize_t (*next_recvmsg)(int, struct msghdr *, int) = dlsym(RTLD_NEXT, "recvmsg");
 	size_t len = MAX_BUFFER_SIZE;
 
-	for (size_t i = 0; i < msg->msg_iovlen; i++) {
-		if (msg->msg_iov[i].iov_len > len) {
+	for (size_t i = 0; i < (size_t)msg->msg_iovlen; i++) {
+		if ((size_t)msg->msg_iov[i].iov_len > len) {
 			msg->msg_iov[i].iov_len = len;
 			len = 0;
 		} else {
