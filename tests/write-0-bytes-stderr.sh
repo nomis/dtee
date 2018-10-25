@@ -9,7 +9,7 @@ function test_prepare() {
 run_test -E "$TESTDIR/$NAME.file.err-overwrite.txt" ./test-write-0-bytes STDERR_FILENO 0
 RET=$?
 
-cmp_files "${0/.sh/.file.err-overwrite.txt}" "$TESTDIR/$NAME.file.err-overwrite.txt"
+cmp_files "file.err-overwrite"
 CMP_ERR_O=$?
 
 variables_must_eq RET $EXIT_SUCCESS \

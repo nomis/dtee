@@ -8,7 +8,7 @@ function test_prepare() {
 run_test -o "$TESTDIR/$NAME.file.out-append.txt" "$RUN"
 RET=$?
 
-cmp_files "${0/.sh/.file.out-append.txt}" "$TESTDIR/$NAME.file.out-append.txt"
+cmp_files "file.out-append"
 CMP_OUT_A=$?
 
 variables_must_eq RET $EXIT_SUCCESS \

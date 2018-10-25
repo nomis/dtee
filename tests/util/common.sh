@@ -71,9 +71,11 @@ function after_test() {
 }
 
 function cmp_files() {
-	cmp "$1" "$2"
+	EXPECTED="${0/.sh/.$1.txt}"
+	ACTUAL="$TESTDIR/$NAME.$1.txt"
+	cmp "$EXPECTED" "$ACTUAL"
 	CMP=$?
-	[ $CMP -ne 0 ] && diff -U4 "$1" "$2"
+	[ $CMP -ne 0 ] && diff -U4 "$EXPECTED" "$ACTUAL"
 	return $CMP
 }
 
@@ -155,17 +157,17 @@ function run_test() {
 	after_test
 
 	if [ -z "$TEST_ALT_STDOUT" ]; then
-		cmp_files "${0/.sh/.out.txt}" "$TESTDIR/$NAME.out.txt"
+		cmp_files "out"
 		CMP_OUT=$?
 	fi
 
 	if [ -z "$TEST_ALT_STDERR" ]; then
-		cmp_files "${0/.sh/.err.txt}" "$TESTDIR/$NAME.err.txt"
+		cmp_files "err"
 		CMP_ERR=$?
 	fi
 
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
-		cmp_files "${0/.sh/.extra-out.txt}" "$TESTDIR/$NAME.extra-out.txt"
+		cmp_files "extra-out"
 		CMP_EXTRA_OUT1=$?
 	fi
 
@@ -204,11 +206,11 @@ function run_test() {
 	fi
 	after_test
 
-	cmp_files "${0/.sh/.com.txt}" "$TESTDIR/$NAME.com.txt"
+	cmp_files "com"
 	CMP_COM=$?
 
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
-		cmp_files "${0/.sh/.extra-out.txt}" "$TESTDIR/$NAME.extra-out.txt"
+		cmp_files "extra-out"
 		CMP_EXTRA_OUT2=$?
 	fi
 

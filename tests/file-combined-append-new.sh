@@ -8,7 +8,7 @@ function test_prepare() {
 run_test -c "$TESTDIR/$NAME.file.com-append.txt" "$RUN"
 RET=$?
 
-cmp_files "${0/.sh/.file.com-append.txt}" "$TESTDIR/$NAME.file.com-append.txt"
+cmp_files "file.com-append"
 CMP_COM_A=$?
 
 variables_must_eq RET $EXIT_SUCCESS \

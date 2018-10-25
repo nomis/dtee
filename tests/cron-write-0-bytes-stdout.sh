@@ -9,7 +9,7 @@ function test_prepare() {
 run_test -q -O "$TESTDIR/$NAME.file.out-overwrite.txt" ./test-write-0-bytes STDOUT_FILENO 1
 RET=$?
 
-cmp_files "${0/.sh/.file.out-overwrite.txt}" "$TESTDIR/$NAME.file.out-overwrite.txt"
+cmp_files "file.out-overwrite"
 CMP_OUT_O=$?
 
 variables_must_eq RET $EXIT_FAILURE \

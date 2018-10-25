@@ -17,22 +17,22 @@ run_test \
 	-q ./test-report 'Hello World!' ETAOIN SHRDLU
 RET=$?
 
-cmp_files "${0/.sh/.file.out-append.txt}" "$TESTDIR/$NAME.file.out-append.txt"
+cmp_files "file.out-append"
 CMP_OUT_A=$?
 
-cmp_files "${0/.sh/.file.out-overwrite.txt}" "$TESTDIR/$NAME.file.out-overwrite.txt"
+cmp_files "file.out-overwrite"
 CMP_OUT_O=$?
 
-cmp_files "${0/.sh/.file.err-append.txt}" "$TESTDIR/$NAME.file.err-append.txt"
+cmp_files "file.err-append"
 CMP_ERR_A=$?
 
-cmp_files "${0/.sh/.file.err-overwrite.txt}" "$TESTDIR/$NAME.file.err-overwrite.txt"
+cmp_files "file.err-overwrite"
 CMP_ERR_O=$?
 
-cmp_files "${0/.sh/.file.com-append.txt}" "$TESTDIR/$NAME.file.com-append.txt"
+cmp_files "file.com-append"
 CMP_COM_A=$?
 
-cmp_files "${0/.sh/.file.com-overwrite.txt}" "$TESTDIR/$NAME.file.com-overwrite.txt"
+cmp_files "file.com-overwrite"
 CMP_COM_O=$?
 
 variables_must_eq RET $EXIT_SUCCESS \

@@ -2,14 +2,14 @@
 . "$(dirname "$0")"/util/common.sh
 
 function test_prepare() {
-	rm -f "$TESTDIR/$NAME.file.err-overwrite"
-	echo Existing line >"$TESTDIR/$NAME.file.err-overwrite"
+	rm -f "$TESTDIR/$NAME.file.err-overwrite.txt"
+	echo Existing line >"$TESTDIR/$NAME.file.err-overwrite.txt"
 }
 
-run_test -E "$TESTDIR/$NAME.file.err-overwrite" "$RUN"
+run_test -E "$TESTDIR/$NAME.file.err-overwrite.txt" "$RUN"
 RET=$?
 
-cmp_files "${0/.sh/.file.err-overwrite}" "$TESTDIR/$NAME.file.err-overwrite"
+cmp_files "file.err-overwrite"
 CMP_ERR_O=$?
 
 variables_must_eq RET $EXIT_SUCCESS \

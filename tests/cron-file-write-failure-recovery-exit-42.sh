@@ -12,10 +12,10 @@ TEST_LD_PRELOAD="./libtest-file-write-failure-recovery.so"
 run_test -q -O "$TESTDIR/$NAME.file.out-overwrite1.txt" -O "$TESTDIR/$NAME.file.out-overwrite2.txt" "$RUN"
 RET=$?
 
-cmp_files "${0/.sh/.file.out-overwrite1.txt}" "$TESTDIR/$NAME.file.out-overwrite1.txt"
+cmp_files "file.out-overwrite1"
 CMP_OUT1_O=$?
 
-cmp_files "${0/.sh/.file.out-overwrite2.txt}" "$TESTDIR/$NAME.file.out-overwrite2.txt"
+cmp_files "file.out-overwrite2"
 CMP_OUT2_O=$?
 
 variables_must_eq RET 42 \
