@@ -44,11 +44,15 @@ foreach arg: compile_args
 	endif
 endforeach
 
+if host_machine.system() == 'linux'
+	c_args = ['-D_POSIX_C_SOURCE=200809L']
+elif host_machine.system() == 'freebsd'
+	c_args = []
+endif
+
 executable('dtee',
 	source_files,
-	cpp_args: [
-		'-D_POSIX_C_SOURCE=200809L',
-
+	cpp_args: c_args + [
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
 		'-DBOOST_DISABLE_THREADS',
 		'-DBOOST_ASIO_DISABLE_THREADS',
@@ -89,9 +93,7 @@ test_env = [
 	'LANG=C',
 ]
 
-test_c_args = [
-	'-D_POSIX_C_SOURCE=200809L',
-]
+test_c_args = c_args
 
 dlfcn_args = test_c_args + [
 	'-D_GNU_SOURCE',
