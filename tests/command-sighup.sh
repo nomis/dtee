@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 run_test ./test-kill-pid 1

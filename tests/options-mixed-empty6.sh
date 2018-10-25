@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 # Empty command stops all following options parsing

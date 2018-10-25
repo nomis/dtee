@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"
 echo "incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis"
 echo "nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."

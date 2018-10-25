@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Only write one line because there is no guarantee we'll be able to write
 # everything before SIGPIPE takes effect and dtee stops reading
 echo "Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison" >&2

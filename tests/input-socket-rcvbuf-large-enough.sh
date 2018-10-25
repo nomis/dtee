@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 export DTEE_TEST_GETSOCKOPT_RCVBUF="PIPE_BUF*4"

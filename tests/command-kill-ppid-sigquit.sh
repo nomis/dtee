@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 export DTEE_TEST_MONITOR_OUTPUT="$TESTDIR/$NAME.canary"

@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 # If the input socket bind fails, execute the command without dtee processing

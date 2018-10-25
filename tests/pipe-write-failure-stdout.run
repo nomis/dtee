@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 echo "Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison" >&2
 echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" >&1
 echo "frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo," >&2

@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 TEST_LD_PRELOAD="./libtest-kill-failure.so"

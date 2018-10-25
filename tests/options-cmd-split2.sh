@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 # End of options signifier stops all following options parsing, even with empty command

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Only write one line because there is no guarantee we'll be able to write
 # everything before SIGPIPE takes effect and dtee stops reading
 echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" >&1

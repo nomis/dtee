@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 # Datagram sockets truncate the trailing portion if the buffer is too small

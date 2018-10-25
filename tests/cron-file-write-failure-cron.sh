@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 # If the temporary output file cannot be written, it should fallback to using stdout/stderr as normal

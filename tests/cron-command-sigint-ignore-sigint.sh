@@ -1,4 +1,3 @@
-#!/bin/bash
 . "$(dirname "$0")"/util/common.sh
 
 # Ignoring SIGINT does not affect behaviour when the child process receives SIGINT

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 kill -INT $PPID
 echo "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor" >&1
 echo "Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison" >&2
