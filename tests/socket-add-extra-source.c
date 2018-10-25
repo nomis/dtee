@@ -30,7 +30,7 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 
 			extra_fd = socket(AF_UNIX, SOCK_DGRAM, 0);
 			if (extra_fd >= 0) {
-				if (!bind(extra_fd, &sock_addr, sizeof(sock_addr))) {
+				if (!bind(extra_fd, (struct sockaddr*)&sock_addr, sizeof(sock_addr))) {
 					if (!connect(extra_fd, addr, addrlen)) {
 						printf("socket-add-extra-source: created socket \"%s\" connected to \"%s\"\n",
 							sock_addr.sun_path, path);
