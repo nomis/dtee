@@ -13,6 +13,12 @@ else
 	NINJA=ninja
 endif
 
+ifeq ($(shell uname),Linux)
+	LTO=true
+else
+	LTO=false
+endif
+
 all: compile
 debug: debug-compile
 
@@ -21,7 +27,7 @@ $(BUILD_DIR)/:
 $(RELEASE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(RELEASE_DIR)/"
 	mkdir $(RELEASE_DIR)/
-	CC=$(CC) CXX=$(CXX) meson --buildtype=release $(RELEASE_DIR)/ || (rm -rf "$(RELEASE_DIR)/"; false)
+	CC=$(CC) CXX=$(CXX) meson --buildtype=release $(RELEASE_DIR)/ -Db_lto=$(LTO) || (rm -rf "$(RELEASE_DIR)/"; false)
 $(COVERAGE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(COVERAGE_DIR)/"
 	mkdir $(COVERAGE_DIR)/
