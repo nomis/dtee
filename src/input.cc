@@ -114,7 +114,6 @@ bool Input::open() {
 	try {
 		input_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		input_.bind(input_ep);
-		input_.shutdown(datagram_protocol::socket::shutdown_send);
 
 		input_.get_option(so_rcvbuf);
 

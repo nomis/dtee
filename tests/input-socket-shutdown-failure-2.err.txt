@@ -1,1 +1,1 @@
-./dtee: stdout socket: shutdown: Transport endpoint is not connected
+./dtee: stderr socket: shutdown: Transport endpoint is not connected
