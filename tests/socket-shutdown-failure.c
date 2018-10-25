@@ -2,6 +2,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #include "allow-n-times.h"
 #include "is-dtee.h"
