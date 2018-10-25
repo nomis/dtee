@@ -30,6 +30,7 @@ source_files = [
 ]
 
 compile_args = [
+	'-pipe',
 	'-Wshadow',
 	'-g3',
 ]
