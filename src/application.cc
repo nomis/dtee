@@ -111,9 +111,6 @@ int Application::run(int argc, const char* const argv[]) {
 			return process_->exit_status(ret_internal);
 		} else if (pid == 0) {
 			input->fork_child();
-
-			execute(command_line_.command());
-			return EX_SOFTWARE;
 		} else {
 			print_error(format("fork: %1%") % errno_to_string());
 			ret_internal = EX_OSERR;
@@ -122,19 +119,20 @@ int Application::run(int argc, const char* const argv[]) {
 		ret_internal = EX_UNAVAILABLE;
 	}
 
-	if (command_line_.cron_mode()) {
-		// If we're running from cron then we have output an error message
-		// for the failed preparation to handle input but must continue to
-		// execute the requested command. Close open files/sockets and
-		// remove signal handlers first.
-		outputs.reset(); // Files are opened with O_CLOEXEC so this is unnecessary
-		input.reset(); // Stop handling signals and close sockets
-
-		execute(command_line_.command());
-		return EX_SOFTWARE;
-	} else {
-		return ret_internal;
+	if (ret_internal != EXIT_SUCCESS) {
+		if (!command_line_.cron_mode()) {
+			// If we're running from cron then we have output an error message
+			// for the failed preparation to handle input but must continue to
+			// execute the requested command.
+			return ret_internal;
+		}
 	}
+
+	outputs.reset(); // Files are opened with O_CLOEXEC so this is unnecessary
+	input.reset(); // Stop handling signals and close all sockets
+
+	execute(command_line_.command());
+	return EX_SOFTWARE;
 }
 
 list<shared_ptr<Output>> Application::create_outputs() {
