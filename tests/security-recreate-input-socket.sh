@@ -14,5 +14,5 @@ TEST_LD_PRELOAD="./libtest-mkdtemp-consistent.so:./libtest-fake-getpid.so:./libt
 run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-security-recreate-input-socket
 RET=$?
 
-variables_must_eq RET $((128 + 15))
+variables_must_eq RET $((128 + $SIGTERM))
 

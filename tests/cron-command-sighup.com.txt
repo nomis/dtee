@@ -1,2 +1,2 @@
 Killing current process with signal 1
-./dtee: ./test-kill-pid: process terminated by signal 1: Hangup
+./dtee: ./test-kill-pid: process terminated by signal 1: SIGHUP

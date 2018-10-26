@@ -1,2 +1,2 @@
 Killing current process with signal 3
-./dtee: ./test-kill-pid: process terminated by signal 3: Quit (core dumped)
+./dtee: ./test-kill-pid: process terminated by signal 3: SIGQUIT (core dumped)

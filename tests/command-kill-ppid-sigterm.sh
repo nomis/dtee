@@ -13,7 +13,7 @@ test_prepare
 eval $(./test-waitpid ./dtee ./dtee -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 15)
 RET2=$?
 
-variables_must_eq RET $((128 + 15)) \
+variables_must_eq RET $((128 + $SIGTERM)) \
 	RET2 0 \
 	WIFSIGNALED 1 \
-	WTERMSIG 15
+	WTERMSIG $SIGTERM

@@ -1,2 +1,2 @@
 ./dtee: waitpid: ECHILD
-./dtee: received signal 17: Child exited
+./dtee: received signal 17: SIGCHLD

@@ -14,7 +14,7 @@ test_prepare
 eval $(./test-waitpid ./dtee ./dtee -o "$FIFO" ./test-closed-pipe-writer "$TESTDIR/$NAME.canary" "$RUN")
 RET2=$?
 
-variables_must_eq RET $((128 + 13)) \
+variables_must_eq RET $((128 + $SIGPIPE)) \
 	RET2 0 \
 	WIFSIGNALED 1 \
-	WTERMSIG 13
+	WTERMSIG $SIGPIPE

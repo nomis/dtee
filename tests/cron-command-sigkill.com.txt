@@ -1,2 +1,2 @@
 Killing current process with signal 9
-./dtee: ./test-kill-pid: process terminated by signal 9: Killed
+./dtee: ./test-kill-pid: process terminated by signal 9: SIGKILL

@@ -15,6 +15,6 @@ test_prepare
 eval $(LD_PRELOAD="$TEST_LD_PRELOAD" ./test-waitpid ./dtee ./dtee -C "$DTEE_TEST_MONITOR_OUTPUT" ./test-lorem-ipsum-wait-exit 1)
 RET2=$?
 
-variables_must_eq RET $((128 + 17)) \
+variables_must_eq RET $((128 + $SIGCHLD)) \
 	RET2 0 \
 	WIFSIGNALED 0

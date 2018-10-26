@@ -8,6 +8,6 @@ RET=$?
 eval $(LD_PRELOAD="$TEST_LD_PRELOAD" ./test-waitpid ./dtee ./dtee ./test-kill-pid 2)
 RET2=$?
 
-variables_must_eq RET $((128 + 2)) \
+variables_must_eq RET $((128 + $SIGINT)) \
 	RET2 0 \
 	WIFSIGNALED 0

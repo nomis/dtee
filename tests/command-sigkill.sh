@@ -6,6 +6,6 @@ RET=$?
 eval $(./test-waitpid ./dtee ./dtee ./test-kill-pid 9)
 RET2=$?
 
-variables_must_eq RET $((128 + 9)) \
+variables_must_eq RET $((128 + $SIGKILL)) \
 	RET2 0 \
 	WIFSIGNALED 0

@@ -1,2 +1,2 @@
 Killing parent process with signal 15
-./dtee: received signal 15: Terminated
+./dtee: received signal 15: SIGTERM

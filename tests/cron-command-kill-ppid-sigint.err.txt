@@ -1,1 +1,1 @@
-./dtee: received signal 2: Interrupt
+./dtee: received signal 2: SIGINT

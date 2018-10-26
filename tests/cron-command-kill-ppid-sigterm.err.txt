@@ -1,1 +1,1 @@
-./dtee: received signal 15: Terminated
+./dtee: received signal 15: SIGTERM

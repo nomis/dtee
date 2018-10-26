@@ -1,1 +1,1 @@
-./dtee: ./test-kill-pid: process terminated by signal 15: Terminated
+./dtee: ./test-kill-pid: process terminated by signal 15: SIGTERM
