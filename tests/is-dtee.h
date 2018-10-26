@@ -5,5 +5,6 @@
 
 bool dtee_test_is_dtee(void);
 bool dtee_test_is_ppid_dtee(void);
+bool dtee_test_is_dtee_test(void);
 
 #endif

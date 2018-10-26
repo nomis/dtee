@@ -65,3 +65,40 @@ bool dtee_test_is_ppid_dtee(void) {
 
 	return is_ppid_dtee;
 }
+
+static bool dtee_test_is_proc_dtee_test(pid_t pid) {
+	bool is_dtee_test = false;
+	kvm_t *kd;
+	int cnt = 0;
+	struct kinfo_proc *proc;
+
+	kd = kvm_open(NULL, "/dev/null", NULL, O_RDONLY, NULL);
+	if (kd != NULL) {
+		proc = kvm_getprocs(kd, KERN_PROC_PID, pid, &cnt);
+		if (proc != NULL && cnt > 0) {
+			const char *base_program_name = basename(proc[0].ki_comm);
+
+			is_dtee_test = !strncmp(base_program_name, "dtee-", 5);
+		}
+		kvm_close(kd);
+	}
+
+	return is_dtee_test;
+}
+
+bool dtee_test_is_dtee_test(void) {
+	bool is_dtee_test = false;
+	static __thread bool active = false;
+
+	if (!active) {
+		active = true;
+
+		// Don't call getpid() because it may be fake
+		pid_t pid = syscall(SYS_getpid);
+		is_dtee_test = dtee_test_is_proc_dtee_test(pid);
+
+		active = false;
+	}
+
+	return is_dtee_test;
+}

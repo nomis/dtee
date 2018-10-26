@@ -93,7 +93,6 @@ run_target('clang-check',
 test_env = [
 	'LC_ALL=C',
 	'LANG=C',
-	'PYTHON=' + find_program(['python3', 'python2', 'python']).path(),
 ]
 
 test_c_args = c_args
@@ -125,6 +124,8 @@ shared_library('test-dup2-failure', ['tests/dup2-failure.c'] , c_args: dlfcn_arg
 shared_library('test-execvp-fd-check', ['tests/execvp-fd-check.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-fake-getpid', ['tests/fake-getpid.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-fake-getuid', ['tests/fake-getuid.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-fake-strerror', ['tests/fake-strerror.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-fake-strsignal', ['tests/fake-strsignal.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-fork-failure', ['tests/fork-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-file-write-failure-recovery', ['tests/file-write-failure-recovery.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-kill-failure', ['tests/kill-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
@@ -157,23 +158,19 @@ executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
 executable('test-report', ['tests/report.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
 executable('test-security-recreate-input-socket', ['tests/security-recreate-input-socket.c'], c_args: test_c_args)
-generate_strerror_txt = executable('test-strerror-txt', ['tests/strerror-txt.c'], c_args: test_c_args)
-generate_strsignal_txt = executable('test-strsignal-txt', ['tests/strsignal-txt.c'], c_args: test_c_args)
+generate_signal_txt = executable('test-signal-txt', ['tests/signal-txt.c'], c_args: test_c_args)
 generate_sysexits_txt = executable('test-sysexits-txt', ['tests/sysexits-txt.c'], c_args: test_c_args)
 executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)
 executable('test-write-0-bytes', ['tests/write-0-bytes.c'], c_args: test_c_args)
 executable('test-writes-of-n-bytes', ['tests/writes-of-n-bytes.c'], c_args: test_c_args)
 
-strerror_txt = custom_target('strerror.txt',
-	command: [generate_strerror_txt],
-	output: 'strerror.txt')
-strsignal_txt = custom_target('strsignal.txt',
-	command: [generate_strsignal_txt],
-	output: ['strsignal.txt', 'signal.txt'])
+signal_txt = custom_target('signal.txt',
+	command: [generate_signal_txt],
+	output: ['signal.txt'])
 sysexits_txt = custom_target('sysexits.txt',
 	command: [generate_sysexits_txt],
 	output: 'sysexits.txt')
-all_test_txt = [strerror_txt, strsignal_txt, sysexits_txt]
+all_test_txt = [signal_txt, sysexits_txt]
 
 bash = find_program('bash')
 

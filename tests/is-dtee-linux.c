@@ -51,3 +51,23 @@ bool dtee_test_is_ppid_dtee(void) {
 
 	return is_ppid_dtee;
 }
+
+bool dtee_test_is_dtee_test(void) {
+	bool is_dtee_test = false;
+	char buf[PATH_MAX + 1] = { 0 };
+	static __thread bool active = false;
+
+	if (!active) {
+		active = true;
+
+		if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) > 0) {
+			const char *base_program_name = basename(buf);
+
+			is_dtee_test = !strncmp(base_program_name, "test-", 5);
+		}
+
+		active = false;
+	}
+
+	return is_dtee_test;
+}

@@ -12,7 +12,7 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
-COMMON_TEST_LD_PRELOAD=(./libtest-execvp-fd-check.so)
+COMMON_TEST_LD_PRELOAD=(./libtest-execvp-fd-check.so ./libtest-fake-strerror.so ./libtest-fake-strsignal.so)
 
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
@@ -62,6 +62,7 @@ function after_test() {
 function cmp_files() {
 	EXPECTED_TEXT="${0/.sh/.$1.txt}"
 	EXPECTED_EVAL="${0/.sh/.$1.eval.txt}"
+	ACTUAL="$TESTDIR/$NAME.$1.txt"
 
 	if [ -e "$EXPECTED_TEXT" ]; then
 		EXPECTED="$EXPECTED_TEXT"
@@ -77,15 +78,9 @@ function cmp_files() {
 		return 1
 	fi
 
-	ACTUAL="$TESTDIR/$NAME.$1.txt"
-	ACTUAL_R="$TESTDIR/$NAME.$1.replace.txt"
-
-	# Replace platform-dependent error strings with error names
-	"$PYTHON" "$UTIL_DIR/replace.py" < "$ACTUAL" > "$ACTUAL_R" || exit $TEST_EX_FAIL
-
-	cmp "$EXPECTED" "$ACTUAL_R"
+	cmp "$EXPECTED" "$ACTUAL"
 	CMP=$?
-	[ $CMP -ne 0 ] && diff -U4 "$EXPECTED" "$ACTUAL_R"
+	[ $CMP -ne 0 ] && diff -U4 "$EXPECTED" "$ACTUAL"
 	return $CMP
 }
 
