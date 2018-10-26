@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sysexits.h>
+#include <unistd.h>
 
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
 	FILE *file = fopen("strerror.txt", "w");
@@ -57,5 +58,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 #endif
 
 #undef STRERROR_FOR
+
+	fclose(file);
 	return EXIT_SUCCESS;
 }
