@@ -48,6 +48,8 @@ if host_machine.system() == 'linux'
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 elif host_machine.system() == 'freebsd'
 	c_args = []
+else
+	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
 
 executable('dtee',
@@ -96,17 +98,27 @@ test_env = [
 
 test_c_args = c_args
 
-dlfcn_args = test_c_args + [
-	'-D_GNU_SOURCE',
-	'-Wno-pedantic',
-]
+if host_machine.system() == 'linux'
+	dlfcn_args = test_c_args + ['-D_GNU_SOURCE', '-Wno-pedantic']
+elif host_machine.system() == 'freebsd'
+	dlfcn_args = test_c_args + ['-Wno-pedantic']
+endif
+
 libdl = meson.get_compiler('c').find_library('dl')
 dlfcn_deps = [
 	libdl,
 ]
 
+if host_machine.system() == 'linux'
+	proc_deps = []
+elif host_machine.system() == 'freebsd'
+	proc_deps = [meson.get_compiler('c').find_library('kvm')]
+else
+	proc_deps = []
+endif
+
 testlib_allow_n_times = shared_library('test-allow-n-times', ['tests/allow-n-times.c'], c_args: test_c_args)
-testlib_is_dtee = shared_library('test-is-dtee', ['tests/is-dtee.c'], c_args: test_c_args)
+testlib_is_dtee = shared_library('test-is-dtee', ['tests/is-dtee-' + host_machine.system() + '.c'], c_args: dlfcn_args, dependencies: dlfcn_deps + proc_deps)
 testlib_is_fd_unix_socket = shared_library('test-fd-unix-socket', ['tests/is-fd-unix-socket.c'], c_args: test_c_args)
 
 shared_library('test-dup2-failure', ['tests/dup2-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])

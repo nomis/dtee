@@ -71,9 +71,16 @@ static int dtee_test_capture_openat64(int dirfd, const char *pathname, int flags
 
 int open(const char *pathname, int flags, mode_t mode) {
 	int (*next_open)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open");
+	static __thread bool active = false;
 
-	if (dtee_test_match_open(pathname)) {
-		next_open = dtee_test_capture_open;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_match_open(pathname)) {
+			next_open = dtee_test_capture_open;
+		}
+
+		active = false;
 	}
 
 	return (*next_open)(pathname, flags, mode);
@@ -81,9 +88,16 @@ int open(const char *pathname, int flags, mode_t mode) {
 
 int open64(const char *pathname, int flags, mode_t mode) {
 	int (*next_open64)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open64");
+	static __thread bool active = false;
 
-	if (dtee_test_match_open(pathname)) {
-		next_open64 = dtee_test_capture_open64;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_match_open(pathname)) {
+			next_open64 = dtee_test_capture_open64;
+		}
+
+		active = false;
 	}
 
 	return (*next_open64)(pathname, flags, mode);
@@ -91,9 +105,16 @@ int open64(const char *pathname, int flags, mode_t mode) {
 
 int openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat");
+	static __thread bool active = false;
 
-	if (dtee_test_match_open(pathname)) {
-		next_openat = dtee_test_capture_openat;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_match_open(pathname)) {
+			next_openat = dtee_test_capture_openat;
+		}
+
+		active = false;
 	}
 
 	return (*next_openat)(dirfd, pathname, flags, mode);
@@ -101,9 +122,16 @@ int openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 
 int openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat64)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat64");
+	static __thread bool active = false;
 
-	if (dtee_test_match_open(pathname)) {
-		next_openat64 = dtee_test_capture_openat64;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_match_open(pathname)) {
+			next_openat64 = dtee_test_capture_openat64;
+		}
+
+		active = false;
 	}
 
 	return (*next_openat64)(dirfd, pathname, flags, mode);
