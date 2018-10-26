@@ -91,6 +91,7 @@ run_target('clang-check',
 test_env = [
 	'LC_ALL=C',
 	'LANG=C',
+	'PYTHON=' + find_program(['python3', 'python2', 'python']).path(),
 ]
 
 test_c_args = c_args

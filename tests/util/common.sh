@@ -77,7 +77,7 @@ function cmp_files() {
 	ACTUAL_R="$TESTDIR/$NAME.$1.replace.txt"
 
 	# Replace platform-dependent error strings with error names
-	python "$UTIL_DIR/replace.py" < "$ACTUAL" > "$ACTUAL_R" || exit $TEST_EX_FAIL
+	"$PYTHON" "$UTIL_DIR/replace.py" < "$ACTUAL" > "$ACTUAL_R" || exit $TEST_EX_FAIL
 
 	cmp "$EXPECTED" "$ACTUAL_R"
 	CMP=$?
