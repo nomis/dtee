@@ -1,1 +1,1 @@
-./dtee: stdout socket: bind: Permission denied
+./dtee: stdout socket: bind: EACCES

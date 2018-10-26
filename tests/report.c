@@ -30,7 +30,7 @@ static bool std_report(int fd, const char *name, const char *message) {
 		ok &= printf("\n") > 0;
 		ok &= !fflush(stdout);
 	} else {
-		ok &= printf("fd %s closed errno=%d\n", name, errno) > 0;
+		ok &= printf("fd %s closed error=\"%s\"\n", name, strerror(errno)) > 0;
 		ok &= !fflush(stdout);
 	}
 

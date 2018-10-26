@@ -1,6 +1,7 @@
 TESTDIR="dtee@test"
 mkdir -p "$TESTDIR"
 
+UTIL_DIR="$(dirname "$0")/util"
 NAME="$(basename "$0")"
 NAME="${NAME/.sh}"
 
@@ -73,9 +74,14 @@ function after_test() {
 function cmp_files() {
 	EXPECTED="${0/.sh/.$1.txt}"
 	ACTUAL="$TESTDIR/$NAME.$1.txt"
-	cmp "$EXPECTED" "$ACTUAL"
+	ACTUAL_R="$TESTDIR/$NAME.$1.replace.txt"
+
+	# Replace platform-dependent error strings with error names
+	python "$UTIL_DIR/replace.py" < "$ACTUAL" > "$ACTUAL_R" || exit $TEST_EX_FAIL
+
+	cmp "$EXPECTED" "$ACTUAL_R"
 	CMP=$?
-	[ $CMP -ne 0 ] && diff -U4 "$EXPECTED" "$ACTUAL"
+	[ $CMP -ne 0 ] && diff -U4 "$EXPECTED" "$ACTUAL_R"
 	return $CMP
 }
 

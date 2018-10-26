@@ -1,1 +1,1 @@
-./dtee: stdout socket: open: Address family not supported by protocol
+./dtee: stdout socket: open: EAFNOSUPPORT

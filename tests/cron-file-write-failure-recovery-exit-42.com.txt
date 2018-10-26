@@ -1,9 +1,9 @@
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: No space left on device
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: No space left on device
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: No space left on device
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: No space left on device
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: No space left on device
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: No space left on device
+./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
 nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

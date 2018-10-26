@@ -19,7 +19,7 @@ static void std_report(FILE* output, int fd, const char *name, const char *messa
 	int werrno = errno;
 	struct sockaddr_un addr;
 
-	fprintf(output, "fd %s write=%zd errno=%d", name, wlen, werrno);
+	fprintf(output, "fd %s write=%zd error=\"%s\"", name, wlen, strerror(werrno));
 	if (dtee_test_is_fd_unix_socket(fd, &addr)) {
 		char path[sizeof(addr.sun_path) + 1] = { 0 };
 

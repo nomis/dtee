@@ -1,6 +1,6 @@
-./dtee: input socket close: Input/output error
-./dtee: stdout socket close: Input/output error
-./dtee: stderr socket close: Input/output error
+./dtee: input socket close: EIO
+./dtee: stdout socket close: EIO
+./dtee: stderr socket close: EIO
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris

@@ -1,1 +1,1 @@
-./dtee: socket receive: Transport endpoint is not connected
+./dtee: socket receive: ENOTCONN

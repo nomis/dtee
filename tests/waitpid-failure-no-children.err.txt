@@ -4,4 +4,4 @@ pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris
 commodo fatback meatball proident. Do commodo tongue jerky doner. Pork loin
 occaecat sunt swine deserunt. Proident turkey dolor est duis qui jowl magna
 elit ham hock enim boudin brisket laborum t-bone. Drumstick sirloin pig.
-./dtee: waitpid: No child processes
+./dtee: waitpid: ECHILD

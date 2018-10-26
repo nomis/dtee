@@ -1,1 +1,1 @@
-./dtee: file_not_writeable: Permission denied
+./dtee: file_not_writeable: EACCES

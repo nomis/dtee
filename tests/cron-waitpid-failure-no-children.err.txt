@@ -1,2 +1,2 @@
-./dtee: waitpid: No child processes
+./dtee: waitpid: ECHILD
 ./dtee: received signal 17: Child exited
