@@ -6,11 +6,11 @@ function test_prepare() {
 	 rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
-run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 2
+run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGINT
 RET=$?
 
 test_prepare
-eval $(./test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 2)
+eval $(./test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGINT)
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGINT)) \

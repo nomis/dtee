@@ -1,1 +1,1 @@
-Killing parent process with signal 9
+Killing parent process

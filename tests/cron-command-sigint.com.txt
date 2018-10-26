@@ -1,2 +1,0 @@
-Killing current process with signal 2
-./dtee: ./test-kill-pid: process terminated by signal 2: SIGINT

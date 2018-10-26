@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	printf("Killing parent process with signal %d\n", signum);
+	printf("Killing parent process\n");
 	fflush(stdout);
 
 	// Wait for the process to read our output before killing it

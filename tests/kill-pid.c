@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
 	signum = strtol(argv[1], NULL, 10);
 
-	printf("Killing current process with signal %d\n", signum);
+	printf("Killing current process\n");
 	fflush(stdout);
 
 	kill(getpid(), signum);

@@ -1,2 +1,0 @@
-Killing parent process with signal 1
-./dtee: received signal 1: SIGHUP

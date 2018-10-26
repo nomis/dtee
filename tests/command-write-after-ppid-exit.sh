@@ -10,7 +10,7 @@ COMMON_TEST_LD_PRELOAD=("${COMMON_TEST_LD_PRELOAD[@]/.\/libtest-execvp-fd-check.
 TEST_EXTRA_OUTPUT=1
 
 TEST_LD_PRELOAD="./libtest-mkdtemp-consistent.so:./libtest-fake-getpid.so:./libtest-fake-getuid.so"
-run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 15
+run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGTERM
 RET=$?
 
 variables_must_eq RET $((128 + $SIGTERM))

@@ -1,1 +1,1 @@
-Killing current process with signal 1
+Killing current process

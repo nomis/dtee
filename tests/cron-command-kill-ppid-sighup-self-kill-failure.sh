@@ -8,11 +8,11 @@ function test_prepare() {
 
 TEST_LD_PRELOAD="./libtest-kill-failure.so"
 # If kill fails, we can only exit with a simulated SIGHUP
-run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 1
+run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGHUP
 RET=$?
 
 test_prepare
-eval $(LD_PRELOAD="$TEST_LD_PRELOAD" ./test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid 1)
+eval $(LD_PRELOAD="$TEST_LD_PRELOAD" ./test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGHUP)
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGHUP)) \

@@ -60,7 +60,23 @@ function after_test() {
 }
 
 function cmp_files() {
-	EXPECTED="${0/.sh/.$1.txt}"
+	EXPECTED_TEXT="${0/.sh/.$1.txt}"
+	EXPECTED_EVAL="${0/.sh/.$1.eval.txt}"
+
+	if [ -e "$EXPECTED_TEXT" ]; then
+		EXPECTED="$EXPECTED_TEXT"
+	elif [ -e "$EXPECTED_EVAL" ]; then
+		EXPECTED="$TESTDIR/$NAME.$1.expected.txt"
+
+		rm -f "$EXPECTED"
+		while read -r line; do
+			eval echo "$line"
+		done < "$EXPECTED_EVAL" > "$EXPECTED"
+	else
+		echo "Missing file $EXPECTED_TEXT"
+		return 1
+	fi
+
 	ACTUAL="$TESTDIR/$NAME.$1.txt"
 	ACTUAL_R="$TESTDIR/$NAME.$1.replace.txt"
 

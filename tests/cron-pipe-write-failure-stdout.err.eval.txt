@@ -1,0 +1,2 @@
+Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
+./dtee: received signal $SIGPIPE: SIGPIPE

@@ -1,2 +1,0 @@
-./dtee: waitpid: ECHILD
-./dtee: received signal 17: SIGCHLD

@@ -1,0 +1,2 @@
+Killing parent process
+./dtee: received signal $SIGTERM: SIGTERM

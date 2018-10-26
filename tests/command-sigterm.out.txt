@@ -1,1 +1,1 @@
-Killing current process with signal 15
+Killing current process

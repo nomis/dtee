@@ -1,2 +1,0 @@
-Killing parent process with signal 2
-./dtee: received signal 2: SIGINT

@@ -1,0 +1,2 @@
+./dtee: waitpid: ECHILD
+./dtee: received signal $SIGCHLD: SIGCHLD

@@ -1,1 +1,0 @@
-./dtee: received signal 15: SIGTERM

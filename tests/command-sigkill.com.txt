@@ -1,1 +1,1 @@
-Killing current process with signal 9
+Killing current process

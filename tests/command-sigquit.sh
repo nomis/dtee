@@ -5,10 +5,10 @@ ulimit -H -c unlimited || exit $TEST_EX_SKIP
 ulimit -S -c unlimited || exit $TEST_EX_SKIP
 export DTEE_TEST_RLIMIT_CORE=0
 
-run_test ./test-kill-pid 3
+run_test ./test-kill-pid $SIGQUIT
 RET=$?
 
-eval $(./test-waitpid ./dtee ./dtee ./test-kill-pid 3)
+eval $(./test-waitpid ./dtee ./dtee ./test-kill-pid $SIGQUIT)
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGQUIT)) \
