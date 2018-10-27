@@ -12,7 +12,7 @@ Compile
   * `Boost <https://www.boost.org/>`_
   * `Clang <https://clang.llvm.org/>`_ or `GNU GCC <https://www.gnu.org/software/gcc/>`_
   * `GNU Make <https://www.gnu.org/software/make/>`_ 3.80+ (optional)
-  * `Meson <https://mesonbuild.com/>`_ 0.41+
+  * `Meson <https://mesonbuild.com/>`_ 0.46+
 
     * `Ninja <https://ninja-build.org/>`_
     * `Python 3 <https://www.python.org/>`_
