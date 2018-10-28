@@ -1,0 +1,1 @@
+writes-of-PIPE_BUF-bytes-stdout.com.txt

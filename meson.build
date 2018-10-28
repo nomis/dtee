@@ -203,10 +203,14 @@ test('file combined append (existing)', bash, args: [files('tests/file-combined-
 
 test('write 0 bytes (stdout)', bash, args: [files('tests/write-0-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
 test('write 0 bytes (stderr)', bash, args: [files('tests/write-0-bytes-stderr.sh')], env: test_env, depends: all_test_txt)
+test('writes of 1 byte (stdout)', bash, args: [files('tests/writes-of-1-byte-stdout.sh')], env: test_env, depends: all_test_txt)
+test('writes of 1 byte (stderr)', bash, args: [files('tests/writes-of-1-byte-stderr.sh')], env: test_env, depends: all_test_txt)
 test('writes of PIPE_BUF bytes (stdout)', bash, args: [files('tests/writes-of-PIPE_BUF-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
 test('writes of PIPE_BUF bytes (stderr)', bash, args: [files('tests/writes-of-PIPE_BUF-bytes-stderr.sh')], env: test_env, depends: all_test_txt)
 test('cron write 0 bytes (stdout)', bash, args: [files('tests/cron-write-0-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
 test('cron write 0 bytes (stderr)', bash, args: [files('tests/cron-write-0-bytes-stderr.sh')], env: test_env, depends: all_test_txt)
+test('cron writes of 1 byte (stdout)', bash, args: [files('tests/cron-writes-of-1-byte-stdout.sh')], env: test_env, depends: all_test_txt)
+test('cron writes of 1 byte (stderr)', bash, args: [files('tests/cron-writes-of-1-byte-stderr.sh')], env: test_env, depends: all_test_txt)
 test('cron writes of PIPE_BUF bytes (stdout)', bash, args: [files('tests/cron-writes-of-PIPE_BUF-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
 test('cron writes of PIPE_BUF bytes (stderr)', bash, args: [files('tests/cron-writes-of-PIPE_BUF-bytes-stderr.sh')], env: test_env, depends: all_test_txt)
 
