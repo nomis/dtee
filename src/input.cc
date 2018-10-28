@@ -117,8 +117,8 @@ bool Input::open() {
 	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 0;
 #endif
 
-	// Ensure the receive buffer is large enough at least as large as PIPE_BUF
-	constexpr int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, PLATFORM_MINIMUM_RCVBUF_SIZE);
+	// Ensure the send buffer (half the receive buffer) is at least as large as PIPE_BUF
+	constexpr int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF * 2, PLATFORM_MINIMUM_RCVBUF_SIZE);
 
 	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 
@@ -157,7 +157,8 @@ bool Input::open() {
 	}
 	buffer_.resize(buffer_size);
 
-	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
+	// Make the send buffer half the size of the receive buffer
+	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value() / 2};
 
 	try {
 		out_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC

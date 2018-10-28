@@ -159,6 +159,8 @@ executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args, link_wi
 executable('test-report', ['tests/report.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
 executable('test-security-recreate-input-socket', ['tests/security-recreate-input-socket.c'], c_args: test_c_args)
 generate_signal_txt = executable('test-signal-txt', ['tests/signal-txt.c'], c_args: test_c_args)
+executable('test-stream-read', ['tests/stream-read.c'], c_args: test_c_args)
+executable('test-stream-write', ['tests/stream-write.c'], c_args: test_c_args)
 generate_sysexits_txt = executable('test-sysexits-txt', ['tests/sysexits-txt.c'], c_args: test_c_args)
 executable('test-waitpid', ['tests/waitpid.c'], c_args: test_c_args)
 executable('test-write-0-bytes', ['tests/write-0-bytes.c'], c_args: test_c_args)
@@ -213,6 +215,10 @@ test('cron writes of 1 byte (stdout)', bash, args: [files('tests/cron-writes-of-
 test('cron writes of 1 byte (stderr)', bash, args: [files('tests/cron-writes-of-1-byte-stderr.sh')], env: test_env, depends: all_test_txt)
 test('cron writes of PIPE_BUF bytes (stdout)', bash, args: [files('tests/cron-writes-of-PIPE_BUF-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
 test('cron writes of PIPE_BUF bytes (stderr)', bash, args: [files('tests/cron-writes-of-PIPE_BUF-bytes-stderr.sh')], env: test_env, depends: all_test_txt)
+
+test('stream 1MB (stdout)', bash, args: [files('tests/stream-1MB.sh')], env: test_env, depends: all_test_txt)
+test('stream 32MB (stdout)', bash, args: [files('tests/stream-32MB.sh')], env: test_env, depends: all_test_txt)
+test('stream 256MB (stdout)', bash, args: [files('tests/stream-256MB.sh')], env: test_env, depends: all_test_txt)
 
 test('debug options (none)', bash, args: [files('tests/options-none.sh')], env: test_env, depends: all_test_txt)
 test('debug options (cron)', bash, args: [files('tests/options-cron.sh')], env: test_env, depends: all_test_txt)
