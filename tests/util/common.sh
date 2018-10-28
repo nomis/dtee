@@ -86,6 +86,7 @@ function cmp_files() {
 		done < "$EXPECTED_EVAL" > "$EXPECTED"
 	else
 		echo "Missing file $EXPECTED_TEXT or $EXPECTED_EVAL or $EXPECTED_TEXT_UNAME or $EXPECTED_EVAL_UNAME"
+		diff -U4 /dev/null "$ACTUAL"
 		return 1
 	fi
 
