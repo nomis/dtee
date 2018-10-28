@@ -62,7 +62,7 @@ bool dtee_test_is_ppid_dtee(void) {
 		char buf[PATH_MAX + 1];
 
 		active = true;
-		is_ppid_dtee = __dtee_test_is_dtee(dtee_test_read_proc_basename(__dtee_test_getppid(), buf, sizeof(buf)));
+		is_ppid_dtee = __dtee_test_is_dtee(dtee_test_read_proc_basename(getppid(), buf, sizeof(buf)));
 		active = false;
 	}
 
