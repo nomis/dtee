@@ -9,20 +9,25 @@
 #include <string.h>
 #include <unistd.h>
 
+static const char *dtee_test_read_proc_basename(const char *path, char *buf, size_t buflen) {
+	memset(buf, 0, buflen);
+
+	if (readlink(path, buf, buflen - 1) > 0) {
+		return basename(buf);
+	}
+
+	return "";
+}
+
 bool dtee_test_is_dtee(void) {
 	bool is_dtee = false;
-	char buf[PATH_MAX + 1] = { 0 };
 	static __thread bool active = false;
 
 	if (!active) {
+		char buf[PATH_MAX + 1];
+
 		active = true;
-
-		if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) > 0) {
-			const char *base_program_name = basename(buf);
-
-			is_dtee = !strcmp(base_program_name, "dtee");
-		}
-
+		is_dtee = !strcmp(dtee_test_read_proc_basename("/proc/self/exe", buf, sizeof(buf)), "dtee");
 		active = false;
 	}
 
@@ -31,21 +36,16 @@ bool dtee_test_is_dtee(void) {
 
 bool dtee_test_is_ppid_dtee(void) {
 	bool is_ppid_dtee = false;
-	char exe[PATH_MAX + 1] = { 0 };
-	char buf[PATH_MAX + 1] = { 0 };
 	static __thread bool active = false;
 
 	if (!active) {
+		char exe[PATH_MAX + 1] = { 0 };
+
 		active = true;
-
 		if (snprintf(exe, sizeof(exe), "/proc/%jd/exe", (intmax_t)getppid()) < (int)sizeof(exe)) {
-			if (readlink(exe, buf, sizeof(buf) - 1) > 0) {
-				const char *base_program_name = basename(buf);
-
-				is_ppid_dtee = !strcmp(base_program_name, "dtee");
-			}
+			char buf[PATH_MAX + 1];
+			is_ppid_dtee = !strcmp(dtee_test_read_proc_basename(exe, buf, sizeof(buf)), "dtee");
 		}
-
 		active = false;
 	}
 
@@ -54,18 +54,13 @@ bool dtee_test_is_ppid_dtee(void) {
 
 bool dtee_test_is_dtee_test(void) {
 	bool is_dtee_test = false;
-	char buf[PATH_MAX + 1] = { 0 };
 	static __thread bool active = false;
 
 	if (!active) {
+		char buf[PATH_MAX + 1];
+
 		active = true;
-
-		if (readlink("/proc/self/exe", buf, sizeof(buf) - 1) > 0) {
-			const char *base_program_name = basename(buf);
-
-			is_dtee_test = !strncmp(base_program_name, "test-", 5);
-		}
-
+		is_dtee_test = !strncmp(dtee_test_read_proc_basename("/proc/self/exe", buf, sizeof(buf)), "test-", 5);
 		active = false;
 	}
 
