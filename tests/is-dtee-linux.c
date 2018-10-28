@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -27,7 +28,7 @@ bool dtee_test_is_dtee(void) {
 		char buf[PATH_MAX + 1];
 
 		active = true;
-		is_dtee = !strcmp(dtee_test_read_proc_basename("/proc/self/exe", buf, sizeof(buf)), "dtee");
+		is_dtee = __dtee_test_is_dtee(dtee_test_read_proc_basename("/proc/self/exe", buf, sizeof(buf)));
 		active = false;
 	}
 
@@ -44,7 +45,7 @@ bool dtee_test_is_ppid_dtee(void) {
 		active = true;
 		if (snprintf(exe, sizeof(exe), "/proc/%jd/exe", (intmax_t)getppid()) < (int)sizeof(exe)) {
 			char buf[PATH_MAX + 1];
-			is_ppid_dtee = !strcmp(dtee_test_read_proc_basename(exe, buf, sizeof(buf)), "dtee");
+			is_ppid_dtee = __dtee_test_is_dtee(dtee_test_read_proc_basename(exe, buf, sizeof(buf)));
 		}
 		active = false;
 	}
@@ -60,7 +61,7 @@ bool dtee_test_is_dtee_test(void) {
 		char buf[PATH_MAX + 1];
 
 		active = true;
-		is_dtee_test = !strncmp(dtee_test_read_proc_basename("/proc/self/exe", buf, sizeof(buf)), "test-", 5);
+		is_dtee_test = __dtee_test_is_dtee_test(dtee_test_read_proc_basename("/proc/self/exe", buf, sizeof(buf)));
 		active = false;
 	}
 

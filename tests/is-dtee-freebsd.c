@@ -47,7 +47,7 @@ bool dtee_test_is_dtee(void) {
 		char buf[PATH_MAX + 1];
 
 		active = true;
-		is_dtee = !strcmp(dtee_test_read_proc_basename(dtee_test_real_getpid(), buf, sizeof(buf)), "dtee");
+		is_dtee = __dtee_test_is_dtee(dtee_test_read_proc_basename(dtee_test_real_getpid(), buf, sizeof(buf)));
 		active = false;
 	}
 
@@ -62,7 +62,7 @@ bool dtee_test_is_ppid_dtee(void) {
 		char buf[PATH_MAX + 1];
 
 		active = true;
-		is_ppid_dtee = !strcmp(dtee_test_read_proc_basename(getppid(), buf, sizeof(buf)), "dtee");
+		is_ppid_dtee = __dtee_test_is_dtee(dtee_test_read_proc_basename(__dtee_test_getppid(), buf, sizeof(buf)));
 		active = false;
 	}
 
@@ -77,7 +77,7 @@ bool dtee_test_is_dtee_test(void) {
 		char buf[PATH_MAX + 1];
 
 		active = true;
-		is_dtee_test = !strncmp(dtee_test_read_proc_basename(dtee_test_real_getpid(), buf, sizeof(buf)), "dtee-", 5);
+		is_dtee_test = __dtee_test_is_dtee_test(dtee_test_read_proc_basename(dtee_test_real_getpid(), buf, sizeof(buf)));
 		active = false;
 	}
 
