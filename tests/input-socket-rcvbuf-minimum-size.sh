@@ -1,6 +1,10 @@
 . "$(dirname "$0")"/util/common.sh
 
-export DTEE_TEST_GETSOCKOPT_RCVBUF="PIPE_BUF"
+if [ "$UNAME" == "FreeBSD" ]; then
+	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((256 * 1024))"
+else
+	export DTEE_TEST_GETSOCKOPT_RCVBUF="PIPE_BUF"
+fi
 
 # If the outgoing SO_RCVBUF is exactly PIPE_BUF, it does not need to be modified
 # The incoming SO_SNDBUF will be set to the same as the observed SO_RCVBUF
