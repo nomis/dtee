@@ -18,9 +18,16 @@ static char *dtee_test_mkdtemp_consistent(char *template) {
 
 char *mkdtemp(char *template) {
 	char *(*next_mkdtemp)(char *) = dlsym(RTLD_NEXT, "mkdtemp");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		next_mkdtemp = dtee_test_mkdtemp_consistent;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next_mkdtemp = dtee_test_mkdtemp_consistent;
+		}
+
+		active = false;
 	}
 
 	return (*next_mkdtemp)(template);

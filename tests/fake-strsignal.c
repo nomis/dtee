@@ -45,9 +45,16 @@ static char *dtee_test_fake_strsignal(int sig) {
 
 char *strsignal(int sig) {
 	char *(*next_strsignal)(int) = dlsym(RTLD_NEXT, "strsignal");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
-		next_strsignal = dtee_test_fake_strsignal;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
+			next_strsignal = dtee_test_fake_strsignal;
+		}
+
+		active = false;
 	}
 
 	return (*next_strsignal)(sig);

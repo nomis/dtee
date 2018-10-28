@@ -12,9 +12,16 @@ static off_t dtee_test_lseek_failure(int fd __attribute__((unused)), off_t offse
 
 off_t lseek(int fd, off_t offset, int whence) {
 	off_t (*next_lseek)(int, off_t, int) = dlsym(RTLD_NEXT, "lseek");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		next_lseek = dtee_test_lseek_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next_lseek = dtee_test_lseek_failure;
+		}
+
+		active = false;
 	}
 
 	return (*next_lseek)(fd, offset, whence);

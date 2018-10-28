@@ -11,9 +11,16 @@ static char *dtee_test_mkdtemp_failure(char *template __attribute__((unused))) {
 
 char *mkdtemp(char *template) {
 	char *(*next_mkdtemp)(char *) = dlsym(RTLD_NEXT, "mkdtemp");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		next_mkdtemp = dtee_test_mkdtemp_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next_mkdtemp = dtee_test_mkdtemp_failure;
+		}
+
+		active = false;
 	}
 
 	return (*next_mkdtemp)(template);

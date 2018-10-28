@@ -125,9 +125,16 @@ static char *dtee_test_fake_strerror_l(int errnum, locale_t locale __attribute__
 char *strerror(int errnum) {
 	int errno_copy = errno;
 	char *(*next_strerror)(int) = dlsym(RTLD_NEXT, "strerror");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
-		next_strerror = dtee_test_fake_strerror;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
+			next_strerror = dtee_test_fake_strerror;
+		}
+
+		active = false;
 	}
 
 	errno = errno_copy;
@@ -148,9 +155,16 @@ int strerror_r(int errnum, char *buf, size_t buflen) {
 #else
 	int (*next_strerror_r)(int, char *, size_t) = dlsym(RTLD_NEXT, "strerror_r");
 #endif
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
-		next_strerror_r = dtee_test_fake_strerror_r;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
+			next_strerror_r = dtee_test_fake_strerror_r;
+		}
+
+		active = false;
 	}
 
 	errno = errno_copy;
@@ -160,9 +174,16 @@ int strerror_r(int errnum, char *buf, size_t buflen) {
 char *strerror_l(int errnum, locale_t locale) {
 	int errno_copy = errno;
 	char *(*next_strerror_l)(int, locale_t) = dlsym(RTLD_NEXT, "strerror_l");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
-		next_strerror_l = dtee_test_fake_strerror_l;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
+			next_strerror_l = dtee_test_fake_strerror_l;
+		}
+
+		active = false;
 	}
 
 	errno = errno_copy;
@@ -181,9 +202,16 @@ static int dtee_test_fake___xpg_strerror_r(int errnum, char *buf, size_t buflen)
 int __xpg_strerror_r(int errnum, char *buf, size_t buflen) {
 	int errno_copy = errno;
 	int (*next___xpg_strerror_r)(int, char *, size_t) = dlsym(RTLD_NEXT, "__xpg_strerror_r");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
-		next___xpg_strerror_r = dtee_test_fake___xpg_strerror_r;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee() || dtee_test_is_ppid_dtee() || dtee_test_is_dtee_test()) {
+			next___xpg_strerror_r = dtee_test_fake___xpg_strerror_r;
+		}
+
+		active = false;
 	}
 
 	errno = errno_copy;

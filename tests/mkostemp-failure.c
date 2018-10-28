@@ -17,9 +17,16 @@ static int dtee_test_mkostemp_failure(char *template __attribute__((unused)), in
 
 int mkostemp(char *template, int flags) {
 	int (*next_mkostemp)(char *, int) = dlsym(RTLD_NEXT, "mkostemp");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		next_mkostemp = dtee_test_mkostemp_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next_mkostemp = dtee_test_mkostemp_failure;
+		}
+
+		active = false;
 	}
 
 	return (*next_mkostemp)(template, flags);
@@ -27,9 +34,16 @@ int mkostemp(char *template, int flags) {
 
 int mkostemp64(char *template, int flags) {
 	int (*next_mkostemp64)(char *, int) = dlsym(RTLD_NEXT, "mkostemp64");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		next_mkostemp64 = dtee_test_mkostemp_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next_mkostemp64 = dtee_test_mkostemp_failure;
+		}
+
+		active = false;
 	}
 
 	return (*next_mkostemp64)(template, flags);

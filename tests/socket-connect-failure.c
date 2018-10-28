@@ -16,16 +16,23 @@ static int dtee_test_connect_failure(int sockfd __attribute__((unused)), const s
 
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 	int (*next_connect)(int, const struct sockaddr *, socklen_t) = dlsym(RTLD_NEXT, "connect");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
-			static unsigned long allowed = 0;
-			static bool first = true;
+	if (!active) {
+		active = true;
 
-			if (!dtee_test_allow_n_times("DTEE_TEST_SOCKET_CONNECT_FAILURE_ALLOW", &first, &allowed)) {
-				next_connect = dtee_test_connect_failure;
+		if (dtee_test_is_dtee()) {
+			if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
+				static unsigned long allowed = 0;
+				static bool first = true;
+
+				if (!dtee_test_allow_n_times("DTEE_TEST_SOCKET_CONNECT_FAILURE_ALLOW", &first, &allowed)) {
+					next_connect = dtee_test_connect_failure;
+				}
 			}
 		}
+
+		active = false;
 	}
 
 	return (*next_connect)(sockfd, addr, addrlen);

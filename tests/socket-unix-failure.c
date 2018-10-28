@@ -15,16 +15,23 @@ static int dtee_test_socket_failure(int domain __attribute__((unused)), int type
 
 int socket(int domain, int type, int protocol) {
 	int (*next_socket)(int, int, int) = dlsym(RTLD_NEXT, "socket");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		if (domain == AF_UNIX) {
-			static unsigned long allowed = 0;
-			static bool first = true;
+	if (!active) {
+		active = true;
 
-			if (!dtee_test_allow_n_times("DTEE_TEST_SOCKET_UNIX_FAILURE_ALLOW", &first, &allowed)) {
-				next_socket = dtee_test_socket_failure;
+		if (dtee_test_is_dtee()) {
+			if (domain == AF_UNIX) {
+				static unsigned long allowed = 0;
+				static bool first = true;
+
+				if (!dtee_test_allow_n_times("DTEE_TEST_SOCKET_UNIX_FAILURE_ALLOW", &first, &allowed)) {
+					next_socket = dtee_test_socket_failure;
+				}
 			}
 		}
+
+		active = false;
 	}
 
 	return (*next_socket)(domain, type, protocol);

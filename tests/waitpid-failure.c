@@ -23,9 +23,16 @@ static pid_t dtee_test_waitpid_failure(pid_t pid __attribute__((unused)), int *w
 
 pid_t waitpid(pid_t pid, int *wstatus, int options) {
 	pid_t (*next_waitpid)(pid_t, int *, int) = dlsym(RTLD_NEXT, "waitpid");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		next_waitpid = dtee_test_waitpid_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next_waitpid = dtee_test_waitpid_failure;
+		}
+
+		active = false;
 	}
 
 	return (*next_waitpid)(pid, wstatus, options);

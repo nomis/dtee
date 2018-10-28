@@ -50,13 +50,20 @@ static int dtee_test_fake_rcvbuf(int sockfd __attribute__((unused)), int level _
 
 int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen) {
 	int (*next_getsockopt)(int, int, int, void *, socklen_t *) = dlsym(RTLD_NEXT, "getsockopt");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
-			if (level == SOL_SOCKET && optname == SO_RCVBUF && *optlen == sizeof(int)) {
-				next_getsockopt = dtee_test_fake_rcvbuf;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
+				if (level == SOL_SOCKET && optname == SO_RCVBUF && *optlen == sizeof(int)) {
+					next_getsockopt = dtee_test_fake_rcvbuf;
+				}
 			}
 		}
+
+		active = false;
 	}
 
 	return (*next_getsockopt)(sockfd, level, optname, optval, optlen);

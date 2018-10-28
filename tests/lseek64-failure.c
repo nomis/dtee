@@ -12,9 +12,16 @@ static off64_t dtee_test_lseek64_failure(int fd __attribute__((unused)), off64_t
 
 off64_t lseek64(int fd, off64_t offset, int whence) {
 	off_t (*next_lseek64)(int, off64_t, int) = dlsym(RTLD_NEXT, "lseek64");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		next_lseek64 = dtee_test_lseek64_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next_lseek64 = dtee_test_lseek64_failure;
+		}
+
+		active = false;
 	}
 
 	return (*next_lseek64)(fd, offset, whence);

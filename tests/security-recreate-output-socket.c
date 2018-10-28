@@ -92,40 +92,47 @@ static int dtee_test_recreate_output_socket(FILE *extra) {
 // The child process has exited, so any remaining data on the input socket will now be read
 pid_t waitpid(pid_t pid, int *wstatus, int options) {
 	pid_t (*next_waitpid)(pid_t, int *, int) = dlsym(RTLD_NEXT, "waitpid");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		const char *extra_stdout = getenv("DTEE_TEST_EXTRA_OUTPUT_FD");
-		FILE *extra;
+	if (!active) {
+		active = true;
 
-		assert(extra_stdout != NULL);
+		if (dtee_test_is_dtee()) {
+			const char *extra_stdout = getenv("DTEE_TEST_EXTRA_OUTPUT_FD");
+			FILE *extra;
 
-		extra = fdopen(strtoul(extra_stdout, NULL, 10), "w");
-		if (extra == NULL) {
-			perror("security-recreate-output-socket fdopen");
-			abort();
-		}
+			assert(extra_stdout != NULL);
 
-		if (!have_details) {
-			fprintf(extra, "No input socket details available\n");
-			fflush(extra);
-		}
+			extra = fdopen(strtoul(extra_stdout, NULL, 10), "w");
+			if (extra == NULL) {
+				perror("security-recreate-output-socket fdopen");
+				abort();
+			}
 
-		int output_fd = dtee_test_recreate_output_socket(extra);
-		if (output_fd >= 0) {
-			const char *message = "Test message\n";
-			ssize_t len = strlen(message);
-			if (write(output_fd, message, strlen(message)) != len) {
-				fprintf(extra, "write: %s\n", strerror(errno));
-				fflush(extra);
-			} else {
-				fprintf(extra, "Finished writing with recreated output socket\n");
+			if (!have_details) {
+				fprintf(extra, "No input socket details available\n");
 				fflush(extra);
 			}
 
-			close(output_fd);
+			int output_fd = dtee_test_recreate_output_socket(extra);
+			if (output_fd >= 0) {
+				const char *message = "Test message\n";
+				ssize_t len = strlen(message);
+				if (write(output_fd, message, strlen(message)) != len) {
+					fprintf(extra, "write: %s\n", strerror(errno));
+					fflush(extra);
+				} else {
+					fprintf(extra, "Finished writing with recreated output socket\n");
+					fflush(extra);
+				}
+
+				close(output_fd);
+			}
+
+			fclose(extra);
 		}
 
-		fclose(extra);
+		active = false;
 	}
 
 	return (*next_waitpid)(pid, wstatus, options);

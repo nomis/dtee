@@ -10,9 +10,16 @@ static uid_t dtee_test_fake_getuid(void) {
 
 uid_t getuid(void) {
 	uid_t (*next_getuid)(void) = dlsym(RTLD_NEXT, "getuid");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		next_getuid = dtee_test_fake_getuid;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next_getuid = dtee_test_fake_getuid;
+		}
+
+		active = false;
 	}
 
 	return (*next_getuid)();

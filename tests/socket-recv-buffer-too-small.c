@@ -48,11 +48,18 @@ static ssize_t dtee_test_recvmsg_failure(int sockfd, struct msghdr *msg, int fla
 
 ssize_t recv(int sockfd, void *buf, size_t len, int flags) {
 	ssize_t (*next_recv)(int, void *, size_t, int) = dlsym(RTLD_NEXT, "recv");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
-			next_recv = dtee_test_recv_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
+				next_recv = dtee_test_recv_failure;
+			}
 		}
+
+		active = false;
 	}
 
 	return (*next_recv)(sockfd, buf, len, flags);
@@ -60,11 +67,18 @@ ssize_t recv(int sockfd, void *buf, size_t len, int flags) {
 
 ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen) {
 	ssize_t (*next_recvfrom)(int, void *, size_t, int, struct sockaddr *, socklen_t *) = dlsym(RTLD_NEXT, "recvfrom");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
-			next_recvfrom = dtee_test_recvfrom_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
+				next_recvfrom = dtee_test_recvfrom_failure;
+			}
 		}
+
+		active = false;
 	}
 
 	return (*next_recvfrom)(sockfd, buf, len, flags, src_addr, addrlen);
@@ -72,11 +86,18 @@ ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *
 
 ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags) {
 	ssize_t (*next_recvmsg)(int, struct msghdr *, int) = dlsym(RTLD_NEXT, "recvmsg");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
-			next_recvmsg = dtee_test_recvmsg_failure;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			if (dtee_test_is_fd_unix_socket(sockfd, NULL)) {
+				next_recvmsg = dtee_test_recvmsg_failure;
+			}
 		}
+
+		active = false;
 	}
 
 	return (*next_recvmsg)(sockfd, msg, flags);

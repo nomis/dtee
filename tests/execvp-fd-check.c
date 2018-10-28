@@ -37,9 +37,16 @@ static void dtee_test_check_fds(void) {
 
 int execvp(const char *filename, char *const argv[]) {
 	int (*next_execvp)(const char*, char * const *) = dlsym(RTLD_NEXT, "execvp");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		dtee_test_check_fds();
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			dtee_test_check_fds();
+		}
+
+		active = false;
 	}
 
 	return (*next_execvp)(filename, argv);
