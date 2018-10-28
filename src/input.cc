@@ -21,6 +21,7 @@
 #include <sys/wait.h>
 #include <sysexits.h>
 #include <unistd.h>
+#include <algorithm>
 #include <cerrno>
 #include <climits>
 #include <csignal>
@@ -36,6 +37,7 @@
 #include "temp_directory.h"
 
 using ::std::bind;
+using ::std::max;
 using ::std::shared_ptr;
 using ::std::string;
 using ::boost::asio::local::datagram_protocol;
@@ -109,6 +111,15 @@ bool Input::open() {
 	const string err_name = temp_dir.register_file("e");
 	err_ep_ = datagram_protocol::endpoint{err_name};
 
+#if defined(__FreeBSD__)
+	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 256 * 1024;
+#else
+	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 0;
+#endif
+
+	// Ensure the receive buffer is large enough at least as large as PIPE_BUF
+	constexpr int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, PLATFORM_MINIMUM_RCVBUF_SIZE);
+
 	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 
 	try {
@@ -117,9 +128,8 @@ bool Input::open() {
 
 		input_.get_option(so_rcvbuf);
 
-		// Ensure the receive buffer is at least as large as PIPE_BUF
-		if (so_rcvbuf.value() < PIPE_BUF) {
-			so_rcvbuf = PIPE_BUF;
+		if (so_rcvbuf.value() < MINIMUM_RCVBUF_SIZE) {
+			so_rcvbuf = MINIMUM_RCVBUF_SIZE;
 			input_.set_option(so_rcvbuf);
 			input_.get_option(so_rcvbuf);
 		}
@@ -142,8 +152,8 @@ bool Input::open() {
 	buffer_size *= 2;
 #endif
 
-	if (buffer_size < PIPE_BUF) {
-		buffer_size = PIPE_BUF;
+	if (buffer_size < MINIMUM_RCVBUF_SIZE) {
+		buffer_size = MINIMUM_RCVBUF_SIZE;
 	}
 	buffer_.resize(buffer_size);
 
