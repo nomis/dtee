@@ -40,6 +40,8 @@ EXIT_FAILURE=1
 # Signals
 . signal.txt
 
+UNAME="$(uname)"
+
 function before_test() {
 	OLD_LD_PRELOAD="$LD_PRELOAD"
 	OIFS="$IFS" IFS=:
@@ -62,7 +64,16 @@ function after_test() {
 function cmp_files() {
 	EXPECTED_TEXT="${0/.sh/.$1.txt}"
 	EXPECTED_EVAL="${0/.sh/.$1.eval.txt}"
+	EXPECTED_TEXT_UNAME="${0/.sh/.$1.$UNAME.txt}"
+	EXPECTED_EVAL_UNAME="${0/.sh/.$1.eval.$UNAME.txt}"
 	ACTUAL="$TESTDIR/$NAME.$1.txt"
+
+	if [ -e "$EXPECTED_TEXT_UNAME" ]; then
+		EXPECTED_TEXT="$EXPECTED_TEXT_UNAME"
+	fi
+	if [ -e "$EXPECTED_EVAL_UNAME" ]; then
+		EXPECTED_EVAL="$EXPECTED_EVAL_UNAME"
+	fi
 
 	if [ -e "$EXPECTED_TEXT" ]; then
 		EXPECTED="$EXPECTED_TEXT"
@@ -74,7 +85,7 @@ function cmp_files() {
 			eval echo "$line"
 		done < "$EXPECTED_EVAL" > "$EXPECTED"
 	else
-		echo "Missing file $EXPECTED_TEXT"
+		echo "Missing file $EXPECTED_TEXT or $EXPECTED_EVAL or $EXPECTED_TEXT_UNAME or $EXPECTED_EVAL_UNAME"
 		return 1
 	fi
 
