@@ -12,18 +12,10 @@
 #include <time.h>
 #include <unistd.h>
 
-static int recreate_input_socket(FILE *output) {
-	struct sockaddr_un peer = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
-	socklen_t peerlen = sizeof(peer);
+static int recreate_input_socket(struct sockaddr_un *peer, FILE *output) {
+	char path[sizeof(peer->sun_path) + 1] = { 0 };
 
-	if (getpeername(STDOUT_FILENO, (struct sockaddr*)&peer, &peerlen) < 0) {
-		fprintf(output, "getpeername: %s\n", strerror(errno));
-		fflush(output);
-		exit(EXIT_FAILURE);
-	}
-	char path[sizeof(peer.sun_path) + 1] = { 0 };
-
-	memcpy(path, &peer.sun_path, sizeof(peer.sun_path));
+	memcpy(path, &peer->sun_path, sizeof(peer->sun_path));
 	path[strlen(path) - 1] = 'i';
 
 	struct sockaddr_un input = { .sun_family = AF_UNIX, .sun_path = { 0 } };
@@ -69,6 +61,15 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 	assert(monitor_stdout != NULL);
 	assert(extra_stdout != NULL);
 
+	// Get peername before the other side disconnects
+	struct sockaddr_un peer = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
+	socklen_t peerlen = sizeof(peer);
+
+	if (getpeername(STDOUT_FILENO, (struct sockaddr*)&peer, &peerlen) < 0) {
+		perror("getpeername");
+		return EXIT_FAILURE;
+	}
+
 	output = fdopen(strtoul(extra_stdout, NULL, 10), "w");
 	if (output == NULL) {
 		perror("fdopen");
@@ -95,7 +96,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 	fprintf(output, "Parent process exited\n");
 	fflush(output);
 
-	int input_fd = recreate_input_socket(output);
+	int input_fd = recreate_input_socket(&peer, output);
 
 	// Write data after the parent process has exited
 	const char *message = "Test message\n";
