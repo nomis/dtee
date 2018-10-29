@@ -125,9 +125,9 @@ bool Cron::unspool_buffer_file() {
 					print_file_error(format("error reading buffer file %1%: %2%"));
 					success = false;
 					break;
+				} else if (len > 0) {
+					success &= fallback_->output(OutputType::STDOUT, buf, len);
 				}
-
-				success &= fallback_->output(OutputType::STDOUT, buf, len);
 			} while (len > 0);
 		}
 
