@@ -4,8 +4,6 @@ BUILD_DIR=build
 RELEASE_DIR=$(BUILD_DIR)/release
 COVERAGE_DIR=$(BUILD_DIR)/coverage
 DEBUG_DIR=$(BUILD_DIR)/debug
-CC=clang
-CXX=clang++
 
 ifeq ($(V),1)
 	NINJA=ninja -v
@@ -27,16 +25,16 @@ $(BUILD_DIR)/:
 $(RELEASE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(RELEASE_DIR)/"
 	mkdir $(RELEASE_DIR)/
-	CC=$(CC) CXX=$(CXX) meson --buildtype=release $(RELEASE_DIR)/ -Db_lto=$(LTO) || (rm -rf "$(RELEASE_DIR)/"; false)
+	meson --buildtype=release $(RELEASE_DIR)/ -Db_lto=$(LTO) || (rm -rf "$(RELEASE_DIR)/"; false)
 $(COVERAGE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(COVERAGE_DIR)/"
 	mkdir $(COVERAGE_DIR)/
 	# meson (0.48.0) will not tell lcov to use llvm-cov, so this will fail when using clang
-	CC=gcc CXX=g++ meson --buildtype=debug $(COVERAGE_DIR)/ -Db_coverage=true || (rm -rf "$(COVERAGE_DIR)/"; false)
+	meson --buildtype=debug $(COVERAGE_DIR)/ -Db_coverage=true || (rm -rf "$(COVERAGE_DIR)/"; false)
 $(DEBUG_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(DEBUG_DIR)/"
 	mkdir $(DEBUG_DIR)/
-	CC=$(CC) CXX=$(CXX) meson --buildtype=debug $(DEBUG_DIR)/ || (rm -rf "$(DEBUG_DIR)/"; false)
+	meson --buildtype=debug $(DEBUG_DIR)/ || (rm -rf "$(DEBUG_DIR)/"; false)
 
 compile: | $(RELEASE_DIR)/
 	$(NINJA) -C $(RELEASE_DIR)/
