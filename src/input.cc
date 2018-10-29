@@ -35,6 +35,7 @@
 
 #include "application.h"
 #include "temp_directory.h"
+#include "uninterruptible.h"
 
 using ::std::bind;
 using ::std::max;
@@ -306,7 +307,7 @@ void Input::handle_child_exited(const error_code &ec, int signal_number) {
 		int wait_status;
 
 		errno = 0;
-		pid_t ret = waitpid(child_, &wait_status, WNOHANG);
+		pid_t ret = uninterruptible::waitpid(child_, &wait_status, WNOHANG);
 		if (ret <= 0) {
 			if (ret != 0) {
 				print_system_error(format("waitpid: %1%"));

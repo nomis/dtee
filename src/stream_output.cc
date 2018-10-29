@@ -17,20 +17,35 @@
 */
 #include "stream_output.h"
 
-#include <ostream>
+#include <unistd.h>
 #include <string>
 #include <vector>
 
-using ::std::ostream;
+#include <boost/format.hpp>
+
+#include "application.h"
+#include "to_string.h"
+#include "uninterruptible.h"
+
+using ::boost::format;
 using ::std::string;
 using ::std::vector;
 
 namespace dtee {
 
-StreamOutput::StreamOutput(ostream &stream, OutputType type)
-	: stream_(stream),
-	  type_(type) {
+StreamOutput::StreamOutput(OutputType type)
+		: type_(type) {
+	switch (type) {
+	case OutputType::STDOUT:
+		name_ = "stdout";
+		fd_ = STDOUT_FILENO;
+		break;
 
+	case OutputType::STDERR:
+		name_ = "stderr";
+		fd_ = STDERR_FILENO;
+		break;
+	}
 }
 
 StreamOutput::~StreamOutput() {
@@ -43,8 +58,16 @@ bool StreamOutput::open() {
 
 bool StreamOutput::output(OutputType type, const vector<char> &buffer, size_t len) {
 	if (type == type_) {
-		stream_.write(buffer.data(), len);
-		stream_.flush();
+		// It is not a good idea to write to a pipe ignoring signals because
+		// SIGINT can't be used to terminate this process. However, the process
+		// on the other end of the pipe will also get the SIGINT so we'll get
+		// an EPIPE return value. It would be difficult to make it possible to
+		// resume output after handling any received signals.
+		errno = 0;
+		if (uninterruptible::write(fd_, buffer.data(), len) != static_cast<ssize_t>(len)) {
+			Application::print_error(format("%1% write: %2%") % name_ % errno_to_string());
+			return false;
+		}
 	}
 
 	return true;

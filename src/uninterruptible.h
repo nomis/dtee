@@ -15,29 +15,26 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_STREAM_OUTPUT_H_
-#define DTEE_STREAM_OUTPUT_H_
+#ifndef DTEE_UNINTERRUPTIBLE_H_
+#define DTEE_UNINTERRUPTIBLE_H_
 
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <string>
-#include <vector>
-
-#include "output.h"
 
 namespace dtee {
 
-class StreamOutput: public Output {
-public:
-	StreamOutput(OutputType type);
-	virtual ~StreamOutput();
+namespace uninterruptible {
 
-	bool open() override;
-	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
+int open(const char *pathname, int flags, mode_t mode);
+ssize_t read(int fd, char *buf, size_t count);
+ssize_t write(int fd, const char *buf, size_t count);
+ssize_t write(int fd, const std::string &buf);
+off_t lseek(int fd, off_t offset, int whence);
+int close(int fd);
+pid_t waitpid(pid_t pid, int *wstatus, int options);
 
-private:
-	OutputType type_;
-	std::string name_;
-	int fd_;
-};
+} // namespace reliable
 
 } // namespace dtee
 

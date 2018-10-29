@@ -28,6 +28,7 @@
 #include "application.h"
 #include "temp_filename_pattern.h"
 #include "to_string.h"
+#include "uninterruptible.h"
 
 using ::boost::format;
 using ::std::string;
@@ -47,6 +48,7 @@ bool TempFile::open() {
 	const string pattern = temp_filename_pattern(name_);
 	vector<char> filename{pattern.cbegin(), pattern.cend() + 1};
 
+	// mkostemp can return EINTR but we don't expect to handle any signals during startup
 	errno = 0;
 	fd_ = mkostemp(filename.data(), O_CLOEXEC);
 	if (fd_ < 0) {
@@ -65,7 +67,7 @@ string TempFile::name() {
 
 void TempFile::close() {
 	if (fd_ >= 0) {
-		::close(fd_);
+		uninterruptible::close(fd_);
 	}
 	fd_ = -1;
 }

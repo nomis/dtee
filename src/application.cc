@@ -39,13 +39,10 @@
 #include "process.h"
 #include "stream_output.h"
 #include "to_string.h"
+#include "uninterruptible.h"
 
 using ::boost::format;
-using ::std::cout;
-using ::std::cerr;
-using ::std::endl;
 using ::std::exception;
-using ::std::flush;
 using ::std::list;
 using ::std::make_shared;
 using ::std::shared_ptr;
@@ -59,8 +56,9 @@ extern "C" void __gcov_flush(void);
 namespace dtee {
 
 void Application::print_error(const format &message) {
-	cout << flush;
-	cerr << CommandLine::display_name() << ": " << str(message) << endl;
+	// If we use std::cerr then the write could be interrupted by a signal
+	// and the message would be lost.
+	uninterruptible::write(STDERR_FILENO, str(format("%s: %s\n") % CommandLine::display_name() % message));
 }
 
 int Application::run(int argc, const char* const argv[]) {
@@ -142,8 +140,8 @@ list<shared_ptr<Output>> Application::create_outputs() {
 	process_ = make_shared<Process>();
 	outputs.push_back(process_);
 
-	original.push_back(make_shared<StreamOutput>(cout, OutputType::STDOUT));
-	original.push_back(make_shared<StreamOutput>(cerr, OutputType::STDERR));
+	original.push_back(make_shared<StreamOutput>(OutputType::STDOUT));
+	original.push_back(make_shared<StreamOutput>(OutputType::STDERR));
 
 	if (command_line_.cron_mode()) {
 		cron_ = make_shared<Cron>(

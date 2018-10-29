@@ -22,19 +22,16 @@
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
-#include <iostream>
 #include <utility>
+#include <vector>
 
 #include <boost/format.hpp>
 
 #include "application.h"
 #include "to_string.h"
+#include "uninterruptible.h"
 
 using ::boost::format;
-using ::std::cout;
-using ::std::cerr;
-using ::std::endl;
-using ::std::flush;
 using ::std::shared_ptr;
 using ::std::string;
 using ::std::vector;
@@ -67,7 +64,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 
 	if (buffered_) {
 		errno = 0;
-		ssize_t written = write(file_.fd(), buffer.data(), len);
+		ssize_t written = uninterruptible::write(file_.fd(), buffer.data(), len);
 		if (written != static_cast<ssize_t>(len)) {
 			print_file_error(format("error writing to buffer file %1%: %2%"));
 
@@ -114,27 +111,24 @@ bool Cron::unspool_buffer_file() {
 
 	if (buffered_) {
 		errno = 0;
-		if (lseek(file_.fd(), 0, SEEK_SET) != 0) {
+		if (uninterruptible::lseek(file_.fd(), 0, SEEK_SET) != 0) {
 			print_file_error(format("error seeking to start of buffer file %1%: %2%"));
 			success = false;
 		} else {
 			ssize_t len;
 			do {
-				char buf[PIPE_BUF];
+				vector<char> buf(PIPE_BUF);
 
 				errno = 0;
-				len = read(file_.fd(), buf, sizeof(buf));
-
+				len = uninterruptible::read(file_.fd(), buf.data(), buf.size());
 				if (len < 0) {
 					print_file_error(format("error reading buffer file %1%: %2%"));
 					success = false;
 					break;
 				}
 
-				cout.write(buf, len);
+				success &= fallback_->output(OutputType::STDOUT, buf, len);
 			} while (len > 0);
-
-			cout << flush;
 		}
 
 		file_.close();
