@@ -345,7 +345,6 @@ void Input::handle_child_exited(const error_code &ec, int signal_number) {
 void Input::handle_interrupt_signals(const error_code &ec, int signal_number) {
 	if (!ec) {
 		output_->interrupted(signal_number);
-		interrupt_signals_.remove(signal_number);
 		interrupt_signals_.async_wait(bind(&Input::handle_interrupt_signals, this, p::_1, p::_2));
 		io_.stop();
 	}
