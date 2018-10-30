@@ -27,16 +27,14 @@ namespace dtee {
 
 class StreamOutput: public Output {
 public:
-	StreamOutput(OutputType type);
-	virtual ~StreamOutput();
+	explicit StreamOutput() {};
+	virtual ~StreamOutput() {};
 
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
 private:
-	OutputType type_;
-	std::string name_;
-	int fd_;
+	bool output(int fd, const char *name, const std::vector<char> &buffer, size_t len);
 };
 
 } // namespace dtee

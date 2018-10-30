@@ -33,43 +33,32 @@ using ::std::vector;
 
 namespace dtee {
 
-StreamOutput::StreamOutput(OutputType type)
-		: type_(type) {
-	switch (type) {
-	case OutputType::STDOUT:
-		name_ = "stdout";
-		fd_ = STDOUT_FILENO;
-		break;
-
-	case OutputType::STDERR:
-		name_ = "stderr";
-		fd_ = STDERR_FILENO;
-		break;
-	}
-}
-
-StreamOutput::~StreamOutput() {
-
-}
-
 bool StreamOutput::open() {
 	return true;
 }
 
 bool StreamOutput::output(OutputType type, const vector<char> &buffer, size_t len) {
-	if (type == type_) {
-		// It is not a good idea to write to a pipe ignoring signals because
-		// SIGINT can't be used to terminate this process. However, the process
-		// on the other end of the pipe will also get the SIGINT so we'll get
-		// an EPIPE return value. It would be difficult to make it possible to
-		// resume output after handling any received signals.
-		errno = 0;
-		if (uninterruptible::write(fd_, buffer.data(), len) != static_cast<ssize_t>(len)) {
-			Application::print_error(format("%1% write: %2%") % name_ % errno_to_string());
-			return false;
-		}
-	}
+	switch(type) {
+	case OutputType::STDOUT:
+		return output(STDOUT_FILENO, "stdout", buffer, len);
 
+	case OutputType::STDERR:
+		return output(STDERR_FILENO, "stderr", buffer, len);
+	}
+}
+
+bool StreamOutput::output(int fd, const char *name, const vector<char> &buffer, size_t len) {
+	// It is not a good idea to write to a pipe ignoring signals because
+	// SIGINT can't be used to terminate this process. However, the process
+	// on the other end of the pipe will also get the SIGINT so we'll get
+	// an EPIPE return value. It would be difficult to make it possible to
+	// resume output after handling any received signals.
+
+	errno = 0;
+	if (uninterruptible::write(fd, buffer.data(), len) != static_cast<ssize_t>(len)) {
+		Application::print_error(format("%1% write: %2%") % name % errno_to_string());
+		return false;
+	}
 	return true;
 }
 

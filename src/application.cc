@@ -135,22 +135,21 @@ int Application::run(int argc, const char* const argv[]) {
 
 list<shared_ptr<Output>> Application::create_outputs() {
 	list<shared_ptr<Output>> outputs;
-	list<shared_ptr<Output>> original;
+	shared_ptr<Output> original;
 
 	process_ = make_shared<Process>();
 	outputs.push_back(process_);
 
-	original.push_back(make_shared<StreamOutput>(OutputType::STDOUT));
-	original.push_back(make_shared<StreamOutput>(OutputType::STDERR));
+	original = make_shared<StreamOutput>();
 
 	if (command_line_.cron_mode()) {
 		cron_ = make_shared<Cron>(
 				command_line_.command()[0],
-				make_shared<Copy>(original));
+				original);
 		outputs.push_back(cron_);
 	} else {
 		cron_ = nullptr;
-		outputs.splice(outputs.end(), original);
+		outputs.push_back(original);
 	}
 
 	create_file_outputs(outputs, "out-overwrite", FileOutputType::STDOUT, false);
