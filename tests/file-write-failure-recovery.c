@@ -141,9 +141,18 @@ int openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 // If dtee closes the target file, unset the fd
 int close(int fd) {
 	int (*next_close)(int) = dlsym(RTLD_NEXT, "close");
+	static __thread bool active = false;
 
-	if (fail_fd == fd) {
-		fail_fd = -1;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			if (fail_fd == fd) {
+				fail_fd = -1;
+			}
+		}
+
+		active = false;
 	}
 
 	return (*next_close)(fd);
@@ -174,13 +183,20 @@ static ssize_t dtee_test_fail_write(int fd __attribute__((unused)), const void *
 
 ssize_t write(int fd, const void *buf, size_t count) {
 	ssize_t (*next_write)(int, const void *, size_t) = dlsym(RTLD_NEXT, "write");
+	static __thread bool active = false;
 
-	if (dtee_test_is_dtee()) {
-		if (fail_fd >= 0 && fd == fail_fd) {
-			if (!dtee_test_allow_write()) {
-				next_write = dtee_test_fail_write;
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			if (fail_fd >= 0 && fd == fail_fd) {
+				if (!dtee_test_allow_write()) {
+					next_write = dtee_test_fail_write;
+				}
 			}
 		}
+
+		active = false;
 	}
 
 	return (*next_write)(fd, buf, count);
