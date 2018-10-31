@@ -1,0 +1,12 @@
+./dtee: stdout write: ENOSPC
+Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
+./dtee: stdout write: ENOSPC
+frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
+./dtee: stdout write: ENOSPC
+pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris
+./dtee: stdout write: ENOSPC
+commodo fatback meatball proident. Do commodo tongue jerky doner. Pork loin
+./dtee: stdout write: ENOSPC
+occaecat sunt swine deserunt. Proident turkey dolor est duis qui jowl magna
+./dtee: stdout write: ENOSPC
+elit ham hock enim boudin brisket laborum t-bone. Drumstick sirloin pig.

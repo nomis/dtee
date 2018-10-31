@@ -151,6 +151,8 @@ shared_library('test-socket-shutdown-failure', ['tests/socket-shutdown-failure.c
 shared_library('test-socket-unix-failure', ['tests/socket-unix-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee])
 shared_library('test-waitpid-failure', ['tests/waitpid-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-write-eintr', ['tests/write-eintr.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-write-truncate-cron', ['tests/write-truncate-cron.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-write-truncate-stdout', ['tests/write-truncate-stdout.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 
 executable('test-closed-pipe-reader', ['tests/closed-pipe-reader.c'], c_args: test_c_args)
 executable('test-closed-pipe-writer', ['tests/closed-pipe-writer.c'], c_args: test_c_args)
@@ -381,5 +383,10 @@ test('command writes to stdout/stderr after dtee exits', bash, args: [files('tes
 
 test('functions return EINTR every other call', bash, args: [files('tests/return-eintr.sh')], env: test_env, depends: all_test_txt)
 test('cron functions return EINTR every other call', bash, args: [files('tests/cron-return-eintr.sh')], env: test_env, depends: all_test_txt)
+
 test('write returns partial completion and EINTR', bash, args: [files('tests/write-eintr.sh')], env: test_env, depends: all_test_txt)
 test('cron write returns partial completion and EINTR', bash, args: [files('tests/cron-write-eintr.sh')], env: test_env, depends: all_test_txt)
+
+test('write truncated (stdout)', bash, args: [files('tests/write-truncate-stdout.sh')], env: test_env, depends: all_test_txt)
+test('cron write truncated (stdout)', bash, args: [files('tests/cron-write-truncate-stdout.sh')], env: test_env, depends: all_test_txt)
+test('cron write truncated (cron)', bash, args: [files('tests/cron-write-truncate-cron.sh')], env: test_env, depends: all_test_txt)
