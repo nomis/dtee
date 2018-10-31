@@ -88,6 +88,7 @@ bool FileOutput::open() {
 bool FileOutput::output(OutputType type, const std::vector<char> &buffer, size_t len) {
 	if (!filtered_ || type == type_) {
 		if (fd_ >= 0) {
+			errno = 0;
 			ssize_t written = uninterruptible::write(fd_, buffer.data(), len);
 			if (written != static_cast<ssize_t>(len)) {
 				if (!failed_) {
