@@ -67,6 +67,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 		ssize_t written = uninterruptible::write(file_.fd(), buffer.data(), len);
 		if (written != static_cast<ssize_t>(len)) {
 			print_file_error(format("error writing to buffer file %1%: %2%"));
+			error_ = true;
 
 			unspool_buffer_file();
 
