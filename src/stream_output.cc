@@ -45,6 +45,8 @@ bool StreamOutput::output(OutputType type, const vector<char> &buffer, size_t le
 	case OutputType::STDERR:
 		return output(STDERR_FILENO, "stderr", buffer, len);
 	}
+
+	return false;
 }
 
 bool StreamOutput::output(int fd, const char *name, const vector<char> &buffer, size_t len) {
@@ -59,6 +61,7 @@ bool StreamOutput::output(int fd, const char *name, const vector<char> &buffer, 
 		Application::print_error(format("%1% write: %2%") % name % errno_to_string());
 		return false;
 	}
+
 	return true;
 }
 
