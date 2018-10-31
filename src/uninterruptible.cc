@@ -30,6 +30,10 @@
 using std::min;
 using std::string;
 
+#if defined(__linux__) || defined(__FreeBSD__)
+# define CLOSE_EINTR_IS_EINPROGRESS
+#endif
+
 namespace dtee {
 
 namespace uninterruptible {
@@ -96,16 +100,23 @@ off_t lseek(int fd, off_t offset, int whence) {
 // operating systems that guarantee closure even when interrupted will never be
 // a problem.
 int close(int fd) {
-	off_t ret;
+	int ret;
 
 	do {
 		errno = 0;
 		ret = ::close(fd);
-#if defined(__linux__) || defined(__FreeBSD__)
-		if (errno == EINTR) {
-			errno = EINPROGRESS;
-		}
+		switch (errno) {
+#ifdef CLOSE_EINTR_IS_EINPROGRESS
+		case EINTR:
 #endif
+		case EINPROGRESS:
+			ret = 0;
+			errno = 0;
+			break;
+
+		default:
+			break;
+		}
 	} while (ret < 0 && errno == EINTR);
 
 	return ret;
