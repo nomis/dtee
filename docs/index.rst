@@ -22,7 +22,8 @@ be written as normal and the exit code will be appended to standard error.
 It will do this by default when invoked as ``cronty``, providing an alternative
 to |cronic|_ but without splitting up the output.
 
-(Also, to do |tee(1)|_ with standard output and standard error at the same time.)
+(Also, to do |tee(1)|_ with standard output and standard error at the same
+time.)
 
 Contents
 --------
@@ -46,6 +47,14 @@ Resources
    Releases <https://github.com/nomis/dtee/releases>
    Issue tracker <https://github.com/nomis/dtee/issues>
 
+Pronunciation
+-------------
+
+dtee
+   /diː.ˈtiː/
+
+cronty
+   /ˈkrɒn.tiː/
 
 .. |cronic| replace:: ``cronic``
 .. _cronic: https://habilis.net/cronic/
