@@ -68,7 +68,7 @@ ssize_t write(int fd, const char *buf, size_t count) {
 			buf += ret;
 			total += ret;
 		}
-	} while ((ret > 0 && count > 0) || (ret < 0 && errno == EINTR));
+	} while (count > 0 && errno == EINTR);
 
 	if (total > 0) {
 		return total;
