@@ -137,6 +137,7 @@ shared_library('test-mkostemp-consistent', ['tests/mkostemp-consistent.c'] , c_a
 shared_library('test-mkostemp-failure', ['tests/mkostemp-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-mkostemp-readonly', ['tests/mkostemp-readonly.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-return-eintr', ['tests/return-eintr.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-security-recreate-output-socket', ['tests/security-recreate-output-socket.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee, testlib_is_fd_unix_socket])
 shared_library('test-socket-add-extra-source', ['tests/socket-add-extra-source.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee, testlib_is_fd_unix_socket])
 shared_library('test-socket-bind-failure', ['tests/socket-bind-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket])
@@ -149,6 +150,7 @@ shared_library('test-socket-setsockopt-monitor', ['tests/socket-setsockopt-monit
 shared_library('test-socket-shutdown-failure', ['tests/socket-shutdown-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket])
 shared_library('test-socket-unix-failure', ['tests/socket-unix-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee])
 shared_library('test-waitpid-failure', ['tests/waitpid-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-write-eintr', ['tests/write-eintr.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 
 executable('test-closed-pipe-reader', ['tests/closed-pipe-reader.c'], c_args: test_c_args)
 executable('test-closed-pipe-writer', ['tests/closed-pipe-writer.c'], c_args: test_c_args)
@@ -376,3 +378,8 @@ test('cron pipe write failure (stderr but no output)', bash, args: [files('tests
 test('cron pipe write failure (file)', bash, args: [files('tests/cron-pipe-write-failure-file.sh')], env: test_env, depends: all_test_txt)
 
 test('command writes to stdout/stderr after dtee exits', bash, args: [files('tests/command-write-after-ppid-exit.sh')], env: test_env, depends: all_test_txt)
+
+test('functions return EINTR every other call', bash, args: [files('tests/return-eintr.sh')], env: test_env, depends: all_test_txt)
+test('cron functions return EINTR every other call', bash, args: [files('tests/cron-return-eintr.sh')], env: test_env, depends: all_test_txt)
+test('write returns partial completion and EINTR', bash, args: [files('tests/write-eintr.sh')], env: test_env, depends: all_test_txt)
+test('cron write returns partial completion and EINTR', bash, args: [files('tests/cron-write-eintr.sh')], env: test_env, depends: all_test_txt)
