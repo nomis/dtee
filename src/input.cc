@@ -194,12 +194,12 @@ bool Input::fork_parent(pid_t pid) {
 
 	io_.notify_fork(io_service::fork_event::fork_parent);
 
-	out_.close(ec);
+	uninterruptible::close(out_, ec);
 	if (ec) {
 		print_socket_error(format("stdout socket close: %1%"), ec);
 	}
 
-	err_.close(ec);
+	uninterruptible::close(err_, ec);
 	if (ec) {
 		print_socket_error(format("stderr socket close: %1%"), ec);
 	}
@@ -246,26 +246,26 @@ void Input::fork_child() {
 	io_.notify_fork(io_service::fork_event::fork_child);
 
 	errno = 0;
-	if (dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
+	if (uninterruptible::dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
 		print_system_error(format("stdout dup2: %1%"));
 	}
 
 	errno = 0;
-	if (dup2(err_.native_handle(), STDERR_FILENO) < 0) {
+	if (uninterruptible::dup2(err_.native_handle(), STDERR_FILENO) < 0) {
 		print_system_error(format("stderr dup2: %1%"));
 	}
 
-	input_.close(ec);
+	uninterruptible::close(input_, ec);
 	if (ec) {
 		print_socket_error(format("input socket close: %1%"), ec);
 	}
 
-	out_.close(ec);
+	uninterruptible::close(out_, ec);
 	if (ec) {
 		print_socket_error(format("stdout socket close: %1%"), ec);
 	}
 
-	err_.close(ec);
+	uninterruptible::close(err_, ec);
 	if (ec) {
 		print_socket_error(format("stderr socket close: %1%"), ec);
 	}

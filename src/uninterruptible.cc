@@ -27,6 +27,11 @@
 #include <cerrno>
 #include <string>
 
+#include <boost/asio.hpp>
+#include <boost/system/error_code.hpp>
+
+using boost::asio::local::datagram_protocol;
+using boost::system::error_code;
 using std::min;
 using std::string;
 
@@ -117,6 +122,33 @@ int close(int fd) {
 		default:
 			break;
 		}
+	} while (ret < 0 && errno == EINTR);
+
+	return ret;
+}
+
+error_code close(datagram_protocol::socket &sock, error_code &ec) {
+	do {
+		sock.close(ec);
+		switch (ec.value()) {
+#ifdef CLOSE_EINTR_IS_EINPROGRESS
+		case boost::asio::error::interrupted:
+#endif
+		case boost::asio::error::in_progress:
+			ec = error_code{};
+			break;
+		}
+	} while (ec == boost::asio::error::interrupted);
+
+	return ec;
+}
+
+int dup2(int oldfd, int newfd) {
+	int ret;
+
+	do {
+		errno = 0;
+		ret = ::dup2(oldfd, newfd);
 	} while (ret < 0 && errno == EINTR);
 
 	return ret;

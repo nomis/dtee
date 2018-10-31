@@ -22,6 +22,9 @@
 #include <sys/types.h>
 #include <string>
 
+#include <boost/asio.hpp>
+#include <boost/system/error_code.hpp>
+
 namespace dtee {
 
 namespace uninterruptible {
@@ -32,6 +35,8 @@ ssize_t write(int fd, const char *buf, size_t count);
 ssize_t write(int fd, const std::string &buf);
 off_t lseek(int fd, off_t offset, int whence);
 int close(int fd);
+boost::system::error_code close(boost::asio::local::datagram_protocol::socket &sock, boost::system::error_code &ec);
+int dup2(int oldfd, int newfd);
 pid_t waitpid(pid_t pid, int *wstatus, int options);
 
 } // namespace reliable
