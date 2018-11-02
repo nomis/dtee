@@ -19,6 +19,7 @@
 #define DTEE_INPUT_H_
 
 #include <sys/types.h>
+#include <cstddef>
 #include <exception>
 #include <memory>
 #include <string>

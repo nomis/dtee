@@ -25,6 +25,7 @@
 #include <cerrno>
 #include <climits>
 #include <csignal>
+#include <cstddef>
 #include <exception>
 #include <memory>
 #include <string>

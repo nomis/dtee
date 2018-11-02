@@ -18,6 +18,7 @@
 #ifndef DTEE_STREAM_OUTPUT_H_
 #define DTEE_STREAM_OUTPUT_H_
 
+#include <cstddef>
 #include <string>
 #include <vector>
 

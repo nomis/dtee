@@ -23,6 +23,7 @@
 #include <sysexits.h>
 #include <unistd.h>
 #include <cerrno>
+#include <cstddef>
 
 #include <boost/format.hpp>
 

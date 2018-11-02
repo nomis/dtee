@@ -17,6 +17,7 @@
 */
 #include "copy.h"
 
+#include <cstddef>
 #include <string>
 
 using ::std::string;

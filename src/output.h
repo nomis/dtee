@@ -18,6 +18,7 @@
 #ifndef DTEE_OUTPUT_H_
 #define DTEE_OUTPUT_H_
 
+#include <cstddef>
 #include <vector>
 
 namespace dtee {

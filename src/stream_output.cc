@@ -18,6 +18,7 @@
 #include "stream_output.h"
 
 #include <unistd.h>
+#include <cstddef>
 #include <string>
 #include <vector>
 

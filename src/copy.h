@@ -18,6 +18,7 @@
 #ifndef DTEE_COPY_H_
 #define DTEE_COPY_H_
 
+#include <cstddef>
 #include <list>
 #include <memory>
 #include <vector>

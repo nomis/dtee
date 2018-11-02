@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <algorithm>
 #include <cerrno>
+#include <cstddef>
 #include <string>
 
 #include <boost/asio.hpp>

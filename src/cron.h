@@ -18,6 +18,7 @@
 #ifndef DTEE_CRON_H_
 #define DTEE_CRON_H_
 
+#include <cstddef>
 #include <memory>
 #include <string>
 #include <vector>

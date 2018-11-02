@@ -18,6 +18,8 @@
 #ifndef DTEE_PROCESS_H_
 #define DTEE_PROCESS_H_
 
+#include <cstddef>
+
 #include "output.h"
 
 namespace dtee {
