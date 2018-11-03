@@ -20,12 +20,16 @@ static const char *dtee_test_read_proc_basename(pid_t pid, char *buf, size_t buf
 
 	kvm_t *kd;
 	int cnt = 0;
+#if defined(__NetBSD__)
+	struct kinfo_proc2 *proc;
+#else
 	struct kinfo_proc *proc;
+#endif
 	char errbuf[_POSIX2_LINE_MAX] = { 0 };
 
 #if defined(__FreeBSD__)
 	kd = kvm_openfiles(NULL, "/dev/null", NULL, O_RDONLY, errbuf);
-#elif defined(__OpenBSD__)
+#elif defined(__OpenBSD__) || defined(__NetBSD__)
 	kd = kvm_openfiles(NULL, NULL, NULL, O_RDONLY | KVM_NO_FILES, errbuf);
 #else
 # error "Unknown BSD"
@@ -35,13 +39,15 @@ static const char *dtee_test_read_proc_basename(pid_t pid, char *buf, size_t buf
 		proc = kvm_getprocs(kd, KERN_PROC_PID, pid, &cnt);
 #elif defined(__OpenBSD__)
 		proc = kvm_getprocs(kd, KERN_PROC_PID, pid, sizeof(*proc), &cnt);
+#elif defined(__NetBSD__)
+		proc = kvm_getproc2(kd, KERN_PROC_PID, pid, sizeof(*proc), &cnt);
 #else
 # error "Unknown BSD"
 #endif
 		if (proc != NULL && cnt > 0) {
 #if defined(__FreeBSD__)
 			strncpy(buf, basename(proc[0].ki_comm), buflen - 1);
-#elif defined(__OpenBSD__)
+#elif defined(__OpenBSD__) || defined(__NetBSD__)
 			strncpy(buf, basename(proc[0].p_comm), buflen - 1);
 #else
 # error "Unknown BSD"

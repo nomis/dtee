@@ -113,7 +113,7 @@ else # freebsd, openbsd, netbsd
 endif
 
 
-if host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd'
+if host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd'
 	proc_deps = [c.find_library('kvm')]
 else # linux
 	proc_deps = []
