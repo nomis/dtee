@@ -35,12 +35,12 @@ compile_args = [
 	'-g3',
 ]
 c = meson.get_compiler('c')
-cc = meson.get_compiler('cpp')
+cpp = meson.get_compiler('cpp')
 foreach arg: compile_args
 	if c.has_argument(arg)
 		add_project_arguments(arg, language: 'c')
 	endif
-	if cc.has_argument(arg)
+	if cpp.has_argument(arg)
 		add_project_arguments(arg, language: 'cpp')
 	endif
 endforeach
@@ -104,15 +104,17 @@ elif host_machine.system() == 'freebsd'
 	dlfcn_args = test_c_args + ['-Wno-pedantic']
 endif
 
-libdl = meson.get_compiler('c').find_library('dl')
-dlfcn_deps = [
-	libdl,
-]
+if host_machine.system() == 'linux'
+	dlfcn_deps = [c.find_library('dl')]
+else
+	dlfcn_deps = []
+endif
+
 
 if host_machine.system() == 'linux'
 	proc_deps = []
 elif host_machine.system() == 'freebsd'
-	proc_deps = [meson.get_compiler('c').find_library('kvm')]
+	proc_deps = [c.find_library('kvm')]
 else
 	proc_deps = []
 endif
