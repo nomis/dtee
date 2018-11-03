@@ -177,12 +177,14 @@ ssize_t write(int fd, const void *buf, size_t count) {
 	if (!active) {
 		active = true;
 
-		if (dtee_test_is_dtee()) {
-			// Boost.Asio (1.62) communicates signals from the
-			// handler to the I/O service using a pipe with
-			// reads/writes of the signal number as an int.
-			// It does not handle the EINTR error value.
-			if (count != sizeof(int)) {
+		// Boost.Asio (1.62) communicates signals from the
+		// handler to the I/O service using a pipe with
+		// reads/writes of the signal number as an int.
+		// It does not handle the EINTR error value.
+		// This also implies we're in a signal handler,
+		// so don't do anything unsafe.
+		if (count != sizeof(int)) {
+			if (dtee_test_is_dtee()) {
 				if (!(success = !success)) {
 					next_write = dtee_test_write_failure;
 				}

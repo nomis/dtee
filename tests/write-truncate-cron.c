@@ -89,9 +89,16 @@ ssize_t write(int fd, const void *buf, size_t count) {
 	if (!active) {
 		active = true;
 
-		if (dtee_test_is_dtee()) {
-			if (fd == cron_fd) {
-				next_write = dtee_test_write_truncate;
+		// Boost.Asio (1.62) communicates signals from the
+		// handler to the I/O service using a pipe with
+		// reads/writes of the signal number as an int.
+		// This implies we're in a signal handler,
+		// so don't do anything unsafe.
+		if (count != sizeof(int)) {
+			if (dtee_test_is_dtee()) {
+				if (fd == cron_fd) {
+					next_write = dtee_test_write_truncate;
+				}
 			}
 		}
 
