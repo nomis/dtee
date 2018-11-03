@@ -126,8 +126,12 @@ int Application::run(int argc, const char* const argv[]) {
 		}
 	}
 
-	outputs.reset(); // Files are opened with O_CLOEXEC so this is unnecessary
-	input.reset(); // Stop handling signals and close all sockets
+	// Files are opened with O_CLOEXEC so these are unnecessary
+	outputs.reset();
+	cron_.reset();
+
+	// Stop handling signals and close all sockets
+	input.reset();
 
 	execute(command_line_.command());
 	return EX_SOFTWARE;
