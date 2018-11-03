@@ -38,7 +38,7 @@ off_t lseek(int fd, off_t offset, int whence);
 int close(int fd);
 boost::system::error_code close(boost::asio::local::datagram_protocol::socket &sock, boost::system::error_code &ec);
 int dup2(int oldfd, int newfd);
-int mkostemp(char *templatename, int flags);
+int mkostemp(char *template_name, int flags);
 pid_t waitpid(pid_t pid, int *wstatus, int options);
 
 } // namespace reliable
