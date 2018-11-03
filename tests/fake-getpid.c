@@ -5,7 +5,7 @@
 #include "is-dtee.h"
 
 static pid_t dtee_test_fake_getpid(void) {
-	return 1;
+	return 2;
 }
 
 pid_t getpid(void) {

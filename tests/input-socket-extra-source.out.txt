@@ -1,4 +1,4 @@
-socket-add-extra-source: created socket "./dtee@test/input-socket-extra-source.tmp/dtee.1.1.input.XXXXXX/x" connected to "./dtee@test/input-socket-extra-source.tmp/dtee.1.1.input.XXXXXX/x"
+socket-add-extra-source: created socket "./dtee@test/input-socket-extra-source.tmp/dtee.1.2.input.XXXXXX/x" connected to "./dtee@test/input-socket-extra-source.tmp/dtee.1.2.input.XXXXXX/x"
 socket-add-extra-source: inserting additional message
 socket-add-extra-source: inserted additional message
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor

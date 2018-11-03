@@ -1,4 +1,4 @@
-./dtee: unable to create temporary file ./dtee@test/cron-file-open-failure-cron.tmp/dtee.1.1.output.XXXXXX: EROFS
+./dtee: unable to create temporary file ./dtee@test/cron-file-open-failure-cron.tmp/dtee.1.2.output.XXXXXX: EROFS
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris
