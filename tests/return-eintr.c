@@ -250,13 +250,12 @@ off64_t lseek64(int fd, off64_t offset, int whence) {
 #endif
 
 static int dtee_test_close_failure(int fd __attribute__((unused))) {
-#if defined(__linux__) || defined(__FreeBSD__)
 	int (*next_close)(int) = dlsym(RTLD_NEXT, "close");
 	int ret = (*next_close)(fd);
 	if (ret < 0) {
 		return ret;
 	}
-#endif
+
 	errno = EINTR;
 	return -1;
 }
