@@ -1,4 +1,4 @@
-./dtee: /dev/full: ENOSPC
+./dtee: dtee@test/cron-file-write-failure-combined.file.com-append.txt: EINVAL
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris

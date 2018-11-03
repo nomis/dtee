@@ -21,12 +21,7 @@
 
 #include "is-dtee.h"
 
-#define DO_N_SUCCESS 2
-#define DO_N_FAILURE 3
-
 static int fail_fd = -1;
-static int successes = 0;
-static int failures = 0;
 
 // When dtee opens the target file, store the fd
 static bool dtee_test_match_open(const char *pathname) {
@@ -165,26 +160,8 @@ int close(int fd) {
 	return (*next_close)(fd);
 }
 
-// Cause intermittent write failures to the file
-static bool dtee_test_allow_write(void) {
-	if (successes >= DO_N_SUCCESS) {
-		++failures;
-
-		if (failures >= DO_N_FAILURE) {
-			successes = 0;
-			failures = 0;
-		}
-
-		return false;
-	} else {
-		++successes;
-
-		return true;
-	}
-}
-
 static ssize_t dtee_test_write_failure(int fd __attribute__((unused)), const void *buf __attribute__((unused)), size_t count __attribute__((unused))) {
-	errno = ENOSPC;
+	errno = EINVAL;
 	return -1;
 }
 
@@ -197,9 +174,7 @@ ssize_t write(int fd, const void *buf, size_t count) {
 
 		if (dtee_test_is_dtee()) {
 			if (fail_fd >= 0 && fd == fail_fd) {
-				if (!dtee_test_allow_write()) {
-					next_write = dtee_test_write_failure;
-				}
+				next_write = dtee_test_write_failure;
 			}
 		}
 

@@ -1,5 +1,5 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-./dtee: /dev/full: ENOSPC
+./dtee: dtee@test/file-write-failure-combined.file.com-append.txt: EINVAL
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,

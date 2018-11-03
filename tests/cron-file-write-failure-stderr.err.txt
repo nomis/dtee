@@ -1,5 +1,5 @@
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
-./dtee: /dev/full: ENOSPC
+./dtee: dtee@test/cron-file-write-failure-stderr.file.err-append.txt: EINVAL
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris
 commodo fatback meatball proident. Do commodo tongue jerky doner. Pork loin

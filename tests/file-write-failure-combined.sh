@@ -1,6 +1,17 @@
 . "$(dirname "$0")"/util/common.sh
 
-run_test "-c" "/dev/full" "$RUN"
+function test_prepare() {
+	rm -f "$TESTDIR/$NAME.file.com-append.txt"
+}
+
+export DTEE_TEST_FILE_WRITE_FAIL_NAME="$TESTDIR/$NAME.file.com-append.txt"
+
+TEST_LD_PRELOAD="./libtest-file-write-failure.so"
+run_test -c "$TESTDIR/$NAME.file.com-append.txt" "$RUN"
 RET=$?
 
-variables_must_eq RET $EX_IOERR
+cmp_files "file.com-append"
+CMP_COM_A=$?
+
+variables_must_eq RET $EX_IOERR \
+	CMP_COM_A 0
