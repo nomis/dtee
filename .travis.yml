@@ -1,5 +1,6 @@
 language: cpp
 
+os: linux
 dist: xenial
 addons:
   apt:
@@ -27,3 +28,8 @@ install:
 script:
   - make check
   - make -C docs man html
+
+notifications:
+  email:
+    recipients:
+      - secure: "fFBhVhwdnAIZo815XjBtIa7TIKr29PTcE6m6pNhF3guXzLnsJZsTx/1nS7TiI4hLt+LleogPc5Sf/q+gPd+LTOYMSN9R8E93r0VZGu9tk50FYzBhvTgw7Bj4BLYMW2UmFqqk6MGGHiaevDTGx2y8+sIDHfoIL/ZtkLAsxOVobBfSKwtyR2EMNkN+t7IWeYoHJfBN3Zin3slgwluKiCEYp9htRK8NS64HgU+HU8CPx7jqp5L/yzGkT6sOLNOop+6GehfZ9srwBR/ZgVuotjiVwqitzRA0wtXhrZQ3k+AsLdfZaIp2VPyn6QnezCr5V9vQkQYdwaWeG1zSEtCJ3zsGi34ch3BXs1vdsokOVJdr3TCJvFHr4ClA9qsoiLGq+kp/WlWNneyXOYifsMA9Ib5INZ3fO2ehxTDI81rIKh5JrNCjRifXM4alCpKd7Wrg/KSgapiYga9IqC3rIUoVkhs/+zHDb4XrRyQolFLnzVlQQ+hGacNz9QMuwi4Hhww532A8rv2tRN22bPdmFvOdOVhDJTwcGuesw7Zud7/lwwiEte+8uWnx+/9h1nN1Y843VLJqAG59/7zNxyAGBwVp1M6Otd36VDvBKDtE+F6kE6HtJdsExsvyqvKCxX4rQ9JmpCKNRaS2xeKsZ2XKfF0Iw/wj5wsovXk8cSjA3GEY+SjG48I="
