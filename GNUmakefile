@@ -12,9 +12,17 @@ else
 endif
 
 ifeq ($(shell uname),Linux)
-	LTO=true
+	D_B_LTO=-Db_lto=true
 else
-	LTO=false
+	D_B_LTO=
+endif
+
+ifeq ($(shell uname),OpenBSD)
+	D_B_LUNDEF=-Db_lundef=false
+	D_B_ASNEEDED=-Db_asneeded=false
+else
+	D_B_LUNDEF=
+	D_B_ASNEEDED=
 endif
 
 all: compile
@@ -25,7 +33,7 @@ $(BUILD_DIR)/:
 $(RELEASE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(RELEASE_DIR)/"
 	mkdir $(RELEASE_DIR)/
-	meson --buildtype=release $(RELEASE_DIR)/ -Db_lto=$(LTO) || (rm -rf "$(RELEASE_DIR)/"; false)
+	meson --buildtype=release $(RELEASE_DIR)/ $(D_B_LTO) $(D_B_LUNDEF) $(D_B_ASNEEDED) || (rm -rf "$(RELEASE_DIR)/"; false)
 $(COVERAGE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(COVERAGE_DIR)/"
 	mkdir $(COVERAGE_DIR)/
