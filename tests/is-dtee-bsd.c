@@ -27,7 +27,7 @@ static const char *dtee_test_read_proc_basename(pid_t pid, char *buf, size_t buf
 #endif
 	char errbuf[_POSIX2_LINE_MAX] = { 0 };
 
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__DragonFly__)
 	kd = kvm_openfiles(NULL, "/dev/null", NULL, O_RDONLY, errbuf);
 #elif defined(__OpenBSD__) || defined(__NetBSD__)
 	kd = kvm_openfiles(NULL, NULL, NULL, O_RDONLY | KVM_NO_FILES, errbuf);
@@ -35,7 +35,7 @@ static const char *dtee_test_read_proc_basename(pid_t pid, char *buf, size_t buf
 # error "Unknown BSD"
 #endif
 	if (kd != NULL) {
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__DragonFly__)
 		proc = kvm_getprocs(kd, KERN_PROC_PID, pid, &cnt);
 #elif defined(__OpenBSD__)
 		proc = kvm_getprocs(kd, KERN_PROC_PID, pid, sizeof(*proc), &cnt);
@@ -49,6 +49,8 @@ static const char *dtee_test_read_proc_basename(pid_t pid, char *buf, size_t buf
 			strncpy(buf, basename(proc[0].ki_comm), buflen - 1);
 #elif defined(__OpenBSD__) || defined(__NetBSD__)
 			strncpy(buf, basename(proc[0].p_comm), buflen - 1);
+#elif defined(__DragonFly__)
+			strncpy(buf, basename(proc[0].kp_comm), buflen - 1);
 #else
 # error "Unknown BSD"
 #endif
@@ -61,7 +63,7 @@ static const char *dtee_test_read_proc_basename(pid_t pid, char *buf, size_t buf
 	return buf;
 }
 
-bool dtee_test_is_dtee(void) {
+bool __dtee_test_is_dtee_impl(void) {
 	bool is_dtee = false;
 	static __thread bool active = false;
 

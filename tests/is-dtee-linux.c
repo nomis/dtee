@@ -20,7 +20,7 @@ static const char *dtee_test_read_proc_basename(const char *path, char *buf, siz
 	return "";
 }
 
-bool dtee_test_is_dtee(void) {
+bool __dtee_test_is_dtee_impl(void) {
 	bool is_dtee = false;
 	static __thread bool active = false;
 
