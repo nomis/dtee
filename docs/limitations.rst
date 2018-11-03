@@ -36,6 +36,12 @@ messages are very likely to be lost if data is written quickly. Unlike the other
 BSDs, this will result in an error on the receive call so it will not go
 unreported.
 
+DragonFlyBSD
+------------
+
+Like `FreeBSD/OpenBSD`_ but even with a 512KB socket buffer it behaves as poorly
+as `NetBSD`_ and without reporting of data loss from the receive call.
+
 .. |sendfile(2)| replace:: ``sendfile(2)``
 .. _sendfile(2): http://man7.org/linux/man-pages/man2/sendfile.2.html
 
