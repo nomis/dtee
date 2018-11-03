@@ -54,20 +54,24 @@ static int dtee_test_capture_open(const char *pathname, int flags, mode_t mode) 
 	return dtee_test_return_open((*next_open)(pathname, flags, mode));
 }
 
+#if defined(__linux__)
 static int dtee_test_capture_open64(const char *pathname, int flags, mode_t mode) {
 	int (*next_open64)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open64");
 	return dtee_test_return_open((*next_open64)(pathname, flags, mode));
 }
+#endif
 
 static int dtee_test_capture_openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat");
 	return dtee_test_return_open((*next_openat)(dirfd, pathname, flags, mode));
 }
 
+#if defined(__linux__)
 static int dtee_test_capture_openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat64)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat64");
 	return dtee_test_return_open((*next_openat64)(dirfd, pathname, flags, mode));
 }
+#endif
 
 int open(const char *pathname, int flags, mode_t mode) {
 	int (*next_open)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open");
@@ -86,6 +90,7 @@ int open(const char *pathname, int flags, mode_t mode) {
 	return (*next_open)(pathname, flags, mode);
 }
 
+#if defined(__linux__)
 int open64(const char *pathname, int flags, mode_t mode) {
 	int (*next_open64)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open64");
 	static __thread bool active = false;
@@ -102,6 +107,7 @@ int open64(const char *pathname, int flags, mode_t mode) {
 
 	return (*next_open64)(pathname, flags, mode);
 }
+#endif
 
 int openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat");
@@ -120,6 +126,7 @@ int openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 	return (*next_openat)(dirfd, pathname, flags, mode);
 }
 
+#if defined(__linux__)
 int openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat64)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat64");
 	static __thread bool active = false;
@@ -136,7 +143,7 @@ int openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 
 	return (*next_openat64)(dirfd, pathname, flags, mode);
 }
-
+#endif
 
 // If dtee closes the target file, unset the fd
 int close(int fd) {

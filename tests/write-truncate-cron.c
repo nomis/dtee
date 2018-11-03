@@ -23,12 +23,14 @@ static int dtee_test_mkostemp_copy(char *template, int flags) {
 	return fd;
 }
 
+#if defined(__linux__)
 static int dtee_test_mkostemp64_copy(char *template, int flags) {
 	int (*next_mkostemp64)(char *, int) = dlsym(RTLD_NEXT, "mkostemp64");
 	int fd = (*next_mkostemp64)(template, flags);
 	cron_fd = fd;
 	return fd;
 }
+#endif
 
 int mkostemp(char *template, int flags) {
 	int (*next_mkostemp)(char *, int) = dlsym(RTLD_NEXT, "mkostemp");
@@ -47,6 +49,7 @@ int mkostemp(char *template, int flags) {
 	return (*next_mkostemp)(template, flags);
 }
 
+#if defined(__linux__)
 int mkostemp64(char *template, int flags) {
 	int (*next_mkostemp64)(char *, int) = dlsym(RTLD_NEXT, "mkostemp64");
 	static __thread bool active = false;
@@ -63,6 +66,7 @@ int mkostemp64(char *template, int flags) {
 
 	return (*next_mkostemp64)(template, flags);
 }
+#endif
 
 static ssize_t dtee_test_write_truncate(int fd __attribute__((unused)), const void *buf __attribute__((unused)), size_t count __attribute__((unused))) {
 	ssize_t (*next_write)(int, const void *, size_t) = dlsym(RTLD_NEXT, "write");

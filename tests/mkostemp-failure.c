@@ -32,6 +32,7 @@ int mkostemp(char *template, int flags) {
 	return (*next_mkostemp)(template, flags);
 }
 
+#if defined(__linux__)
 int mkostemp64(char *template, int flags) {
 	int (*next_mkostemp64)(char *, int) = dlsym(RTLD_NEXT, "mkostemp64");
 	static __thread bool active = false;
@@ -48,3 +49,4 @@ int mkostemp64(char *template, int flags) {
 
 	return (*next_mkostemp64)(template, flags);
 }
+#endif

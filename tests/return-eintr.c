@@ -30,20 +30,24 @@ static int dtee_test_open_failure(const char *pathname __attribute__((unused)), 
 	return -1;
 }
 
+#if defined(__linux__)
 static int dtee_test_open64_failure(const char *pathname __attribute__((unused)), int flags __attribute__((unused)), mode_t mode __attribute__((unused))) {
 	errno = EINTR;
 	return -1;
 }
+#endif
 
 static int dtee_test_openat_failure(int dirfd __attribute__((unused)), const char *pathname __attribute__((unused)), int flags __attribute__((unused)), mode_t mode __attribute__((unused))) {
 	errno = EINTR;
 	return -1;
 }
 
+#if defined(__linux__)
 static int dtee_test_openat64_failure(int dirfd __attribute__((unused)), const char *pathname __attribute__((unused)), int flags __attribute__((unused)), mode_t mode __attribute__((unused))) {
 	errno = EINTR;
 	return -1;
 }
+#endif
 
 int open(const char *pathname, int flags, mode_t mode) {
 	int (*next_open)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open");
@@ -65,6 +69,7 @@ int open(const char *pathname, int flags, mode_t mode) {
 	return (*next_open)(pathname, flags, mode);
 }
 
+#if defined(__linux__)
 int open64(const char *pathname, int flags, mode_t mode) {
 	int (*next_open64)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open64");
 	static __thread bool active = false;
@@ -84,6 +89,7 @@ int open64(const char *pathname, int flags, mode_t mode) {
 
 	return (*next_open64)(pathname, flags, mode);
 }
+#endif
 
 int openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat");
@@ -105,6 +111,7 @@ int openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 	return (*next_openat)(dirfd, pathname, flags, mode);
 }
 
+#if defined(__linux__)
 int openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat64)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat64");
 	static __thread bool active = false;
@@ -124,6 +131,7 @@ int openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 
 	return (*next_openat64)(dirfd, pathname, flags, mode);
 }
+#endif
 
 static ssize_t dtee_test_read_failure(int fd __attribute__((unused)), void *buf __attribute__((unused)), size_t count __attribute__((unused))) {
 	errno = EINTR;
@@ -212,6 +220,7 @@ off_t lseek(int fd, off_t offset, int whence) {
 	return (*next_lseek)(fd, offset, whence);
 }
 
+#if defined(__linux__)
 static off64_t dtee_test_lseek64_failure(int fd __attribute__((unused)), off64_t offset __attribute__((unused)), int whence __attribute__((unused))) {
 	errno = EINTR;
 	return -1;
@@ -236,6 +245,7 @@ off64_t lseek64(int fd, off64_t offset, int whence) {
 
 	return (*next_lseek64)(fd, offset, whence);
 }
+#endif
 
 static int dtee_test_close_failure(int fd __attribute__((unused))) {
 #if defined(__linux__) || defined(__FreeBSD__)
