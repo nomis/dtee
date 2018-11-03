@@ -45,11 +45,11 @@ foreach arg: compile_args
 	endif
 endforeach
 
-if host_machine.system() == 'linux'
-	c_args = ['-D_POSIX_C_SOURCE=200809L']
-elif host_machine.system() == 'freebsd'
+if host_machine.system() == 'freebsd'
 	c_args = []
-else
+elif host_machine.system() == 'openbsd'
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_BSD_SOURCE']
+else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
 
@@ -100,22 +100,20 @@ test_c_args = c_args
 
 if host_machine.system() == 'linux'
 	dlfcn_args = test_c_args + ['-D_GNU_SOURCE', '-Wno-pedantic']
-else
+else # freebsd, openbsd
 	dlfcn_args = test_c_args + ['-Wno-pedantic']
 endif
 
 if host_machine.system() == 'linux'
 	dlfcn_deps = [c.find_library('dl')]
-else
+else # freebsd, openbsd
 	dlfcn_deps = []
 endif
 
 
-if host_machine.system() == 'linux'
-	proc_deps = []
-elif host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd'
+if host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd'
 	proc_deps = [c.find_library('kvm')]
-else
+else # linux
 	proc_deps = []
 endif
 
