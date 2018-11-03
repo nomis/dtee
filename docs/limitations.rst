@@ -28,6 +28,14 @@ full. The default socket receive buffer is quite small so it will be raised to
 Messages are likely to be lost from programs that write large amounts of data
 (more than 128..256KB) very quickly or do so inefficiently (1 byte at a time).
 
+NetBSD
+------
+
+Like `FreeBSD/OpenBSD`_ but the socket buffer can only be raised to 128KB so
+messages are very likely to be lost if data is written quickly. Unlike the other
+BSDs, this will result in an error on the receive call so it will not go
+unreported.
+
 .. |sendfile(2)| replace:: ``sendfile(2)``
 .. _sendfile(2): http://man7.org/linux/man-pages/man2/sendfile.2.html
 
