@@ -164,7 +164,9 @@ bool Input::open() {
 	try {
 		out_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		out_.bind(out_ep_);
+#ifdef __OpenBSD__
 		out_ep_ = out_.local_endpoint();
+#endif
 		out_.connect(input_ep);
 		out_.shutdown(datagram_protocol::socket::shutdown_receive);
 		out_.set_option(so_sndbuf);
@@ -176,7 +178,9 @@ bool Input::open() {
 	try {
 		err_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		err_.bind(err_ep_);
+#ifdef __OpenBSD__
 		err_ep_ = err_.local_endpoint();
+#endif
 		err_.connect(input_ep);
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
 		err_.set_option(so_sndbuf);
