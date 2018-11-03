@@ -24,6 +24,12 @@ bool dtee_test_is_fd_unix_socket(int fd, struct sockaddr_un *addr) {
 		if (getsockname(fd, (struct sockaddr*)addr, &addrlen) == 0) {
 			if (addr->sun_family == AF_UNIX) {
 				is_unix_socket = true;
+#ifdef __DragonFly__
+			// Doesn't return the socket address for unbound Unix sockets
+			// Fixed by ddec9e61ea71e07fc90922027c433c850db5a3ad
+			} else if (addrlen == 0) {
+				is_unix_socket = true;
+#endif
 			}
 		}
 
