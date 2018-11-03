@@ -1,4 +1,4 @@
-dtee (double tee)
+dtee (double tee) [![](https://travis-ci.org/nomis/dtee.svg?branch=master)](https://travis-ci.org/nomis/dtee "Build Status")
 =================
 
 ![](docs/logo.svg)
