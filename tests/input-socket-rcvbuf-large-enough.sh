@@ -2,6 +2,8 @@
 
 if [ "$UNAME" == "FreeBSD" ] || [ "$UNAME" == "OpenBSD" ]; then
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((1024 * 1024))"
+elif [ "$UNAME" == "NetBSD" ]; then
+	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((192 * 1024))"
 else
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="PIPE_BUF*4"
 fi

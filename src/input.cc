@@ -115,6 +115,8 @@ bool Input::open() {
 
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
 	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 512 * 1024;
+#elif defined(__NetBSD__)
+	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 128 * 1024;
 #else
 	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 0;
 #endif
