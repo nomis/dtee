@@ -50,7 +50,7 @@ bool TempFile::open() {
 
 	// mkostemp can return EINTR but we don't expect to handle any signals during startup
 	errno = 0;
-	fd_ = mkostemp(filename.data(), O_CLOEXEC);
+	fd_ = uninterruptible::mkostemp(filename.data(), O_CLOEXEC);
 	if (fd_ < 0) {
 		Application::print_error(format("unable to create temporary file %1%: %2%") % pattern % errno_to_string());
 		return false;

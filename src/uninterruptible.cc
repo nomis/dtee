@@ -155,6 +155,17 @@ int dup2(int oldfd, int newfd) {
 	return ret;
 }
 
+int mkostemp(char *template_name, int flags) {
+	int ret;
+
+	do {
+		errno = 0;
+		ret = ::mkostemp(template_name, flags);
+	} while (ret < 0 && errno == EINTR);
+
+	return ret;
+}
+
 pid_t waitpid(pid_t pid, int *wstatus, int options) {
 	pid_t ret;
 
