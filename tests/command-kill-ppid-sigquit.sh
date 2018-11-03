@@ -6,9 +6,10 @@ function test_prepare() {
 	 rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
-# Disable core dumps (this may not have the desired effect on Linux)
-ulimit -H -c 0 || exit $TEST_EX_SKIP
+# Disable core dumps (this may not have the desired effect on Linux
+# a program handles core dumps, but this won't affect the test script)
 ulimit -S -c 0 || exit $TEST_EX_SKIP
+ulimit -H -c 0 || exit $TEST_EX_SKIP
 run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGQUIT
 RET=$?
 
