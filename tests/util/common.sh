@@ -56,13 +56,19 @@ function before_test() {
 	OIFS="$IFS" IFS=:
 	NEW_LD_PRELOAD="${COMMON_TEST_LD_PRELOAD[*]}"
 	IFS="$OIFS"
-	if [ ! -z "$TEST_LD_PRELOAD" ]; then
-		NEW_LD_PRELOAD="$TEST_LD_PRELOAD:$NEW_LD_PRELOAD"
+	if [ -n "$TEST_LD_PRELOAD" ]; then
+		if [ -n "$NEW_LD_PRELOAD" ]; then
+			NEW_LD_PRELOAD="$TEST_LD_PRELOAD:$NEW_LD_PRELOAD"
+		else
+			NEW_LD_PRELOAD="$TEST_LD_PRELOAD"
+		fi
 	fi
-	if [ -z "$OLD_LD_PRELOAD" ]; then
-		export LD_PRELOAD="$NEW_LD_PRELOAD"
-	else
-		export LD_PRELOAD="$NEW_LD_PRELOAD:$OLD_LD_PRELOAD"
+	if [ -n "$NEW_LD_PRELOAD" ]; then
+		if [ -n "$OLD_LD_PRELOAD" ]; then
+			export LD_PRELOAD="$NEW_LD_PRELOAD:$OLD_LD_PRELOAD"
+		else
+			export LD_PRELOAD="$NEW_LD_PRELOAD"
+		fi
 	fi
 }
 
