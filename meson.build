@@ -100,7 +100,7 @@ test_c_args = c_args
 
 if host_machine.system() == 'linux'
 	dlfcn_args = test_c_args + ['-D_GNU_SOURCE', '-Wno-pedantic']
-elif host_machine.system() == 'freebsd'
+else
 	dlfcn_args = test_c_args + ['-Wno-pedantic']
 endif
 
@@ -113,7 +113,7 @@ endif
 
 if host_machine.system() == 'linux'
 	proc_deps = []
-elif host_machine.system() == 'freebsd'
+elif host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd'
 	proc_deps = [c.find_library('kvm')]
 else
 	proc_deps = []
