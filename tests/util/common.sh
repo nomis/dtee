@@ -58,7 +58,11 @@ function before_test() {
 }
 
 function after_test() {
-	export LD_PRELOAD="$OLD_LD_PRELOAD"
+	if [ -z "$OLD_LD_PRELOAD" ]; then
+		unset LD_PRELOAD
+	else
+		export LD_PRELOAD="$OLD_LD_PRELOAD"
+	fi
 }
 
 function cmp_files() {
