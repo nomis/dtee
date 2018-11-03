@@ -1,7 +1,7 @@
 . "$(dirname "$0")"/util/common.sh
 
-if [ "$UNAME" == "FreeBSD" ]; then
-	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((256 * 1024))"
+if [ "$UNAME" == "FreeBSD" ] || [ "$UNAME" == "OpenBSD" ]; then
+	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((512 * 1024))"
 else
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="PIPE_BUF"
 fi

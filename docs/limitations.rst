@@ -18,15 +18,15 @@ an interactive program that outputs such large quantities of data?
 
 For more details read the :doc:`architecture <architecture>` document.
 
-FreeBSD
--------
+FreeBSD/OpenBSD
+---------------
 
 Writes to the socket do not block when the receive buffer of the peer socket is
 full. The default socket receive buffer is quite small so it will be raised to
-256KB (for the send buffer, 128KB). This avoids problems most of the time.
+512KB (for the send buffer, 256KB). This avoids problems most of the time.
 
 Messages are likely to be lost from programs that write large amounts of data
-(more than 128KB) very quickly or do so inefficiently (1 byte at a time).
+(more than 128..256KB) very quickly or do so inefficiently (1 byte at a time).
 
 .. |sendfile(2)| replace:: ``sendfile(2)``
 .. _sendfile(2): http://man7.org/linux/man-pages/man2/sendfile.2.html
