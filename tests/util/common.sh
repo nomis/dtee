@@ -42,6 +42,15 @@ EXIT_FAILURE=1
 
 UNAME="$(uname)"
 
+function no_ld_preload() {
+	count=${#COMMON_TEST_LD_PRELOAD[@]}
+	for ((i = 0; i < count; i++)); do
+		if [ "${COMMON_TEST_LD_PRELOAD[i]}" = "$1" ] ; then
+			unset "COMMON_TEST_LD_PRELOAD[i]"
+		fi
+	done
+}
+
 function before_test() {
 	OLD_LD_PRELOAD="$LD_PRELOAD"
 	OIFS="$IFS" IFS=:

@@ -1,6 +1,6 @@
 . "$(dirname "$0")"/util/common.sh
 
-COMMON_TEST_LD_PRELOAD=("${COMMON_TEST_LD_PRELOAD[@]/.\/libtest-execvp-fd-check.so}")
+no_ld_preload "./libtest-execvp-fd-check.so"
 TEST_EXTRA_OUTPUT=1
 
 TEST_LD_PRELOAD="./libtest-security-recreate-output-socket.so:./libtest-mkdtemp-consistent.so:./libtest-fake-getpid.so:./libtest-fake-getuid.so"
