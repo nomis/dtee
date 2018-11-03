@@ -49,6 +49,8 @@ if host_machine.system() == 'freebsd'
 	c_args = []
 elif host_machine.system() == 'openbsd'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_BSD_SOURCE']
+elif host_machine.system() == 'netbsd'
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_NETBSD_SOURCE']
 else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
@@ -106,7 +108,7 @@ endif
 
 if host_machine.system() == 'linux'
 	dlfcn_deps = [c.find_library('dl')]
-else # freebsd, openbsd
+else # freebsd, openbsd, netbsd
 	dlfcn_deps = []
 endif
 
