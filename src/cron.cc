@@ -32,7 +32,6 @@
 
 #include "application.h"
 #include "to_string.h"
-#include "uninterruptible.h"
 
 using ::boost::format;
 using ::std::min;
@@ -68,7 +67,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 
 	if (buffered_) {
 		errno = 0;
-		ssize_t written = uninterruptible::write(file_.fd(), buffer.data(), len);
+		ssize_t written = ::write(file_.fd(), buffer.data(), len);
 		if (written != static_cast<ssize_t>(len)) {
 			print_file_error(format("error writing to buffer file %1%: %2%"));
 			error_ = true;
@@ -116,7 +115,7 @@ bool Cron::unspool_buffer_file() {
 
 	if (buffered_) {
 		errno = 0;
-		if (uninterruptible::lseek(file_.fd(), 0, SEEK_SET) != 0) {
+		if (::lseek(file_.fd(), 0, SEEK_SET) != 0) {
 			print_file_error(format("error seeking to start of buffer file %1%: %2%"));
 			success = false;
 		} else {
@@ -126,7 +125,7 @@ bool Cron::unspool_buffer_file() {
 				vector<char> buf(min(BUFSIZ, PIPE_BUF));
 
 				errno = 0;
-				len = uninterruptible::read(file_.fd(), buf.data(), buf.size());
+				len = ::read(file_.fd(), buf.data(), buf.size());
 				if (len < 0) {
 					print_file_error(format("error reading buffer file %1%: %2%"));
 					success = false;

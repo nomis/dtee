@@ -23,7 +23,6 @@
 #include <cstdlib>
 #include <vector>
 
-
 namespace dtee {
 
 using ::std::vector;

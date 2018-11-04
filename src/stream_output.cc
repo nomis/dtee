@@ -26,7 +26,6 @@
 
 #include "application.h"
 #include "to_string.h"
-#include "uninterruptible.h"
 
 using ::boost::format;
 using ::std::string;
@@ -58,7 +57,7 @@ bool StreamOutput::output(int fd, const char *name, const vector<char> &buffer, 
 	// resume output after handling any received signals.
 
 	errno = 0;
-	if (uninterruptible::write(fd, buffer.data(), len) != static_cast<ssize_t>(len)) {
+	if (::write(fd, buffer.data(), len) != static_cast<ssize_t>(len)) {
 		Application::print_error(format("%1% write: %2%") % name % errno_to_string());
 		return false;
 	}

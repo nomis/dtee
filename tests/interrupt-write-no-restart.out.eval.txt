@@ -1,0 +1,6 @@
+Test message
+WIFEXITED=1
+WEXITSTATUS=$EX_IOERR
+WIFSIGNALED=0
+WTERMSIG=0
+Reading from fifo... -1 bytes:

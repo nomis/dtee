@@ -39,9 +39,10 @@
 #include "process.h"
 #include "stream_output.h"
 #include "to_string.h"
-#include "uninterruptible.h"
 
 using ::boost::format;
+using ::std::cerr;
+using ::std::endl;
 using ::std::exception;
 using ::std::list;
 using ::std::make_shared;
@@ -56,9 +57,7 @@ extern "C" void __gcov_flush(void);
 namespace dtee {
 
 void Application::print_error(const format &message) {
-	// If we use std::cerr then the write could be interrupted by a signal
-	// and the message would be lost.
-	uninterruptible::write(STDERR_FILENO, str(format("%s: %s\n") % CommandLine::display_name() % message));
+	cerr << CommandLine::display_name() << ": " << message << endl;
 }
 
 int Application::run(int argc, const char* const argv[]) {

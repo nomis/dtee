@@ -1,0 +1,7 @@
+Test message
+WIFEXITED=1
+WEXITSTATUS=$EXIT_SUCCESS
+WIFSIGNALED=0
+WTERMSIG=0
+Reading from fifo... 13 bytes:
+Test message

@@ -1,0 +1,7 @@
+Test message
+./dtee: dtee@test/interrupt-write-no-restart.block.fifo: Interrupted system call
+WIFEXITED=1
+WEXITSTATUS=$EX_IOERR
+WIFSIGNALED=0
+WTERMSIG=0
+Reading from fifo... -1 bytes:

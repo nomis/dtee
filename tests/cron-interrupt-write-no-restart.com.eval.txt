@@ -1,0 +1,8 @@
+./dtee: dtee@test/cron-interrupt-write-no-restart.block.fifo: Interrupted system call
+Test message
+./dtee: received signal $SIGINT: SIGINT
+WIFEXITED=0
+WEXITSTATUS=0
+WIFSIGNALED=1
+WTERMSIG=$SIGINT
+Reading from fifo... -1 bytes:

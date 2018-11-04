@@ -28,7 +28,6 @@
 #include <boost/format.hpp>
 
 #include "application.h"
-#include "uninterruptible.h"
 
 using ::boost::format;
 using ::std::string;
@@ -57,7 +56,7 @@ FileOutput::FileOutput(const string &filename, FileOutputType type, bool append)
 
 FileOutput::~FileOutput() {
 	if (fd_ >= 0) {
-		uninterruptible::close(fd_);
+		::close(fd_);
 	}
 }
 
@@ -76,7 +75,7 @@ bool FileOutput::open() {
 	}
 
 	errno = 0;
-	fd_ = uninterruptible::open(filename_.c_str(), flags, DEFFILEMODE);
+	fd_ = ::open(filename_.c_str(), flags, DEFFILEMODE);
 	if (fd_ < 0) {
 		print_file_error();
 
@@ -90,7 +89,7 @@ bool FileOutput::output(OutputType type, const std::vector<char> &buffer, size_t
 	if (!filtered_ || type == type_) {
 		if (fd_ >= 0) {
 			errno = 0;
-			ssize_t written = uninterruptible::write(fd_, buffer.data(), len);
+			ssize_t written = ::write(fd_, buffer.data(), len);
 			if (written != static_cast<ssize_t>(len)) {
 				if (!failed_) {
 					print_file_error();

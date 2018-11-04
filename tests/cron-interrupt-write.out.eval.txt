@@ -1,0 +1,7 @@
+Test message
+WIFEXITED=0
+WEXITSTATUS=0
+WIFSIGNALED=1
+WTERMSIG=$SIGINT
+Reading from fifo... 13 bytes:
+Test message
