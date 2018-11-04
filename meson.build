@@ -98,7 +98,14 @@ if sphinx_build.found()
 	dtee_man = custom_target('dtee.1',
 		input: ['docs/'] + source_docs,
 		output: 'dtee.1',
-		command: [sphinx_build, '-b', 'man', '@INPUT0@', '@BUILD_ROOT@'],
+		command: [
+			sphinx_build,
+			'-b', 'man',
+			'-D', 'version=' + meson.project_version(),
+			'-D', 'release=' + meson.project_version(),
+			'@INPUT0@',
+			'@BUILD_ROOT@',
+		],
 		install: true,
 		install_dir: join_paths(get_option('mandir'), 'man1'))
 
