@@ -3,7 +3,7 @@
 export DTEE_TEST_MONITOR_OUTPUT="$TESTDIR/$NAME.canary"
 
 function test_prepare() {
-	 rm -f "$DTEE_TEST_MONITOR_OUTPUT"
+	rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
 no_ld_preload "./libtest-execvp-fd-check.so"

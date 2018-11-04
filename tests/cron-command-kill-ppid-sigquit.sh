@@ -3,7 +3,7 @@
 export DTEE_TEST_MONITOR_OUTPUT="$TESTDIR/$NAME.canary"
 
 function test_prepare() {
-	 rm -f "$DTEE_TEST_MONITOR_OUTPUT"
+	rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
 # Disable core dumps (this may not have the desired effect on Linux
