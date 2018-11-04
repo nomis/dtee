@@ -51,6 +51,8 @@ elif host_machine.system() == 'openbsd'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_BSD_SOURCE']
 elif host_machine.system() == 'netbsd'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_NETBSD_SOURCE']
+elif host_machine.system() == 'gnu'
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-DPIPE_BUF=4096', '-DPATH_MAX=4096']
 else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
@@ -100,13 +102,13 @@ test_env = [
 
 test_c_args = c_args
 
-if host_machine.system() == 'linux'
+if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	dlfcn_args = test_c_args + ['-D_GNU_SOURCE', '-Wno-pedantic']
 else # freebsd, openbsd, netbsd, dragonfly
 	dlfcn_args = test_c_args + ['-Wno-pedantic']
 endif
 
-if host_machine.system() == 'linux'
+if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	dlfcn_deps = [c.find_library('dl')]
 else # freebsd, openbsd, netbsd, dragonfly
 	dlfcn_deps = []
