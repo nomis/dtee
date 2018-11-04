@@ -57,6 +57,12 @@ else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
 
+if host_machine.system() == 'netbsd' # 😩
+	link_args = ['-Wl,--wrap=sigaction', '-Wl,--wrap=__sigaction14']
+else # linux, freebsd, openbsd, netbsd, gnu
+	link_args = ['-Wl,--wrap=sigaction']
+endif
+
 dtee = executable('dtee',
 	source_files,
 	cpp_args: c_args + [
@@ -64,7 +70,7 @@ dtee = executable('dtee',
 		'-DBOOST_DISABLE_THREADS',
 		'-DBOOST_ASIO_DISABLE_THREADS',
 	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
-	link_args: ['-Wl,--wrap=sigaction'],
+	link_args: link_args,
 	dependencies: [
 		dependency('boost', modules: [
 			'filesystem',

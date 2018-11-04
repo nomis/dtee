@@ -35,3 +35,19 @@ extern "C" int __attribute__((used)) __wrap_sigaction(int signum, const struct s
 
 	return __real_sigaction(signum, act, oldact);
 }
+
+#if defined(__NetBSD__)
+extern "C" int __real___sigaction14(int signum, const struct sigaction *act, struct sigaction *oldact);
+
+extern "C" int __attribute__((used)) __wrap___sigaction14(int signum, const struct sigaction *act, struct sigaction *oldact) {
+	struct sigaction newact;
+
+	if (act != nullptr) {
+		newact = *act;
+		newact.sa_flags |= SA_RESTART;
+		act = &newact;
+	}
+
+	return __real___sigaction14(signum, act, oldact);
+}
+#endif
