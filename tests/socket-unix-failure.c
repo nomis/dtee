@@ -43,6 +43,7 @@ int socket(int domain, int type, int protocol) {
 	return (*next_socket)(domain, type, protocol);
 }
 
+#if defined(__NetBSD__)
 int __socket30(int domain, int type, int protocol) {
 	int (*next___socket30)(int, int, int) = dlsym(RTLD_NEXT, "__socket30");
 	static __thread bool active = false;
@@ -66,3 +67,4 @@ int __socket30(int domain, int type, int protocol) {
 
 	return (*next___socket30)(domain, type, protocol);
 }
+#endif
