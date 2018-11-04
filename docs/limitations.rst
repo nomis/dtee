@@ -41,7 +41,8 @@ DragonFlyBSD
 ------------
 
 Like `FreeBSD/OpenBSD`_ but even with a 512KB socket buffer it loses messages of
-|PIPE_BUF|_ size that are written very quickly.
+|PIPE_BUF|_ size that are written very quickly. Writes of |BUFSIZ|_ size are ok
+because they result in fewer messages.
 
 GNU Hurd
 --------
