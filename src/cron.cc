@@ -19,9 +19,11 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+#include <algorithm>
 #include <cerrno>
 #include <cstddef>
 #include <cstdlib>
+#include <cstdio>
 #include <cstring>
 #include <utility>
 #include <vector>
@@ -33,6 +35,7 @@
 #include "uninterruptible.h"
 
 using ::boost::format;
+using ::std::min;
 using ::std::shared_ptr;
 using ::std::string;
 using ::std::vector;
@@ -119,7 +122,8 @@ bool Cron::unspool_buffer_file() {
 		} else {
 			ssize_t len;
 			do {
-				vector<char> buf(PIPE_BUF);
+				// Be compatible with both file and pipe outputs
+				vector<char> buf(min(BUFSIZ, PIPE_BUF));
 
 				errno = 0;
 				len = uninterruptible::read(file_.fd(), buf.data(), buf.size());
