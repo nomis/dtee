@@ -130,6 +130,7 @@ bool Input::open() {
 		input_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		input_.bind(input_ep);
 
+#if !defined(__GNU__)
 		input_.get_option(so_rcvbuf);
 
 		if (so_rcvbuf.value() < MINIMUM_RCVBUF_SIZE) {
@@ -137,6 +138,9 @@ bool Input::open() {
 			input_.set_option(so_rcvbuf);
 			input_.get_option(so_rcvbuf);
 		}
+#else
+		so_rcvbuf = MINIMUM_RCVBUF_SIZE;
+#endif
 	} catch (std::exception &e) {
 		print_socket_error(format("input socket: %1%"), e);
 		return false;
@@ -171,7 +175,9 @@ bool Input::open() {
 #endif
 		out_.connect(input_ep);
 		out_.shutdown(datagram_protocol::socket::shutdown_receive);
+#if !defined(__GNU__)
 		out_.set_option(so_sndbuf);
+#endif
 	} catch (std::exception &e) {
 		print_socket_error(format("stdout socket: %1%"), e);
 		return false;
@@ -185,7 +191,9 @@ bool Input::open() {
 #endif
 		err_.connect(input_ep);
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
+#if !defined(__GNU__)
 		err_.set_option(so_sndbuf);
+#endif
 	} catch (std::exception &e) {
 		print_socket_error(format("stderr socket: %1%"), e);
 		return false;

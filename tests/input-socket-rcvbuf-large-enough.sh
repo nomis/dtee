@@ -4,6 +4,8 @@ if [ "$UNAME" == "FreeBSD" ] || [ "$UNAME" == "OpenBSD" ] || [ "$UNAME" == "Drag
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((1024 * 1024))"
 elif [ "$UNAME" == "NetBSD" ]; then
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((192 * 1024))"
+elif [ "$UNAME" == "GNU" ]; then
+	exit $TEST_EX_SKIP
 else
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="PIPE_BUF*4"
 fi

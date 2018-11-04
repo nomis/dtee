@@ -1,5 +1,9 @@
 . "$(dirname "$0")"/util/common.sh
 
+if [ "$UNAME" == "GNU" ]; then
+	exit $TEST_EX_SKIP
+fi
+
 export DTEE_TEST_GETSOCKOPT_RCVBUF="PIPE_BUF/4"
 
 # If the outgoing SO_RCVBUF is smaller than PIPE_BUF, it should be raised to at least PIPE_BUF
