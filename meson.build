@@ -57,7 +57,7 @@ else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
 
-executable('dtee',
+dtee = executable('dtee',
 	source_files,
 	cpp_args: c_args + [
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
@@ -73,11 +73,32 @@ executable('dtee',
 	],
 	install: true)
 
+ln = find_program('ln')
+
 custom_target('cronty',
-	command: [find_program('ln'), '-s', '-f', 'dtee', 'cronty'],
+	input: dtee,
 	output: 'cronty',
+	command: [ln, '-s', '-f', '@INPUT@', '@OUTPUT@'],
 	install: true,
 	install_dir: get_option('bindir'))
+
+sphinx_build = find_program('sphinx-build', required: false)
+
+if sphinx_build.found()
+	dtee_man = custom_target('dtee.1',
+		input: 'docs',
+		output: 'dtee.1',
+		command: [sphinx_build, '-b', 'man', '@INPUT@', '.'],
+		install: true,
+		install_dir: join_paths(get_option('mandir'), 'man1'))
+
+	custom_target('cronty.1',
+		input: dtee_man,
+		output: 'cronty.1',
+		command: [ln, '-s', '-f', '@INPUT@', '@OUTPUT@'],
+		install: true,
+		install_dir: join_paths(get_option('mandir'), 'man1'))
+endif
 
 run_target('cppcheck',
 	command: [
