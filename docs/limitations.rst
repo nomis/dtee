@@ -40,8 +40,8 @@ unreported.
 DragonFlyBSD
 ------------
 
-Like `FreeBSD/OpenBSD`_ but even with a 512KB socket buffer it behaves as poorly
-as `NetBSD`_ and without reporting of data loss from the receive call.
+Like `FreeBSD/OpenBSD`_ but even with a 512KB socket buffer it loses messages of
+|PIPE_BUF|_ size that are written very quickly.
 
 GNU Hurd
 --------
