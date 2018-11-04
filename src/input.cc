@@ -170,7 +170,7 @@ bool Input::open() {
 	try {
 		out_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		out_.bind(out_ep_);
-#ifdef __OpenBSD__
+#if defined(__OpenBSD__) || defined(__GNU__)
 		out_ep_ = out_.local_endpoint();
 #endif
 		out_.connect(input_ep);
@@ -186,7 +186,7 @@ bool Input::open() {
 	try {
 		err_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		err_.bind(err_ep_);
-#ifdef __OpenBSD__
+#if defined(__OpenBSD__) || defined(__GNU__)
 		err_ep_ = err_.local_endpoint();
 #endif
 		err_.connect(input_ep);
@@ -198,6 +198,13 @@ bool Input::open() {
 		print_socket_error(format("stderr socket: %1%"), e);
 		return false;
 	}
+
+#if defined(__GNU__)
+	if (out_ep_ == err_ep_) {
+		Application::print_error(format("output socket endpoints are not unique"));
+		return false;
+	}
+#endif
 
 	return true;
 }
