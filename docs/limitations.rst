@@ -3,18 +3,19 @@ Limitations
 
 Datagram sockets can only process writes as individual packets with a maximum
 packet size. Therefore, if the program being run attempts to |write(2)|_
-more than this size in one call the write will fail and part of the output will
-be lost.
+more than this size in one call the write will fail and that part of the output
+will be lost. On GNU Hurd, writes larger than the page size (4KB) are truncated.
 
 This is not usually a problem because the default socket buffer size is usually
 much higher than the size programs typically write with. For safety, the socket
 buffer size will be increased to |PIPE_BUF|_ if the default is smaller than
 this value.
 
-Writes to the socket (on Linux) will block until there is capacity available in
-the socket buffer. If the process uses |sendfile(2)|_ then (on Linux) the writes
-occur in |PIPE_BUF|_ sized chunks so it works as normal, but why are you using
-an interactive program that outputs such large quantities of data?
+Writes to the socket (on Linux or GNU Hurd) will block until there is capacity
+available in the socket buffer. If the process uses |sendfile(2)|_ then (on
+Linux) the writes occur in |PIPE_BUF|_ sized chunks so it works as normal, but
+why are you using an interactive program that outputs such large quantities of
+data?
 
 For more details read the :doc:`architecture <architecture>` document.
 
