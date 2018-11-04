@@ -9,5 +9,5 @@ TEST_LD_PRELOAD="./libtest-security-recreate-output-socket.so:./libtest-mkdtemp-
 run_test "$RUN"
 RET=$?
 
-variables_must_eq RET 0
+variables_must_eq RET $EXIT_SUCCESS
 
