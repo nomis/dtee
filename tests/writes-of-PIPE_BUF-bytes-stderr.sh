@@ -4,7 +4,7 @@ function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file.err-overwrite.txt"
 }
 
-run_test -E "$TESTDIR/$NAME.file.err-overwrite.txt" ./test-writes-of-n-bytes STDERR_FILENO PIPE_BUF 0
+run_test -E "$TESTDIR/$NAME.file.err-overwrite.txt" ./test-writes-of-n-bytes STDERR_FILENO "max(PIPE_BUF,BUFSIZ)" 0
 RET=$?
 
 cmp_files "file.err-overwrite"

@@ -8,8 +8,8 @@ will be lost.
 
 This is not usually a problem because the default socket buffer size is usually
 much higher than the size programs typically write with. For safety, the socket
-buffer size will be increased to |PIPE_BUF|_ if the default is smaller than
-this value.
+buffer size will be increased to at least |PIPE_BUF|_ and |BUFSIZ|_ if the
+default is smaller than these values.
 
 Writes to the socket (on Linux or GNU Hurd) will block until there is capacity
 available in the socket buffer. If the process uses |sendfile(2)|_ then (on
@@ -61,3 +61,6 @@ increase the size of the socket buffer.
 
 .. |PIPE_BUF| replace:: ``PIPE_BUF``
 .. _PIPE_BUF: http://man7.org/linux/man-pages/man0/limits.h.0p.html
+
+.. |BUFSIZ| replace:: ``BUFSIZ``
+.. _BUFSIZ: http://man7.org/linux/man-pages/man0/stdio.h.0p.html

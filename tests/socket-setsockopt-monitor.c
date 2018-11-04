@@ -9,6 +9,8 @@
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
 
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
 int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen) {
 	int (*next_setsockopt)(int, int, int, const void *, socklen_t) = dlsym(RTLD_NEXT, "setsockopt");
 	static __thread bool active = false;
@@ -35,24 +37,24 @@ int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t
 						value = *(int*)optval;
 					}
 
-					if (value == PIPE_BUF*16) {
-						value_str = "PIPE_BUF*16";
-					} else if (value == PIPE_BUF*8) {
-						value_str = "PIPE_BUF*8";
-					} else if (value == PIPE_BUF*4) {
-						value_str = "PIPE_BUF*4";
-					} else if (value == PIPE_BUF*2) {
-						value_str = "PIPE_BUF*2";
-					} else if (value == PIPE_BUF) {
-						value_str = "PIPE_BUF";
-					} else if (value == PIPE_BUF/2) {
-						value_str = "PIPE_BUF/2";
-					} else if (value == PIPE_BUF/4) {
-						value_str = "PIPE_BUF/4";
-					} else if (value == PIPE_BUF/8) {
-						value_str = "PIPE_BUF/8";
-					} else if (value == PIPE_BUF/16) {
-						value_str = "PIPE_BUF/16";
+					if (value == max(PIPE_BUF, BUFSIZ)*16) {
+						value_str = "max(PIPE_BUF,BUFSIZ)*16";
+					} else if (value == max(PIPE_BUF, BUFSIZ)*8) {
+						value_str = "max(PIPE_BUF,BUFSIZ)*8";
+					} else if (value == max(PIPE_BUF, BUFSIZ)*4) {
+						value_str = "max(PIPE_BUF,BUFSIZ)*4";
+					} else if (value == max(PIPE_BUF, BUFSIZ)*2) {
+						value_str = "max(PIPE_BUF,BUFSIZ)*2";
+					} else if (value == max(PIPE_BUF, BUFSIZ)) {
+						value_str = "max(PIPE_BUF,BUFSIZ)";
+					} else if (value == max(PIPE_BUF, BUFSIZ)/2) {
+						value_str = "max(PIPE_BUF,BUFSIZ)/2";
+					} else if (value == max(PIPE_BUF, BUFSIZ)/4) {
+						value_str = "max(PIPE_BUF,BUFSIZ)/4";
+					} else if (value == max(PIPE_BUF, BUFSIZ)/8) {
+						value_str = "max(PIPE_BUF,BUFSIZ)/8";
+					} else if (value == max(PIPE_BUF, BUFSIZ)/16) {
+						value_str = "max(PIPE_BUF,BUFSIZ)/16";
 					}
 
 					if (name != NULL) {

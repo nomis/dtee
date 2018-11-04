@@ -10,26 +10,28 @@
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
 
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
 static int dtee_test_fake_rcvbuf(int sockfd __attribute__((unused)), int level __attribute__((unused)), int optname __attribute__((unused)), void *optval, socklen_t *optlen __attribute__((unused))) {
 	const char *value_str = getenv("DTEE_TEST_GETSOCKOPT_RCVBUF");
 	int *value = (int*)optval;
 
 	if (value_str != NULL) {
-		if (!strcmp(value_str, "PIPE_BUF*4")) {
+		if (!strcmp(value_str, "max(PIPE_BUF,BUFSIZ)*4")) {
 			errno = 0;
-			*value = PIPE_BUF*4;
-		} else if (!strcmp(value_str, "PIPE_BUF*2")) {
+			*value = max(PIPE_BUF, BUFSIZ)*4;
+		} else if (!strcmp(value_str, "max(PIPE_BUF,BUFSIZ)*2")) {
 			errno = 0;
-			*value = PIPE_BUF*2;
-		} else if (!strcmp(value_str, "PIPE_BUF")) {
+			*value = max(PIPE_BUF, BUFSIZ)*2;
+		} else if (!strcmp(value_str, "max(PIPE_BUF,BUFSIZ)")) {
 			errno = 0;
-			*value = PIPE_BUF;
-		} else if (!strcmp(value_str, "PIPE_BUF/2")) {
+			*value = max(PIPE_BUF, BUFSIZ);
+		} else if (!strcmp(value_str, "max(PIPE_BUF,BUFSIZ)/2")) {
 			errno = 0;
-			*value = PIPE_BUF/2;
-		} else if (!strcmp(value_str, "PIPE_BUF/4")) {
+			*value = max(PIPE_BUF, BUFSIZ)/2;
+		} else if (!strcmp(value_str, "max(PIPE_BUF,BUFSIZ)/4")) {
 			errno = 0;
-			*value = PIPE_BUF/4;
+			*value = max(PIPE_BUF, BUFSIZ)/4;
 		} else {
 			errno = 0;
 			*value = strtoul(value_str, NULL, 10);

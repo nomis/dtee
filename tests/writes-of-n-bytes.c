@@ -6,6 +6,8 @@
 #include <sysexits.h>
 #include <unistd.h>
 
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
 #define MAX_SIZE (128 *1024)
 static char message[MAX_SIZE + 1] = { 0 };
 
@@ -251,8 +253,8 @@ int main(int argc, char *argv[]) {
 		abort();
 	}
 
-	if (!strcmp(argv[2], "PIPE_BUF")) {
-		bytes = PIPE_BUF;
+	if (!strcmp(argv[2], "max(PIPE_BUF,BUFSIZ)")) {
+		bytes = max(PIPE_BUF, BUFSIZ);
 	} else {
 		bytes = strtol(argv[2], NULL, 10);
 	}

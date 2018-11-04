@@ -26,6 +26,7 @@
 #include <climits>
 #include <csignal>
 #include <cstddef>
+#include <cstdio>
 #include <exception>
 #include <memory>
 #include <string>
@@ -121,8 +122,9 @@ bool Input::open() {
 	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 0;
 #endif
 
-	// Ensure the receive buffer is large enough at least as large as PIPE_BUF
-	constexpr int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, PLATFORM_MINIMUM_RCVBUF_SIZE);
+	// Ensure the receive buffer is large enough at least as large as both
+	// PIPE_BUF (for pipe writes) and BUFSIZ (for file writes)
+	constexpr int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, max(BUFSIZ, PLATFORM_MINIMUM_RCVBUF_SIZE));
 
 	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 

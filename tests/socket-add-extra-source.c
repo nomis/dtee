@@ -12,9 +12,9 @@
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
 
-static int extra_fd = -1;
-
 #define min(a, b) (((a) < (b)) ? (a) : (b))
+
+static int extra_fd = -1;
 
 // When dtee connects to its own input socket, clone the socket details and make an extra socket
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
