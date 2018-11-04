@@ -17,16 +17,15 @@ int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t
 		active = true;
 
 		if (dtee_test_is_dtee()) {
-			struct sockaddr_un addr;
+			struct sockaddr_un addr = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
 
 			if (dtee_test_is_fd_unix_socket(sockfd, &addr)) {
 				if (level == SOL_SOCKET) {
-					char path[sizeof(addr.sun_path) + 1] = { 0 };
 					const char *name = NULL;
 					const char *value_str = NULL;
 					int value = 0;
 
-					memcpy(path, &addr.sun_path, sizeof(addr.sun_path));
+					addr.sun_path[sizeof(addr.sun_path) - 1] = 0;
 
 					if (optname == SO_RCVBUF && optlen == sizeof(int)) {
 						name = "SO_RCVBUF";

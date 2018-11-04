@@ -13,13 +13,9 @@
 #include <unistd.h>
 
 static int recreate_input_socket(struct sockaddr_un *peer, FILE *output) {
-	char path[sizeof(peer->sun_path) + 1] = { 0 };
-
-	memcpy(path, &peer->sun_path, sizeof(peer->sun_path));
-	path[strlen(path) - 1] = 'i';
-
-	struct sockaddr_un input = { .sun_family = AF_UNIX, .sun_path = { 0 } };
-	strncpy(input.sun_path, path, sizeof(input.sun_path) - 1);
+	struct sockaddr_un input = *peer;
+	input.sun_path[sizeof(input.sun_path) - 1] = 0;
+	input.sun_path[strlen(input.sun_path) - 1] = 'i';
 
 	int input_fd = socket(AF_UNIX, SOCK_DGRAM, 0);
 	if (input_fd < 0) {
@@ -27,6 +23,9 @@ static int recreate_input_socket(struct sockaddr_un *peer, FILE *output) {
 		fflush(output);
 		exit(EXIT_FAILURE);
 	}
+
+	char path[sizeof(input.sun_path)];
+	memcpy(path, input.sun_path, sizeof(input.sun_path));
 
 	if (mkdir(dirname(path), S_IRUSR|S_IWUSR|S_IXUSR) < 0) {
 		fprintf(output, "mkdir: %s\n", strerror(errno));

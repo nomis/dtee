@@ -14,6 +14,8 @@
 
 static int extra_fd = -1;
 
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+
 // When dtee connects to its own input socket, clone the socket details and make an extra socket
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 	int (*next_connect)(int, const struct sockaddr *, socklen_t) = dlsym(RTLD_NEXT, "connect");
@@ -23,21 +25,23 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 		active = true;
 
 		if (dtee_test_is_dtee() && extra_fd < 0) {
-			struct sockaddr_un sock_addr;
+			struct sockaddr_un sock_addr = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
+			struct sockaddr_un extra_addr;
+			struct sockaddr_un dest_addr = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
 
 			if (dtee_test_is_fd_unix_socket(sockfd, &sock_addr)) {
-				char path[sizeof(sock_addr.sun_path) + 1] = { 0 };
-
-				memcpy(path, &sock_addr.sun_path, sizeof(sock_addr.sun_path));
-				path[strlen(path) - 1] = 'x';
-				strncpy(sock_addr.sun_path, path, sizeof(sock_addr.sun_path) - 1);
+				sock_addr.sun_path[sizeof(sock_addr.sun_path) - 1] = 0;
+				extra_addr = sock_addr;
+				extra_addr.sun_path[strlen(extra_addr.sun_path) - 1] = 'x';
+				memcpy(&dest_addr, addr, min(sizeof(dest_addr), addrlen));
+				dest_addr.sun_path[sizeof(dest_addr.sun_path) - 1] = 0;
 
 				extra_fd = socket(AF_UNIX, SOCK_DGRAM, 0);
 				if (extra_fd >= 0) {
-					if (!bind(extra_fd, (struct sockaddr*)&sock_addr, sizeof(sock_addr))) {
+					if (!bind(extra_fd, (struct sockaddr*)&extra_addr, sizeof(extra_addr))) {
 						if (!connect(extra_fd, addr, addrlen)) {
 							printf("socket-add-extra-source: created socket \"%s\" connected to \"%s\"\n",
-								sock_addr.sun_path, path);
+								extra_addr.sun_path, dest_addr.sun_path);
 							fflush(stdout);
 						} else {
 							perror("socket-add-extra-source: connect");
@@ -47,7 +51,7 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 							extra_fd = -1;
 						}
 
-						if (unlink(path)) {
+						if (unlink(extra_addr.sun_path)) {
 							perror("socket-add-extra-source: unlink");
 							fflush(stderr);
 						}

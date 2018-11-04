@@ -17,14 +17,12 @@ static void std_report(FILE* output, int fd, const char *name, const char *messa
 	errno = 0;
 	ssize_t wlen = write(fd, message, strlen(message));
 	int werrno = errno;
-	struct sockaddr_un addr;
+	struct sockaddr_un addr = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
 
 	fprintf(output, "fd %s write=%zd error=\"%s\"", name, wlen, strerror(werrno));
 	if (dtee_test_is_fd_unix_socket(fd, &addr)) {
-		char path[sizeof(addr.sun_path) + 1] = { 0 };
-
-		memcpy(path, &addr.sun_path, sizeof(addr.sun_path));
-		fprintf(output, " sockname=%s", path);
+		addr.sun_path[sizeof(addr.sun_path) - 1] = 0;
+		fprintf(output, " sockname=%s", addr.sun_path);
 		fprintf(output, "\n");
 	}
 	fflush(output);

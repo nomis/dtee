@@ -18,14 +18,12 @@ static bool std_report(int fd, const char *name, const char *message) {
 	if (fcntl(fd, F_GETFL) != -1) {
 		ssize_t rlen = read(fd, buf, 1);
 		ssize_t wlen = write(fd, message, strlen(message));
-		struct sockaddr_un addr;
+		struct sockaddr_un addr = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
 
 		ok &= printf("fd %s open read=%zd (%02x) write=%zd", name, rlen, buf[0], wlen) > 0;
 		if (dtee_test_is_fd_unix_socket(fd, &addr)) {
-			char path[sizeof(addr.sun_path) + 1] = { 0 };
-
-			memcpy(path, &addr.sun_path, sizeof(addr.sun_path));
-			ok &= printf(" sockname=%s", path) > 0;
+			addr.sun_path[sizeof(addr.sun_path) - 1] = 0;
+			ok &= printf(" sockname=%s", addr.sun_path) > 0;
 		}
 		ok &= printf("\n") > 0;
 		ok &= !fflush(stdout);

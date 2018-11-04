@@ -19,8 +19,8 @@
 #include "is-fd-unix-socket.h"
 
 static bool have_details = false;
-static struct sockaddr_un input = { .sun_family = AF_UNIX, .sun_path = { 0 } };
-static struct sockaddr_un output = { .sun_family = AF_UNIX, .sun_path = { 0 } };
+static struct sockaddr_un input;
+static struct sockaddr_un output;
 
 // When dtee connects to its own input socket, copy the socket details and make an extra socket
 int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
@@ -30,8 +30,9 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 		struct sockaddr_un sock_addr = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
 
 		if (dtee_test_is_fd_unix_socket(sockfd, &sock_addr)) {
-			strncpy(input.sun_path, sock_addr.sun_path, sizeof(sock_addr.sun_path) - 1);
-			strncpy(output.sun_path, sock_addr.sun_path, sizeof(sock_addr.sun_path) - 1);
+			sock_addr.sun_path[sizeof(sock_addr.sun_path) - 1] = 0;
+			input = sock_addr;
+			output = sock_addr;
 			input.sun_path[strlen(input.sun_path) - 1] = 'i';
 			output.sun_path[strlen(output.sun_path) - 1] = 'o';
 
@@ -54,8 +55,8 @@ static int dtee_test_recreate_output_socket(FILE *extra) {
 		return -1;
 	}
 
-	char path[sizeof(input.sun_path) + 1] = { 0 };
-	memcpy(path, &input.sun_path, sizeof(input.sun_path));
+	char path[sizeof(input.sun_path)];
+	memcpy(path, input.sun_path, sizeof(input.sun_path));
 
 	if (mkdir(dirname(path), S_IRUSR|S_IWUSR|S_IXUSR) < 0) {
 		fprintf(extra, "mkdir: %s\n", strerror(errno));
