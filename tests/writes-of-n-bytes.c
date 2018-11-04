@@ -6,6 +6,7 @@
 #include <sysexits.h>
 #include <unistd.h>
 
+#define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
 #define MAX_SIZE (128 *1024)
@@ -253,8 +254,14 @@ int main(int argc, char *argv[]) {
 		abort();
 	}
 
-	if (!strcmp(argv[2], "max(PIPE_BUF,BUFSIZ)")) {
+	if (!strcmp(argv[2], "min(PIPE_BUF,BUFSIZ)")) {
+		bytes = min(PIPE_BUF, BUFSIZ);
+	} else if (!strcmp(argv[2], "max(PIPE_BUF,BUFSIZ)")) {
 		bytes = max(PIPE_BUF, BUFSIZ);
+	} else if (!strcmp(argv[2], "PIPE_BUF")) {
+		bytes = PIPE_BUF;
+	} else if (!strcmp(argv[2], "BUFSIZ")) {
+		bytes = BUFSIZ;
 	} else {
 		bytes = strtol(argv[2], NULL, 10);
 	}

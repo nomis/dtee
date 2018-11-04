@@ -4,11 +4,11 @@ function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file.out-overwrite.txt"
 }
 
-run_test -O "$TESTDIR/$NAME.file.out-overwrite.txt" ./test-writes-of-n-bytes STDOUT_FILENO PIPE_BUF 0
+run_test -q -O "$TESTDIR/$NAME.file.out-overwrite.txt" ./test-writes-of-n-bytes STDOUT_FILENO BUFSIZ 1
 RET=$?
 
 cmp_files "file.out-overwrite"
 CMP_OUT_O=$?
 
-variables_must_eq RET $EXIT_SUCCESS \
+variables_must_eq RET $EXIT_FAILURE \
 	CMP_OUT_O 0
