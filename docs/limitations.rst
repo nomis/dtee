@@ -43,6 +43,13 @@ DragonFlyBSD
 Like `FreeBSD/OpenBSD`_ but even with a 512KB socket buffer it behaves as poorly
 as `NetBSD`_ and without reporting of data loss from the receive call.
 
+GNU Hurd
+--------
+
+Does not currently have support for returning addresses of Unix sockets, so none
+of the output works. It may be possible to implement custom pipe-like objects
+with three file descriptors in userspace.
+
 .. |sendfile(2)| replace:: ``sendfile(2)``
 .. _sendfile(2): http://man7.org/linux/man-pages/man2/sendfile.2.html
 
