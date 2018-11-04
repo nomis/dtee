@@ -4,7 +4,7 @@ Limitations
 Datagram sockets can only process writes as individual packets with a maximum
 packet size. Therefore, if the program being run attempts to |write(2)|_
 more than this size in one call the write will fail and that part of the output
-will be lost. On GNU Hurd, writes larger than the page size (4KB) are truncated.
+will be lost.
 
 This is not usually a problem because the default socket buffer size is usually
 much higher than the size programs typically write with. For safety, the socket
@@ -49,6 +49,9 @@ GNU Hurd
 Does not currently have support for returning addresses of Unix sockets, so none
 of the output works. It may be possible to implement custom pipe-like objects
 with three file descriptors in userspace.
+
+Writes larger than the page size (4KB) are truncated and there's no way to
+increase the size of the socket buffer.
 
 .. |sendfile(2)| replace:: ``sendfile(2)``
 .. _sendfile(2): http://man7.org/linux/man-pages/man2/sendfile.2.html
