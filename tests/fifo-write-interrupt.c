@@ -47,10 +47,21 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 
+	// Fill up the fifo so that dtee blocks writing to it
 	size_t written = 0;
 	ssize_t ret;
 	do {
 		char buf[BUFSIZ] = { '*' };
+
+		errno = 0;
+		ret = write(fifo_w, buf, sizeof(buf));
+		if (ret > 0) {
+			written += ret;
+		}
+	} while (ret > 0);
+	// Some platforms won't do partial writes to a fifo
+	do {
+		char buf[1] = { '*' };
 
 		errno = 0;
 		ret = write(fifo_w, buf, sizeof(buf));
