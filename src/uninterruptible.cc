@@ -24,7 +24,7 @@ static_assert(BOOST_ASIO_HAS_SIGACTION, "Boost must use sigaction() so that the 
 
 extern "C" int __real_sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);
 
-extern "C" int __wrap_sigaction(int signum, const struct sigaction *act, struct sigaction *oldact) {
+extern "C" int __attribute__((used)) __wrap_sigaction(int signum, const struct sigaction *act, struct sigaction *oldact) {
 	struct sigaction newact;
 
 	if (act != nullptr) {
