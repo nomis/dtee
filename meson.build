@@ -85,10 +85,20 @@ custom_target('cronty',
 sphinx_build = find_program('sphinx-build', required: false)
 
 if sphinx_build.found()
+	source_docs = [
+		'docs/architecture.rst',
+		'docs/conf.py',
+		'docs/dependencies.rst',
+		'docs/index.rst',
+		'docs/install.rst',
+		'docs/limitations.rst',
+		'docs/manual.rst',
+	]
+
 	dtee_man = custom_target('dtee.1',
-		input: 'docs',
+		input: ['docs/'] + source_docs,
 		output: 'dtee.1',
-		command: [sphinx_build, '-b', 'man', '@INPUT@', '.'],
+		command: [sphinx_build, '-b', 'man', '@INPUT0@', '@BUILD_ROOT@'],
 		install: true,
 		install_dir: join_paths(get_option('mandir'), 'man1'))
 
