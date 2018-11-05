@@ -1,12 +1,30 @@
 #include <sys/resource.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <fcntl.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sysexits.h>
 #include <unistd.h>
+
+static bool kernel_core_pattern(char *buf, size_t buflen) {
+	int fd = open("/proc/sys/kernel/core_pattern", O_RDONLY);
+	if (fd < 0) {
+		return false;
+	}
+
+	memset(buf, 0, buflen);
+	if (read(fd, buf, buflen) <= 0) {
+		return false;
+	}
+
+	close(fd);
+	return true;
+}
 
 int main(int argc, char *argv[]) {
 	const char *env_rlimit_core = getenv("DTEE_TEST_RLIMIT_CORE");
@@ -24,21 +42,24 @@ int main(int argc, char *argv[]) {
 			value = RLIM_INFINITY;
 		} else {
 			value = strtoul(env_rlimit_core, NULL, 10);
-#ifdef __linux__
+		}
+
+#if defined(__linux__)
+		char buf[BUFSIZ] = { 0 };
+
+		if (value == 0 && kernel_core_pattern(buf, sizeof(buf)) && buf[0] == '|') {
 			// If kernel.core_pattern is a pipe and fs.suid_dumpable is non-zero,
 			// then core dumps happen even if RLIMIT_CORE is 0 or the executable is
 			// not readable. However, they don't happen if RLIMIT_CORE is the special
 			// value of 1.
 
-			if (value == 0) {
-				value = 1;
-			}
+			value = 1;
 
 			// When kernel.core_pattern is not a pipe, then RLIMIT_CORE must be at
 			// least PAGE_SIZE or ELF_EXEC_PAGESIZE (both of which are greater than 1)
 			// for a core dump to be produced.
-#endif
 		}
+#endif
 
 		rlim.rlim_cur = rlim.rlim_max = value;
 
