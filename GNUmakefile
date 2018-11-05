@@ -17,6 +17,12 @@ else
 	D_B_LTO=
 endif
 
+ifeq ($(LTO),1)
+	D_B_LTO=-Db_lto=true
+else ifeq ($(LTO),0)
+	D_B_LTO=-Db_lto=false
+endif
+
 ifeq ($(shell uname),OpenBSD)
 	D_B_LUNDEF=-Db_lundef=false
 	D_B_ASNEEDED=-Db_asneeded=false

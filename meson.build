@@ -38,13 +38,17 @@ c = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
 foreach arg: compile_args
 	if c.has_argument(arg)
-		add_project_arguments(arg, language: 'c')
+		if arg != '-Wshadow' or c.get_id() != 'gcc' or c.version().version_compare('>=5')
+			add_project_arguments(arg, language: 'c')
+		endif
 		if arg == '-pipe'
 			add_project_link_arguments(arg, language: 'c')
 		endif
 	endif
 	if cpp.has_argument(arg)
-		add_project_arguments(arg, language: 'cpp')
+		if arg != '-Wshadow' or cpp.get_id() != 'gcc' or cpp.version().version_compare('>=5')
+			add_project_arguments(arg, language: 'cpp')
+		endif
 		if arg == '-pipe'
 			add_project_link_arguments(arg, language: 'cpp')
 		endif
