@@ -39,9 +39,15 @@ cpp = meson.get_compiler('cpp')
 foreach arg: compile_args
 	if c.has_argument(arg)
 		add_project_arguments(arg, language: 'c')
+		if arg == '-pipe'
+			add_project_link_arguments(arg, language: 'c')
+		endif
 	endif
 	if cpp.has_argument(arg)
 		add_project_arguments(arg, language: 'cpp')
+		if arg == '-pipe'
+			add_project_link_arguments(arg, language: 'cpp')
+		endif
 	endif
 endforeach
 
