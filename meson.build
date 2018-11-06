@@ -171,8 +171,14 @@ endif
 
 if host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd' or host_machine.system() == 'dragonfly'
 	proc_deps = [c.find_library('kvm')]
-else # linux
+else # linux, gnu
 	proc_deps = []
+endif
+
+if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
+	has_generic_sendfile = true
+else
+	has_generic_sendfile = false
 endif
 
 testlib_allow_n_times = shared_library('test-allow-n-times', ['tests/allow-n-times.c'], c_args: test_c_args)
@@ -221,7 +227,9 @@ executable('test-kill-pid', ['tests/kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['tests/kill-ppid.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
 executable('test-report', ['tests/report.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
 executable('test-security-recreate-input-socket', ['tests/security-recreate-input-socket.c'], c_args: test_c_args)
-executable('test-sendfile', ['tests/sendfile.c'], c_args: test_c_args)
+if has_generic_sendfile
+	executable('test-sendfile', ['tests/sendfile.c'], c_args: test_c_args)
+endif
 generate_signal_txt = executable('test-signal-txt', ['tests/signal-txt.c'], c_args: test_c_args)
 executable('test-stream-read', ['tests/stream-read.c'], c_args: test_c_args)
 executable('test-stream-write', ['tests/stream-write.c'], c_args: test_c_args)
@@ -292,7 +300,9 @@ test('cron writes of BUFSIZ bytes (stderr)', bash, args: [files('tests/cron-writ
 test('cron writes of max(PIPE_BUF, BUFSIZ) bytes (stdout)', bash, args: [files('tests/cron-writes-of-max-PIPE_BUF-BUFSIZ-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
 test('cron writes of max(PIPE_BUF, BUFSIZ) bytes (stderr)', bash, args: [files('tests/cron-writes-of-max-PIPE_BUF-BUFSIZ-bytes-stderr.sh')], env: test_env, depends: all_test_txt)
 
-test('sendfile (stdout)', bash, args: [files('tests/sendfile-stdout.sh')], env: test_env, depends: all_test_txt)
+if has_generic_sendfile
+	test('sendfile (stdout)', bash, args: [files('tests/sendfile-stdout.sh')], env: test_env, depends: all_test_txt)
+endif
 test('stream 1MB (stdout)', bash, args: [files('tests/stream-1MB.sh')], env: test_env, depends: all_test_txt)
 test('stream 32MB (stdout)', bash, args: [files('tests/stream-32MB.sh')], env: test_env, depends: all_test_txt)
 test('stream 256MB (stdout)', bash, args: [files('tests/stream-256MB.sh')], env: test_env, depends: all_test_txt)
