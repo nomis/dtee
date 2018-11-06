@@ -11,6 +11,7 @@
 #include <sysexits.h>
 #include <unistd.h>
 
+#if defined(__linux__)
 static bool kernel_core_pattern(char *buf, size_t buflen) {
 	int fd = open("/proc/sys/kernel/core_pattern", O_RDONLY);
 	if (fd < 0) {
@@ -25,6 +26,7 @@ static bool kernel_core_pattern(char *buf, size_t buflen) {
 	close(fd);
 	return true;
 }
+#endif
 
 int main(int argc, char *argv[]) {
 	const char *env_rlimit_core = getenv("DTEE_TEST_RLIMIT_CORE");
