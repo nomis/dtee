@@ -29,31 +29,26 @@ source_files = [
 	vcs_tag(input: 'src/version.h.in', output: 'version.h'),
 ]
 
-compile_args = [
-	'-pipe',
-	'-Wshadow',
-	'-g3',
-]
 c = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
-foreach arg: compile_args
-	if c.has_argument(arg)
-		if arg != '-Wshadow' or c.get_id() != 'gcc' or c.version().version_compare('>=5')
-			add_project_arguments(arg, language: 'c')
-		endif
-		if arg == '-pipe'
-			add_project_link_arguments(arg, language: 'c')
-		endif
+
+if not (c.get_id() == 'gcc' and c.version().version_compare('<5'))
+	if c.has_argument('-Wshadow')
+		add_project_arguments('-Wshadow', language: 'c')
 	endif
-	if cpp.has_argument(arg)
-		if arg != '-Wshadow' or cpp.get_id() != 'gcc' or cpp.version().version_compare('>=5')
-			add_project_arguments(arg, language: 'cpp')
-		endif
-		if arg == '-pipe'
-			add_project_link_arguments(arg, language: 'cpp')
-		endif
+	if cpp.has_argument('-Wshadow')
+		add_project_arguments('-Wshadow', language: 'cpp')
 	endif
-endforeach
+endif
+
+if c.has_argument('-pipe')
+	add_project_arguments('-pipe', language: 'c')
+	add_project_link_arguments('-pipe', language: 'c')
+endif
+if cpp.has_argument('-pipe')
+	add_project_arguments('-pipe', language: 'cpp')
+	add_project_link_arguments('-pipe', language: 'cpp')
+endif
 
 if host_machine.system() == 'freebsd' or host_machine.system() == 'dragonfly'
 	c_args = []
