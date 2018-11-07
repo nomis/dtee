@@ -123,7 +123,7 @@ bool Input::open() {
 
 	// Ensure the receive buffer is large enough at least as large as both
 	// PIPE_BUF (for pipe writes) and BUFSIZ (for file writes)
-	constexpr int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, max(BUFSIZ, PLATFORM_MINIMUM_RCVBUF_SIZE));
+	const int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, max(BUFSIZ, PLATFORM_MINIMUM_RCVBUF_SIZE));
 
 	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 
