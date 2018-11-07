@@ -42,7 +42,6 @@
 
 using ::boost::format;
 using ::std::cerr;
-using ::std::endl;
 using ::std::exception;
 using ::std::list;
 using ::std::make_shared;
@@ -57,7 +56,10 @@ extern "C" void __gcov_flush(void);
 namespace dtee {
 
 void Application::print_error(const format &message) {
-	cerr << CommandLine::display_name() << ": " << message << endl;
+	const string line = str(format("%1%: %2%\n") % CommandLine::display_name() % message);
+
+	cerr.clear();
+	cerr.write(line.c_str(), line.length());
 }
 
 int Application::run(int argc, const char* const argv[]) {
