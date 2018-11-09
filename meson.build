@@ -64,7 +64,7 @@ endif
 
 if host_machine.system() == 'netbsd' # 😩
 	link_args = ['-Wl,--wrap=sigaction', '-Wl,--wrap=__sigaction14']
-else # linux, freebsd, openbsd, netbsd, gnu
+else # linux, freebsd, openbsd, dragonfly, gnu
 	link_args = ['-Wl,--wrap=sigaction']
 endif
 
@@ -152,22 +152,13 @@ test_env = [
 
 if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	test_c_args = c_args + ['-D_DEFAULT_SOURCE']
-else # freebsd, openbsd, netbsd, dragonfly
-	test_c_args = c_args
-endif
-
-if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	dlfcn_args = test_c_args + ['-D_GNU_SOURCE', '-Wno-pedantic']
-else # freebsd, openbsd, netbsd, dragonfly
-	dlfcn_args = test_c_args + ['-Wno-pedantic']
-endif
-
-if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	dlfcn_deps = [c.find_library('dl')]
 else # freebsd, openbsd, netbsd, dragonfly
+	test_c_args = c_args
+	dlfcn_args = test_c_args + ['-Wno-pedantic']
 	dlfcn_deps = []
 endif
-
 
 if host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd' or host_machine.system() == 'dragonfly'
 	proc_deps = [c.find_library('kvm')]
@@ -177,7 +168,7 @@ endif
 
 if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	has_generic_sendfile = true
-else
+else # freebsd, openbsd, netbsd, dragonfly
 	has_generic_sendfile = false
 endif
 
