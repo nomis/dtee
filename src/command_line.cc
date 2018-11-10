@@ -216,7 +216,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 
 void CommandLine::display_usage(const po::options_description &options) const {
 	cout << "Usage: " << display_name_ << " [OPTION]... COMMAND [ARG]..." << endl << endl;
-	cout << "Run COMMAND with standard output and standard error copied to each FILE," << endl;
+	cout << "Run COMMAND with standard output and standard error copied to each FILE" << endl;
 	if (cron_mode()) {
 		cout << "suppressing all output unless the process outputs an error message or has a" << endl;
 		cout << "non-zero exit status whereupon the original output will be written as normal" << endl;

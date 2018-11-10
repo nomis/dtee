@@ -5,8 +5,8 @@ dtee (double tee) [![](https://travis-ci.org/nomis/dtee.svg?branch=master)](http
 
 ## Description
 
-Run a program with standard output and standard error copied to files
-while maintaining the original standard output and standard error as normal.
+Run a program with standard output and standard error copied to files while
+maintaining the original standard output and standard error as normal.
 
 ## Purpose
 

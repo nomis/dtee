@@ -11,8 +11,8 @@ Synopsis
 Description
 -----------
 
-Run *command* with standard output and standard error copied to files,
-while maintaining the original standard output and standard error as normal.
+Run *command* with standard output and standard error copied to files while
+maintaining the original standard output and standard error as normal.
 
 Options
 -------

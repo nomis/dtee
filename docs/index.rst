@@ -9,8 +9,8 @@ dtee (double tee)
 Description
 -----------
 
-Run a program with standard output and standard error copied to files
-while maintaining the original standard output and standard error as normal.
+Run a program with standard output and standard error copied to files while
+maintaining the original standard output and standard error as normal.
 
 Purpose
 -------
