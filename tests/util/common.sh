@@ -133,10 +133,15 @@ function check_variables() {
 			CV_RET=1
 		elif [ -z "$CV_EXPECTED" ]; then
 			CV_RET=1
-		elif [ ${!CV_ACTUAL} -ne $CV_EXPECTED ]; then
+		elif [ "${!CV_ACTUAL}" != "$CV_EXPECTED" ]; then
 			CV_RET=1
 		fi
 		shift 2
+		if [ $? -ne 0 ]; then
+			echo "Invalid list of variables"
+			CV_RET=1
+			break
+		fi
 	done
 
 	set -x
