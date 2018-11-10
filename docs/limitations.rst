@@ -49,7 +49,7 @@ GNU Hurd
 
 Does not currently have support for returning addresses of Unix sockets, so none
 of the output works. It may be possible to implement custom pipe-like objects
-with three file descriptors in userspace.
+with three file descriptors in user space.
 
 Writes larger than the page size (4KB) are truncated and there's no way to
 increase the size of the socket buffer.
