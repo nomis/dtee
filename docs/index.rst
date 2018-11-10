@@ -35,6 +35,7 @@ Contents
    dependencies
    limitations
    install
+   packages
    manual
 
 Resources
