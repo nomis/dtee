@@ -1,4 +1,4 @@
-dtee (double tee) [![](https://travis-ci.org/nomis/dtee.svg?branch=master)](https://travis-ci.org/nomis/dtee "Build Status") [![Download](https://api.bintray.com/packages/nomis/dtee/dtee/images/download.svg)](https://bintray.com/nomis/dtee/dtee/_latestVersion "Download")
+dtee (double tee) [![](https://travis-ci.org/nomis/dtee.svg?branch=master)](https://travis-ci.org/nomis/dtee "Build Status") [![Download](https://api.bintray.com/packages/dtee/source/dtee/images/download.svg)](https://bintray.com/dtee/source/dtee/_latestVersion "Download")
 =================
 
 ![](docs/logo.svg)
