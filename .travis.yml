@@ -7,9 +7,6 @@ matrix:
     - name: Documentation
       os: linux
       dist: xenial
-      addons:
-        apt:
-          packages: [python3-sphinx]
       env: BUILD=docs
 
     - name: GCC 5
@@ -45,7 +42,7 @@ matrix:
       addons:
         apt:
           sources: [ubuntu-toolchain-r-test]
-          packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, python3-sphinx, gcc-8, g++-8]
+          packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, gcc-8, g++-8]
       env: BUILD=app C_COMPILER=gcc-8 CXX_COMPILER=g++-8
 
     - name: Clang 3.9
@@ -81,7 +78,7 @@ matrix:
       addons:
         apt:
           sources: [ubuntu-toolchain-r-test]
-          packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, python3-sphinx, clang-6.0, llvm-6.0-dev]
+          packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, clang-6.0, llvm-6.0-dev]
       env: BUILD=app C_COMPILER=clang-6.0 CXX_COMPILER=clang++-6.0
 
 install:
@@ -90,6 +87,7 @@ install:
       pip3 install --user setuptools;
       pip3 install --user meson ninja;
     fi
+  - pip3 install --user Sphinx;
 
 script:
   - if [ "$BUILD" = "app" ]; then

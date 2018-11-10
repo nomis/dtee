@@ -32,3 +32,5 @@ texinfo_documents = [
 ]
 
 texinfo_show_urls = 'inline'
+
+linkcheck_timeout = 60
