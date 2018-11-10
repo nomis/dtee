@@ -7,6 +7,9 @@ matrix:
     - name: Documentation
       os: linux
       dist: xenial
+      addons:
+        apt:
+          packages: [python3-pip]
       env: BUILD=docs
 
     - name: GCC 5
