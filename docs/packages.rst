@@ -11,7 +11,7 @@ Packages are available on `Bintray <https://bintray.com/dtee>`_ for
 `Debian <https://bintray.com/dtee/debian/dtee>`_
 and `Ubuntu <https://bintray.com/dtee/ubuntu/dtee>`_.
 
-Install the `Bintray <https://bintray.com/bintray>`_ public key::
+Install the `Bintray public key <https://bintray.com/bintray>`_::
 
     wget https://bintray.com/user/downloadSubjectPublicKey?username=bintray -O - | apt-key add -
 
