@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+0.0.1_ |--| 2018-11-11
+----------------------
+
+Update to allow improvements in packaging.
+
 Fixed
 ~~~~~
 
@@ -35,5 +40,6 @@ Added
 .. _DragonFlyBSD: https://www.dragonflybsd.org/
 .. _GNU Hurd: https://www.gnu.org/software/hurd/
 
-.. _Unreleased: https://github.com/nomis/dtee/compare/0.0.0...HEAD
+.. _Unreleased: https://github.com/nomis/dtee/compare/0.0.1...HEAD
+.. _0.0.1: https://github.com/nomis/dtee/compare/0.0.0...0.0.1
 .. _0.0.0: https://github.com/nomis/dtee/commits/0.0.0
