@@ -65,4 +65,63 @@ Run the following commands:
   1. ``apt update``
   2. ``apt install dtee``
 
+RPM Packages
+------------
+
+Packages are available on Bintray for
+`Fedora <https://bintray.com/dtee/fedora/dtee>`_.
+and `RedHat Enterprise Linux <https://bintray.com/dtee/redhat/dtee>`_
+
+Fedora
+~~~~~~
+
+Save the repository configuation file
+`dtee-fedora.repo <_static/dtee-fedora.repo>`_
+to ``/etc/yum.repos.d/dtee-fedora.repo``::
+
+    [dtee]
+    name=dtee ($releasever/$basearch)
+    baseurl=https://dl.bintray.com/dtee/fedora/$releasever/$basearch
+    enabled=1
+    gpgcheck=0
+    repo_gpgcheck=1
+    gpgkey=https://dl.bintray.com/dtee/fedora/$releasever/$basearch/repodata/repomd.xml.key
+    
+    [dtee-source]
+    name=dtee ($releasever/Source)
+    baseurl=https://dl.bintray.com/dtee/fedora/$releasever/source
+    enabled=0
+    gpgcheck=0
+    repo_gpgcheck=1
+    gpgkey=https://dl.bintray.com/dtee/fedora/$releasever/source/repodata/repomd.xml.key
+
+Run the following commands:
+  1. ``yum install dtee``
+
+RedHat Enterprise Linux 7
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Save the repository configuration file
+`dtee-rhel7.repo <_static/dtee-rhel7.repo>`_
+to ``/etc/yum.repos.d/dtee-rhel7.repo``::
+
+    [dtee]
+    name=dtee (7/$basearch)
+    baseurl=https://dl.bintray.com/dtee/redhat/7/$basearch
+    enabled=1
+    gpgcheck=0
+    repo_gpgcheck=1
+    gpgkey=https://dl.bintray.com/dtee/redhat/7/$basearch/repodata/repomd.xml.key
+    
+    [dtee-source]
+    name=dtee (7/Source)
+    baseurl=https://dl.bintray.com/dtee/redhat/7/source
+    enabled=0
+    gpgcheck=0
+    repo_gpgcheck=1
+    gpgkey=https://dl.bintray.com/dtee/redhat/7/source/repodata/repomd.xml.key
+
+Run the following commands:
+  1. ``yum install dtee``
+
 .. _APT: https://en.wikipedia.org/wiki/APT_(Debian)
