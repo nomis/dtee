@@ -76,7 +76,7 @@ Fedora
 ~~~~~~
 
 Save the repository configuation file
-`dtee-fedora.repo <_static/dtee-fedora.repo>`_
+:download:`dtee-fedora.repo <../yum/dtee-fedora.repo>`
 to ``/etc/yum.repos.d/dtee-fedora.repo``::
 
     [dtee]
@@ -102,7 +102,7 @@ RedHat Enterprise Linux 7
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Save the repository configuration file
-`dtee-rhel7.repo <_static/dtee-rhel7.repo>`_
+:download:`dtee-rhel7.repo <../yum/dtee-rhel7.repo>`
 to ``/etc/yum.repos.d/dtee-rhel7.repo``::
 
     [dtee]

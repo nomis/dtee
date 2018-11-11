@@ -33,6 +33,4 @@ texinfo_documents = [
 
 texinfo_show_urls = 'inline'
 
-html_static_path = ['_static']
-
 linkcheck_timeout = 60

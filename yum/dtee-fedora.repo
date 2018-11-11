@@ -1,0 +1,15 @@
+[dtee]
+name=dtee ($releasever/$basearch)
+baseurl=https://dl.bintray.com/dtee/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=0
+repo_gpgcheck=1
+gpgkey=https://dl.bintray.com/dtee/fedora/$releasever/$basearch/repodata/repomd.xml.key
+
+[dtee-source]
+name=dtee ($releasever/Source)
+baseurl=https://dl.bintray.com/dtee/fedora/$releasever/source
+enabled=0
+gpgcheck=0
+repo_gpgcheck=1
+gpgkey=https://dl.bintray.com/dtee/fedora/$releasever/source/repodata/repomd.xml.key
