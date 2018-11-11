@@ -11,13 +11,13 @@ Packages are available on `Bintray <https://bintray.com/dtee>`_ for
 `Debian <https://bintray.com/dtee/debian/dtee>`_
 and `Ubuntu <https://bintray.com/dtee/ubuntu/dtee>`_.
 
-Install the `Bintray <https://bintray.com/bintray>`_ public key and then follow
-the instructions for your specific distribution::
+Install the `Bintray <https://bintray.com/bintray>`_ public key::
 
     wget https://bintray.com/user/downloadSubjectPublicKey?username=bintray -O - | apt-key add -
 
-If you are using a newer distribution than the ones listed then use the builds
-for the most recent prior version.
+Follow the instructions for your specific distribution. If you are using a newer
+distribution than the ones listed then use the builds for the most recent prior
+version.
 
 Debian 8 (jessie)
 ~~~~~~~~~~~~~~~~~~
