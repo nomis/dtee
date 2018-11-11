@@ -1,17 +1,14 @@
 Packages
 ========
 
-Source packages for Linux distributions are kept in the `dtee-package repository
-<https://github.com/nomis/dtee-package>`_.
+Source packages for Linux distributions are kept in the `dtee-package repository`_.
 
 Debian binary packages
 ----------------------
 
-Packages are available on `Bintray <https://bintray.com/dtee>`_ for
-`Debian <https://bintray.com/dtee/debian/dtee>`_
-and `Ubuntu <https://bintray.com/dtee/ubuntu/dtee>`_.
+Packages are available on Bintray_ for Debian_ and Ubuntu_.
 
-Install the `Bintray public key <https://bintray.com/bintray>`_::
+Install the `Bintray public key`_::
 
     wget https://bintray.com/user/downloadSubjectPublicKey?username=bintray -O - | apt-key add -
 
@@ -68,9 +65,7 @@ Run the following commands:
 RPM Packages
 ------------
 
-Packages are available on Bintray for
-`Fedora <https://bintray.com/dtee/fedora/dtee>`_.
-and `RedHat Enterprise Linux <https://bintray.com/dtee/redhat/dtee>`_
+Packages are available on Bintray_ for Fedora_ and `RedHat Enterprise Linux`_.
 
 Fedora
 ~~~~~~
@@ -124,4 +119,11 @@ to ``/etc/yum.repos.d/dtee-rhel7.repo``::
 Run the following commands:
   1. ``yum install dtee``
 
+.. _dtee-package repository: https://github.com/nomis/dtee-package
+.. _Bintray: https://bintray.com/dtee
+.. _Bintray public key: https://bintray.com/bintray
+.. _Debian: https://bintray.com/dtee/debian/dtee
+.. _Ubuntu: https://bintray.com/dtee/ubuntu/dtee
+.. _Fedora: https://bintray.com/dtee/fedora/dtee
+.. _RedHat Enterprise Linux: https://bintray.com/dtee/redhat/dtee
 .. _APT: https://en.wikipedia.org/wiki/APT_(Debian)
