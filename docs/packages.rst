@@ -20,7 +20,7 @@ distribution than the ones listed then use the builds for the most recent prior
 version.
 
 Debian 8 (jessie)
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
 
@@ -44,7 +44,7 @@ Run the following commands:
   3. ``apt install dtee``
 
 Ubuntu 16.04 LTS (Xenial Xerus)
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
 
@@ -55,7 +55,7 @@ Run the following commands:
   2. ``apt install dtee``
 
 Ubuntu 18.04 LTS (Bionic Beaver)
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
 
