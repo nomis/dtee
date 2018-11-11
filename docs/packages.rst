@@ -72,23 +72,7 @@ Fedora
 
 Save the repository configuation file
 :download:`dtee-fedora.repo <../yum/dtee-fedora.repo>`
-to ``/etc/yum.repos.d/dtee-fedora.repo``::
-
-    [dtee]
-    name=dtee ($releasever/$basearch)
-    baseurl=https://dl.bintray.com/dtee/fedora/$releasever/$basearch
-    enabled=1
-    gpgcheck=0
-    repo_gpgcheck=1
-    gpgkey=https://dl.bintray.com/dtee/fedora/$releasever/$basearch/repodata/repomd.xml.key
-    
-    [dtee-source]
-    name=dtee ($releasever/Source)
-    baseurl=https://dl.bintray.com/dtee/fedora/$releasever/source
-    enabled=0
-    gpgcheck=0
-    repo_gpgcheck=1
-    gpgkey=https://dl.bintray.com/dtee/fedora/$releasever/source/repodata/repomd.xml.key
+to ``/etc/yum.repos.d/dtee-fedora.repo``.
 
 Run the following commands:
   1. ``yum install dtee``
@@ -98,23 +82,7 @@ RedHat Enterprise Linux 7
 
 Save the repository configuration file
 :download:`dtee-rhel7.repo <../yum/dtee-rhel7.repo>`
-to ``/etc/yum.repos.d/dtee-rhel7.repo``::
-
-    [dtee]
-    name=dtee (7/$basearch)
-    baseurl=https://dl.bintray.com/dtee/redhat/7/$basearch
-    enabled=1
-    gpgcheck=0
-    repo_gpgcheck=1
-    gpgkey=https://dl.bintray.com/dtee/redhat/7/$basearch/repodata/repomd.xml.key
-    
-    [dtee-source]
-    name=dtee (7/Source)
-    baseurl=https://dl.bintray.com/dtee/redhat/7/source
-    enabled=0
-    gpgcheck=0
-    repo_gpgcheck=1
-    gpgkey=https://dl.bintray.com/dtee/redhat/7/source/repodata/repomd.xml.key
+to ``/etc/yum.repos.d/dtee-rhel7.repo``.
 
 Run the following commands:
   1. ``yum install dtee``
