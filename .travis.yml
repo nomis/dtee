@@ -96,6 +96,7 @@ install:
 script:
   - if [ "$BUILD" = "app" ]; then
       make CC=$C_COMPILER CXX=$CXX_COMPILER distclean check;
+      make CC=$C_COMPILER CXX=$CXX_COMPILER MESON_OPTS="--unity on" distclean check;
     elif [ "$BUILD" = "docs" ]; then
       make -C docs man html linkcheck;
     fi

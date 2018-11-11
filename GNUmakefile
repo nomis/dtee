@@ -39,16 +39,16 @@ $(BUILD_DIR)/:
 $(RELEASE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(RELEASE_DIR)/"
 	mkdir $(RELEASE_DIR)/
-	meson --buildtype=release $(RELEASE_DIR)/ $(D_B_LTO) $(D_B_LUNDEF) $(D_B_ASNEEDED) || (rm -rf "$(RELEASE_DIR)/"; false)
+	meson --buildtype=release $(RELEASE_DIR)/ $(D_B_LTO) $(D_B_LUNDEF) $(D_B_ASNEEDED) $(MESON_OPTS) || (rm -rf "$(RELEASE_DIR)/"; false)
 $(COVERAGE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(COVERAGE_DIR)/"
 	mkdir $(COVERAGE_DIR)/
 	# meson (0.48.0) will not tell lcov to use llvm-cov, so this will fail when using clang
-	meson --buildtype=debug $(COVERAGE_DIR)/ -Db_coverage=true || (rm -rf "$(COVERAGE_DIR)/"; false)
+	meson --buildtype=debug $(COVERAGE_DIR)/ -Db_coverage=true $(MESON_OPTS) || (rm -rf "$(COVERAGE_DIR)/"; false)
 $(DEBUG_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(DEBUG_DIR)/"
 	mkdir $(DEBUG_DIR)/
-	meson --buildtype=debug $(DEBUG_DIR)/ || (rm -rf "$(DEBUG_DIR)/"; false)
+	meson --buildtype=debug $(DEBUG_DIR)/ $(MESON_OPTS) || (rm -rf "$(DEBUG_DIR)/"; false)
 
 compile: | $(RELEASE_DIR)/
 	$(NINJA) -C $(RELEASE_DIR)/
