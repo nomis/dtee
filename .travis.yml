@@ -19,7 +19,7 @@ matrix:
         apt:
           sources: [ubuntu-toolchain-r-test]
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, gcc-5, g++-5]
-      env: BUILD=app C_COMPILER=gcc-5 CXX_COMPILER=g++-5
+      env: BUILD=app C_COMPILER=gcc-5 CXX_COMPILER=g++-5 UNITY=1
 
     - name: GCC 6
       os: linux
@@ -28,7 +28,7 @@ matrix:
         apt:
           sources: [ubuntu-toolchain-r-test]
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, gcc-6, g++-6]
-      env: BUILD=app C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+      env: BUILD=app C_COMPILER=gcc-6 CXX_COMPILER=g++-6 UNITY=1
 
     - name: GCC 7
       os: linux
@@ -37,7 +37,7 @@ matrix:
         apt:
           sources: [ubuntu-toolchain-r-test]
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, gcc-7, g++-7]
-      env: BUILD=app C_COMPILER=gcc-7 CXX_COMPILER=g++-7
+      env: BUILD=app C_COMPILER=gcc-7 CXX_COMPILER=g++-7 UNITY=1
 
     - name: GCC 8
       os: linux
@@ -46,7 +46,7 @@ matrix:
         apt:
           sources: [ubuntu-toolchain-r-test]
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, python3-sphinx, gcc-8, g++-8]
-      env: BUILD=app C_COMPILER=gcc-8 CXX_COMPILER=g++-8
+      env: BUILD=app C_COMPILER=gcc-8 CXX_COMPILER=g++-8 UNITY=1
 
     - name: Clang 3.9
       os: linux
@@ -55,7 +55,7 @@ matrix:
         apt:
           sources: [ubuntu-toolchain-r-test]
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, clang-3.9, llvm-3.9-dev]
-      env: BUILD=app C_COMPILER=clang-3.9 CXX_COMPILER=clang++-3.9
+      env: BUILD=app C_COMPILER=clang-3.9 CXX_COMPILER=clang++-3.9 UNITY=1
 
     - name: Clang 4.0
       os: linux
@@ -64,7 +64,7 @@ matrix:
         apt:
           sources: [ubuntu-toolchain-r-test]
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, clang-4.0, llvm-4.0-dev]
-      env: BUILD=app C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0
+      env: BUILD=app C_COMPILER=clang-4.0 CXX_COMPILER=clang++-4.0 UNITY=0
 
     - name: Clang 5.0
       os: linux
@@ -73,7 +73,7 @@ matrix:
         apt:
           sources: [ubuntu-toolchain-r-test]
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, clang-5.0, llvm-5.0-dev]
-      env: BUILD=app C_COMPILER=clang-5.0 CXX_COMPILER=clang++-5.0
+      env: BUILD=app C_COMPILER=clang-5.0 CXX_COMPILER=clang++-5.0 UNITY=0
 
     - name: Clang 6.0
       os: linux
@@ -82,7 +82,7 @@ matrix:
         apt:
           sources: [ubuntu-toolchain-r-test]
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, python3-sphinx, clang-6.0, llvm-6.0-dev]
-      env: BUILD=app C_COMPILER=clang-6.0 CXX_COMPILER=clang++-6.0
+      env: BUILD=app C_COMPILER=clang-6.0 CXX_COMPILER=clang++-6.0 UNITY=1
 
 install:
   - if [ "$BUILD" = "app" ]; then
@@ -96,7 +96,9 @@ install:
 script:
   - if [ "$BUILD" = "app" ]; then
       make CC=$C_COMPILER CXX=$CXX_COMPILER distclean check;
-      make CC=$C_COMPILER CXX=$CXX_COMPILER MESON_OPTS="--unity on" distclean check;
+      if [ $UNITY -eq 1 ]; then
+        make CC=$C_COMPILER CXX=$CXX_COMPILER MESON_OPTS="--unity on" distclean check;
+      fi;
     elif [ "$BUILD" = "docs" ]; then
       make -C docs man html linkcheck;
     fi
