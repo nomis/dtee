@@ -9,6 +9,8 @@ Fixed
 
 * Infinite loop in the test scripts if check variables are undefined (this is
   unlikely).
+* Support for `unity builds <https://mesonbuild.com/Unity-builds.html>`_ when
+  ``-Wshadow`` is used.
 
 0.0.0_ |--| 2018-11-09
 ----------------------
