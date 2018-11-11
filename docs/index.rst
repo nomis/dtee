@@ -35,7 +35,6 @@ Contents
    dependencies
    limitations
    install
-   packages
    manual
 
 Resources
@@ -46,6 +45,8 @@ Resources
 
    Source code <https://github.com/nomis/dtee>
    Releases <https://github.com/nomis/dtee/releases>
+   changelog
+   packages
    Issue tracker <https://github.com/nomis/dtee/issues>
 
 Pronunciation
