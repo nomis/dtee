@@ -79,7 +79,7 @@ Save the repository configuation file
 :download:`dtee-fedora.repo <../yum/dtee-fedora.repo>`
 to ``/etc/yum.repos.d/dtee-fedora.repo``.
 
-Run the following commands::
+Run the following command::
 
     yum install dtee
 
@@ -90,7 +90,7 @@ Save the repository configuration file
 :download:`dtee-rhel7.repo <../yum/dtee-rhel7.repo>`
 to ``/etc/yum.repos.d/dtee-rhel7.repo``.
 
-Run the following commands::
+Run the following command::
 
     yum install dtee
 
