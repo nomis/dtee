@@ -42,6 +42,18 @@ Run the following commands::
     apt update
     apt install dtee
 
+Ubuntu 14.04 LTS (Trusty Tahr)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
+
+    deb https://dl.bintray.com/dtee/ubuntu/ trusty main
+
+Run the following commands::
+
+    apt update
+    apt install dtee
+
 Ubuntu 16.04 LTS (Xenial Xerus)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
