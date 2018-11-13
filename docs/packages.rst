@@ -19,7 +19,9 @@ version.
 Debian 8 (jessie)
 ~~~~~~~~~~~~~~~~~
 
-Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
+Add the following APT_ data source
+:download:`dtee-debian-jessie.list <../apt/dtee-debian-jessie.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
 
     deb https://dl.bintray.com/dtee/debian/ jessie main
 
@@ -32,7 +34,9 @@ Run the following commands::
 Debian 9 (stretch)
 ~~~~~~~~~~~~~~~~~~
 
-Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
+Add the following APT_ data source
+:download:`dtee-debian-stretch.list <../apt/dtee-debian-stretch.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
 
     deb https://dl.bintray.com/dtee/debian/ stretch main
 
@@ -45,7 +49,9 @@ Run the following commands::
 Ubuntu 14.04 LTS (Trusty Tahr)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
+Add the following APT_ data source
+:download:`dtee-ubuntu-trusty.list <../apt/dtee-ubuntu-trusty.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
 
     deb https://dl.bintray.com/dtee/ubuntu/ trusty main
 
@@ -57,7 +63,9 @@ Run the following commands::
 Ubuntu 16.04 LTS (Xenial Xerus)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
+Add the following APT_ data source
+:download:`dtee-ubuntu-xenial.list <../apt/dtee-ubuntu-xenial.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
 
     deb https://dl.bintray.com/dtee/ubuntu/ xenial main
 
@@ -69,7 +77,9 @@ Run the following commands::
 Ubuntu 18.04 LTS (Bionic Beaver)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Add the following APT_ data source to ``/etc/apt/sources.list.d/dtee.list``::
+Add the following APT_ data source
+:download:`dtee-ubuntu-bionic.list <../apt/dtee-ubuntu-bionic.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
 
     deb https://dl.bintray.com/dtee/ubuntu/ bionic main
 
