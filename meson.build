@@ -112,6 +112,8 @@ if sphinx_build.found()
 		output: 'dtee.1',
 		command: [
 			sphinx_build,
+			'-n',
+			'-W',
 			'-b', 'man',
 			'-D', 'version=' + meson.project_version(),
 			'-D', 'release=' + meson.project_version(),
