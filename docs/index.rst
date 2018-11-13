@@ -30,6 +30,7 @@ Contents
 
 .. toctree::
    :titlesonly:
+   :maxdepth: 1
 
    architecture
    dependencies
@@ -42,11 +43,12 @@ Resources
 
 .. toctree::
    :titlesonly:
+   :maxdepth: 1
 
    Source code <https://github.com/nomis/dtee>
    Releases <https://github.com/nomis/dtee/releases>
    changelog
-   packages
+   packages/index
    Issue tracker <https://github.com/nomis/dtee/issues>
 
 Pronunciation
