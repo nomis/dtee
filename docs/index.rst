@@ -48,7 +48,7 @@ Resources
    Source code <https://github.com/nomis/dtee>
    Releases <https://github.com/nomis/dtee/releases>
    changelog
-   packages/index
+   packages
    Issue tracker <https://github.com/nomis/dtee/issues>
 
 Pronunciation

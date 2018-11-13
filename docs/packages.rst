@@ -11,8 +11,8 @@ Packages are available on Bintray_ for Debian_ and Ubuntu_.
 .. toctree::
    :titlesonly:
 
-   debian
-   ubuntu
+   packages/debian
+   packages/ubuntu
 
 RPM packages
 ------------
@@ -22,8 +22,8 @@ Packages are available on Bintray_ for Fedora_ and `Red Hat Enterprise Linux`_.
 .. toctree::
    :titlesonly:
 
-   fedora
-   rhel
+   packages/fedora
+   packages/rhel
 
 .. _dtee-package repository: https://github.com/nomis/dtee-package
 .. _Bintray: https://bintray.com/dtee
