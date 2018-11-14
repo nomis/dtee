@@ -30,7 +30,7 @@ enum class OutputType {
 
 class Output {
 public:
-	Output() {};
+	explicit Output() {};
 	virtual ~Output() {};
 
 	virtual bool open() = 0;

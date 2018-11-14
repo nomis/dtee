@@ -27,11 +27,12 @@ namespace dtee {
 
 using ::std::vector;
 
-void Process::terminated(int status, int signum, bool core_dump __attribute__((unused))) {
+void Process::terminated(int status, int signum, bool core_dumped) {
 	terminated_ = true;
 
 	exit_status_ = status;
 	exit_signum_ = signum;
+	core_dumped_ = core_dumped;
 }
 
 void Process::interrupted(int signum) {

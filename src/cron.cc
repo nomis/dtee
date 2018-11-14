@@ -90,10 +90,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 }
 
 void Cron::terminated(int status, int signum, bool core_dumped) {
-	terminated_ = true;
-	exit_status_ = status;
-	exit_signum_ = signum;
-	core_dumped_ = core_dumped;
+	Process::terminated(status, signum, core_dumped);
 
 	if (status != EXIT_SUCCESS) {
 		error_ = true;
@@ -101,7 +98,8 @@ void Cron::terminated(int status, int signum, bool core_dumped) {
 }
 
 void Cron::interrupted(int signum) {
-	interrupt_signum_ = signum;
+	Process::interrupted(signum);
+
 	error_ = true;
 
 	// The return status of this is ignored, so an I/O error won't be

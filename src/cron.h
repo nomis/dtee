@@ -26,13 +26,14 @@
 #include <boost/format.hpp>
 
 #include "output.h"
+#include "process.h"
 #include "result_handler.h"
 #include "temp_file.h"
 #include "to_string.h"
 
 namespace dtee {
 
-class Cron: public Output, public ResultHandler {
+class Cron: public Output, virtual public ResultHandler, private Process {
 public:
 	explicit Cron(std::string command, std::shared_ptr<Output> fallback);
 	virtual ~Cron() {};
@@ -54,13 +55,7 @@ private:
 	TempFile file_; //!< Temporary output file
 
 	bool buffered_ = false; //!< Output is being buffered
-
-	bool terminated_ = false; //!< Child process terminated
 	bool error_ = false; //!< Error state of child process
-	int exit_status_ = -1; //!< Exit status of child process
-	int exit_signum_ = -1; //!< Termination signal of child process
-	bool core_dumped_ = false; //!< Child process produced a core dump
-	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
 };
 
 } // namespace dtee

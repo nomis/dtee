@@ -26,21 +26,22 @@ namespace dtee {
 
 constexpr int SHELL_EXIT_CODE_SIGNAL = 0x80;
 
-class Process: public ResultHandler {
+class Process: virtual public ResultHandler {
 public:
-	Process() {};
+	explicit Process() {};
 	virtual ~Process() {};
 
-	void terminated(int status, int signum, bool core_dump) override;
+	void terminated(int status, int signum, bool core_dumped) override;
 	void interrupted(int signum) override;
 
 	int interrupt_signum();
 	int exit_status(int internal_status);
 
-private:
+protected:
 	bool terminated_ = false; //!< Child process terminated
 	int exit_status_ = -1; //!< Exit status of child process
 	int exit_signum_ = -1; //!< Termination signal of child process
+	bool core_dumped_ = false; //!< Child process produced a core dump
 	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
 };
 
