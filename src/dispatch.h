@@ -31,7 +31,7 @@ namespace dtee {
 class Dispatch: public Output, public ResultHandler {
 public:
 	Dispatch(std::list<std::shared_ptr<Output>> &outputs, std::list<std::shared_ptr<ResultHandler>> &result_handlers);
-	~Dispatch() {};
+	~Dispatch() override = default;
 
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;

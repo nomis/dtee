@@ -30,8 +30,8 @@ enum class OutputType {
 
 class Output {
 public:
-	explicit Output() {};
-	virtual ~Output() {};
+	explicit Output() = default;
+	virtual ~Output() = default;
 
 	virtual bool open() = 0;
 	virtual bool output(OutputType type, const std::vector<char> &buffer, size_t len) = 0;

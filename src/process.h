@@ -28,8 +28,8 @@ constexpr int SHELL_EXIT_CODE_SIGNAL = 0x80;
 
 class Process: virtual public ResultHandler {
 public:
-	explicit Process() {};
-	virtual ~Process() {};
+	explicit Process() = default;
+	~Process() override = default;
 
 	void terminated(int status, int signum, bool core_dumped) override;
 	void interrupted(int signum) override;

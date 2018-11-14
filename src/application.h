@@ -37,8 +37,8 @@ namespace dtee {
 
 class Application {
 public:
-	Application() {};
-	~Application() {};
+	explicit Application() = default;
+	~Application() = default;
 
 	static void print_error(const boost::format &message);
 

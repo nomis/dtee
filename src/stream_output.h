@@ -28,8 +28,8 @@ namespace dtee {
 
 class StreamOutput: public Output {
 public:
-	explicit StreamOutput() {};
-	virtual ~StreamOutput() {};
+	explicit StreamOutput() = default;
+	~StreamOutput() override = default;
 
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;

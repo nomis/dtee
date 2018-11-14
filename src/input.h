@@ -39,7 +39,7 @@ namespace dtee {
 class Input {
 public:
 	Input(const CommandLine &command_line, std::shared_ptr<Dispatch> output);
-	~Input() {};
+	~Input() = default;
 
 	bool open();
 	void fork_prepare();

@@ -33,10 +33,10 @@
 
 namespace dtee {
 
-class Cron: public Output, virtual public ResultHandler, private Process {
+class Cron: public Output, public virtual ResultHandler, private Process {
 public:
-	explicit Cron(std::string command, std::shared_ptr<Output> fallback);
-	virtual ~Cron() {};
+	Cron(std::string command, std::shared_ptr<Output> fallback);
+	~Cron() override = default;
 
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;

@@ -39,7 +39,7 @@ enum class FileOutputType {
 class FileOutput: public Output {
 public:
 	FileOutput(const std::string &filename, FileOutputType type, bool append);
-	virtual ~FileOutput();
+	~FileOutput() override;
 
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
