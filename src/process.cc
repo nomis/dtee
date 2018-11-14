@@ -27,14 +27,6 @@ namespace dtee {
 
 using ::std::vector;
 
-bool Process::open() {
-	return true;
-}
-
-bool Process::output(OutputType type __attribute__((unused)), const vector<char> &buffer __attribute__((unused)), size_t len __attribute__((unused))) {
-	return true;
-}
-
 void Process::terminated(int status, int signum, bool core_dump __attribute__((unused))) {
 	terminated_ = true;
 

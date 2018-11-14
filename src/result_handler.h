@@ -15,30 +15,23 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_COPY_H_
-#define DTEE_COPY_H_
+#ifndef DTEE_RESULTHANDLER_H_
+#define DTEE_RESULTHANDLER_H_
 
 #include <cstddef>
-#include <list>
-#include <memory>
-#include <vector>
-
-#include "output.h"
 
 namespace dtee {
 
-class Copy: public Output {
+class ResultHandler {
 public:
-	explicit Copy(std::list<std::shared_ptr<Output>> outputs);
-	~Copy() {};
+	ResultHandler() {};
+	virtual ~ResultHandler() {};
 
-	bool open() override;
-	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
-	void terminated(int status, int signum, bool core_dumped) override;
-	void interrupted(int signum) override;
+	virtual void terminated(int status, int signum, bool core_dumped) = 0;
+	virtual void interrupted(int signum) = 0;
 
-private:
-	std::list<std::shared_ptr<Output>> outputs_;
+	ResultHandler(const ResultHandler&) = delete;
+	ResultHandler& operator=(const ResultHandler&) = delete;
 };
 
 } // namespace dtee

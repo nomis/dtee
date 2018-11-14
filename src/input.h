@@ -30,15 +30,15 @@
 #include <boost/system/error_code.hpp>
 
 #include "command_line.h"
+#include "dispatch.h"
 #include "input.h"
-#include "output.h"
 #include "to_string.h"
 
 namespace dtee {
 
 class Input {
 public:
-	Input(const CommandLine &command_line, std::shared_ptr<Output> output);
+	Input(const CommandLine &command_line, std::shared_ptr<Dispatch> output);
 	~Input() {};
 
 	bool open();
@@ -75,7 +75,7 @@ private:
 	std::vector<char> buffer_; //!< Incoming data
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data
 
-	std::shared_ptr<Output> output_;
+	std::shared_ptr<Dispatch> output_;
 	bool handle_signals_;
 	bool ignore_sigint_;
 };

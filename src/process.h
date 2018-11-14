@@ -20,19 +20,17 @@
 
 #include <cstddef>
 
-#include "output.h"
+#include "result_handler.h"
 
 namespace dtee {
 
 constexpr int SHELL_EXIT_CODE_SIGNAL = 0x80;
 
-class Process: public Output {
+class Process: public ResultHandler {
 public:
 	Process() {};
 	virtual ~Process() {};
 
-	bool open() override;
-	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 	void terminated(int status, int signum, bool core_dump) override;
 	void interrupted(int signum) override;
 

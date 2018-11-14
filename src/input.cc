@@ -55,7 +55,7 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-Input::Input(const CommandLine &command_line, shared_ptr<Output> output)
+Input::Input(const CommandLine &command_line, shared_ptr<Dispatch> output)
 		: input_(io_),
 		  out_(io_),
 		  err_(io_),

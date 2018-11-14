@@ -15,51 +15,35 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "copy.h"
+#ifndef DTEE_DISPATCH_H_
+#define DTEE_DISPATCH_H_
 
 #include <cstddef>
-#include <string>
+#include <list>
+#include <memory>
+#include <vector>
 
-using ::std::string;
+#include "output.h"
+#include "result_handler.h"
 
 namespace dtee {
 
-/* cppcheck-suppress passedByValue symbolName=outputs */
-Copy::Copy(std::list<std::shared_ptr<Output>> outputs)
-	: outputs_(outputs) {
+class Dispatch: public Output, public ResultHandler {
+public:
+	Dispatch(std::list<std::shared_ptr<Output>> &outputs, std::list<std::shared_ptr<ResultHandler>> &result_handlers);
+	~Dispatch() {};
 
-}
+	bool open() override;
+	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
-bool Copy::open() {
-	bool success = true;
+	void terminated(int status, int signum, bool core_dumped) override;
+	void interrupted(int signum = -1) override;
 
-	for (auto& output : outputs_) {
-		success &= output->open();
-	}
-
-	return success;
-}
-
-bool Copy::output(OutputType type, const std::vector<char> &buffer, size_t len) {
-	bool success = true;
-
-	for (auto& output : outputs_) {
-		success &= output->output(type, buffer, len);
-	}
-
-	return success;
-}
-
-void Copy::terminated(int status, int signum, bool core_dumped) {
-	for (auto& output : outputs_) {
-		output->terminated(status, signum, core_dumped);
-	}
-}
-
-void Copy::interrupted(int signum) {
-	for (auto& output : outputs_) {
-		output->interrupted(signum);
-	}
-}
+private:
+	std::list<std::shared_ptr<Output>> outputs_;
+	std::list<std::shared_ptr<ResultHandler>> result_handlers_;
+};
 
 } // namespace dtee
+
+#endif

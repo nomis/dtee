@@ -32,8 +32,8 @@
 #include <boost/format.hpp>
 
 #include "command_line.h"
-#include "copy.h"
 #include "cron.h"
+#include "dispatch.h"
 #include "file_output.h"
 #include "input.h"
 #include "process.h"
@@ -65,14 +65,14 @@ void Application::print_error(const format &message) {
 int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
 
-	shared_ptr<Copy> outputs = make_shared<Copy>(create_outputs());
-	shared_ptr<Input> input = make_shared<Input>(command_line_, outputs);
+	shared_ptr<Dispatch> output = create_dispatch();
+	shared_ptr<Input> input = make_shared<Input>(command_line_, output);
 
-	bool outputs_ok = outputs->open();
+	bool output_ok = output->open();
 	bool input_ok = input->open();
 	int ret_internal = EXIT_SUCCESS;
 
-	if (!outputs_ok) {
+	if (!output_ok) {
 		ret_internal = EX_CANTCREAT;
 
 		if (!command_line_.cron_mode()) {
@@ -128,7 +128,7 @@ int Application::run(int argc, const char* const argv[]) {
 	}
 
 	// Files are opened with O_CLOEXEC so these are unnecessary
-	outputs.reset();
+	output.reset();
 	cron_.reset();
 
 	// Stop handling signals and close all sockets
@@ -138,14 +138,15 @@ int Application::run(int argc, const char* const argv[]) {
 	return EX_SOFTWARE;
 }
 
+shared_ptr<Dispatch> Application::create_dispatch() {
+	list<shared_ptr<Output>> outputs = create_outputs();
+	list<shared_ptr<ResultHandler>> result_handlers = create_result_handlers();
+	return make_shared<Dispatch>(outputs, result_handlers);
+}
+
 list<shared_ptr<Output>> Application::create_outputs() {
 	list<shared_ptr<Output>> outputs;
-	shared_ptr<Output> original;
-
-	process_ = make_shared<Process>();
-	outputs.push_back(process_);
-
-	original = make_shared<StreamOutput>();
+	shared_ptr<Output> original = make_shared<StreamOutput>();
 
 	if (command_line_.cron_mode()) {
 		cron_ = make_shared<Cron>(
@@ -172,6 +173,19 @@ void Application::create_file_outputs(list<shared_ptr<Output>> &outputs,
 	for (const auto& filename : command_line_.list(name)) {
 		outputs.push_back(make_shared<FileOutput>(filename, type, append));
 	}
+}
+
+list<shared_ptr<ResultHandler>> Application::create_result_handlers() {
+	list<shared_ptr<ResultHandler>> result_handlers;
+
+	process_ = make_shared<Process>();
+	result_handlers.push_back(process_);
+
+	if (command_line_.cron_mode()) {
+		result_handlers.push_back(cron_);
+	}
+
+	return result_handlers;
 }
 
 void Application::execute(const vector<string> &command) {

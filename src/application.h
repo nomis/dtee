@@ -27,9 +27,11 @@
 
 #include "command_line.h"
 #include "cron.h"
+#include "dispatch.h"
 #include "output.h"
 #include "file_output.h"
 #include "process.h"
+#include "result_handler.h"
 
 namespace dtee {
 
@@ -48,7 +50,9 @@ public:
 private:
 	void create_file_outputs(std::list<std::shared_ptr<Output>> &outputs,
 			const std::string &name, FileOutputType type, bool append);
+	std::shared_ptr<Dispatch> create_dispatch();
 	std::list<std::shared_ptr<Output>> create_outputs();
+	std::list<std::shared_ptr<ResultHandler>> create_result_handlers();
 	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
 
 	CommandLine command_line_;
