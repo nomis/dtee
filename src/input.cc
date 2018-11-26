@@ -113,7 +113,7 @@ bool Input::open() {
 	const string err_name = temp_dir.register_file("e");
 	err_ep_ = datagram_protocol::endpoint{err_name};
 
-#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__APPLE__)
 	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #elif defined(__NetBSD__)
 	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 128 * 1024;
