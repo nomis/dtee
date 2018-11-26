@@ -8,7 +8,7 @@ NAME="${NAME/.sh}"
 # Ensure commands that are run have relative path names in argv[0]
 rm -f "$TESTDIR/$NAME.run"
 if [ -e "${0/.sh/.run}" ]; then
-	ln -s "${0/.sh/.run}" "$TESTDIR/$NAME.run"
+	ln "${0/.sh/.run}" "$TESTDIR/$NAME.run"
 fi
 RUN="$TESTDIR/$NAME.run"
 
