@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 echo -n "T" >&1
 echo -n "h" >&2
 echo -n "e" >&1
