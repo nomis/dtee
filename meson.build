@@ -58,6 +58,8 @@ elif host_machine.system() == 'netbsd'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_NETBSD_SOURCE']
 elif host_machine.system() == 'gnu'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-DPIPE_BUF=4096', '-DPATH_MAX=4096']
+elif host_machine.system() == 'darwin'
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_DARWIN_C_SOURCE']
 else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
