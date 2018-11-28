@@ -1,5 +1,9 @@
 . "$(dirname "$0")"/util/common.sh
 
+if [ "$UNAME" == "Darwin" ] && [ "$DTEE_TEST_COREDUMPS" != "1" ]; then
+	exit $TEST_EX_SKIP
+fi
+
 # Increase core size to unlimited and then the command will set it again
 ulimit -H -c unlimited || exit $TEST_EX_SKIP
 ulimit -S -c unlimited || exit $TEST_EX_SKIP

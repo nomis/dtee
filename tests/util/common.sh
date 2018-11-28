@@ -113,7 +113,15 @@ function build_ld_preload() {
 	echo "$LD_PRELOAD_STR"
 }
 
+function periodic_cleanup() {
+	if [ "$UNAME" == "Darwin" ] && [ "$DTEE_TEST_COREDUMPS" == "1" ]; then
+		# Why dump the whole of RAM without using sparse files? 😖
+		rm -f /cores/core.* /private/cores/core.*
+	fi
+}
+
 function before_test() {
+	periodic_cleanup
 	OLD_LD_PRELOAD="$(get_ld_preload)"
 	NEW_LD_PRELOAD="$(build_ld_preload)"
 	set_ld_preload "$NEW_LD_PRELOAD"
@@ -121,6 +129,7 @@ function before_test() {
 
 function after_test() {
 	set_ld_preload "$OLD_LD_PRELOAD"
+	periodic_cleanup
 }
 
 function cmp_files() {
