@@ -22,9 +22,7 @@
 
 static_assert(BOOST_ASIO_HAS_SIGACTION, "Boost must use sigaction() so that the SA_RESTART flag can be used");
 
-#if !defined(__APPLE__)
 extern "C" int __real_sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);
-#endif
 
 extern "C" int __attribute__((used)) __wrap_sigaction(int signum, const struct sigaction *act, struct sigaction *oldact) {
 	struct sigaction newact;
@@ -35,11 +33,7 @@ extern "C" int __attribute__((used)) __wrap_sigaction(int signum, const struct s
 		act = &newact;
 	}
 
-#if defined(__APPLE__)
-	return sigaction(signum, act, oldact);
-#else
 	return __real_sigaction(signum, act, oldact);
-#endif
 }
 
 #if defined(__NetBSD__)
