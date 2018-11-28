@@ -5,9 +5,10 @@
 #include <unistd.h>
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static char *dtee_test_fake_strsignal(int sig) {
-	char *(*next_strsignal)(int) = dlsym(RTLD_NEXT, "strsignal");
+	char *(*next_strsignal)(int) = TEST_FCN_NEXT(strsignal);
 
 	switch (sig) {
 #define STRSIGNAL_FOR(__sig) \
@@ -43,8 +44,8 @@ static char *dtee_test_fake_strsignal(int sig) {
 	}
 }
 
-char *strsignal(int sig) {
-	char *(*next_strsignal)(int) = dlsym(RTLD_NEXT, "strsignal");
+TEST_FCN_REPL(char *, strsignal, (int sig)) {
+	char *(*next_strsignal)(int) = TEST_FCN_NEXT(strsignal);
 	static __thread bool active = false;
 
 	if (!active) {

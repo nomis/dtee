@@ -8,11 +8,12 @@
 
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
+#include "dtee-fcn.h"
 
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
-int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen) {
-	int (*next_setsockopt)(int, int, int, const void *, socklen_t) = dlsym(RTLD_NEXT, "setsockopt");
+TEST_FCN_REPL(int, setsockopt, (int sockfd, int level, int optname, const void *optval, socklen_t optlen)) {
+	int (*next_setsockopt)(int, int, int, const void *, socklen_t) = TEST_FCN_NEXT(setsockopt);
 	static __thread bool active = false;
 
 	if (!active) {

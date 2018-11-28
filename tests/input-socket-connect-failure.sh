@@ -1,7 +1,7 @@
 . "$(dirname "$0")"/util/common.sh
 set -x
 
-TEST_LD_PRELOAD="./libtest-socket-connect-failure.so:./libtest-fake-getpid.so:./libtest-fake-getuid.so"
+TEST_LD_PRELOAD=(./libtest-socket-connect-failure ./libtest-fake-getpid ./libtest-fake-getuid)
 run_test "$RUN"
 RET=$?
 

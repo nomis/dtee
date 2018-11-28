@@ -12,7 +12,7 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
-COMMON_TEST_LD_PRELOAD=(./libtest-execvp-fd-check.so ./libtest-fake-strerror.so ./libtest-fake-strsignal.so)
+COMMON_TEST_LD_PRELOAD=(./libtest-execvp-fd-check ./libtest-fake-strerror ./libtest-fake-strsignal)
 
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
@@ -42,42 +42,85 @@ EXIT_FAILURE=1
 
 UNAME="$(uname)"
 
+case "$UNAME" in
+	Darwin)
+		SHLIB_EXT=.dylib
+		;;
+	*)
+		SHLIB_EXT=.so
+		;;
+esac
+
 function no_ld_preload() {
+	NEW_ARRAY=()
 	count=${#COMMON_TEST_LD_PRELOAD[@]}
 	for ((i = 0; i < count; i++)); do
-		if [ "${COMMON_TEST_LD_PRELOAD[i]}" = "$1" ] ; then
-			unset "COMMON_TEST_LD_PRELOAD[i]"
+		if [ "${COMMON_TEST_LD_PRELOAD[i]}" != "$1" ] ; then
+			NEW_ARRAY+=(${COMMON_TEST_LD_PRELOAD[i]})
 		fi
 	done
+	COMMON_TEST_LD_PRELOAD=$NEW_ARRAY
+}
+
+function get_ld_preload() {
+	case "$UNAME" in
+		Darwin)
+			echo "$DYLD_INSERT_LIBRARIES"
+			;;
+
+		*)
+			echo "$LD_PRELOAD"
+			;;
+	esac
+}
+
+function set_ld_preload() {
+	case "$UNAME" in
+		Darwin)
+			if [ -n "$1" ]; then
+				export DYLD_INSERT_LIBRARIES="$1"
+			else
+				unset DYLD_INSERT_LIBRARIES
+			fi
+			;;
+
+		*)
+			if [ -n "$1" ]; then
+				export LD_PRELOAD="$1"
+			else
+				unset LD_PRELOAD
+			fi
+			;;
+	esac
+}
+
+function build_ld_preload() {
+	LD_PRELOAD_STR="$(get_ld_preload)"
+	count=${#TEST_LD_PRELOAD[@]}
+	for ((i = 0; i < count; i++)); do
+		if [ -n "$LD_PRELOAD_STR" ]; then
+			LD_PRELOAD_STR="$LD_PRELOAD_STR:"
+		fi
+		LD_PRELOAD_STR="${LD_PRELOAD_STR}${TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
+	done
+	count=${#COMMON_TEST_LD_PRELOAD[@]}
+	for ((i = 0; i < count; i++)); do
+		if [ -n "$LD_PRELOAD_STR" ]; then
+			LD_PRELOAD_STR="$LD_PRELOAD_STR:"
+		fi
+		LD_PRELOAD_STR="${LD_PRELOAD_STR}${COMMON_TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
+	done
+	echo "$LD_PRELOAD_STR"
 }
 
 function before_test() {
-	OLD_LD_PRELOAD="$LD_PRELOAD"
-	OIFS="$IFS" IFS=:
-	NEW_LD_PRELOAD="${COMMON_TEST_LD_PRELOAD[*]}"
-	IFS="$OIFS"
-	if [ -n "$TEST_LD_PRELOAD" ]; then
-		if [ -n "$NEW_LD_PRELOAD" ]; then
-			NEW_LD_PRELOAD="$TEST_LD_PRELOAD:$NEW_LD_PRELOAD"
-		else
-			NEW_LD_PRELOAD="$TEST_LD_PRELOAD"
-		fi
-	fi
-	if [ -n "$NEW_LD_PRELOAD" ]; then
-		if [ -n "$OLD_LD_PRELOAD" ]; then
-			export LD_PRELOAD="$NEW_LD_PRELOAD:$OLD_LD_PRELOAD"
-		else
-			export LD_PRELOAD="$NEW_LD_PRELOAD"
-		fi
-	fi
+	OLD_LD_PRELOAD="$(get_ld_preload)"
+	NEW_LD_PRELOAD="$(build_ld_preload)"
+	set_ld_preload "$NEW_LD_PRELOAD"
 }
 
 function after_test() {
-	if [ -z "$OLD_LD_PRELOAD" ]; then
-		unset LD_PRELOAD
-	else
-		export LD_PRELOAD="$OLD_LD_PRELOAD"
-	fi
+	set_ld_preload "$OLD_LD_PRELOAD"
 }
 
 function cmp_files() {
@@ -264,6 +307,12 @@ function run_test() {
 	fi
 
 	return $RET1
+}
+
+function run_with_preload() {
+	before_test
+	"$@"
+	after_test
 }
 
 set -x

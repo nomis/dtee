@@ -3,14 +3,15 @@
 #include <unistd.h>
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static pid_t dtee_test_fork_failure(void) {
 	errno = EAGAIN;
 	return -1;
 }
 
-pid_t fork(void) {
-	pid_t (*next_fork)(void) = dlsym(RTLD_NEXT, "fork");
+TEST_FCN_REPL(pid_t, fork, (void)) {
+	pid_t (*next_fork)(void) = TEST_FCN_NEXT(fork);
 	static __thread bool active = false;
 
 	if (!active) {

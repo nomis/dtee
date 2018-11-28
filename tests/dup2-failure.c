@@ -3,14 +3,15 @@
 #include <unistd.h>
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static int dtee_test_dup2_failure(int oldfd __attribute__((unused)), int newfd __attribute__((unused))) {
 	errno = EMFILE;
 	return -1;
 }
 
-int dup2(int oldfd, int newfd) {
-	int (*next_dup2)(int, int) = dlsym(RTLD_NEXT, "dup2");
+TEST_FCN_REPL(int, dup2, (int oldfd, int newfd)) {
+	int (*next_dup2)(int, int) = TEST_FCN_NEXT(dup2);
 	static __thread bool active = false;
 
 	if (!active) {

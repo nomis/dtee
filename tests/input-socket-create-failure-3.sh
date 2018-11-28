@@ -3,7 +3,7 @@
 # Allow the first two sockets to work
 export DTEE_TEST_SOCKET_UNIX_FAILURE_ALLOW=2
 
-TEST_LD_PRELOAD="./libtest-socket-unix-failure.so:./libtest-fake-getpid.so:./libtest-fake-getuid.so"
+TEST_LD_PRELOAD=(./libtest-socket-unix-failure ./libtest-fake-getpid ./libtest-fake-getuid)
 run_test "$RUN"
 RET=$?
 

@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static char *dtee_test_mkdtemp_consistent(char *template) {
 	// Not a safe implementation of mkdtemp but the filename needs to be predictable
@@ -16,8 +17,8 @@ static char *dtee_test_mkdtemp_consistent(char *template) {
 	return template;
 }
 
-char *mkdtemp(char *template) {
-	char *(*next_mkdtemp)(char *) = dlsym(RTLD_NEXT, "mkdtemp");
+TEST_FCN_REPL(char *, mkdtemp, (char *template)) {
+	char *(*next_mkdtemp)(char *) = TEST_FCN_NEXT(mkdtemp);
 	static __thread bool active = false;
 
 	if (!active) {

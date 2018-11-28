@@ -3,7 +3,7 @@
 # Allow the first socket to work
 export DTEE_TEST_SOCKET_SHUTDOWN_FAILURE_ALLOW=1
 
-TEST_LD_PRELOAD="./libtest-socket-shutdown-failure.so:./libtest-fake-getpid.so:./libtest-fake-getuid.so"
+TEST_LD_PRELOAD=(./libtest-socket-shutdown-failure ./libtest-fake-getpid ./libtest-fake-getuid)
 run_test "$RUN"
 RET=$?
 

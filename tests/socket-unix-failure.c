@@ -13,14 +13,15 @@
 
 #include "allow-n-times.h"
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static int dtee_test_socket_failure(int domain __attribute__((unused)), int type __attribute__((unused)), int protocol __attribute__((unused))) {
 	errno = EAFNOSUPPORT;
 	return -1;
 }
 
-int socket(int domain, int type, int protocol) {
-	int (*next_socket)(int, int, int) = dlsym(RTLD_NEXT, "socket");
+TEST_FCN_REPL(int, socket, (int domain, int type, int protocol)) {
+	int (*next_socket)(int, int, int) = TEST_FCN_NEXT(socket);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -44,8 +45,8 @@ int socket(int domain, int type, int protocol) {
 }
 
 #if defined(__NetBSD__)
-int __socket30(int domain, int type, int protocol) {
-	int (*next___socket30)(int, int, int) = dlsym(RTLD_NEXT, "__socket30");
+TEST_FCN_REPL(int, __socket30, (int domain, int type, int protocol)) {
+	int (*next___socket30)(int, int, int) = TEST_FCN_NEXT(__socket30);
 	static __thread bool active = false;
 
 	if (!active) {

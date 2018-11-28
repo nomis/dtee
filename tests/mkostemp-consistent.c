@@ -12,6 +12,7 @@
 #undef mkostemp64
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static int dtee_test_mkostemp_consistent(char *template, int flags) {
 	// Not a safe implementation of mkostemp but the filename needs to be predictable
@@ -21,8 +22,8 @@ static int dtee_test_mkostemp_consistent(char *template, int flags) {
 	return open(template, flags, S_IRUSR);
 }
 
-int mkostemp(char *template, int flags) {
-	int (*next_mkostemp)(char *, int) = dlsym(RTLD_NEXT, "mkostemp");
+TEST_FCN_REPL(int, mkostemp, (char *template, int flags)) {
+	int (*next_mkostemp)(char *, int) = TEST_FCN_NEXT(mkostemp);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -39,8 +40,8 @@ int mkostemp(char *template, int flags) {
 }
 
 #if defined(__linux__)
-int mkostemp64(char *template, int flags) {
-	int (*next_mkostemp64)(char *, int) = dlsym(RTLD_NEXT, "mkostemp64");
+TEST_FCN_REPL(int, mkostemp64, (char *template, int flags)) {
+	int (*next_mkostemp64)(char *, int) = TEST_FCN_NEXT(mkostemp64);
 	static __thread bool active = false;
 
 	if (!active) {

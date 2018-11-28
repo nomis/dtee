@@ -13,11 +13,15 @@
 #undef mkostemp64
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static int cron_fd = -1;
 
+TEST_FCN_DECL(int, mkostemp, (char *template, int flags));
+TEST_FCN_DECL(int, mkostemp64, (char *template, int flags));
+
 static int dtee_test_mkostemp_copy(char *template, int flags) {
-	int (*next_mkostemp)(char *, int) = dlsym(RTLD_NEXT, "mkostemp");
+	int (*next_mkostemp)(char *, int) = TEST_FCN_NEXT(mkostemp);
 	int fd = (*next_mkostemp)(template, flags);
 	cron_fd = fd;
 	return fd;
@@ -25,15 +29,15 @@ static int dtee_test_mkostemp_copy(char *template, int flags) {
 
 #if defined(__linux__)
 static int dtee_test_mkostemp64_copy(char *template, int flags) {
-	int (*next_mkostemp64)(char *, int) = dlsym(RTLD_NEXT, "mkostemp64");
+	int (*next_mkostemp64)(char *, int) = TEST_FCN_NEXT(mkostemp64);
 	int fd = (*next_mkostemp64)(template, flags);
 	cron_fd = fd;
 	return fd;
 }
 #endif
 
-int mkostemp(char *template, int flags) {
-	int (*next_mkostemp)(char *, int) = dlsym(RTLD_NEXT, "mkostemp");
+TEST_FCN_REPL(int, mkostemp, (char *template, int flags)) {
+	int (*next_mkostemp)(char *, int) = TEST_FCN_NEXT(mkostemp);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -50,8 +54,8 @@ int mkostemp(char *template, int flags) {
 }
 
 #if defined(__linux__)
-int mkostemp64(char *template, int flags) {
-	int (*next_mkostemp64)(char *, int) = dlsym(RTLD_NEXT, "mkostemp64");
+TEST_FCN_REPL(int, mkostemp64, (char *template, int flags)) {
+	int (*next_mkostemp64)(char *, int) = TEST_FCN_NEXT(mkostemp64);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -69,7 +73,7 @@ int mkostemp64(char *template, int flags) {
 #endif
 
 static ssize_t dtee_test_write_truncate(int fd __attribute__((unused)), const void *buf __attribute__((unused)), size_t count __attribute__((unused))) {
-	ssize_t (*next_write)(int, const void *, size_t) = dlsym(RTLD_NEXT, "write");
+	ssize_t (*next_write)(int, const void *, size_t) = TEST_FCN_NEXT(write);
 
 	if (count > 1) {
 		count /= 2;
@@ -82,8 +86,8 @@ static ssize_t dtee_test_write_truncate(int fd __attribute__((unused)), const vo
 	return ret;
 }
 
-ssize_t write(int fd, const void *buf, size_t count) {
-	ssize_t (*next_write)(int, const void *, size_t) = dlsym(RTLD_NEXT, "write");
+TEST_FCN_REPL(ssize_t, write, (int fd, const void *buf, size_t count)) {
+	ssize_t (*next_write)(int, const void *, size_t) = TEST_FCN_NEXT(write);
 	static __thread bool active = false;
 
 	if (!active) {

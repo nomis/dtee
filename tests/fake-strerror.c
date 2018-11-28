@@ -13,6 +13,14 @@
 #undef __xpg_strerror_r
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
+
+TEST_FCN_DECL(char *, strerror, (int errnum));
+#ifdef __GLIBC__
+TEST_FCN_DECL(char *, strerror_r, (int errnum, char *buf, size_t buflen));
+#else
+TEST_FCN_DECL(int, strerror_r, (int errnum, char *buf, size_t buflen));
+#endif
 
 #ifdef __GLIBC__
 static char *dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
@@ -21,9 +29,9 @@ static int dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
 #endif
 	int errno_copy = errno;
 #ifdef __GLIBC__
-	char *(*next_strerror_r)(int, char *, size_t) = dlsym(RTLD_NEXT, "strerror_r");
+	char *(*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
 #else
-	int (*next_strerror_r)(int, char *, size_t) = dlsym(RTLD_NEXT, "strerror_r");
+	int (*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
 #endif
 
 	memset(buf, 0, buflen);
@@ -105,7 +113,7 @@ static char *dtee_test_fake_strerror(int errnum) {
 	return dtee_test_fake_strerror_r(errnum, buf, sizeof(buf));
 #else
 	int errno_copy = errno;
-	char *(*next_strerror)(int) = dlsym(RTLD_NEXT, "strerror");
+	char *(*next_strerror)(int) = TEST_FCN_NEXT(strerror);
 
 	errno = errno_copy;
 	if (dtee_test_fake_strerror_r(errnum, buf, sizeof(buf)) != 0) {
@@ -118,13 +126,15 @@ static char *dtee_test_fake_strerror(int errnum) {
 #endif
 }
 
+#if !defined(__APPLE__)
 static char *dtee_test_fake_strerror_l(int errnum, locale_t locale __attribute__((unused))) {
 	return dtee_test_fake_strerror(errnum);
 }
+#endif
 
-char *strerror(int errnum) {
+TEST_FCN_REPL(char *, strerror, (int errnum)) {
 	int errno_copy = errno;
-	char *(*next_strerror)(int) = dlsym(RTLD_NEXT, "strerror");
+	char *(*next_strerror)(int) = TEST_FCN_NEXT(strerror);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -145,15 +155,15 @@ char *strerror(int errnum) {
 // which then calls the old strerror_r function and assumes
 // that errnum is unknown if the return value is not buf
 #ifdef __GLIBC__
-char *strerror_r(int errnum, char *buf, size_t buflen) {
+TEST_FCN_REPL(char *, strerror_r, (int errnum, char *buf, size_t buflen)) {
 #else
-int strerror_r(int errnum, char *buf, size_t buflen) {
+TEST_FCN_REPL(int, strerror_r, (int errnum, char *buf, size_t buflen)) {
 #endif
 	int errno_copy = errno;
 #ifdef __GLIBC__
-	char *(*next_strerror_r)(int, char *, size_t) = dlsym(RTLD_NEXT, "strerror_r");
+	char *(*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
 #else
-	int (*next_strerror_r)(int, char *, size_t) = dlsym(RTLD_NEXT, "strerror_r");
+	int (*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
 #endif
 	static __thread bool active = false;
 
@@ -171,9 +181,10 @@ int strerror_r(int errnum, char *buf, size_t buflen) {
 	return (*next_strerror_r)(errnum, buf, buflen);
 }
 
-char *strerror_l(int errnum, locale_t locale) {
+#if !defined(__APPLE__)
+TEST_FCN_REPL(char *, strerror_l, (int errnum, locale_t locale)) {
 	int errno_copy = errno;
-	char *(*next_strerror_l)(int, locale_t) = dlsym(RTLD_NEXT, "strerror_l");
+	char *(*next_strerror_l)(int, locale_t) = TEST_FCN_NEXT(strerror_l);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -189,19 +200,21 @@ char *strerror_l(int errnum, locale_t locale) {
 	errno = errno_copy;
 	return (*next_strerror_l)(errnum, locale);
 }
+#endif
 
-static int dtee_test_fake___xpg_strerror_r(int errnum, char *buf, size_t buflen) {
 #ifdef __GLIBC__
+static int dtee_test_fake___xpg_strerror_r(int errnum, char *buf, size_t buflen) {
+# ifdef __GLIBC__
 	dtee_test_fake_strerror_r(errnum, buf, buflen);
 	return 0;
-#else
+# else
 	return dtee_test_fake_strerror_r(errnum, buf, buflen);
-#endif
+# endif
 }
 
-int __xpg_strerror_r(int errnum, char *buf, size_t buflen) {
+TEST_FCN_REPL(int, __xpg_strerror_r, (int errnum, char *buf, size_t buflen)) {
 	int errno_copy = errno;
-	int (*next___xpg_strerror_r)(int, char *, size_t) = dlsym(RTLD_NEXT, "__xpg_strerror_r");
+	int (*next___xpg_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(__xpg_strerror_r);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -217,3 +230,4 @@ int __xpg_strerror_r(int errnum, char *buf, size_t buflen) {
 	errno = errno_copy;
 	return (*next___xpg_strerror_r)(errnum, buf, buflen);
 }
+#endif

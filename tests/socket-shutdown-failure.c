@@ -7,14 +7,15 @@
 #include "allow-n-times.h"
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
+#include "dtee-fcn.h"
 
 static int dtee_test_shutdown_failure(int sockfd __attribute__((unused)), int how __attribute__((unused))) {
 	errno = ENOTCONN;
 	return -1;
 }
 
-int shutdown(int sockfd, int how) {
-	int (*next_shutdown)(int, int) = dlsym(RTLD_NEXT, "shutdown");
+TEST_FCN_REPL(int, shutdown, (int sockfd, int how)) {
+	int (*next_shutdown)(int, int) = TEST_FCN_NEXT(shutdown);
 	static __thread bool active = false;
 
 	if (!active) {

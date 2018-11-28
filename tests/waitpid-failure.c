@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static pid_t dtee_test_waitpid_failure(pid_t pid __attribute__((unused)), int *wstatus __attribute__((unused)), int options __attribute__((unused))) {
 	const char *type = getenv("DTEE_TEST_WAITPID_FAILURE_TYPE");
@@ -21,8 +22,8 @@ static pid_t dtee_test_waitpid_failure(pid_t pid __attribute__((unused)), int *w
 	}
 }
 
-pid_t waitpid(pid_t pid, int *wstatus, int options) {
-	pid_t (*next_waitpid)(pid_t, int *, int) = dlsym(RTLD_NEXT, "waitpid");
+TEST_FCN_REPL(pid_t, waitpid, (pid_t pid, int *wstatus, int options)) {
+	pid_t (*next_waitpid)(pid_t, int *, int) = TEST_FCN_NEXT(waitpid);
 	static __thread bool active = false;
 
 	if (!active) {

@@ -5,7 +5,7 @@ if [ "$UNAME" == "GNU" ]; then
 fi
 
 # Datagram sockets truncate the trailing portion if the buffer is too small
-TEST_LD_PRELOAD="./libtest-socket-recv-buffer-too-small.so"
+TEST_LD_PRELOAD=(./libtest-socket-recv-buffer-too-small)
 run_test "$RUN"
 RET=$?
 

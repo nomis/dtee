@@ -17,14 +17,15 @@
 
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
+#include "dtee-fcn.h"
 
 static bool have_details = false;
 static struct sockaddr_un input;
 static struct sockaddr_un output;
 
 // When dtee connects to its own input socket, copy the socket details and make an extra socket
-int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
-	int (*next_connect)(int, const struct sockaddr *, socklen_t) = dlsym(RTLD_NEXT, "connect");
+TEST_FCN_REPL(int, connect, (int sockfd, const struct sockaddr *addr, socklen_t addrlen)) {
+	int (*next_connect)(int, const struct sockaddr *, socklen_t) = TEST_FCN_NEXT(connect);
 
 	if (dtee_test_is_dtee() && !have_details) {
 		struct sockaddr_un sock_addr = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };
@@ -91,8 +92,8 @@ static int dtee_test_recreate_output_socket(FILE *extra) {
 }
 
 // The child process has exited, so any remaining data on the input socket will now be read
-pid_t waitpid(pid_t pid, int *wstatus, int options) {
-	pid_t (*next_waitpid)(pid_t, int *, int) = dlsym(RTLD_NEXT, "waitpid");
+TEST_FCN_REPL(pid_t, waitpid, (pid_t pid, int *wstatus, int options)) {
+	pid_t (*next_waitpid)(pid_t, int *, int) = TEST_FCN_NEXT(waitpid);
 	static __thread bool active = false;
 
 	if (!active) {

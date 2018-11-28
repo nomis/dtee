@@ -8,14 +8,15 @@
 #include "allow-n-times.h"
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
+#include "dtee-fcn.h"
 
 static int dtee_test_bind_failure(int sockfd __attribute__((unused)), const struct sockaddr *addr __attribute__((unused)), socklen_t addrlen __attribute__((unused))) {
 	errno = EACCES;
 	return -1;
 }
 
-int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
-	int (*next_bind)(int, const struct sockaddr *, socklen_t) = dlsym(RTLD_NEXT, "bind");
+TEST_FCN_REPL(int, bind, (int sockfd, const struct sockaddr *addr, socklen_t addrlen)) {
+	int (*next_bind)(int, const struct sockaddr *, socklen_t) = TEST_FCN_NEXT(bind);
 	static __thread bool active = false;
 
 	if (!active) {

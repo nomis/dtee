@@ -3,7 +3,7 @@
 # Allow the first few lines to work
 export DTEE_TEST_SOCKET_RECV_FAILURE_ALLOW=4
 
-TEST_LD_PRELOAD="./libtest-socket-recv-failure.so"
+TEST_LD_PRELOAD=(./libtest-socket-recv-failure)
 run_test "$RUN"
 RET=$?
 

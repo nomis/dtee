@@ -11,14 +11,15 @@
 
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
+#include "dtee-fcn.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
 static int extra_fd = -1;
 
 // When dtee connects to its own input socket, clone the socket details and make an extra socket
-int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
-	int (*next_connect)(int, const struct sockaddr *, socklen_t) = dlsym(RTLD_NEXT, "connect");
+TEST_FCN_REPL(int, connect, (int sockfd, const struct sockaddr *addr, socklen_t addrlen)) {
+	int (*next_connect)(int, const struct sockaddr *, socklen_t) = TEST_FCN_NEXT(connect);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -76,8 +77,8 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 }
 
 // When dtee is about to exec the command, insert an additional message
-int execvp(const char *filename, char *const argv[]) {
-	int (*next_execvp)(const char*, char * const *) = dlsym(RTLD_NEXT, "execvp");
+TEST_FCN_REPL(int, execvp, (const char *filename, char *const argv[])) {
+	int (*next_execvp)(const char*, char * const *) = TEST_FCN_NEXT(execvp);
 	static __thread bool active = false;
 
 	if (!active) {

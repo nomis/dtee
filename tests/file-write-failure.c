@@ -20,8 +20,14 @@
 #undef openat64
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static int fail_fd = -1;
+
+TEST_FCN_DECL(int, open, (const char *pathname, int flags, mode_t mode));
+TEST_FCN_DECL(int, open64, (const char *pathname, int flags, mode_t mode));
+TEST_FCN_DECL(int, openat, (int dirfd, const char *pathname, int flags, mode_t mode));
+TEST_FCN_DECL(int, openat64, (int dirfd, const char *pathname, int flags, mode_t mode));
 
 // When dtee opens the target file, store the fd
 static bool dtee_test_match_open(const char *pathname) {
@@ -45,31 +51,31 @@ static int dtee_test_return_open(int ret) {
 }
 
 static int dtee_test_capture_open(const char *pathname, int flags, mode_t mode) {
-	int (*next_open)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open");
+	int (*next_open)(const char *, int, mode_t) = TEST_FCN_NEXT(open);
 	return dtee_test_return_open((*next_open)(pathname, flags, mode));
 }
 
 #if defined(__linux__)
 static int dtee_test_capture_open64(const char *pathname, int flags, mode_t mode) {
-	int (*next_open64)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open64");
+	int (*next_open64)(const char *, int, mode_t) = TEST_FCN_NEXT(open64);
 	return dtee_test_return_open((*next_open64)(pathname, flags, mode));
 }
 #endif
 
 static int dtee_test_capture_openat(int dirfd, const char *pathname, int flags, mode_t mode) {
-	int (*next_openat)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat");
+	int (*next_openat)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat);
 	return dtee_test_return_open((*next_openat)(dirfd, pathname, flags, mode));
 }
 
 #if defined(__linux__)
 static int dtee_test_capture_openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
-	int (*next_openat64)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat64");
+	int (*next_openat64)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat64);
 	return dtee_test_return_open((*next_openat64)(dirfd, pathname, flags, mode));
 }
 #endif
 
-int open(const char *pathname, int flags, mode_t mode) {
-	int (*next_open)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open");
+TEST_FCN_REPL(int, open, (const char *pathname, int flags, mode_t mode)) {
+	int (*next_open)(const char *, int, mode_t) = TEST_FCN_NEXT(open);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -86,8 +92,8 @@ int open(const char *pathname, int flags, mode_t mode) {
 }
 
 #if defined(__linux__)
-int open64(const char *pathname, int flags, mode_t mode) {
-	int (*next_open64)(const char *, int, mode_t) = dlsym(RTLD_NEXT, "open64");
+TEST_FCN_REPL(int, open64, (const char *pathname, int flags, mode_t mode)) {
+	int (*next_open64)(const char *, int, mode_t) = TEST_FCN_NEXT(open64);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -104,8 +110,8 @@ int open64(const char *pathname, int flags, mode_t mode) {
 }
 #endif
 
-int openat(int dirfd, const char *pathname, int flags, mode_t mode) {
-	int (*next_openat)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat");
+TEST_FCN_REPL(int, openat, (int dirfd, const char *pathname, int flags, mode_t mode)) {
+	int (*next_openat)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -122,8 +128,8 @@ int openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 }
 
 #if defined(__linux__)
-int openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
-	int (*next_openat64)(int, const char *, int, mode_t) = dlsym(RTLD_NEXT, "openat64");
+TEST_FCN_REPL(int, openat64, (int dirfd, const char *pathname, int flags, mode_t mode)) {
+	int (*next_openat64)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat64);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -141,8 +147,8 @@ int openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 #endif
 
 // If dtee closes the target file, unset the fd
-int close(int fd) {
-	int (*next_close)(int) = dlsym(RTLD_NEXT, "close");
+TEST_FCN_REPL(int, close, (int fd)) {
+	int (*next_close)(int) = TEST_FCN_NEXT(close);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -165,8 +171,8 @@ static ssize_t dtee_test_write_failure(int fd __attribute__((unused)), const voi
 	return -1;
 }
 
-ssize_t write(int fd, const void *buf, size_t count) {
-	ssize_t (*next_write)(int, const void *, size_t) = dlsym(RTLD_NEXT, "write");
+TEST_FCN_REPL(ssize_t, write, (int fd, const void *buf, size_t count)) {
+	ssize_t (*next_write)(int, const void *, size_t) = TEST_FCN_NEXT(write);
 	static __thread bool active = false;
 
 	if (!active) {

@@ -4,7 +4,7 @@ function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file.out-overwrite.txt" "$TESTDIR/$NAME.file.com-overwrite.txt"
 }
 
-TEST_LD_PRELOAD="./libtest-write-truncate-cron.so:./libtest-mkostemp-consistent.so:./libtest-fake-getpid.so:./libtest-fake-getuid.so"
+TEST_LD_PRELOAD=(./libtest-write-truncate-cron ./libtest-mkostemp-consistent ./libtest-fake-getpid ./libtest-fake-getuid)
 run_test \
 	-O "$TESTDIR/$NAME.file.out-overwrite.txt" \
 	-C "$TESTDIR/$NAME.file.com-overwrite.txt" \

@@ -1,7 +1,7 @@
 . "$(dirname "$0")"/util/common.sh
 
 # If the input socket cannot be created, execute the command without dtee processing
-TEST_LD_PRELOAD="./libtest-socket-unix-failure.so:./libtest-fake-getpid.so:./libtest-fake-getuid.so"
+TEST_LD_PRELOAD=(./libtest-socket-unix-failure ./libtest-fake-getpid ./libtest-fake-getuid)
 run_test "-q" "$RUN"
 RET=$?
 

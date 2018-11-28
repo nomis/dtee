@@ -4,7 +4,7 @@ function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file.out-overwrite.txt" "$TESTDIR/$NAME.file.com-overwrite.txt"
 }
 
-TEST_LD_PRELOAD="./libtest-write-truncate-stdout.so"
+TEST_LD_PRELOAD=(./libtest-write-truncate-stdout)
 run_test \
 	-O "$TESTDIR/$NAME.file.out-overwrite.txt" \
 	-C "$TESTDIR/$NAME.file.com-overwrite.txt" \

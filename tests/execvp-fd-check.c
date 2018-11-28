@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static void dtee_test_check_fds(void) {
 	for (int fd = 0; fd < 4096; fd++) {
@@ -35,8 +36,8 @@ static void dtee_test_check_fds(void) {
 	}
 }
 
-int execvp(const char *filename, char *const argv[]) {
-	int (*next_execvp)(const char*, char * const *) = dlsym(RTLD_NEXT, "execvp");
+TEST_FCN_REPL(int, execvp, (const char *filename, char *const argv[])) {
+	int (*next_execvp)(const char*, char * const *) = TEST_FCN_NEXT(execvp);
 	static __thread bool active = false;
 
 	if (!active) {

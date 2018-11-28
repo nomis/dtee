@@ -12,9 +12,12 @@
 typedef struct __dtee__hide__sigaction dtee_sigaction_t;
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
+
+TEST_FCN_DECL(int, sigaction, (int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact));
 
 static int dtee_test_sigaction_no_restart(int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact) {
-	int (*next_sigaction)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = dlsym(RTLD_NEXT, "sigaction");
+	int (*next_sigaction)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = TEST_FCN_NEXT(sigaction);
 	dtee_sigaction_t newact;
 
 	if (act != NULL) {
@@ -26,8 +29,8 @@ static int dtee_test_sigaction_no_restart(int signum, const dtee_sigaction_t *ac
 	return (*next_sigaction)(signum, act, oldact);
 }
 
-int sigaction(int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact) {
-	int (*next_sigaction)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = dlsym(RTLD_NEXT, "sigaction");
+TEST_FCN_REPL(int, sigaction, (int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact)) {
+	int (*next_sigaction)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = TEST_FCN_NEXT(sigaction);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -45,7 +48,7 @@ int sigaction(int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact)
 
 #if defined(__NetBSD__)
 static int dtee_test___sigaction14_no_restart(int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact) {
-	int (*next___sigaction14)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = dlsym(RTLD_NEXT, "__sigaction14");
+	int (*next___sigaction14)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = TEST_FCN_NEXT(__sigaction14);
 	dtee_sigaction_t newact;
 
 	if (act != NULL) {
@@ -57,8 +60,8 @@ static int dtee_test___sigaction14_no_restart(int signum, const dtee_sigaction_t
 	return (*next___sigaction14)(signum, act, oldact);
 }
 
-int __sigaction14(int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact) {
-	int (*next___sigaction14)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = dlsym(RTLD_NEXT, "__sigaction14");
+TEST_FCN_REPL(int, __sigaction14, (int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact)) {
+	int (*next___sigaction14)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = TEST_FCN_NEXT(__sigaction14);
 	static __thread bool active = false;
 
 	if (!active) {

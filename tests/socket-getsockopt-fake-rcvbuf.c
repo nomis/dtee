@@ -9,6 +9,7 @@
 
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
+#include "dtee-fcn.h"
 
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -50,8 +51,8 @@ static int dtee_test_fake_rcvbuf(int sockfd __attribute__((unused)), int level _
 	}
 }
 
-int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen) {
-	int (*next_getsockopt)(int, int, int, void *, socklen_t *) = dlsym(RTLD_NEXT, "getsockopt");
+TEST_FCN_REPL(int, getsockopt, (int sockfd, int level, int optname, void *optval, socklen_t *optlen)) {
+	int (*next_getsockopt)(int, int, int, void *, socklen_t *) = TEST_FCN_NEXT(getsockopt);
 	static __thread bool active = false;
 
 	if (!active) {

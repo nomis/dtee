@@ -3,13 +3,14 @@
 #include <unistd.h>
 
 #include "is-dtee.h"
+#include "dtee-fcn.h"
 
 static uid_t dtee_test_fake_getuid(void) {
 	return 1;
 }
 
-uid_t getuid(void) {
-	uid_t (*next_getuid)(void) = dlsym(RTLD_NEXT, "getuid");
+TEST_FCN_REPL(uid_t, getuid, (void)) {
+	uid_t (*next_getuid)(void) = TEST_FCN_NEXT(getuid);
 	static __thread bool active = false;
 
 	if (!active) {

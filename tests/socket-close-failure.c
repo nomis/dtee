@@ -5,14 +5,15 @@
 
 #include "is-dtee.h"
 #include "is-fd-unix-socket.h"
+#include "dtee-fcn.h"
 
 static int dtee_test_close_failure(int fd __attribute__((unused))) {
 	errno = EIO;
 	return -1;
 }
 
-int close(int fd) {
-	int (*next_close)(int) = dlsym(RTLD_NEXT, "close");
+TEST_FCN_REPL(int, close, (int fd)) {
+	int (*next_close)(int) = TEST_FCN_NEXT(close);
 	static __thread bool active = false;
 
 	if (!active) {
