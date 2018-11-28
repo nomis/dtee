@@ -66,6 +66,8 @@ endif
 
 if host_machine.system() == 'netbsd' # 😩
 	link_args = ['-Wl,--wrap=sigaction', '-Wl,--wrap=__sigaction14']
+elif host_machine.system() == 'darwin'
+	link_args = []
 else # linux, freebsd, openbsd, dragonfly, gnu
 	link_args = ['-Wl,--wrap=sigaction']
 endif

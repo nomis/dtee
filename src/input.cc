@@ -15,6 +15,11 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+#if defined(__APPLE__)
+// Wrap sigaction manually because the linker can't do it 😩
+# define sigaction __wrap_sigaction
+#endif
+
 #include "input.h"
 
 #include <sys/types.h>
