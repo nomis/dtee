@@ -160,6 +160,10 @@ if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	test_c_args = c_args + ['-D_DEFAULT_SOURCE']
 	dlfcn_args = test_c_args + ['-D_GNU_SOURCE', '-Wno-pedantic']
 	dlfcn_deps = [c.find_library('dl')]
+elif host_machine.system() == 'darwin'
+	test_c_args = c_args
+	dlfcn_args = test_c_args
+	dlfcn_deps = []
 else # freebsd, openbsd, netbsd, dragonfly
 	test_c_args = c_args
 	dlfcn_args = test_c_args + ['-Wno-pedantic']
@@ -168,13 +172,13 @@ endif
 
 if host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd' or host_machine.system() == 'dragonfly'
 	proc_deps = [c.find_library('kvm')]
-else # linux, gnu
+else # linux, gnu, darwin
 	proc_deps = []
 endif
 
 if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	has_generic_sendfile = true
-else # freebsd, openbsd, netbsd, dragonfly
+else # freebsd, openbsd, netbsd, dragonfly, darwin
 	has_generic_sendfile = false
 endif
 
