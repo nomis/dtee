@@ -19,8 +19,8 @@ data?
 
 For more details read the :doc:`architecture <architecture>` document.
 
-FreeBSD/OpenBSD
----------------
+FreeBSD/OpenBSD/Darwin
+----------------------
 
 Writes to the socket do not block when the receive buffer of the peer socket is
 full. The default socket receive buffer is quite small so it will be raised to
@@ -32,17 +32,17 @@ Messages are likely to be lost from programs that write large amounts of data
 NetBSD
 ------
 
-Like `FreeBSD/OpenBSD`_ but the socket buffer can only be raised to 128KB so
-messages are very likely to be lost if data is written quickly. Unlike the other
-BSDs, this will result in an error on the receive call so it will not go
-unreported.
+Like `FreeBSD/OpenBSD/Darwin`_ but the socket buffer can only be raised to
+128KB so messages are very likely to be lost if data is written quickly. Unlike
+the other BSDs, this will result in an error on the receive call so it will not
+go unreported.
 
 DragonFlyBSD
 ------------
 
-Like `FreeBSD/OpenBSD`_ but even with a 512KB socket buffer it loses messages of
-|PIPE_BUF|_ size that are written very quickly. Writes of |BUFSIZ|_ size are ok
-because they result in fewer messages.
+Like `FreeBSD/OpenBSD/Darwin`_ but even with a 512KB socket buffer it loses
+messages of |PIPE_BUF|_ size that are written very quickly. Writes of |BUFSIZ|_
+size are ok because they result in fewer messages.
 
 GNU Hurd
 --------
