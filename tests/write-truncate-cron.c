@@ -21,20 +21,14 @@ TEST_FCN_DECL(int, mkostemp, (char *template, int flags));
 TEST_FCN_DECL(int, mkostemp64, (char *template, int flags));
 
 static int dtee_test_mkostemp_copy(char *template, int flags) {
-	int (*next_mkostemp)(char *, int) = TEST_FCN_NEXT(mkostemp);
-	int fd = (*next_mkostemp)(template, flags);
+	// Not a safe implementation of mkostemp but the filename needs to be predictable
+	unlink(template);
+	flags &= ~(O_RDONLY | O_WRONLY);
+	flags |= O_RDWR | O_CREAT | O_EXCL;
+	int fd = open(template, flags, S_IRUSR);
 	cron_fd = fd;
 	return fd;
 }
-
-#if defined(__linux__)
-static int dtee_test_mkostemp64_copy(char *template, int flags) {
-	int (*next_mkostemp64)(char *, int) = TEST_FCN_NEXT(mkostemp64);
-	int fd = (*next_mkostemp64)(template, flags);
-	cron_fd = fd;
-	return fd;
-}
-#endif
 
 TEST_FCN_REPL(int, mkostemp, (char *template, int flags)) {
 	int (*next_mkostemp)(char *, int) = TEST_FCN_NEXT(mkostemp);
@@ -62,7 +56,7 @@ TEST_FCN_REPL(int, mkostemp64, (char *template, int flags)) {
 		active = true;
 
 		if (dtee_test_is_dtee()) {
-			next_mkostemp64 = dtee_test_mkostemp64_copy;
+			next_mkostemp64 = dtee_test_mkostemp_copy;
 		}
 
 		active = false;
