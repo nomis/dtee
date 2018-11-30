@@ -5,10 +5,19 @@ UTIL_DIR="$(dirname "$0")/util"
 NAME="$(basename "$0")"
 NAME="${NAME/.sh}"
 
+# GNU standard
+TEST_EX_OK=0
+TEST_EX_FAIL=1
+TEST_EX_SKIP=77
+
+# C standard
+EXIT_SUCCESS=0
+EXIT_FAILURE=1
+
 # Ensure commands that are run have relative path names in argv[0]
-rm -f "$TESTDIR/$NAME.run"
+rm -f "$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 if [ -e "${0/.sh/.run}" ]; then
-	ln "${0/.sh/.run}" "$TESTDIR/$NAME.run"
+	ln "${0/.sh/.run}" "$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 fi
 RUN="$TESTDIR/$NAME.run"
 
@@ -21,18 +30,9 @@ TEST_ALT_STDOUT=
 TEST_ALT_STDERR=
 
 # Use a consistent and isolated temporary directory
-rm -rf "$TESTDIR/$NAME.tmp"
-mkdir -p "$TESTDIR/$NAME.tmp"
+rm -rf "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
+mkdir -p "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
 export TMPDIR="./$TESTDIR/$NAME.tmp"
-
-# GNU standard
-TEST_EX_OK=0
-TEST_EX_FAIL=1
-TEST_EX_SKIP=77
-
-# C standard
-EXIT_SUCCESS=0
-EXIT_FAILURE=1
 
 # /usr/include/sysexits.h
 . sysexits.txt
