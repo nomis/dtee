@@ -84,23 +84,48 @@ matrix:
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, python3-sphinx, clang-6.0, llvm-6.0-dev]
       env: BUILD=app C_COMPILER=clang-6.0 CXX_COMPILER=clang++-6.0 UNITY=1
 
+    - name: Xcode 9
+      os: osx
+      osx_image: xcode9.4
+      addons:
+        homebrew:
+          packages:
+          - boost
+          - meson
+          - ninja
+          update: true
+      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ UNITY=0 PIP_SPHINX=0
+
+    - name: Xcode 10
+      os: osx
+      osx_image: xcode10.1
+      addons:
+        homebrew:
+          packages:
+          - boost
+          - meson
+          - ninja
+          update: true
+      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ UNITY=0 PIP_SPHINX=1
+
 install:
   - if [ "$BUILD" = "app" ]; then
-      pip3 install --user --upgrade pip;
-      pip3 install --user setuptools;
-      pip3 install --user meson ninja;
-    elif [ "$BUILD" = "docs" ]; then
+      pip3 install --user --upgrade pip || exit 1;
+      pip3 install --user setuptools || exit 1;
+      pip3 install --user meson ninja || exit 1;
+    fi
+  - if [ "$BUILD" = "docs" ] || [ $PIP_SPHINX -eq 1 ]; then
       pip3 install --user Sphinx;
     fi
 
 script:
   - if [ "$BUILD" = "app" ]; then
-      make CC=$C_COMPILER CXX=$CXX_COMPILER distclean check;
+      make CC=$C_COMPILER CXX=$CXX_COMPILER MESON_OPTS="-Dtest_expect_fail=true" distclean check || exit 1;
       if [ $UNITY -eq 1 ]; then
-        make CC=$C_COMPILER CXX=$CXX_COMPILER MESON_OPTS="--unity on" distclean check;
+        make CC=$C_COMPILER CXX=$CXX_COMPILER MESON_OPTS="-Dtest_expect_fail=true --unity on" distclean check || exit 1;
       fi;
     elif [ "$BUILD" = "docs" ]; then
-      make -C docs man html linkcheck;
+      make -C docs man html linkcheck || exit 1;
     fi
 
 notifications:
