@@ -15,20 +15,26 @@
 #include "is-dtee.h"
 #include "dtee-fcn.h"
 
+#if defined(__GLIBC__) || defined(__CYGWIN__)
+# define CHAR_STRERROR_R 1
+#else
+# define CHAR_STRERROR_R 0
+#endif
+
 TEST_FCN_DECL(char *, strerror, (int errnum));
-#ifdef __GLIBC__
+#if CHAR_STRERROR_R
 TEST_FCN_DECL(char *, strerror_r, (int errnum, char *buf, size_t buflen));
 #else
 TEST_FCN_DECL(int, strerror_r, (int errnum, char *buf, size_t buflen));
 #endif
 
-#ifdef __GLIBC__
+#if CHAR_STRERROR_R
 static char *dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
 #else
 static int dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
 #endif
 	int errno_copy = errno;
-#ifdef __GLIBC__
+#if CHAR_STRERROR_R
 	char *(*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
 #else
 	int (*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
@@ -99,7 +105,7 @@ static int dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
 	}
 
 	errno = errno_copy;
-#ifdef __GLIBC__
+#if CHAR_STRERROR_R
 	return buf;
 #else
 	return 0;
@@ -108,22 +114,21 @@ static int dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
 
 static char *dtee_test_fake_strerror(int errnum) {
 	static char buf[1024];
-
-#ifdef __GLIBC__
-	return dtee_test_fake_strerror_r(errnum, buf, sizeof(buf));
-#else
 	int errno_copy = errno;
 	char *(*next_strerror)(int) = TEST_FCN_NEXT(strerror);
 
 	errno = errno_copy;
+#if CHAR_STRERROR_R
+	if (dtee_test_fake_strerror_r(errnum, buf, sizeof(buf)) == NULL) {
+#else
 	if (dtee_test_fake_strerror_r(errnum, buf, sizeof(buf)) != 0) {
+#endif
 		errno = errno_copy;
 		return (*next_strerror)(errnum);
 	}
 
 	errno = errno_copy;
 	return buf;
-#endif
 }
 
 #if !defined(__APPLE__)
@@ -151,16 +156,13 @@ TEST_FCN_REPL(char *, strerror, (int errnum)) {
 	return (*next_strerror)(errnum);
 }
 
-// glibc implements the POSIX strerror_r as __xpg_strerror_r
-// which then calls the old strerror_r function and assumes
-// that errnum is unknown if the return value is not buf
-#ifdef __GLIBC__
+#if CHAR_STRERROR_R
 TEST_FCN_REPL(char *, strerror_r, (int errnum, char *buf, size_t buflen)) {
 #else
 TEST_FCN_REPL(int, strerror_r, (int errnum, char *buf, size_t buflen)) {
 #endif
 	int errno_copy = errno;
-#ifdef __GLIBC__
+#if CHAR_STRERROR_R
 	char *(*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
 #else
 	int (*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
@@ -202,9 +204,9 @@ TEST_FCN_REPL(char *, strerror_l, (int errnum, locale_t locale)) {
 }
 #endif
 
-#ifdef __GLIBC__
+#if CHAR_STRERROR_R
 static int dtee_test_fake___xpg_strerror_r(int errnum, char *buf, size_t buflen) {
-# ifdef __GLIBC__
+# if CHAR_STRERROR_R
 	dtee_test_fake_strerror_r(errnum, buf, buflen);
 	return 0;
 # else
