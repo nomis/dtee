@@ -1,6 +1,6 @@
 . "$(dirname "$0")"/util/common.sh
 
-TEST_LD_PRELOAD=(./libtest-kill-failure)
+TEST_LD_PRELOAD=(test-kill-failure)
 # If kill fails, we can only exit with a simulated SIGINT
 run_test ./test-kill-pid $SIGINT
 RET=$?

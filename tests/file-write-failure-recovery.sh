@@ -7,7 +7,7 @@ function test_prepare() {
 export DTEE_TEST_FILE_WRITE_FAIL_NAME="$TESTDIR/$NAME.file.out-overwrite1.txt"
 export DTEE_FILE_WRITE_FAILURE_EXIT_CODE=0
 
-TEST_LD_PRELOAD=(./libtest-file-write-failure-recovery)
+TEST_LD_PRELOAD=(test-file-write-failure-recovery)
 run_test -O "$TESTDIR/$NAME.file.out-overwrite1.txt" -O "$TESTDIR/$NAME.file.out-overwrite2.txt" "$RUN"
 RET=$?
 

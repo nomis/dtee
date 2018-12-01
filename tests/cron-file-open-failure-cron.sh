@@ -1,7 +1,7 @@
 . "$(dirname "$0")"/util/common.sh
 
 # If the temporary output file cannot be opened, it should fallback to using stdout/stderr as normal
-TEST_LD_PRELOAD=(./libtest-mkostemp-failure ./libtest-fake-getpid ./libtest-fake-getuid)
+TEST_LD_PRELOAD=(test-mkostemp-failure test-fake-getpid test-fake-getuid)
 run_test "-q" "$RUN"
 RET=$?
 

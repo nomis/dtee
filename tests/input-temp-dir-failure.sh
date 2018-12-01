@@ -1,6 +1,6 @@
 . "$(dirname "$0")"/util/common.sh
 
-TEST_LD_PRELOAD=(./libtest-mkdtemp-failure ./libtest-fake-getpid ./libtest-fake-getuid)
+TEST_LD_PRELOAD=(test-mkdtemp-failure test-fake-getpid test-fake-getuid)
 run_test "$RUN"
 RET=$?
 

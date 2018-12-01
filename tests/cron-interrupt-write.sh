@@ -5,7 +5,7 @@ function test_prepare() {
 	make_fifo "block"
 }
 
-no_ld_preload "./libtest-execvp-fd-check"
+no_ld_preload "test-execvp-fd-check"
 
 # Send SIGINT to the process while write() is blocked
 # The signal should be handled without interrupting the write()

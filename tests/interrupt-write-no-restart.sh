@@ -5,10 +5,10 @@ function test_prepare() {
 	make_fifo "block"
 }
 
-no_ld_preload "./libtest-execvp-fd-check"
+no_ld_preload "test-execvp-fd-check"
 
 # Disable the use of SA_RESTART to prove that it is having the desired effect
-TEST_LD_PRELOAD=(./libtest-sigaction-no-restart)
+TEST_LD_PRELOAD=(test-sigaction-no-restart)
 
 # Send SIGINT to the process while write() is blocked
 # The signal should interrupt the write()

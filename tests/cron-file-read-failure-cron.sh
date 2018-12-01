@@ -1,7 +1,7 @@
 . "$(dirname "$0")"/util/common.sh
 
 # If the temporary output file cannot be read, it should output an error message
-TEST_LD_PRELOAD=(./libtest-mkostemp-writeonly ./libtest-fake-getpid ./libtest-fake-getuid)
+TEST_LD_PRELOAD=(test-mkostemp-writeonly test-fake-getpid test-fake-getuid)
 run_test "-q" "$RUN"
 RET=$?
 

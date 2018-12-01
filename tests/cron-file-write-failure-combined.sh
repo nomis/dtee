@@ -6,7 +6,7 @@ function test_prepare() {
 
 export DTEE_TEST_FILE_WRITE_FAIL_NAME="$TESTDIR/$NAME.file.com-append.txt"
 
-TEST_LD_PRELOAD=(./libtest-file-write-failure)
+TEST_LD_PRELOAD=(test-file-write-failure)
 run_test -q -c "$TESTDIR/$NAME.file.com-append.txt" "$RUN"
 RET=$?
 

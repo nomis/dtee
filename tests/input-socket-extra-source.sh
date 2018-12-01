@@ -1,8 +1,8 @@
 . "$(dirname "$0")"/util/common.sh
 
-no_ld_preload "./libtest-execvp-fd-check"
+no_ld_preload "test-execvp-fd-check"
 
-TEST_LD_PRELOAD=(./libtest-socket-add-extra-source ./libtest-mkdtemp-consistent ./libtest-fake-getpid ./libtest-fake-getuid)
+TEST_LD_PRELOAD=(test-socket-add-extra-source test-mkdtemp-consistent test-fake-getpid test-fake-getuid)
 run_test "$RUN"
 RET=$?
 

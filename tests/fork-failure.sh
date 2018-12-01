@@ -4,7 +4,7 @@ function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file.com-overwrite.txt"
 }
 
-TEST_LD_PRELOAD=(./libtest-fork-failure)
+TEST_LD_PRELOAD=(test-fork-failure)
 # If fork fails then dtee will exit without running the command
 run_test -C "$TESTDIR/$NAME.file.com-overwrite.txt" "$RUN"
 RET=$?

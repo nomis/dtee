@@ -7,7 +7,7 @@ function test_prepare() {
 }
 
 export DTEE_TEST_WAITPID_FAILURE_TYPE=NO_CHILDREN
-TEST_LD_PRELOAD=(./libtest-waitpid-failure)
+TEST_LD_PRELOAD=(test-waitpid-failure)
 run_test -C "$DTEE_TEST_MONITOR_OUTPUT" ./test-lorem-ipsum-wait-exit 1
 RET=$?
 

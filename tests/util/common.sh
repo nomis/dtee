@@ -21,7 +21,7 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
-COMMON_TEST_LD_PRELOAD=(./libtest-execvp-fd-check ./libtest-fake-strerror ./libtest-fake-strsignal)
+COMMON_TEST_LD_PRELOAD=(test-execvp-fd-check test-fake-strerror test-fake-strsignal)
 
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
@@ -44,9 +44,15 @@ UNAME="$(uname)"
 
 case "$UNAME" in
 	Darwin)
+		SHLIB_PREFIX=./lib
 		SHLIB_EXT=.dylib
 		;;
+	CYGWIN_*)
+		SHLIB_PREFIX=./cyg
+		SHLIB_EXT=.dll
+		;;
 	*)
+		SHLIB_PREFIX=./lib
 		SHLIB_EXT=.so
 		;;
 esac
@@ -101,14 +107,14 @@ function build_ld_preload() {
 		if [ -n "$LD_PRELOAD_STR" ]; then
 			LD_PRELOAD_STR="$LD_PRELOAD_STR:"
 		fi
-		LD_PRELOAD_STR="${LD_PRELOAD_STR}${TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
+		LD_PRELOAD_STR="${LD_PRELOAD_STR}${SHLIB_PREFIX}${TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
 	done
 	count=${#COMMON_TEST_LD_PRELOAD[@]}
 	for ((i = 0; i < count; i++)); do
 		if [ -n "$LD_PRELOAD_STR" ]; then
 			LD_PRELOAD_STR="$LD_PRELOAD_STR:"
 		fi
-		LD_PRELOAD_STR="${LD_PRELOAD_STR}${COMMON_TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
+		LD_PRELOAD_STR="${LD_PRELOAD_STR}${SHLIB_PREFIX}${COMMON_TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
 	done
 	echo "$LD_PRELOAD_STR"
 }

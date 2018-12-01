@@ -6,7 +6,7 @@ function test_prepare() {
 	rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
-TEST_LD_PRELOAD=(./libtest-kill-failure)
+TEST_LD_PRELOAD=(test-kill-failure)
 # If kill fails, we can only exit with a simulated SIGHUP
 run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGHUP
 RET=$?

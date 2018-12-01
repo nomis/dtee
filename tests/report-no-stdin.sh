@@ -5,10 +5,10 @@ function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file.out-overwrite.txt" "$TESTDIR/$NAME.file.err-overwrite.txt" "$TESTDIR/$NAME.file.com-overwrite.txt"
 }
 
-no_ld_preload "./libtest-execvp-fd-check"
+no_ld_preload "test-execvp-fd-check"
 TEST_NO_STDIN=1
 
-TEST_LD_PRELOAD=(./libtest-mkdtemp-consistent ./libtest-fake-getpid ./libtest-fake-getuid)
+TEST_LD_PRELOAD=(test-mkdtemp-consistent test-fake-getpid test-fake-getuid)
 run_test \
 	-o "$TESTDIR/$NAME.file.out-append.txt" -O "$TESTDIR/$NAME.file.out-overwrite.txt" \
 	-e "$TESTDIR/$NAME.file.err-append.txt" -E "$TESTDIR/$NAME.file.err-overwrite.txt" \

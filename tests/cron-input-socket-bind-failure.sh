@@ -1,7 +1,7 @@
 . "$(dirname "$0")"/util/common.sh
 
 # If the input socket bind fails, execute the command without dtee processing
-TEST_LD_PRELOAD=(./libtest-socket-bind-failure ./libtest-fake-getpid ./libtest-fake-getuid)
+TEST_LD_PRELOAD=(test-socket-bind-failure test-fake-getpid test-fake-getuid)
 run_test "-q" "$RUN"
 RET=$?
 
