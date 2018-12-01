@@ -35,6 +35,7 @@
 #include <exception>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
@@ -47,6 +48,8 @@ using ::std::bind;
 using ::std::max;
 using ::std::shared_ptr;
 using ::std::string;
+using ::std::vector;
+using ::boost::asio::buffer;
 using ::boost::asio::local::datagram_protocol;
 using ::boost::asio::io_service;
 using ::boost::format;
@@ -184,6 +187,14 @@ bool Input::open() {
 #if !defined(__GNU__)
 		out_.set_option(so_sndbuf);
 #endif
+#if defined(__CYGWIN__)
+		// On Cygwin, getsockname() does not return the same value as
+		// recvfrom() or getpeername() does for the other socket.
+		// Send an empty message to obtain the real socket address.
+		vector<char> empty{0};
+		out_.send(buffer(empty));
+		input_.receive_from(buffer(empty), out_ep_);
+#endif
 	} catch (std::exception &e) {
 		print_socket_error(format("stdout socket: %1%"), e);
 		return false;
@@ -199,6 +210,14 @@ bool Input::open() {
 		err_.shutdown(datagram_protocol::socket::shutdown_receive);
 #if !defined(__GNU__)
 		err_.set_option(so_sndbuf);
+#endif
+#if defined(__CYGWIN__)
+		// On Cygwin, getsockname() does not return the same value as
+		// recvfrom() or getpeername() does for the other socket.
+		// Send an empty message to obtain the real socket address.
+		vector<char> empty{0};
+		err_.send(buffer(empty));
+		input_.receive_from(buffer(empty), err_ep_);
 #endif
 	} catch (std::exception &e) {
 		print_socket_error(format("stderr socket: %1%"), e);
@@ -236,7 +255,7 @@ bool Input::fork_parent(pid_t pid) {
 
 	child_ = pid;
 
-	input_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
+	input_.async_receive_from(buffer(buffer_), recv_ep_,
 			bind(&Input::handle_receive_from, this, p::_1, p::_2));
 
 	child_exited_.async_wait(bind(&Input::handle_child_exited, this, p::_1, p::_2));
@@ -321,7 +340,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 #endif
 		}
 
-		input_.async_receive_from(boost::asio::buffer(buffer_), recv_ep_,
+		input_.async_receive_from(buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
 		print_socket_error(format("socket receive: %1%"), ec);
