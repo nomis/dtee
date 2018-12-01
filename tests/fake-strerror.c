@@ -119,16 +119,18 @@ static char *dtee_test_fake_strerror(int errnum) {
 
 	errno = errno_copy;
 #if CHAR_STRERROR_R
-	if (dtee_test_fake_strerror_r(errnum, buf, sizeof(buf)) == NULL) {
+	char *ret = dtee_test_fake_strerror_r(errnum, buf, sizeof(buf));
+	if (ret == NULL) {
 #else
-	if (dtee_test_fake_strerror_r(errnum, buf, sizeof(buf)) != 0) {
+	char *ret = buf;
+	if (dtee_test_fake_strerror_r(errnum, buf, sizeof(buf))) {
 #endif
 		errno = errno_copy;
 		return (*next_strerror)(errnum);
 	}
 
 	errno = errno_copy;
-	return buf;
+	return ret;
 }
 
 #if !defined(__APPLE__)
