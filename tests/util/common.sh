@@ -57,6 +57,22 @@ case "$UNAME" in
 		;;
 esac
 
+function is_acl_override() {
+	# Are ACL permissions on files overridden?
+	case "$UNAME" in
+		CYGWIN_*)
+			# Running with elevated permissions
+			id -G | grep -E '\<(114|544)\>'
+			return $?
+			;;
+
+		*)
+			# Running as root
+			return [ $(id -u) -eq 0 ]
+			;;
+	esac
+}
+
 function no_ld_preload() {
 	NEW_ARRAY=()
 	count=${#COMMON_TEST_LD_PRELOAD[@]}
