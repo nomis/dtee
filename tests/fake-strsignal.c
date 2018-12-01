@@ -7,6 +7,8 @@
 #include "is-dtee.h"
 #include "dtee-fcn.h"
 
+TEST_FCN_DECL(char *, strsignal, (int sig));
+
 static char *dtee_test_fake_strsignal(int sig) {
 	char *(*next_strsignal)(int) = TEST_FCN_NEXT(strsignal);
 

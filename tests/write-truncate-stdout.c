@@ -6,6 +6,8 @@
 #include "is-dtee.h"
 #include "dtee-fcn.h"
 
+TEST_FCN_DECL(ssize_t, write, (int fd, const void *buf, size_t count));
+
 static ssize_t dtee_test_write_truncate(int fd __attribute__((unused)), const void *buf __attribute__((unused)), size_t count __attribute__((unused))) {
 	ssize_t (*next_write)(int, const void *, size_t) = TEST_FCN_NEXT(write);
 

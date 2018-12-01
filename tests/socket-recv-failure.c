@@ -10,6 +10,10 @@
 #include "is-fd-unix-socket.h"
 #include "dtee-fcn.h"
 
+TEST_FCN_DECL(ssize_t, recv, (int sockfd, void *buf, size_t len, int flags));
+TEST_FCN_DECL(ssize_t, recvfrom, (int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen));
+TEST_FCN_DECL(ssize_t, recvmsg, (int sockfd, struct msghdr *msg, int flags));
+
 static ssize_t dtee_test_recv_failure(int sockfd __attribute__((unused)), void *buf __attribute__((unused)), size_t len __attribute__((unused)), int flags __attribute__((unused))) {
 	ssize_t (*next_recv)(int, void *, size_t, int) = TEST_FCN_NEXT(recv);
 	static unsigned long allowed = 0;

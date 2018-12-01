@@ -34,7 +34,7 @@ TEST_FCN_REPL(int, connect, (int sockfd, const struct sockaddr *addr, socklen_t 
 				sock_addr.sun_path[sizeof(sock_addr.sun_path) - 1] = 0;
 				extra_addr = sock_addr;
 				extra_addr.sun_path[strlen(extra_addr.sun_path) - 1] = 'x';
-				memcpy(&dest_addr, addr, min(sizeof(dest_addr), addrlen));
+				memcpy(&dest_addr, addr, min((socklen_t)sizeof(dest_addr), addrlen));
 				dest_addr.sun_path[sizeof(dest_addr.sun_path) - 1] = 0;
 
 				extra_fd = socket(AF_UNIX, SOCK_DGRAM, 0);

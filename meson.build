@@ -60,6 +60,8 @@ elif host_machine.system() == 'gnu'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-DPIPE_BUF=4096', '-DPATH_MAX=4096']
 elif host_machine.system() == 'darwin'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_DARWIN_C_SOURCE']
+elif host_machine.system() == 'cygwin'
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_GNU_SOURCE']
 else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
@@ -68,7 +70,7 @@ if host_machine.system() == 'netbsd' # 😩
 	link_args = ['-Wl,--wrap=sigaction', '-Wl,--wrap=__sigaction14']
 elif host_machine.system() == 'darwin'
 	link_args = ['-Wl,-alias,_sigaction,___real_sigaction']
-else # linux, freebsd, openbsd, dragonfly, gnu
+else # linux, freebsd, openbsd, dragonfly, gnu, cygwin
 	link_args = ['-Wl,--wrap=sigaction']
 endif
 
@@ -164,7 +166,7 @@ elif host_machine.system() == 'darwin'
 	test_c_args = c_args
 	dlfcn_args = test_c_args
 	dlfcn_deps = []
-else # freebsd, openbsd, netbsd, dragonfly
+else # freebsd, openbsd, netbsd, dragonfly, cygwin
 	test_c_args = c_args
 	dlfcn_args = test_c_args + ['-Wno-pedantic']
 	dlfcn_deps = []
@@ -178,7 +180,7 @@ endif
 
 if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	has_generic_sendfile = true
-else # freebsd, openbsd, netbsd, dragonfly, darwin
+else # freebsd, openbsd, netbsd, dragonfly, darwin, cygwin
 	has_generic_sendfile = false
 endif
 

@@ -21,6 +21,7 @@ TEST_FCN_DECL(int, mkostemp, (char *template, int flags));
 #if defined(__linux__)
 TEST_FCN_DECL(int, mkostemp64, (char *template, int flags));
 #endif
+TEST_FCN_DECL(ssize_t, write, (int fd, const void *buf, size_t count));
 
 static int dtee_test_mkostemp_copy(char *template, int flags) {
 	// Not a safe implementation of mkostemp but the filename needs to be predictable
