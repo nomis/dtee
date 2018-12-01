@@ -25,9 +25,11 @@
 static int fail_fd = -1;
 
 TEST_FCN_DECL(int, open, (const char *pathname, int flags, mode_t mode));
-TEST_FCN_DECL(int, open64, (const char *pathname, int flags, mode_t mode));
 TEST_FCN_DECL(int, openat, (int dirfd, const char *pathname, int flags, mode_t mode));
+#if defined(__linux__)
+TEST_FCN_DECL(int, open64, (const char *pathname, int flags, mode_t mode));
 TEST_FCN_DECL(int, openat64, (int dirfd, const char *pathname, int flags, mode_t mode));
+#endif
 
 // When dtee opens the target file, store the fd
 static bool dtee_test_match_open(const char *pathname) {

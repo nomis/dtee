@@ -18,7 +18,9 @@
 static int cron_fd = -1;
 
 TEST_FCN_DECL(int, mkostemp, (char *template, int flags));
+#if defined(__linux__)
 TEST_FCN_DECL(int, mkostemp64, (char *template, int flags));
+#endif
 
 static int dtee_test_mkostemp_copy(char *template, int flags) {
 	// Not a safe implementation of mkostemp but the filename needs to be predictable
