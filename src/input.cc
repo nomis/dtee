@@ -179,48 +179,14 @@ bool Input::open() {
 	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
 
 	try {
-		out_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
-		out_.bind(out_ep_);
-#if defined(__OpenBSD__) || defined(__GNU__)
-		out_ep_ = out_.local_endpoint();
-#endif
-		out_.connect(input_ep);
-		out_.shutdown(datagram_protocol::socket::shutdown_receive);
-#if !defined(__GNU__)
-		out_.set_option(so_sndbuf);
-#endif
-#if defined(__CYGWIN__)
-		// On Cygwin, getsockname() does not return the same value as
-		// recvfrom() or getpeername() does for the other socket.
-		// Send an empty message to obtain the real socket address.
-		vector<char> empty{0};
-		out_.send(buffer(empty));
-		input_.receive_from(buffer(empty), out_ep_);
-#endif
+		open_output(input_ep, out_, out_ep_, so_sndbuf);
 	} catch (std::exception &e) {
 		print_socket_error(format("stdout socket: %1%"), e);
 		return false;
 	}
 
 	try {
-		err_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
-		err_.bind(err_ep_);
-#if defined(__OpenBSD__) || defined(__GNU__)
-		err_ep_ = err_.local_endpoint();
-#endif
-		err_.connect(input_ep);
-		err_.shutdown(datagram_protocol::socket::shutdown_receive);
-#if !defined(__GNU__)
-		err_.set_option(so_sndbuf);
-#endif
-#if defined(__CYGWIN__)
-		// On Cygwin, getsockname() does not return the same value as
-		// recvfrom() or getpeername() does for the other socket.
-		// Send an empty message to obtain the real socket address.
-		vector<char> empty{0};
-		err_.send(buffer(empty));
-		input_.receive_from(buffer(empty), err_ep_);
-#endif
+		open_output(input_ep, err_, err_ep_, so_sndbuf);
 	} catch (std::exception &e) {
 		print_socket_error(format("stderr socket: %1%"), e);
 		return false;
@@ -228,12 +194,46 @@ bool Input::open() {
 
 #if defined(__GNU__)
 	if (out_ep_ == err_ep_) {
+		// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
+		// so they both look the same.
 		Application::print_error(format("output socket endpoints are not unique"));
 		return false;
 	}
 #endif
 
 	return true;
+}
+
+void Input::open_output(const datagram_protocol::endpoint &input_ep,
+		datagram_protocol::socket &output, datagram_protocol::endpoint &output_ep,
+		const datagram_protocol::socket::send_buffer_size &so_sndbuf) {
+	output.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
+	output.bind(output_ep);
+#if defined(__OpenBSD__) || defined(__GNU__)
+	// Workaround Boost.Asio (1.66.0) bug on OpenBSD 6.4
+	// Endpoint paths can't be compared correctly if they weren't both
+	// constructed by the application or both returned by the OS.
+	// https://github.com/boostorg/asio/issues/161
+	//
+	// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
+	// so they both look the same. Retrieve the address after binding so that
+	// this can be checked.
+	output_ep = output.local_endpoint();
+#endif
+	output.connect(input_ep);
+	output.shutdown(datagram_protocol::socket::shutdown_receive);
+#if !defined(__GNU__)
+	// Not supported on GNU (Hurd 0.9, Mach 1.8)
+	output.set_option(so_sndbuf);
+#endif
+#if defined(__CYGWIN__)
+	// On Cygwin, getsockname() does not return the same value as
+	// recvfrom() or getpeername() does for the other socket.
+	// Send an empty message to obtain the real socket address.
+	vector<char> empty{0};
+	output.send(buffer(empty));
+	input_.receive_from(buffer(empty), output_ep);
+#endif
 }
 
 void Input::fork_prepare() {

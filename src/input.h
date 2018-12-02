@@ -50,6 +50,11 @@ public:
 	Input& operator=(const Input&) = delete;
 
 private:
+	void open_output(const boost::asio::local::datagram_protocol::endpoint &input_ep,
+			boost::asio::local::datagram_protocol::socket &output,
+			boost::asio::local::datagram_protocol::endpoint &output_ep,
+			const boost::asio::local::datagram_protocol::socket::send_buffer_size &so_sndbuf);
+
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);
 	void handle_child_exited(const boost::system::error_code &ec, int signal_number);
 	void handle_interrupt_signals(const boost::system::error_code &ec, int signal_number);
