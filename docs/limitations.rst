@@ -58,8 +58,8 @@ Cygwin
 ------
 
 Performs as well as Linux but the maximum amount of data that can be streamed
-quickly is limited by the size of the socket buffer which will will be raised
-to 2MB.
+quickly is limited by the size of the socket buffer (which will will be raised
+to 2MB).
 
 There are security issues because the underlying implementation of Unix sockets
 is a UDP socket on localhost. This presents an opportunity for another process
