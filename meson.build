@@ -465,6 +465,7 @@ test('cron waitpid failure (no children)', bash, args: [files('tests/cron-waitpi
 test('cron waitpid failure (no change)', bash, args: [files('tests/cron-waitpid-failure-no-change.sh')], env: test_env, depends: all_test_txt)
 
 if host_machine.system() != 'cygwin'
+	# Assume Cygwin is insecure because the underlying Unix socket implementation is UDP
 	test('security recreate the input socket after the parent process exits', bash, args: [files('tests/security-recreate-input-socket.sh')], env: test_env, depends: all_test_txt)
 	test('security recreate the output socket after the child process exits', bash, args: [files('tests/security-recreate-output-socket.sh')], env: test_env, depends: all_test_txt)
 endif
