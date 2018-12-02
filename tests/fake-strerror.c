@@ -17,35 +17,28 @@
 
 #if defined(__GLIBC__) || defined(__CYGWIN__)
 # define CHAR_STRERROR_R 1
+typedef char * strerror_r_t;
 #else
 # define CHAR_STRERROR_R 0
+typedef int strerror_r_t;
+#endif
+
+#if defined(__CYGWIN__)
+// winsup/cygwin/errno.cc uses an internal strerror implementation for C++
+// error messages, so rewrite the strings in _sys_errlist instead 🤠
+# define REWRITE_ERRLIST 1
+#else
+# define REWRITE_ERRLIST 0
 #endif
 
 TEST_FCN_DECL(char *, strerror, (int errnum));
-#if CHAR_STRERROR_R
-TEST_FCN_DECL(char *, strerror_r, (int errnum, char *buf, size_t buflen));
-#else
-TEST_FCN_DECL(int, strerror_r, (int errnum, char *buf, size_t buflen));
-#endif
+TEST_FCN_DECL(strerror_r_t, strerror_r, (int errnum, char *buf, size_t buflen));
 
-#if CHAR_STRERROR_R
-static char *dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
-#else
-static int dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
-#endif
-	int errno_copy = errno;
-#if CHAR_STRERROR_R
-	char *(*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
-#else
-	int (*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
-#endif
-
-	memset(buf, 0, buflen);
-
+static char *dtee_test_strerror(int errnum) {
 	switch (errnum) {
 #define STRERROR_FOR(__errnum) \
 	case __errnum: \
-		snprintf(buf, buflen, #__errnum); \
+		return #__errnum; \
 		break;
 
 #ifdef EACCES
@@ -100,11 +93,25 @@ static int dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
 #undef STRERROR_FOR
 
 	default:
+		return NULL;
+	}
+}
+
+static strerror_r_t dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
+	int errno_copy = errno;
+	strerror_r_t (*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
+
+	memset(buf, 0, buflen);
+	errno = errno_copy;
+
+	char *ret = dtee_test_strerror(errnum);
+	if (ret != NULL) {
+		strncpy(buf, ret, buflen - 1);
 		errno = errno_copy;
+	} else {
 		return (*next_strerror_r)(errnum, buf, buflen);
 	}
 
-	errno = errno_copy;
 #if CHAR_STRERROR_R
 	return buf;
 #else
@@ -113,24 +120,16 @@ static int dtee_test_fake_strerror_r(int errnum, char *buf, size_t buflen) {
 }
 
 static char *dtee_test_fake_strerror(int errnum) {
-	static char buf[1024];
 	int errno_copy = errno;
 	char *(*next_strerror)(int) = TEST_FCN_NEXT(strerror);
-
 	errno = errno_copy;
-#if CHAR_STRERROR_R
-	char *ret = dtee_test_fake_strerror_r(errnum, buf, sizeof(buf));
-	if (ret == NULL) {
-#else
-	char *ret = buf;
-	if (dtee_test_fake_strerror_r(errnum, buf, sizeof(buf))) {
-#endif
-		errno = errno_copy;
-		return (*next_strerror)(errnum);
+
+	char *ret = dtee_test_strerror(errnum);
+	if (ret != NULL) {
+		return ret;
 	}
 
-	errno = errno_copy;
-	return ret;
+	return (*next_strerror)(errnum);
 }
 
 #if !defined(__APPLE__)
@@ -158,17 +157,9 @@ TEST_FCN_REPL(char *, strerror, (int errnum)) {
 	return (*next_strerror)(errnum);
 }
 
-#if CHAR_STRERROR_R
-TEST_FCN_REPL(char *, strerror_r, (int errnum, char *buf, size_t buflen)) {
-#else
-TEST_FCN_REPL(int, strerror_r, (int errnum, char *buf, size_t buflen)) {
-#endif
+TEST_FCN_REPL(strerror_r_t, strerror_r, (int errnum, char *buf, size_t buflen)) {
 	int errno_copy = errno;
-#if CHAR_STRERROR_R
-	char *(*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
-#else
-	int (*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
-#endif
+	strerror_r_t (*next_strerror_r)(int, char *, size_t) = TEST_FCN_NEXT(strerror_r);
 	static __thread bool active = false;
 
 	if (!active) {
@@ -208,12 +199,11 @@ TEST_FCN_REPL(char *, strerror_l, (int errnum, locale_t locale)) {
 
 #if CHAR_STRERROR_R
 static int dtee_test_fake___xpg_strerror_r(int errnum, char *buf, size_t buflen) {
-# if CHAR_STRERROR_R
-	dtee_test_fake_strerror_r(errnum, buf, buflen);
+	if (dtee_test_fake_strerror_r(errnum, buf, buflen) == NULL) {
+		errno = EINVAL;
+		return -1;
+	}
 	return 0;
-# else
-	return dtee_test_fake_strerror_r(errnum, buf, buflen);
-# endif
 }
 
 TEST_FCN_REPL(int, __xpg_strerror_r, (int errnum, char *buf, size_t buflen)) {
@@ -233,5 +223,18 @@ TEST_FCN_REPL(int, __xpg_strerror_r, (int errnum, char *buf, size_t buflen)) {
 
 	errno = errno_copy;
 	return (*next___xpg_strerror_r)(errnum, buf, buflen);
+}
+#endif
+
+#if REWRITE_ERRLIST
+static void __attribute__((constructor)) dtee_test_rewrite_errlist(void) {
+	char **errlist = (char **)_sys_errlist; // 🙈
+
+	for (int i = 0; i < _sys_nerr; i++) {
+		char *msg = dtee_test_strerror(i);
+		if (msg != NULL) {
+			errlist[i] = msg;
+		}
+	}
 }
 #endif
