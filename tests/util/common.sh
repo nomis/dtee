@@ -41,6 +41,7 @@ export TMPDIR="./$TESTDIR/$NAME.tmp"
 . signal.txt
 
 UNAME="$(uname)"
+SHORT_UNAME="$UNAME"
 
 case "$UNAME" in
 	Darwin)
@@ -50,6 +51,7 @@ case "$UNAME" in
 	CYGWIN_*)
 		SHLIB_PREFIX=./cyg
 		SHLIB_EXT=.dll
+		SHORT_UNAME="CYGWIN"
 		;;
 	*)
 		SHLIB_PREFIX=./lib
@@ -155,8 +157,8 @@ function after_test() {
 function cmp_files() {
 	EXPECTED_TEXT="${0/.sh/.$1.txt}"
 	EXPECTED_EVAL="${0/.sh/.$1.eval.txt}"
-	EXPECTED_TEXT_UNAME="${0/.sh/.$1.$UNAME.txt}"
-	EXPECTED_EVAL_UNAME="${0/.sh/.$1.eval.$UNAME.txt}"
+	EXPECTED_TEXT_UNAME="${0/.sh/.$1.$SHORT_UNAME.txt}"
+	EXPECTED_EVAL_UNAME="${0/.sh/.$1.eval.$SHORT_UNAME.txt}"
 	ACTUAL="$TESTDIR/$NAME.$1.txt"
 
 	if [ -e "$EXPECTED_TEXT_UNAME" ]; then
