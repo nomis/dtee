@@ -254,6 +254,9 @@ bash = find_program('bash')
 xfail = get_option('test_expect_fail')
 xfail_general_writes = ['netbsd'].contains(host_machine.system())
 xfail_stream = xfail_general_writes or ['freebsd', 'openbsd', 'darwin'].contains(host_machine.system())
+xfail_stream_1mb = xfail_stream
+xfail_stream_32mb = xfail_stream or ['cygwin'].contains(host_machine.system())
+xfail_stream_256mb = xfail_stream or ['cygwin'].contains(host_machine.system())
 xfail_writes_of_1_byte = xfail_general_writes or xfail_stream
 xfail_small_writes = xfail_general_writes or ['dragonfly'].contains(host_machine.system())
 xfail_large_writes = xfail_general_writes
@@ -313,9 +316,9 @@ test('cron writes of max(PIPE_BUF, BUFSIZ) bytes (stderr)', bash, args: [files('
 if has_generic_sendfile
 	test('sendfile (stdout)', bash, args: [files('tests/sendfile-stdout.sh')], env: test_env, depends: all_test_txt)
 endif
-test('stream 1MB (stdout)', bash, args: [files('tests/stream-1MB.sh')], env: test_env, depends: all_test_txt, should_fail: xfail and xfail_stream)
-test('stream 32MB (stdout)', bash, args: [files('tests/stream-32MB.sh')], env: test_env, depends: all_test_txt, should_fail: xfail and xfail_stream)
-test('stream 256MB (stdout)', bash, args: [files('tests/stream-256MB.sh')], env: test_env, depends: all_test_txt, should_fail: xfail and xfail_stream)
+test('stream 1MB (stdout)', bash, args: [files('tests/stream-1MB.sh')], env: test_env, depends: all_test_txt, should_fail: xfail and xfail_stream_1mb)
+test('stream 32MB (stdout)', bash, args: [files('tests/stream-32MB.sh')], env: test_env, depends: all_test_txt, should_fail: xfail and xfail_stream_32mb)
+test('stream 256MB (stdout)', bash, args: [files('tests/stream-256MB.sh')], env: test_env, depends: all_test_txt, should_fail: xfail and xfail_stream_256mb)
 
 test('debug options (none)', bash, args: [files('tests/options-none.sh')], env: test_env, depends: all_test_txt)
 test('debug options (cron)', bash, args: [files('tests/options-cron.sh')], env: test_env, depends: all_test_txt)

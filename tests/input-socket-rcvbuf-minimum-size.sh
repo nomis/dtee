@@ -1,6 +1,8 @@
 . "$(dirname "$0")"/util/common.sh
 
-if [ "$UNAME" == "FreeBSD" ] || [ "$UNAME" == "OpenBSD" ] || [ "$UNAME" == "DragonFly" ] || [ "$UNAME" == "Darwin" ]; then
+if [ "$SHORT_UNAME" == "CYGWIN" ]; then
+	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((2 * 1024 * 1024))"
+elif [ "$UNAME" == "FreeBSD" ] || [ "$UNAME" == "OpenBSD" ] || [ "$UNAME" == "DragonFly" ] || [ "$UNAME" == "Darwin" ]; then
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((512 * 1024))"
 elif [ "$UNAME" == "NetBSD" ]; then
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((128 * 1024))"
