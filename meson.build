@@ -480,10 +480,13 @@ test('cron pipe write failure (file)', bash, args: [files('tests/cron-pipe-write
 
 test('command writes to stdout/stderr after dtee exits', bash, args: [files('tests/command-write-after-ppid-exit.sh')], env: test_env, depends: all_test_txt)
 
-test('interrupted by signal during write', bash, args: [files('tests/interrupt-write.sh')], env: test_env, depends: all_test_txt)
-test('interrupted by signal during write (no SA_RESTART)', bash, args: [files('tests/interrupt-write-no-restart.sh')], env: test_env, depends: all_test_txt)
-test('cron interrupt by signal during write', bash, args: [files('tests/cron-interrupt-write.sh')], env: test_env, depends: all_test_txt)
-test('cron interrupt by signal during write (no SA_RESTART)', bash, args: [files('tests/cron-interrupt-write-no-restart.sh')], env: test_env, depends: all_test_txt)
+if host_machine.system() != 'cygwin'
+	# These don't work on Cygwin because the FIFO can't have multiple readers/writers
+	test('interrupted by signal during write', bash, args: [files('tests/interrupt-write.sh')], env: test_env, depends: all_test_txt)
+	test('interrupted by signal during write (no SA_RESTART)', bash, args: [files('tests/interrupt-write-no-restart.sh')], env: test_env, depends: all_test_txt)
+	test('cron interrupt by signal during write', bash, args: [files('tests/cron-interrupt-write.sh')], env: test_env, depends: all_test_txt)
+	test('cron interrupt by signal during write (no SA_RESTART)', bash, args: [files('tests/cron-interrupt-write-no-restart.sh')], env: test_env, depends: all_test_txt)
+endif
 
 test('write truncated (stdout)', bash, args: [files('tests/write-truncate-stdout.sh')], env: test_env, depends: all_test_txt)
 test('cron write truncated (stdout)', bash, args: [files('tests/cron-write-truncate-stdout.sh')], env: test_env, depends: all_test_txt)
