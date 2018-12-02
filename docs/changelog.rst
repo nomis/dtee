@@ -8,6 +8,7 @@ Added
 ~~~~~
 
 * Best effort support on Darwin_ (macOS).
+* Best effort support on Cygwin_.
 
 0.0.1_ |--| 2018-11-11
 ----------------------
@@ -45,6 +46,7 @@ Added
 .. _DragonFlyBSD: https://www.dragonflybsd.org/
 .. _GNU Hurd: https://www.gnu.org/software/hurd/
 .. _Darwin: https://opensource.apple.com/
+.. _Cygwin: https://www.cygwin.com/
 
 .. _Unreleased: https://github.com/nomis/dtee/compare/0.0.1...HEAD
 .. _0.0.1: https://github.com/nomis/dtee/compare/0.0.0...0.0.1

@@ -54,8 +54,29 @@ with three file descriptors in user space.
 Writes larger than the page size (4KB) are truncated and there's no way to
 increase the size of the socket buffer.
 
+Cygwin
+------
+
+Performs as well as Linux but the maximum amount of data that can be streamed
+quickly is limited by the size of the socket buffer which will will be raised
+to 2MB.
+
+There are security issues because the underlying implementation of Unix sockets
+is a UDP socket on localhost. This presents an opportunity for another process
+to bind the same port after ``dtee`` or the command being run exits, which will
+allow it to:
+
+* Write additional input for ``dtee`` after the child process has exited (until
+  |waitpid(2)|_ is processed).
+* Read output from child processes if the program being run forks into the
+  background (causing ``dtee`` to exit).
+* Read output from child processes if ``dtee`` is killed.
+
 .. |sendfile(2)| replace:: ``sendfile(2)``
 .. _sendfile(2): http://man7.org/linux/man-pages/man2/sendfile.2.html
+
+.. |waitpid(2)| replace:: ``waitpid(2)``
+.. _waitpid(2): http://man7.org/linux/man-pages/man2/waitpid.2.html
 
 .. |write(2)| replace:: ``write(2)``
 .. _write(2): http://man7.org/linux/man-pages/man2/write.2.html
