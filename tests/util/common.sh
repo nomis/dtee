@@ -143,7 +143,6 @@ function periodic_cleanup() {
 }
 
 function before_test() {
-	periodic_cleanup
 	OLD_LD_PRELOAD="$(get_ld_preload)"
 	NEW_LD_PRELOAD="$(build_ld_preload)"
 	set_ld_preload "$NEW_LD_PRELOAD"
@@ -151,7 +150,6 @@ function before_test() {
 
 function after_test() {
 	set_ld_preload "$OLD_LD_PRELOAD"
-	periodic_cleanup
 }
 
 function cmp_files() {
@@ -190,7 +188,7 @@ function cmp_files() {
 }
 
 function make_fifo() {
-	rm -f "$TESTDIR/$NAME.$1.fifo"
+	rm -f "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
 	mkfifo "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
 	echo "$TESTDIR/$NAME.$1.fifo"
 }
@@ -246,30 +244,40 @@ function run_test() {
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		rm -f "$TESTDIR/$NAME.extra-out.txt"
 	fi
-	before_test
+	periodic_cleanup
 	if [ $TEST_NO_STDIN -eq 1 ]; then
+		before_test
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
+		after_test
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		FIFO=$(make_fifo "extra-out1")
+		before_test
 		DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt" 3>"$FIFO" &
 		PID=$!
+		after_test
 
 		cat <"$FIFO" >"$TESTDIR/$NAME.extra-out.txt"
 
 		wait $PID
 		RET1=$?
 	elif [ -n "$TEST_ALT_STDOUT" ]; then
+		before_test
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TEST_ALT_STDOUT" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
+		after_test
 	elif [ -n "$TEST_ALT_STDERR" ]; then
+		before_test
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TEST_ALT_STDERR"
 		RET1=$?
+		after_test
 	else
+		before_test
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
+		after_test
 	fi
-	after_test
+	periodic_cleanup
 
 	if [ -z "$TEST_ALT_STDOUT" ]; then
 		cmp_files "out"
@@ -302,24 +310,30 @@ function run_test() {
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		rm -f "$TESTDIR/$NAME.extra-out.txt"
 	fi
-	before_test
+	periodic_cleanup
 	if [ $TEST_NO_STDIN -eq 1 ]; then
+		before_test
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
 		RET2=$?
+		after_test
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		FIFO=$(make_fifo "extra-out2")
+		before_test
 		DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1 3>"$FIFO" &
 		PID=$!
+		after_test
 
 		cat <"$FIFO" >"$TESTDIR/$NAME.extra-out.txt"
 
 		wait $PID
 		RET2=$?
 	else
+		before_test
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
 		RET2=$?
+		after_test
 	fi
-	after_test
+	periodic_cleanup
 
 	cmp_files "com"
 	CMP_COM=$?
