@@ -230,7 +230,7 @@ void Input::open_output(const datagram_protocol::endpoint &input_ep,
 	// On Cygwin, getsockname() does not return the same value as
 	// recvfrom() or getpeername() does for the other socket.
 	// Send an empty message to obtain the real socket address.
-	vector<char> empty{0};
+	vector<char> empty;
 	output.send(buffer(empty));
 	input_.receive_from(buffer(empty), output_ep);
 #endif
