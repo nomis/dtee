@@ -25,7 +25,7 @@ using ::std::string;
 namespace dtee {
 
 Dispatch::Dispatch(std::list<std::shared_ptr<Output>> &outputs, std::list<std::shared_ptr<ResultHandler>> &result_handlers)
-	: outputs_(outputs), result_handlers_(result_handlers) {
+		: outputs_(outputs), result_handlers_(result_handlers) {
 
 }
 

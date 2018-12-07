@@ -38,12 +38,13 @@ namespace dtee {
 
 class Input {
 public:
-	Input(const CommandLine &command_line, std::shared_ptr<Dispatch> output);
+	Input(const CommandLine &command_line, boost::asio::io_service &io, std::shared_ptr<Dispatch> output);
 	~Input() = default;
 
 	bool open();
-	void fork_prepare();
-	bool fork_parent(pid_t pid);
+	void fork_parent(pid_t pid);
+	void start();
+	bool stop();
 	void fork_child();
 
 	Input(const Input&) = delete;
@@ -63,7 +64,7 @@ private:
 	void print_socket_error(boost::format message, const std::exception &e);
 	void print_system_error(boost::format message, std::string cause = errno_to_string());
 
-	boost::asio::io_service io_;
+	boost::asio::io_service &io_;
 	boost::asio::local::datagram_protocol::socket input_; //!< Incoming socket for data from child process
 	boost::asio::local::datagram_protocol::socket out_; //!< Standard output of child process
 	boost::asio::local::datagram_protocol::socket err_; //!< Standard error of child process

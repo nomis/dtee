@@ -29,7 +29,9 @@
 #include <system_error>
 #include <vector>
 
+#include <boost/asio.hpp>
 #include <boost/format.hpp>
+#include <boost/system/error_code.hpp>
 
 #include "command_line.h"
 #include "cron.h"
@@ -40,7 +42,9 @@
 #include "stream_output.h"
 #include "to_string.h"
 
+using ::boost::asio::io_service;
 using ::boost::format;
+using ::boost::system::error_code;
 using ::std::cerr;
 using ::std::exception;
 using ::std::list;
@@ -66,7 +70,7 @@ int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
 
 	shared_ptr<Dispatch> output = create_dispatch();
-	shared_ptr<Input> input = make_shared<Input>(command_line_, output);
+	shared_ptr<Input> input = make_shared<Input>(command_line_, io_, output);
 
 	bool output_ok = output->open();
 	bool input_ok = input->open();
@@ -84,17 +88,24 @@ int Application::run(int argc, const char* const argv[]) {
 	}
 
 	if (input_ok) {
-		input->fork_prepare();
+		io_.notify_fork(io_service::fork_event::fork_prepare);
 		pid_t pid = fork();
 		if (pid > 0) {
-			if (!input->fork_parent(pid)) {
-				ret_internal = EX_IOERR;
-			}
+			io_.notify_fork(io_service::fork_event::fork_parent);
+			input->fork_parent(pid);
+			input->start();
+
+			bool io_ok = true;
+
+			io_ok &= io_run();
+			io_ok &= input->stop();
 
 			if (cron_) {
-				if (!cron_->report()) {
-					ret_internal = EX_IOERR;
-				}
+				io_ok &= cron_->report();
+			}
+
+			if (!io_ok) {
+				ret_internal = EX_IOERR;
 			}
 
 			int signum = process_->interrupt_signum();
@@ -109,6 +120,7 @@ int Application::run(int argc, const char* const argv[]) {
 
 			return process_->exit_status(ret_internal);
 		} else if (pid == 0) {
+			io_.notify_fork(io_service::fork_event::fork_child);
 			input->fork_child();
 		} else {
 			print_error(format("fork: %1%") % errno_to_string());
@@ -186,6 +198,35 @@ list<shared_ptr<ResultHandler>> Application::create_result_handlers() {
 	}
 
 	return result_handlers;
+}
+
+bool Application::io_run() {
+	bool io_error = false;
+	error_code ec;
+
+	do {
+		io_.run(ec);
+
+		if (ec) {
+			print_error(format("asio run: %1%") % ec.message());
+			io_error = true;
+			break;
+		}
+	} while (!io_.stopped());
+
+	size_t events;
+	do {
+		io_.reset();
+		events = io_.poll(ec);
+
+		if (ec) {
+			print_error(format("asio poll: %1%") % ec.message());
+			io_error = true;
+			break;
+		}
+	} while (events > 0);
+
+	return !io_error;
 }
 
 void Application::execute(const vector<string> &command) {

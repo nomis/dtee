@@ -23,6 +23,7 @@
 #include <memory>
 #include <string>
 
+#include <boost/asio.hpp>
 #include <boost/format.hpp>
 
 #include "command_line.h"
@@ -53,9 +54,11 @@ private:
 	std::shared_ptr<Dispatch> create_dispatch();
 	std::list<std::shared_ptr<Output>> create_outputs();
 	std::list<std::shared_ptr<ResultHandler>> create_result_handlers();
+	bool io_run();
 	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
 
 	CommandLine command_line_;
+	boost::asio::io_service io_;
 	std::shared_ptr<Process> process_;
 	std::shared_ptr<Cron> cron_;
 };

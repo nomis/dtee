@@ -44,16 +44,16 @@
 #include "application.h"
 #include "temp_directory.h"
 
+using ::boost::asio::buffer;
+using ::boost::asio::io_service;
+using ::boost::asio::local::datagram_protocol;
+using ::boost::format;
+using ::boost::system::error_code;
 using ::std::bind;
 using ::std::max;
 using ::std::shared_ptr;
 using ::std::string;
 using ::std::vector;
-using ::boost::asio::buffer;
-using ::boost::asio::local::datagram_protocol;
-using ::boost::asio::io_service;
-using ::boost::format;
-using ::boost::system::error_code;
 
 namespace p = ::std::placeholders;
 
@@ -63,8 +63,9 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-Input::Input(const CommandLine &command_line, shared_ptr<Dispatch> output)
-		: input_(io_),
+Input::Input(const CommandLine &command_line, io_service &io, shared_ptr<Dispatch> output)
+		: io_(io),
+		  input_(io_),
 		  out_(io_),
 		  err_(io_),
 		  child_exited_(io_, SIGCHLD),
@@ -236,14 +237,8 @@ void Input::open_output(const datagram_protocol::endpoint &input_ep,
 #endif
 }
 
-void Input::fork_prepare() {
-	io_.notify_fork(io_service::fork_event::fork_prepare);
-}
-
-bool Input::fork_parent(pid_t pid) {
+void Input::fork_parent(pid_t pid) {
 	error_code ec;
-
-	io_.notify_fork(io_service::fork_event::fork_parent);
 
 	out_.close(ec);
 	if (ec) {
@@ -256,36 +251,18 @@ bool Input::fork_parent(pid_t pid) {
 	}
 
 	child_ = pid;
+}
 
+void Input::start() {
 	input_.async_receive_from(buffer(buffer_), recv_ep_,
 			bind(&Input::handle_receive_from, this, p::_1, p::_2));
 
 	child_exited_.async_wait(bind(&Input::handle_child_exited, this, p::_1, p::_2));
 	interrupt_signals_.async_wait(bind(&Input::handle_interrupt_signals, this, p::_1, p::_2));
 	pipe_signal_.async_wait(bind(&Input::handle_pipe_signal, this, p::_1, p::_2));
+}
 
-	do {
-		io_.run(ec);
-
-		if (ec) {
-			print_socket_error(format("asio run: %1%"), ec);
-			io_error_ = true;
-			break;
-		}
-	} while (!io_.stopped());
-
-	size_t events;
-	do {
-		io_.reset();
-		events = io_.poll(ec);
-
-		if (ec) {
-			print_socket_error(format("asio poll: %1%"), ec);
-			io_error_ = true;
-			break;
-		}
-	} while (events > 0);
-
+bool Input::stop() {
 	interrupt_signals_.clear();
 
 	return !io_error_;
@@ -293,8 +270,6 @@ bool Input::fork_parent(pid_t pid) {
 
 void Input::fork_child() {
 	error_code ec;
-
-	io_.notify_fork(io_service::fork_event::fork_child);
 
 	errno = 0;
 	if (::dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
