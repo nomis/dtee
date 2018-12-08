@@ -15,27 +15,19 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#if defined(__APPLE__)
-// Wrap sigaction manually because the linker can't do it 😩
-# define sigaction __wrap_sigaction
-#endif
-
 #include "input.h"
 
 #include <sys/types.h>
-#include <sys/wait.h>
-#include <sysexits.h>
 #include <unistd.h>
 #include <algorithm>
 #include <cerrno>
 #include <climits>
-#include <csignal>
 #include <cstddef>
 #include <cstdio>
 #include <exception>
+#include <functional>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
@@ -53,7 +45,6 @@ using ::std::bind;
 using ::std::max;
 using ::std::shared_ptr;
 using ::std::string;
-using ::std::vector;
 
 namespace p = ::std::placeholders;
 
@@ -63,18 +54,12 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-Input::Input(const CommandLine &command_line, io_service &io, shared_ptr<Dispatch> output)
+Input::Input(io_service &io, shared_ptr<Dispatch> output)
 		: io_(io),
 		  input_(io_),
 		  out_(io_),
 		  err_(io_),
-		  child_exited_(io_, SIGCHLD),
-		  interrupt_signals_(io_),
-		  ignored_signals_(io_),
-		  pipe_signal_(io_),
 		  output_(output) {
-	handle_signals_ = command_line.cron_mode();
-	ignore_sigint_ = command_line.ignore_interrupts();
 }
 
 void Input::print_socket_error(format message, const error_code &ec) {
@@ -96,21 +81,6 @@ bool Input::open() {
 
 	if (!temp_dir.valid()) {
 		return false;
-	}
-
-	if (handle_signals_) {
-		interrupt_signals_.add(SIGHUP);
-		interrupt_signals_.add(SIGTERM);
-
-		if (!ignore_sigint_) {
-			interrupt_signals_.add(SIGINT);
-		}
-
-		pipe_signal_.add(SIGPIPE);
-	}
-
-	if (ignore_sigint_) {
-		ignored_signals_.add(SIGINT);
 	}
 
 	const string input_name = temp_dir.register_file("i");
@@ -251,24 +221,16 @@ void Input::close_outputs() {
 	}
 }
 
-void Input::fork_parent(pid_t pid) {
-	child_ = pid;
-
+void Input::fork_parent() {
 	close_outputs();
 }
 
 void Input::start() {
 	input_.async_receive_from(buffer(buffer_), recv_ep_,
 			bind(&Input::handle_receive_from, this, p::_1, p::_2));
-
-	child_exited_.async_wait(bind(&Input::handle_child_exited, this, p::_1, p::_2));
-	interrupt_signals_.async_wait(bind(&Input::handle_interrupt_signals, this, p::_1, p::_2));
-	pipe_signal_.async_wait(bind(&Input::handle_pipe_signal, this, p::_1, p::_2));
 }
 
 bool Input::stop() {
-	interrupt_signals_.clear();
-
 	return !io_error_;
 }
 
@@ -320,62 +282,6 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 
 		output_->interrupted();
 		io_error_ = true;
-		io_.stop();
-	}
-}
-
-void Input::handle_child_exited(const error_code &ec, int signal_number) {
-	if (!ec) {
-		int wait_status;
-
-		errno = 0;
-		pid_t ret = ::waitpid(child_, &wait_status, WNOHANG);
-		if (ret <= 0) {
-			if (ret != 0) {
-				print_system_error(format("waitpid: %1%"));
-			}
-
-			output_->interrupted(signal_number);
-			io_error_ = true;
-		} else {
-			bool core_dumped = false;
-			int exit_status = -1;
-			int exit_signum = -1;
-
-			if (WIFEXITED(wait_status)) {
-				exit_status = WEXITSTATUS(wait_status);
-			}
-
-			if (WIFSIGNALED(wait_status)) {
-				exit_signum = WTERMSIG(wait_status);
-			}
-
-#ifdef WCOREDUMP
-			if (WCOREDUMP(wait_status)) {
-				core_dumped = true;
-			}
-#endif
-
-			output_->terminated(exit_status, exit_signum, core_dumped);
-		}
-
-		child_exited_.clear();
-		io_.stop();
-	}
-}
-
-void Input::handle_interrupt_signals(const error_code &ec, int signal_number) {
-	if (!ec) {
-		output_->interrupted(signal_number);
-		interrupt_signals_.async_wait(bind(&Input::handle_interrupt_signals, this, p::_1, p::_2));
-		io_.stop();
-	}
-}
-
-void Input::handle_pipe_signal(const error_code &ec, int signal_number) {
-	if (!ec) {
-		output_->interrupted(signal_number);
-		pipe_signal_.async_wait(bind(&Input::handle_pipe_signal, this, p::_1, p::_2));
 		io_.stop();
 	}
 }

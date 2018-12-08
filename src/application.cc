@@ -39,6 +39,7 @@
 #include "file_output.h"
 #include "input.h"
 #include "process.h"
+#include "signal_handler.h"
 #include "stream_output.h"
 #include "to_string.h"
 
@@ -70,7 +71,8 @@ int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
 
 	shared_ptr<Dispatch> output = create_dispatch();
-	shared_ptr<Input> input = make_shared<Input>(command_line_, io_, output);
+	shared_ptr<Input> input = make_shared<Input>(io_, output);
+	shared_ptr<SignalHandler> signal_handler = make_shared<SignalHandler>(command_line_, io_, output);
 
 	bool output_ok = output->open();
 	bool input_ok = input->open();
@@ -92,13 +94,15 @@ int Application::run(int argc, const char* const argv[]) {
 		pid_t pid = fork();
 		if (pid > 0) {
 			io_.notify_fork(io_service::fork_event::fork_parent);
-			input->fork_parent(pid);
+			signal_handler->start(pid);
+			input->fork_parent();
 			input->start();
 
 			bool io_ok = true;
 
 			io_ok &= io_run();
 			io_ok &= input->stop();
+			io_ok &= signal_handler->stop();
 
 			if (cron_) {
 				io_ok &= cron_->report();
@@ -111,7 +115,7 @@ int Application::run(int argc, const char* const argv[]) {
 			int signum = process_->interrupt_signum();
 
 			if (signum >= 0) {
-				input.reset(); // Stop handling signals
+				signal_handler.reset();
 #ifdef GCOV_ENABLED
 				__gcov_flush(); // LCOV_EXCL_LINE
 #endif
@@ -145,6 +149,7 @@ int Application::run(int argc, const char* const argv[]) {
 
 	// Stop handling signals and close all sockets
 	input.reset();
+	signal_handler.reset();
 
 	execute(command_line_.command());
 	return EX_SOFTWARE;
@@ -204,6 +209,8 @@ bool Application::io_run() {
 	bool io_error = false;
 	error_code ec;
 
+	// Wait for events until the I/O service is explicitly stopped
+
 	do {
 		io_.run(ec);
 
@@ -213,6 +220,8 @@ bool Application::io_run() {
 			break;
 		}
 	} while (!io_.stopped());
+
+	// Poll until there are no more events
 
 	size_t events;
 	do {

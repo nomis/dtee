@@ -20,6 +20,7 @@ source_files = [
 	'src/input.cc',
 	'src/main.cc',
 	'src/process.cc',
+	'src/signal_handler.cc',
 	'src/stream_output.cc',
 	'src/temp_directory.cc',
 	'src/temp_file.cc',

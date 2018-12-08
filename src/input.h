@@ -18,18 +18,15 @@
 #ifndef DTEE_INPUT_H_
 #define DTEE_INPUT_H_
 
-#include <sys/types.h>
 #include <cstddef>
 #include <exception>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
 #include <boost/system/error_code.hpp>
 
-#include "command_line.h"
 #include "dispatch.h"
 #include "input.h"
 #include "to_string.h"
@@ -38,11 +35,11 @@ namespace dtee {
 
 class Input {
 public:
-	Input(const CommandLine &command_line, boost::asio::io_service &io, std::shared_ptr<Dispatch> output);
+	Input(boost::asio::io_service &io, std::shared_ptr<Dispatch> output);
 	~Input() = default;
 
 	bool open();
-	void fork_parent(pid_t pid);
+	void fork_parent();
 	void start();
 	bool stop();
 	void fork_child();
@@ -58,9 +55,6 @@ private:
 	void close_outputs();
 
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);
-	void handle_child_exited(const boost::system::error_code &ec, int signal_number);
-	void handle_interrupt_signals(const boost::system::error_code &ec, int signal_number);
-	void handle_pipe_signal(const boost::system::error_code &ec, int signal_number);
 	void print_socket_error(boost::format message, const boost::system::error_code &ec);
 	void print_socket_error(boost::format message, const std::exception &e);
 	void print_system_error(boost::format message, std::string cause = errno_to_string());
@@ -72,19 +66,12 @@ private:
 	boost::asio::local::datagram_protocol::endpoint out_ep_; //!< Endpoint name for child process standard output
 	boost::asio::local::datagram_protocol::endpoint err_ep_; //!< Endpoint name for child process standard error
 
-	pid_t child_ = -1;
 	bool io_error_ = false;
 
-	boost::asio::signal_set child_exited_;
-	boost::asio::signal_set interrupt_signals_;
-	boost::asio::signal_set ignored_signals_;
-	boost::asio::signal_set pipe_signal_;
 	std::vector<char> buffer_; //!< Incoming data
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data
 
 	std::shared_ptr<Dispatch> output_;
-	bool handle_signals_;
-	bool ignore_sigint_;
 };
 
 } // namespace dtee
