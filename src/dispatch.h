@@ -30,7 +30,7 @@ namespace dtee {
 
 class Dispatch: public Output, public ResultHandler {
 public:
-	Dispatch(std::list<std::shared_ptr<Output>> &outputs, std::list<std::shared_ptr<ResultHandler>> &result_handlers);
+	Dispatch(const std::list<std::shared_ptr<Output>> &outputs, const std::list<std::shared_ptr<ResultHandler>> &result_handlers);
 	~Dispatch() override = default;
 
 	bool open() override;
