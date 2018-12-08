@@ -10,6 +10,11 @@ Added
 * Best effort support on Darwin_ (macOS).
 * Best effort support on Cygwin_.
 
+Fixed
+~~~~~
+
+* Invalid usage messages now use standard error instead of standard output.
+
 0.0.1_ |--| 2018-11-11
 ----------------------
 

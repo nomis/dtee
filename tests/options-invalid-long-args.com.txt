@@ -1,1 +1,1 @@
-options-invalid-long-args.out.txt
+options-invalid-long-args.err.txt

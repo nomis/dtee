@@ -32,6 +32,7 @@
 using ::std::string;
 using ::std::vector;
 
+using ::std::cerr;
 using ::std::cout;
 using ::std::endl;
 using ::std::flush;
@@ -206,8 +207,8 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 			exit(EX_USAGE);
 		}
 	} catch (std::exception &e) {
-		cout << display_name_ << ": " << e.what() << endl;
-		cout << "Try '" << display_name_ << " -h' for more information." << endl;
+		cerr << display_name_ << ": " << e.what() << endl;
+		cerr << "Try '" << display_name_ << " -h' for more information." << endl;
 		exit(EX_USAGE);
 	}
 

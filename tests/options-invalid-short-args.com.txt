@@ -1,1 +1,1 @@
-options-invalid-short-args.out.txt
+options-invalid-short-args.err.txt

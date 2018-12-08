@@ -1,0 +1,2 @@
+./dtee: unrecognised option '--all'
+Try './dtee -h' for more information.
