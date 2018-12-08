@@ -25,13 +25,13 @@
 #include <boost/asio.hpp>
 
 #include "command_line.h"
-#include "dispatch.h"
+#include "result_handler.h"
 
 namespace dtee {
 
 class SignalHandler {
 public:
-	SignalHandler(const CommandLine &command_line, boost::asio::io_service &io, std::shared_ptr<Dispatch> output);
+	SignalHandler(const CommandLine &command_line, boost::asio::io_service &io, std::shared_ptr<ResultHandler> output);
 	~SignalHandler() = default;
 
 	void start(pid_t pid);
@@ -55,7 +55,7 @@ private:
 	boost::asio::signal_set ignored_signals_;
 	boost::asio::signal_set pipe_signal_;
 
-	std::shared_ptr<Dispatch> output_;
+	std::shared_ptr<ResultHandler> output_;
 	bool handle_signals_;
 	bool ignore_sigint_;
 };

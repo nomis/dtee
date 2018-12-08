@@ -52,7 +52,7 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-SignalHandler::SignalHandler(const CommandLine &command_line, io_service &io, shared_ptr<Dispatch> output)
+SignalHandler::SignalHandler(const CommandLine &command_line, io_service &io, shared_ptr<ResultHandler> output)
 		: io_(io),
 		  child_exited_(io_, SIGCHLD),
 		  interrupt_signals_(io_),
