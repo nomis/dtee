@@ -46,7 +46,6 @@ Cron::Cron(string command, shared_ptr<Output> fallback)
 		: command_(command),
 		  fallback_(fallback),
 		  file_("output") {
-
 }
 
 void Cron::print_file_error(format message) {

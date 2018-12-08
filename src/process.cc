@@ -70,7 +70,7 @@ int Process::exit_status(int internal_status) {
 		default_status = EXIT_SUCCESS;
 	} else if (exit_status_ >= 0) {
 		return exit_status_;
-	} else if (exit_signum_ >= 0){
+	} else if (exit_signum_ >= 0) {
 		return SHELL_EXIT_CODE_SIGNAL + exit_signum_;
 	} else {
 		default_status = EX_SOFTWARE;

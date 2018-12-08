@@ -40,7 +40,7 @@ public:
 
 	bool cron_mode() const { return cron_mode_; }
 	bool ignore_interrupts() const { return flag("ignore-interrupts"); }
-	const std::vector<std::string>& command() const { return list(BOOST_COMMAND_OPT); };
+	const std::vector<std::string>& command() const { return list(BOOST_COMMAND_OPT); }
 
 	CommandLine(const CommandLine&) = delete;
 	CommandLine& operator=(const CommandLine&) = delete;
