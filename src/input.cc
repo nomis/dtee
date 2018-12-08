@@ -28,6 +28,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <boost/asio.hpp>
 #include <boost/format.hpp>

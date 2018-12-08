@@ -21,6 +21,7 @@
 #include <cstddef>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <boost/asio.hpp>
 #include <boost/system/error_code.hpp>
