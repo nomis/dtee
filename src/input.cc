@@ -35,6 +35,7 @@
 #include <boost/system/error_code.hpp>
 
 #include "application.h"
+#include "platform.h"
 #include "print_error.h"
 #include "temp_directory.h"
 
@@ -83,19 +84,9 @@ bool Input::open() {
 	const string err_name = temp_dir.register_file("e");
 	err_ep_ = datagram_protocol::endpoint{err_name};
 
-#if defined(__CYGWIN__)
-	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 2 * 1024 * 1024;
-#elif defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__APPLE__) || defined(__CYGWIN__)
-	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 512 * 1024;
-#elif defined(__NetBSD__)
-	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 128 * 1024;
-#else
-	constexpr int PLATFORM_MINIMUM_RCVBUF_SIZE = 0;
-#endif
-
 	// Ensure the receive buffer is large enough at least as large as both
 	// PIPE_BUF (for pipe writes) and BUFSIZ (for file writes)
-	const int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, max(BUFSIZ, PLATFORM_MINIMUM_RCVBUF_SIZE));
+	const int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, max(BUFSIZ, platform::MINIMUM_RCVBUF_SIZE));
 
 	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 
@@ -103,39 +94,41 @@ bool Input::open() {
 		input_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		input_.bind(input_ep);
 
-#if !defined(__GNU__)
-		input_.get_option(so_rcvbuf);
-
-		if (so_rcvbuf.value() < MINIMUM_RCVBUF_SIZE) {
-			so_rcvbuf = MINIMUM_RCVBUF_SIZE;
-			input_.set_option(so_rcvbuf);
+		if (!platform::Hurd) {
 			input_.get_option(so_rcvbuf);
+
+			if (so_rcvbuf.value() < MINIMUM_RCVBUF_SIZE) {
+				so_rcvbuf = MINIMUM_RCVBUF_SIZE;
+				input_.set_option(so_rcvbuf);
+				input_.get_option(so_rcvbuf);
+			}
+		} else {
+			so_rcvbuf = MINIMUM_RCVBUF_SIZE;
 		}
-#else
-		so_rcvbuf = MINIMUM_RCVBUF_SIZE;
-#endif
 	} catch (std::exception &e) {
 		print_error(format("input socket: %1%"), e);
 		return false;
 	}
 
 	int buffer_size = so_rcvbuf.value();
-#if defined(__linux__)
-	// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
-	// From Boost (1.62): "Linux puts additional stuff into the
-	//     buffers so that only about half is actually available to the application.
-	//     The retrieved value is divided by 2 here to make it appear as though the
-	//     correct value has been set."
-	//
-	// Boost is wrong because the kernel is not specified as using half the buffer size.
-	// It would be simpler if the kernel didn't return its doubled value either.
-	// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
-	buffer_size *= 2;
-#endif
+
+	if (platform::Linux) {
+		// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
+		// From Boost (1.62): "Linux puts additional stuff into the
+		//     buffers so that only about half is actually available to the application.
+		//     The retrieved value is divided by 2 here to make it appear as though the
+		//     correct value has been set."
+		//
+		// Boost is wrong because the kernel is not specified as using half the buffer size.
+		// It would be simpler if the kernel didn't return its doubled value either.
+		// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
+		buffer_size *= 2;
+	}
 
 	if (buffer_size < MINIMUM_RCVBUF_SIZE) {
 		buffer_size = MINIMUM_RCVBUF_SIZE;
 	}
+
 	buffer_.resize(buffer_size);
 
 	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
@@ -154,14 +147,14 @@ bool Input::open() {
 		return false;
 	}
 
-#if defined(__GNU__)
-	if (out_ep_ == err_ep_) {
-		// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
-		// so they both look the same.
-		print_error(format("output socket endpoints are not unique"));
-		return false;
+	if (platform::OpenBSD || platform::Hurd || platform::Cygwin) {
+		if (out_ep_ == err_ep_) {
+			// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
+			// so they both look the same.
+			print_error(format("output socket endpoints are not unique"));
+			return false;
+		}
 	}
-#endif
 
 	return true;
 }
@@ -171,31 +164,35 @@ void Input::open_output(const datagram_protocol::endpoint &input_ep,
 		const datagram_protocol::socket::send_buffer_size &so_sndbuf) {
 	output.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 	output.bind(output_ep);
-#if defined(__OpenBSD__) || defined(__GNU__)
-	// Workaround Boost.Asio (1.66.0) bug on OpenBSD 6.4
-	// Endpoint paths can't be compared correctly if they weren't both
-	// constructed by the application or both returned by the OS.
-	// https://github.com/boostorg/asio/issues/161
-	//
-	// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
-	// so they both look the same. Retrieve the address after binding so that
-	// this can be checked.
-	output_ep = output.local_endpoint();
-#endif
+
+	if (platform::OpenBSD || platform::Hurd) {
+		// Workaround Boost.Asio (1.66.0) bug on OpenBSD 6.4
+		// Endpoint paths can't be compared correctly if they weren't both
+		// constructed by the application or both returned by the OS.
+		// https://github.com/boostorg/asio/issues/161
+		//
+		// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
+		// so they both look the same. Retrieve the address after binding so that
+		// this can be checked.
+		output_ep = output.local_endpoint();
+	}
+
 	output.connect(input_ep);
 	output.shutdown(datagram_protocol::socket::shutdown_receive);
-#if !defined(__GNU__)
-	// Not supported on GNU (Hurd 0.9, Mach 1.8)
-	output.set_option(so_sndbuf);
-#endif
-#if defined(__CYGWIN__)
-	// On Cygwin, getsockname() does not return the same value as
-	// recvfrom() or getpeername() does for the other socket.
-	// Send an empty message to obtain the real socket address.
-	vector<char> empty;
-	output.send(buffer(empty));
-	input_.receive_from(buffer(empty), output_ep);
-#endif
+
+	if (!platform::Hurd) {
+		// Not supported on GNU (Hurd 0.9, Mach 1.8)
+		output.set_option(so_sndbuf);
+	}
+
+	if (platform::Cygwin) {
+		// On Cygwin, getsockname() does not return the same value as
+		// recvfrom() or getpeername() does for the other socket.
+		// Send an empty message to obtain the real socket address.
+		vector<char> empty;
+		output.send(buffer(empty));
+		input_.receive_from(buffer(empty), output_ep);
+	}
 }
 
 void Input::close_outputs() {
