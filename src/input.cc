@@ -158,7 +158,7 @@ bool Input::open() {
 	if (out_ep_ == err_ep_) {
 		// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 		// so they both look the same.
-		Application::print_error(format("output socket endpoints are not unique"));
+		print_error(format("output socket endpoints are not unique"));
 		return false;
 	}
 #endif
