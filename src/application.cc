@@ -21,8 +21,6 @@
 #include <sysexits.h>
 #include <unistd.h>
 #include <csignal>
-#include <exception>
-#include <iostream>
 #include <list>
 #include <memory>
 #include <string>
@@ -38,16 +36,14 @@
 #include "dispatch.h"
 #include "file_output.h"
 #include "input.h"
+#include "print_error.h"
 #include "process.h"
 #include "signal_handler.h"
 #include "stream_output.h"
-#include "to_string.h"
 
 using ::boost::asio::io_service;
 using ::boost::format;
 using ::boost::system::error_code;
-using ::std::cerr;
-using ::std::exception;
 using ::std::list;
 using ::std::make_shared;
 using ::std::shared_ptr;
@@ -59,13 +55,6 @@ extern "C" void __gcov_flush(void);
 #endif
 
 namespace dtee {
-
-void Application::print_error(const format &message) {
-	const string line = str(format("%1%: %2%\n") % CommandLine::display_name() % message);
-
-	cerr.clear();
-	cerr.write(line.c_str(), line.length());
-}
 
 int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
@@ -127,7 +116,7 @@ int Application::run(int argc, const char* const argv[]) {
 			io_.notify_fork(io_service::fork_event::fork_child);
 			input->fork_child();
 		} else {
-			print_error(format("fork: %1%") % errno_to_string());
+			print_system_error(format("fork: %1%"));
 			ret_internal = EX_OSERR;
 		}
 	} else {
@@ -215,7 +204,7 @@ bool Application::io_run() {
 		io_.run(ec);
 
 		if (ec) {
-			print_error(format("asio run: %1%") % ec.message());
+			print_error(format("asio run: %1%"), ec);
 			io_error = true;
 			break;
 		}
@@ -229,7 +218,7 @@ bool Application::io_run() {
 		events = io_.poll(ec);
 
 		if (ec) {
-			print_error(format("asio poll: %1%") % ec.message());
+			print_error(format("asio poll: %1%"), ec);
 			io_error = true;
 			break;
 		}
@@ -259,7 +248,7 @@ void Application::execute(const vector<string> &command) {
 
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
-	print_error(format("%1%: %2%") % argv[0] % errno_to_string());
+	print_system_error(format("%1%: %2%") % argv[0]);
 	exit(EX_NOINPUT);
 }
 

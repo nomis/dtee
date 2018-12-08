@@ -15,46 +15,42 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_FILE_OUTPUT_H_
-#define DTEE_FILE_OUTPUT_H_
+#include "print_error.h"
 
-#include <cstddef>
-#include <memory>
+#include <exception>
+#include <iostream>
 #include <string>
-#include <vector>
 
 #include <boost/format.hpp>
+#include <boost/system/error_code.hpp>
 
-#include "output.h"
+#include "command_line.h"
+
+using ::boost::format;
+using ::boost::system::error_code;
+using ::std::cerr;
+using ::std::exception;
+using ::std::string;
 
 namespace dtee {
 
-enum class FileOutputType {
-	STDOUT,
-	STDERR,
-	COMBINED,
-};
+void print_error(const format &message) {
+	const string line = str(format("%1%: %2%\n") % CommandLine::display_name() % message);
 
-class FileOutput: public Output {
-public:
-	FileOutput(const std::string &filename, FileOutputType type, bool append);
-	~FileOutput() override;
+	cerr.clear();
+	cerr.write(line.c_str(), line.length());
+}
 
-	bool open() override;
-	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
+void print_error(format message, const error_code &ec) {
+	print_error(message % ec.message());
+}
 
-private:
-	void print_file_error();
+void print_error(format message, const exception &e) {
+	print_error(message % e.what());
+}
 
-	bool filtered_;
-	OutputType type_;
-
-	std::string filename_; //!< Output filename
-	bool append_;
-	int fd_ = -1; //!< Output file
-	bool failed_ = false; //!< Failure state of writes to output file
-};
+void print_system_error(format message, string cause) {
+	print_error(message % cause);
+}
 
 } // namespace dtee
-
-#endif

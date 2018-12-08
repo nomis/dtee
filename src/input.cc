@@ -34,6 +34,7 @@
 #include <boost/system/error_code.hpp>
 
 #include "application.h"
+#include "print_error.h"
 #include "temp_directory.h"
 
 using ::boost::asio::buffer;
@@ -60,18 +61,6 @@ Input::Input(io_service &io, shared_ptr<Dispatch> output)
 		  out_(io_),
 		  err_(io_),
 		  output_(output) {
-}
-
-void Input::print_socket_error(format message, const error_code &ec) {
-	Application::print_error(message % ec.message());
-}
-
-void Input::print_socket_error(format message, const std::exception &e) {
-	Application::print_error(message % e.what());
-}
-
-void Input::print_system_error(format message, std::string cause) {
-	Application::print_error(message % cause);
 }
 
 bool Input::open() {
@@ -124,7 +113,7 @@ bool Input::open() {
 		so_rcvbuf = MINIMUM_RCVBUF_SIZE;
 #endif
 	} catch (std::exception &e) {
-		print_socket_error(format("input socket: %1%"), e);
+		print_error(format("input socket: %1%"), e);
 		return false;
 	}
 
@@ -152,14 +141,14 @@ bool Input::open() {
 	try {
 		open_output(input_ep, out_, out_ep_, so_sndbuf);
 	} catch (std::exception &e) {
-		print_socket_error(format("stdout socket: %1%"), e);
+		print_error(format("stdout socket: %1%"), e);
 		return false;
 	}
 
 	try {
 		open_output(input_ep, err_, err_ep_, so_sndbuf);
 	} catch (std::exception &e) {
-		print_socket_error(format("stderr socket: %1%"), e);
+		print_error(format("stderr socket: %1%"), e);
 		return false;
 	}
 
@@ -212,12 +201,12 @@ void Input::close_outputs() {
 
 	out_.close(ec);
 	if (ec) {
-		print_socket_error(format("stdout socket close: %1%"), ec);
+		print_error(format("stdout socket close: %1%"), ec);
 	}
 
 	err_.close(ec);
 	if (ec) {
-		print_socket_error(format("stderr socket close: %1%"), ec);
+		print_error(format("stderr socket close: %1%"), ec);
 	}
 }
 
@@ -249,7 +238,7 @@ void Input::fork_child() {
 
 	input_.close(ec);
 	if (ec) {
-		print_socket_error(format("input socket close: %1%"), ec);
+		print_error(format("input socket close: %1%"), ec);
 	}
 
 	close_outputs();
@@ -278,7 +267,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		input_.async_receive_from(buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		print_socket_error(format("socket receive: %1%"), ec);
+		print_error(format("socket receive: %1%"), ec);
 
 		output_->interrupted();
 		io_error_ = true;

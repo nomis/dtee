@@ -31,6 +31,7 @@
 #include <boost/format.hpp>
 
 #include "application.h"
+#include "print_error.h"
 #include "to_string.h"
 
 using ::boost::format;
@@ -48,8 +49,8 @@ Cron::Cron(string command, shared_ptr<Output> fallback)
 
 }
 
-void Cron::print_file_error(format message, string cause) {
-	Application::print_error(message % file_.name() % cause);
+void Cron::print_file_error(format message) {
+	print_system_error(message % file_.name());
 }
 
 bool Cron::open() {
@@ -149,16 +150,16 @@ bool Cron::report() {
 	bool success = unspool_buffer_file();
 
 	if (interrupt_signum_ >= 0) {
-		Application::print_error(format("received signal %1%") % signal_to_string(interrupt_signum_));
+		print_error(format("received signal %1%") % signal_to_string(interrupt_signum_));
 	}
 
 	if (exit_status_ >= 0) {
-		Application::print_error(format("%1%: exited with status %2%") % command_ % exit_status_);
+		print_error(format("%1%: exited with status %2%") % command_ % exit_status_);
 	} else if (exit_signum_ >= 0) {
 		if (core_dumped_) {
-			Application::print_error(format("%1%: process terminated by signal %2% (core dumped)") % command_ % signal_to_string(exit_signum_));
+			print_error(format("%1%: process terminated by signal %2% (core dumped)") % command_ % signal_to_string(exit_signum_));
 		} else {
-			Application::print_error(format("%1%: process terminated by signal %2%") % command_ % signal_to_string(exit_signum_));
+			print_error(format("%1%: process terminated by signal %2%") % command_ % signal_to_string(exit_signum_));
 		}
 	}
 

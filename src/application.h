@@ -18,13 +18,12 @@
 #ifndef DTEE_APPLICATION_H_
 #define DTEE_APPLICATION_H_
 
-#include <exception>
 #include <list>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <boost/asio.hpp>
-#include <boost/format.hpp>
 
 #include "command_line.h"
 #include "cron.h"
@@ -40,8 +39,6 @@ class Application {
 public:
 	explicit Application() = default;
 	~Application() = default;
-
-	static void print_error(const boost::format &message);
 
 	int run(int argc, const char* const argv[]);
 

@@ -19,6 +19,7 @@ source_files = [
 	'src/file_output.cc',
 	'src/input.cc',
 	'src/main.cc',
+	'src/print_error.cc',
 	'src/process.cc',
 	'src/signal_handler.cc',
 	'src/stream_output.cc',

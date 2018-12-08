@@ -28,6 +28,7 @@
 #include <boost/format.hpp>
 
 #include "application.h"
+#include "print_error.h"
 
 using ::boost::format;
 using ::std::string;
@@ -60,8 +61,8 @@ FileOutput::~FileOutput() {
 	}
 }
 
-void FileOutput::print_file_error(string cause) {
-	Application::print_error(format("%1%: %2%") % filename_ % cause);
+void FileOutput::print_file_error() {
+	print_system_error(format("%1%: %2%") % filename_);
 }
 
 bool FileOutput::open() {

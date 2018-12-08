@@ -25,7 +25,7 @@
 #include <boost/format.hpp>
 
 #include "application.h"
-#include "to_string.h"
+#include "print_error.h"
 
 using ::boost::format;
 using ::std::string;
@@ -58,7 +58,7 @@ bool StreamOutput::output(int fd, const char *name, const vector<char> &buffer, 
 
 	errno = 0;
 	if (::write(fd, buffer.data(), len) != static_cast<ssize_t>(len)) {
-		Application::print_error(format("%1% write: %2%") % name % errno_to_string());
+		print_system_error(format("%1% write: %2%") % name);
 		return false;
 	}
 

@@ -15,45 +15,23 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_FILE_OUTPUT_H_
-#define DTEE_FILE_OUTPUT_H_
+#ifndef DTEE_PRINT_ERROR_H_
+#define DTEE_PRINT_ERROR_H_
 
-#include <cstddef>
-#include <memory>
+#include <exception>
 #include <string>
-#include <vector>
 
 #include <boost/format.hpp>
+#include <boost/system/error_code.hpp>
 
-#include "output.h"
+#include "to_string.h"
 
 namespace dtee {
 
-enum class FileOutputType {
-	STDOUT,
-	STDERR,
-	COMBINED,
-};
-
-class FileOutput: public Output {
-public:
-	FileOutput(const std::string &filename, FileOutputType type, bool append);
-	~FileOutput() override;
-
-	bool open() override;
-	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
-
-private:
-	void print_file_error();
-
-	bool filtered_;
-	OutputType type_;
-
-	std::string filename_; //!< Output filename
-	bool append_;
-	int fd_ = -1; //!< Output file
-	bool failed_ = false; //!< Failure state of writes to output file
-};
+void print_error(const boost::format &message);
+void print_error(boost::format message, const boost::system::error_code &ec);
+void print_error(boost::format message, const std::exception &e);
+void print_system_error(boost::format message, std::string cause = errno_to_string());
 
 } // namespace dtee
 

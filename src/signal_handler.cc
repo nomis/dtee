@@ -36,7 +36,7 @@
 #include <boost/system/error_code.hpp>
 
 #include "application.h"
-#include "to_string.h"
+#include "print_error.h"
 
 using ::boost::asio::io_service;
 using ::boost::format;
@@ -100,7 +100,7 @@ void SignalHandler::handle_child_exited(const error_code &ec, int signal_number)
 		pid_t ret = ::waitpid(child_, &wait_status, WNOHANG);
 		if (ret <= 0) {
 			if (ret != 0) {
-				Application::print_error(format("waitpid: %1%") % errno_to_string());
+				print_system_error(format("waitpid: %1%"));
 			}
 
 			output_->interrupted(signal_number);

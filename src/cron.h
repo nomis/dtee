@@ -29,7 +29,6 @@
 #include "process.h"
 #include "result_handler.h"
 #include "temp_file.h"
-#include "to_string.h"
 
 namespace dtee {
 
@@ -47,7 +46,7 @@ public:
 	bool report();
 
 private:
-	void print_file_error(boost::format message, std::string cause = errno_to_string());
+	void print_file_error(boost::format message);
 	bool unspool_buffer_file();
 
 	std::string command_; //!< Name of command being executed
