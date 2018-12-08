@@ -9,12 +9,13 @@
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
-#define MAX_SIZE (128 *1024)
+#define MAX_SIZE (128 * 1024)
 static char message[MAX_SIZE + 1] = { 0 };
 
 static void append(const char *text) {
-	assert(sizeof(message) >= strlen(message) + strlen(text) + 1);
-	strcat(message, text);
+	size_t remaining = sizeof(message) - (strlen(message) + 1);
+	assert(strlen(text) <= remaining);
+	strncat(message, text, remaining);
 }
 
 int main(int argc, char *argv[]) {
