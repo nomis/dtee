@@ -237,7 +237,7 @@ void Input::open_output(const datagram_protocol::endpoint &input_ep,
 #endif
 }
 
-void Input::fork_parent(pid_t pid) {
+void Input::close_outputs() {
 	error_code ec;
 
 	out_.close(ec);
@@ -249,8 +249,12 @@ void Input::fork_parent(pid_t pid) {
 	if (ec) {
 		print_socket_error(format("stderr socket close: %1%"), ec);
 	}
+}
 
+void Input::fork_parent(pid_t pid) {
 	child_ = pid;
+
+	close_outputs();
 }
 
 void Input::start() {
@@ -286,15 +290,7 @@ void Input::fork_child() {
 		print_socket_error(format("input socket close: %1%"), ec);
 	}
 
-	out_.close(ec);
-	if (ec) {
-		print_socket_error(format("stdout socket close: %1%"), ec);
-	}
-
-	err_.close(ec);
-	if (ec) {
-		print_socket_error(format("stderr socket close: %1%"), ec);
-	}
+	close_outputs();
 }
 
 void Input::handle_receive_from(const error_code &ec, size_t len) {

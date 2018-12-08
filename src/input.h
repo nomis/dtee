@@ -55,6 +55,7 @@ private:
 			boost::asio::local::datagram_protocol::socket &output,
 			boost::asio::local::datagram_protocol::endpoint &output_ep,
 			const boost::asio::local::datagram_protocol::socket::send_buffer_size &so_sndbuf);
+	void close_outputs();
 
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);
 	void handle_child_exited(const boost::system::error_code &ec, int signal_number);
