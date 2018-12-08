@@ -28,7 +28,7 @@ namespace dtee {
 
 class StreamOutput: public Output {
 public:
-	explicit StreamOutput() = default;
+	StreamOutput() = default;
 	~StreamOutput() override = default;
 
 	bool open() override;

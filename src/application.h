@@ -37,7 +37,7 @@ namespace dtee {
 
 class Application {
 public:
-	explicit Application() = default;
+	Application() = default;
 	~Application() = default;
 
 	int run(int argc, const char* const argv[]);

@@ -27,7 +27,7 @@ namespace dtee {
 
 class CommandLine {
 public:
-	explicit CommandLine() = default;
+	CommandLine() = default;
 	~CommandLine() = default;
 
 	static std::string internal_name() { return internal_name_; }

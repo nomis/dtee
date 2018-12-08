@@ -24,7 +24,7 @@ namespace dtee {
 
 class ResultHandler {
 public:
-	explicit ResultHandler() = default;
+	ResultHandler() = default;
 	virtual ~ResultHandler() = default;
 
 	virtual void terminated(int status, int signum, bool core_dumped) = 0;
