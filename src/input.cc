@@ -56,11 +56,11 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-Input::Input(io_service &io, shared_ptr<Dispatch> output)
+Input::Input(shared_ptr<boost::asio::io_service> io, shared_ptr<Dispatch> output)
 		: io_(io),
-		  input_(io_),
-		  out_(io_),
-		  err_(io_),
+		  input_(*io_),
+		  out_(*io_),
+		  err_(*io_),
 		  output_(output) {
 }
 
@@ -272,7 +272,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 
 		output_->interrupted();
 		io_error_ = true;
-		io_.stop();
+		io_->stop();
 	}
 }
 

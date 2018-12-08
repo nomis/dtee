@@ -55,7 +55,7 @@ private:
 	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
 
 	CommandLine command_line_;
-	boost::asio::io_service io_;
+	std::shared_ptr<boost::asio::io_service> io_;
 	std::shared_ptr<Process> process_;
 	std::shared_ptr<Cron> cron_;
 };

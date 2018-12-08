@@ -52,12 +52,12 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-SignalHandler::SignalHandler(const CommandLine &command_line, io_service &io, shared_ptr<ResultHandler> output)
+SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::asio::io_service> &io, shared_ptr<ResultHandler> output)
 		: io_(io),
-		  child_exited_(io_, SIGCHLD),
-		  interrupt_signals_(io_),
-		  ignored_signals_(io_),
-		  pipe_signal_(io_),
+		  child_exited_(*io_, SIGCHLD),
+		  interrupt_signals_(*io_),
+		  ignored_signals_(*io_),
+		  pipe_signal_(*io_),
 		  output_(output) {
 	handle_signals_ = command_line.cron_mode();
 	ignore_sigint_ = command_line.ignore_interrupts();
@@ -128,7 +128,7 @@ void SignalHandler::handle_child_exited(const error_code &ec, int signal_number)
 		}
 
 		child_exited_.clear();
-		io_.stop();
+		io_->stop();
 	}
 }
 
@@ -136,7 +136,7 @@ void SignalHandler::handle_interrupt_signals(const error_code &ec, int signal_nu
 	if (!ec) {
 		output_->interrupted(signal_number);
 		interrupt_signals_.async_wait(bind(&SignalHandler::handle_interrupt_signals, this, p::_1, p::_2));
-		io_.stop();
+		io_->stop();
 	}
 }
 
@@ -144,7 +144,7 @@ void SignalHandler::handle_pipe_signal(const error_code &ec, int signal_number) 
 	if (!ec) {
 		output_->interrupted(signal_number);
 		pipe_signal_.async_wait(bind(&SignalHandler::handle_pipe_signal, this, p::_1, p::_2));
-		io_.stop();
+		io_->stop();
 	}
 }
 

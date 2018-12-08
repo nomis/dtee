@@ -31,7 +31,7 @@ namespace dtee {
 
 class SignalHandler {
 public:
-	SignalHandler(const CommandLine &command_line, boost::asio::io_service &io, std::shared_ptr<ResultHandler> output);
+	SignalHandler(const CommandLine &command_line, std::shared_ptr<boost::asio::io_service> &io, std::shared_ptr<ResultHandler> output);
 	~SignalHandler() = default;
 
 	void start(pid_t pid);
@@ -45,7 +45,7 @@ private:
 	void handle_interrupt_signals(const boost::system::error_code &ec, int signal_number);
 	void handle_pipe_signal(const boost::system::error_code &ec, int signal_number);
 
-	boost::asio::io_service &io_;
+	std::shared_ptr<boost::asio::io_service> &io_;
 
 	pid_t child_ = -1;
 	bool io_error_ = false;

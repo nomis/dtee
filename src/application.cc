@@ -59,6 +59,7 @@ namespace dtee {
 int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
 
+	io_ = make_shared<io_service>();
 	shared_ptr<Dispatch> output = create_dispatch();
 	shared_ptr<Input> input = make_shared<Input>(io_, output);
 	shared_ptr<SignalHandler> signal_handler = make_shared<SignalHandler>(command_line_, io_, output);
@@ -79,10 +80,10 @@ int Application::run(int argc, const char* const argv[]) {
 	}
 
 	if (input_ok) {
-		io_.notify_fork(io_service::fork_event::fork_prepare);
+		io_->notify_fork(io_service::fork_event::fork_prepare);
 		pid_t pid = fork();
 		if (pid > 0) {
-			io_.notify_fork(io_service::fork_event::fork_parent);
+			io_->notify_fork(io_service::fork_event::fork_parent);
 			signal_handler->start(pid);
 			input->fork_parent();
 			input->start();
@@ -113,7 +114,7 @@ int Application::run(int argc, const char* const argv[]) {
 
 			return process_->exit_status(ret_internal);
 		} else if (pid == 0) {
-			io_.notify_fork(io_service::fork_event::fork_child);
+			io_->notify_fork(io_service::fork_event::fork_child);
 			input->fork_child();
 		} else {
 			print_system_error(format("fork: %1%"));
@@ -139,6 +140,10 @@ int Application::run(int argc, const char* const argv[]) {
 	// Stop handling signals and close all sockets
 	input.reset();
 	signal_handler.reset();
+
+	// This is the only way to really close all file descriptors with Boost.Asio
+	// (not everything is CLOEXEC on all platforms).
+	io_.reset();
 
 	execute(command_line_.command());
 	return EX_SOFTWARE;
@@ -199,23 +204,21 @@ bool Application::io_run() {
 	error_code ec;
 
 	// Wait for events until the I/O service is explicitly stopped
-
 	do {
-		io_.run(ec);
+		io_->run(ec);
 
 		if (ec) {
 			print_error(format("asio run: %1%"), ec);
 			io_error = true;
 			break;
 		}
-	} while (!io_.stopped());
+	} while (!io_->stopped());
 
 	// Poll until there are no more events
-
 	size_t events;
 	do {
-		io_.reset();
-		events = io_.poll(ec);
+		io_->reset();
+		events = io_->poll(ec);
 
 		if (ec) {
 			print_error(format("asio poll: %1%"), ec);

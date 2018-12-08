@@ -33,7 +33,7 @@ namespace dtee {
 
 class Input {
 public:
-	Input(boost::asio::io_service &io, std::shared_ptr<Dispatch> output);
+	Input(std::shared_ptr<boost::asio::io_service> io, std::shared_ptr<Dispatch> output);
 	~Input() = default;
 
 	bool open();
@@ -54,7 +54,7 @@ private:
 
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);
 
-	boost::asio::io_service &io_;
+	std::shared_ptr<boost::asio::io_service> io_;
 	boost::asio::local::datagram_protocol::socket input_; //!< Incoming socket for data from child process
 	boost::asio::local::datagram_protocol::socket out_; //!< Standard output of child process
 	boost::asio::local::datagram_protocol::socket err_; //!< Standard error of child process
