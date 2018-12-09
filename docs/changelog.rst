@@ -14,6 +14,7 @@ Fixed
 ~~~~~
 
 * Invalid usage messages now use standard error instead of standard output.
+* Check build version matches the release version.
 
 0.0.1_ |--| 2018-11-11
 ----------------------
