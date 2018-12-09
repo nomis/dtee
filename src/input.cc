@@ -134,14 +134,14 @@ bool Input::open() {
 	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
 
 	try {
-		open_output(input_ep, out_, out_ep_, so_sndbuf);
+		open_output(input_, input_ep, out_, out_ep_, so_sndbuf);
 	} catch (std::exception &e) {
 		print_error(format("stdout socket: %1%"), e);
 		return false;
 	}
 
 	try {
-		open_output(input_ep, err_, err_ep_, so_sndbuf);
+		open_output(input_, input_ep, err_, err_ep_, so_sndbuf);
 	} catch (std::exception &e) {
 		print_error(format("stderr socket: %1%"), e);
 		return false;
@@ -159,8 +159,10 @@ bool Input::open() {
 	return true;
 }
 
-void Input::open_output(const datagram_protocol::endpoint &input_ep,
-		datagram_protocol::socket &output, datagram_protocol::endpoint &output_ep,
+void Input::open_output(datagram_protocol::socket &input,
+		const datagram_protocol::endpoint &input_ep,
+		datagram_protocol::socket &output,
+		datagram_protocol::endpoint &output_ep,
 		const datagram_protocol::socket::send_buffer_size &so_sndbuf) {
 	output.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 	output.bind(output_ep);
@@ -191,7 +193,7 @@ void Input::open_output(const datagram_protocol::endpoint &input_ep,
 		// Send an empty message to obtain the real socket address.
 		vector<char> empty;
 		output.send(buffer(empty));
-		input_.receive_from(buffer(empty), output_ep);
+		input.receive_from(buffer(empty), output_ep);
 	}
 }
 
