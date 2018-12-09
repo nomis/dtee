@@ -1,8 +1,13 @@
 Change log
 ==========
 
-Unreleased_
------------
+.. Unreleased_
+.. -----------
+
+1.0.0_ |--| 2018-12-09
+----------------------
+
+First stable release.
 
 Added
 ~~~~~
@@ -54,6 +59,7 @@ Added
 .. _Darwin: https://opensource.apple.com/
 .. _Cygwin: https://www.cygwin.com/
 
-.. _Unreleased: https://github.com/nomis/dtee/compare/0.0.1...HEAD
+.. _Unreleased: https://github.com/nomis/dtee/compare/1.0.0...HEAD
+.. _1.0.0: https://github.com/nomis/dtee/compare/0.0.1...1.0.0
 .. _0.0.1: https://github.com/nomis/dtee/compare/0.0.0...0.0.1
 .. _0.0.0: https://github.com/nomis/dtee/commits/0.0.0
