@@ -147,14 +147,6 @@ run_target('cppcheck',
 		'--inline-suppr',
 	] + source_files)
 
-run_target('clang-check',
-	command: [
-		'clang-check',
-		'-p', meson.current_build_dir(),
-		'-analyze',
-		'-fixit',
-	] + source_files)
-
 test_env = [
 	'LC_ALL=C',
 	'LANG=C',
