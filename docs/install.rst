@@ -25,7 +25,7 @@ Set the following environment variable::
 
     CYGWIN=winsymlinks:nativestrict
 
-Set the following ``git`` config option::
+Set the following ``git`` configuration option::
 
     git config core.symlinks true
 
