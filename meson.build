@@ -78,9 +78,9 @@ endif
 
 python3 = find_program('python3')
 
-check_version = run_command(python3, [files('docs/check_version.py'), files('docs/changelog.rst'), meson.project_version()])
-if check_version.returncode() != 0
-	error(check_version.stderr())
+version_check = run_command(python3, [files('docs/version_check.py'), files('docs/changelog.rst'), meson.project_version()])
+if version_check.returncode() != 0
+	error(version_check.stderr())
 endif
 
 dtee = executable('dtee',
