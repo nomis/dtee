@@ -6,7 +6,7 @@ project('dtee',
 		'warning_level=3',
 		'werror=true',
 	],
-	version: '0.0.0',
+	version: '0.0.1',
 	license: 'GPL3+',
 	meson_version: '>=0.46.0',
 )
@@ -74,6 +74,13 @@ elif host_machine.system() == 'darwin'
 	link_args = ['-Wl,-alias,_sigaction,___real_sigaction']
 else # linux, freebsd, openbsd, dragonfly, gnu, cygwin
 	link_args = ['-Wl,--wrap=sigaction']
+endif
+
+python3 = find_program('python3')
+
+check_version = run_command(python3, [files('docs/check_version.py'), files('docs/changelog.rst'), meson.project_version()])
+if check_version.returncode() != 0
+	error(check_version.stderr())
 endif
 
 dtee = executable('dtee',
