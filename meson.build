@@ -76,7 +76,7 @@ else # linux, freebsd, openbsd, dragonfly, gnu, cygwin
 	link_args = ['-Wl,--wrap=sigaction']
 endif
 
-python3 = find_program('python3')
+python3 = import('python').find_installation('python3')
 
 version_check = run_command(python3, [files('docs/version_check.py'), files('docs/changelog.rst'), meson.project_version()])
 if version_check.returncode() != 0
