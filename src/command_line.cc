@@ -27,6 +27,8 @@
 #include <typeinfo>
 #include <vector>
 
+#include <boost/program_options.hpp>
+
 #include "version.h"
 
 using ::std::string;
