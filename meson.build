@@ -6,7 +6,7 @@ project('dtee',
 		'warning_level=3',
 		'werror=true',
 	],
-	version: '1.0.0',
+	version: '1.0.1',
 	license: 'GPL3+',
 	meson_version: '>=0.46.0',
 )
@@ -87,7 +87,6 @@ dtee = executable('dtee',
 	source_files,
 	cpp_args: c_args + [
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
-		'-DBOOST_DISABLE_THREADS',
 		'-DBOOST_ASIO_DISABLE_THREADS',
 	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
 	link_args: link_args,

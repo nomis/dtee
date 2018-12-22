@@ -4,6 +4,18 @@ Change log
 .. Unreleased_
 .. -----------
 
+1.0.1_ |--| 2018-12-22
+----------------------
+
+Update to avoid causing a trivial memory leak in Boost.
+
+Fixed
+~~~~~
+
+* Memory leak in Boost program_options resulting from differing
+  ``boost::smart_ptr`` implementations (`boostorg/program_options issue #70
+  <https://github.com/boostorg/program_options/issues/70>`_).
+
 1.0.0_ |--| 2018-12-09
 ----------------------
 
@@ -59,7 +71,8 @@ Added
 .. _Darwin: https://opensource.apple.com/
 .. _Cygwin: https://www.cygwin.com/
 
-.. _Unreleased: https://github.com/nomis/dtee/compare/1.0.0...HEAD
+.. _Unreleased: https://github.com/nomis/dtee/compare/1.0.1...HEAD
+.. _1.0.1: https://github.com/nomis/dtee/compare/1.0.0...1.0.1
 .. _1.0.0: https://github.com/nomis/dtee/compare/0.0.1...1.0.0
 .. _0.0.1: https://github.com/nomis/dtee/compare/0.0.0...0.0.1
 .. _0.0.0: https://github.com/nomis/dtee/commits/0.0.0
