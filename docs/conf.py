@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
+
+travis_ci = os.environ.get("TRAVIS") == 'true'
+
 needs_sphinx = '1.3'
 extensions = []
 source_suffix = ['.rst']
@@ -34,3 +38,5 @@ texinfo_documents = [
 texinfo_show_urls = 'inline'
 
 linkcheck_timeout = 60
+if travis_ci:
+	linkcheck_ignore = [r'https://blogs\.windows\.com/']
