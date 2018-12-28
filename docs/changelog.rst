@@ -1,8 +1,13 @@
 Change log
 ==========
 
-.. Unreleased_
-.. -----------
+Unreleased_
+-----------
+
+Changed
+~~~~~~~
+
+* Normalise error messages.
 
 1.0.1_ |--| 2018-12-22
 ----------------------

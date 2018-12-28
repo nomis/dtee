@@ -1,5 +1,5 @@
-./dtee: stdout socket close: EIO
-./dtee: stderr socket close: EIO
+./dtee: stdout socket: close: EIO
+./dtee: stderr socket: close: EIO
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis

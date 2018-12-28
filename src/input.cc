@@ -202,12 +202,12 @@ void Input::close_outputs() {
 
 	out_.close(ec);
 	if (ec) {
-		print_error(format("stdout socket close: %1%"), ec);
+		print_error(format("stdout socket: close: %1%"), ec);
 	}
 
 	err_.close(ec);
 	if (ec) {
-		print_error(format("stderr socket close: %1%"), ec);
+		print_error(format("stderr socket: close: %1%"), ec);
 	}
 }
 
@@ -229,17 +229,17 @@ void Input::fork_child() {
 
 	errno = 0;
 	if (::dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
-		print_system_error(format("stdout dup2: %1%"));
+		print_system_error(format("stdout: dup2: %1%"));
 	}
 
 	errno = 0;
 	if (::dup2(err_.native_handle(), STDERR_FILENO) < 0) {
-		print_system_error(format("stderr dup2: %1%"));
+		print_system_error(format("stderr: dup2: %1%"));
 	}
 
 	input_.close(ec);
 	if (ec) {
-		print_error(format("input socket close: %1%"), ec);
+		print_error(format("input socket: close: %1%"), ec);
 	}
 
 	close_outputs();
@@ -268,7 +268,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		input_.async_receive_from(buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		print_error(format("socket receive: %1%"), ec);
+		print_error(format("input socket: receive: %1%"), ec);
 
 		output_->interrupted();
 		io_error_ = true;

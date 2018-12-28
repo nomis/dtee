@@ -1,5 +1,5 @@
-./dtee: stdout dup2: EMFILE
-./dtee: stderr dup2: EMFILE
+./dtee: stdout: dup2: EMFILE
+./dtee: stderr: dup2: EMFILE
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris
