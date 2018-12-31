@@ -268,7 +268,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		input_.async_receive_from(buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		print_error(format("input socket: receive: %1%"), ec);
+		print_error(format("input socket: recv: %1%"), ec);
 
 		output_->interrupted();
 		io_error_ = true;

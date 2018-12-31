@@ -1,1 +1,1 @@
-./dtee: input socket: receive: ENOTCONN
+./dtee: input socket: recv: ENOTCONN
