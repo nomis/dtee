@@ -1,0 +1,193 @@
+# English (United Kingdom) translation of dtee
+# Copyright 2018  Simon Arlott
+# This file is distributed under the same licence as the dtee package.
+#
+# All translations are empty because the source code language is en_GB.
+msgid ""
+msgstr ""
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/application.cc src/file_output.cc
+#, boost-format
+msgid "%1%: %2%"
+msgstr ""
+
+#: src/command_line.cc
+msgid "Output files"
+msgstr ""
+
+#: src/command_line.cc
+msgid "FILE"
+msgstr ""
+
+#: src/command_line.cc
+msgid "append standard output to FILE"
+msgstr ""
+
+#: src/command_line.cc
+msgid "copy standard output to FILE"
+msgstr ""
+
+#: src/command_line.cc
+msgid "append standard error to FILE"
+msgstr ""
+
+#: src/command_line.cc
+msgid "copy standard error to FILE"
+msgstr ""
+
+#: src/command_line.cc
+msgid "append standard output and error to FILE"
+msgstr ""
+
+#: src/command_line.cc
+msgid "copy standard output and error to FILE"
+msgstr ""
+
+#: src/command_line.cc
+msgid "Options"
+msgstr ""
+
+#: src/command_line.cc
+msgid "ignore interrupt signals"
+msgstr ""
+
+#: src/command_line.cc
+msgid ""
+"operate in cron mode (suppress output unless the process outputs an error "
+"message or has a non-zero exit status)"
+msgstr ""
+
+#: src/command_line.cc
+msgid "Miscellaneous"
+msgstr ""
+
+#: src/command_line.cc
+msgid "display this help and exit"
+msgstr ""
+
+#: src/command_line.cc
+msgid "output version information and exit"
+msgstr ""
+
+#: src/command_line.cc
+#, boost-format
+msgid "Try '%1% %2%' for more information."
+msgstr ""
+
+#: src/command_line.cc
+#, boost-format
+msgid "Usage: %1% [OPTION]... COMMAND [ARG]..."
+msgstr ""
+
+#: src/command_line.cc
+msgid ""
+"Run COMMAND with standard output and standard error copied to each FILE\n"
+"suppressing all output unless the process outputs an error message or has a\n"
+"non-zero exit status whereupon the original output will be written as "
+"normal\n"
+"and the exit code will be appended to standard error.\n"
+msgstr ""
+
+#: src/command_line.cc
+msgid ""
+"Run COMMAND with standard output and standard error copied to each FILE\n"
+"while maintaining the original standard output and standard error as "
+"normal.\n"
+msgstr ""
+
+#: src/command_line.cc
+#, boost-format
+msgid ""
+"Licence GPLv3+: GNU GPL version 3 or later <%1%>.\n"
+"This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by "
+"law.\n"
+"This is free software: you are free to change and redistribute it.\n"
+msgstr ""
+
+#: src/cron.cc
+#, boost-format
+msgid "error writing to buffer file %1%: %2%"
+msgstr ""
+
+#: src/cron.cc
+#, boost-format
+msgid "error seeking to start of buffer file %1%: %2%"
+msgstr ""
+
+#: src/cron.cc
+#, boost-format
+msgid "error reading buffer file %1%: %2%"
+msgstr ""
+
+#: src/cron.cc
+#, c-format, boost-format
+msgid "received signal %1$d: %2$s"
+msgstr ""
+
+#: src/cron.cc
+#, boost-format
+msgid "%1%: exited with status %2$d"
+msgstr ""
+
+#: src/cron.cc
+#, boost-format
+msgid "%1%: process terminated by signal %2$d: %3$s (core dumped)"
+msgstr ""
+
+#: src/cron.cc
+#, boost-format
+msgid "%1%: process terminated by signal %2$d: %3$s"
+msgstr ""
+
+#: src/input.cc
+#, boost-format
+msgid "input socket: %1%"
+msgstr ""
+
+#: src/input.cc
+#, boost-format
+msgid "stdout socket: %1%"
+msgstr ""
+
+#: src/input.cc
+#, boost-format
+msgid "stderr socket: %1%"
+msgstr ""
+
+#: src/input.cc
+#, boost-format
+msgid ""
+"output socket endpoints are not unique:\n"
+"\tstdout socket: %1%\n"
+"\tstderr socket: %2%"
+msgstr ""
+
+#: src/input.cc
+#, boost-format
+msgid "stdout: %1%"
+msgstr ""
+
+#: src/input.cc
+#, boost-format
+msgid "stderr: %1%"
+msgstr ""
+
+#: src/print_error.cc
+#, boost-format
+msgid "%1%: %2%\n"
+msgstr ""
+
+#: src/temp_directory.cc
+#, boost-format
+msgid "unable to create temporary directory %1%: %2%"
+msgstr ""
+
+#: src/temp_file.cc
+#, boost-format
+msgid "unable to create temporary file %1%: %2%"
+msgstr ""

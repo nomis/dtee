@@ -35,6 +35,7 @@
 #include <boost/system/error_code.hpp>
 
 #include "application.h"
+#include "i18n.h"
 #include "platform.h"
 #include "print_error.h"
 #include "temp_directory.h"
@@ -106,7 +107,7 @@ bool Input::open() {
 			so_rcvbuf = MINIMUM_RCVBUF_SIZE;
 		}
 	} catch (std::exception &e) {
-		print_error(format("input socket: %1%"), e);
+		print_error(format(_("input socket: %1%")), e);
 		return false;
 	}
 
@@ -136,14 +137,14 @@ bool Input::open() {
 	try {
 		open_output(input_, input_ep, out_, out_ep_, so_sndbuf);
 	} catch (std::exception &e) {
-		print_error(format("stdout socket: %1%"), e);
+		print_error(format(_("stdout socket: %1%")), e);
 		return false;
 	}
 
 	try {
 		open_output(input_, input_ep, err_, err_ep_, so_sndbuf);
 	} catch (std::exception &e) {
-		print_error(format("stderr socket: %1%"), e);
+		print_error(format(_("stderr socket: %1%")), e);
 		return false;
 	}
 
@@ -151,7 +152,10 @@ bool Input::open() {
 		if (out_ep_ == err_ep_) {
 			// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 			// so they both look the same.
-			print_error(format("output socket endpoints are not unique"));
+			print_error(format(_(
+				"output socket endpoints are not unique:\n"
+				"\tstdout socket: %1%\n\tstderr socket: %2%"))
+				% out_ep_.path() % err_ep_.path());
 			return false;
 		}
 	}
@@ -198,16 +202,16 @@ void Input::open_output(datagram_protocol::socket &input,
 }
 
 void Input::close_outputs() {
-	error_code ec;
-
-	out_.close(ec);
-	if (ec) {
-		print_error(format("stdout socket: close: %1%"), ec);
+	try {
+		out_.close();
+	} catch (std::exception &e) {
+		print_error(format(_("stdout socket: %1%")), e);
 	}
 
-	err_.close(ec);
-	if (ec) {
-		print_error(format("stderr socket: close: %1%"), ec);
+	try {
+		err_.close();
+	} catch (std::exception &e) {
+		print_error(format(_("stderr socket: %1%")), e);
 	}
 }
 
@@ -225,21 +229,20 @@ bool Input::stop() {
 }
 
 void Input::fork_child() {
-	error_code ec;
-
 	errno = 0;
 	if (::dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
-		print_system_error(format("stdout: dup2: %1%"));
+		print_system_error(format(str(format(_("stdout: %1%")) % "dup2: %1%")));
 	}
 
 	errno = 0;
 	if (::dup2(err_.native_handle(), STDERR_FILENO) < 0) {
-		print_system_error(format("stderr: dup2: %1%"));
+		print_system_error(format(str(format(_("stderr: %1%")) % "dup2: %1%")));
 	}
 
-	input_.close(ec);
-	if (ec) {
-		print_error(format("input socket: close: %1%"), ec);
+	try {
+		input_.close();
+	} catch (std::exception &e) {
+		print_error(format(_("input socket: %1%")), e);
 	}
 
 	close_outputs();
@@ -268,7 +271,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		input_.async_receive_from(buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		print_error(format("input socket: recv: %1%"), ec);
+		print_error(format(str(format(_("input socket: %1%")) % "recv: %1%")), ec);
 
 		output_->interrupted();
 		io_error_ = true;

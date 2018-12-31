@@ -28,6 +28,7 @@
 #include <boost/format.hpp>
 
 #include "application.h"
+#include "i18n.h"
 #include "print_error.h"
 
 using ::boost::format;
@@ -62,7 +63,7 @@ FileOutput::~FileOutput() {
 }
 
 void FileOutput::print_file_error() {
-	print_system_error(format("%1%: %2%") % filename_);
+	print_system_error(format(_("%1%: %2%")) % filename_);
 }
 
 bool FileOutput::open() {

@@ -15,21 +15,14 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#include "to_string.h"
+#ifndef DTEE_I18N_H_
+#define DTEE_I18N_H_
 
-#include <string>
-#include <system_error>
+#include <libintl.h>
 
-#include <boost/format.hpp>
-
-using ::boost::format;
-using ::std::string;
-using ::std::to_string;
-
-namespace dtee {
-
-string errno_to_string(int errno_copy) {
-	return std::error_code(errno_copy, std::system_category()).message();
+static inline const char *_(const char *msgid) {
+	return gettext(msgid);
 }
 
-} // namespace dtee
+#endif
+

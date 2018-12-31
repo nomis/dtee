@@ -25,6 +25,7 @@
 #include <boost/system/error_code.hpp>
 
 #include "command_line.h"
+#include "i18n.h"
 
 using ::boost::format;
 using ::boost::system::error_code;
@@ -35,7 +36,7 @@ using ::std::string;
 namespace dtee {
 
 void print_error(const format &message) {
-	const string line = str(format("%1%: %2%\n") % CommandLine::display_name() % message);
+	const string line = str(format(_("%1%: %2%\n")) % CommandLine::display_name() % message);
 
 	cerr.clear();
 	cerr.write(line.c_str(), line.length());

@@ -35,6 +35,7 @@
 #include "cron.h"
 #include "dispatch.h"
 #include "file_output.h"
+#include "i18n.h"
 #include "input.h"
 #include "print_error.h"
 #include "process.h"
@@ -251,7 +252,7 @@ void Application::execute(const vector<string> &command) {
 
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
-	print_system_error(format("%1%: %2%") % argv[0]);
+	print_system_error(format(_("%1%: %2%")) % argv[0]);
 	exit(EX_NOINPUT);
 }
 

@@ -25,12 +25,14 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <string>
 #include <utility>
 #include <vector>
 
 #include <boost/format.hpp>
 
 #include "application.h"
+#include "i18n.h"
 #include "print_error.h"
 #include "to_string.h"
 
@@ -69,7 +71,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 		errno = 0;
 		ssize_t written = ::write(file_.fd(), buffer.data(), len);
 		if (written != static_cast<ssize_t>(len)) {
-			print_file_error(format("error writing to buffer file %1%: %2%"));
+			print_file_error(format(_("error writing to buffer file %1%: %2%")));
 			error_ = true;
 
 			unspool_buffer_file();
@@ -114,7 +116,7 @@ bool Cron::unspool_buffer_file() {
 	if (buffered_) {
 		errno = 0;
 		if (::lseek(file_.fd(), 0, SEEK_SET) != 0) {
-			print_file_error(format("error seeking to start of buffer file %1%: %2%"));
+			print_file_error(format(_("error seeking to start of buffer file %1%: %2%")));
 			success = false;
 		} else {
 			ssize_t len;
@@ -125,7 +127,7 @@ bool Cron::unspool_buffer_file() {
 				errno = 0;
 				len = ::read(file_.fd(), buf.data(), buf.size());
 				if (len < 0) {
-					print_file_error(format("error reading buffer file %1%: %2%"));
+					print_file_error(format(_("error reading buffer file %1%: %2%")));
 					success = false;
 					break;
 				} else if (len > 0) {
@@ -149,16 +151,17 @@ bool Cron::report() {
 	bool success = unspool_buffer_file();
 
 	if (interrupt_signum_ >= 0) {
-		print_error(format("received signal %1%") % signal_to_string(interrupt_signum_));
+		/* blah */
+		print_error(format(_("received signal %1$d: %2$s")) % interrupt_signum_ % strsignal(interrupt_signum_));
 	}
 
 	if (exit_status_ >= 0) {
-		print_error(format("%1%: exited with status %2%") % command_ % exit_status_);
+		print_error(format(_("%1%: exited with status %2$d")) % command_ % exit_status_);
 	} else if (exit_signum_ >= 0) {
 		if (core_dumped_) {
-			print_error(format("%1%: process terminated by signal %2% (core dumped)") % command_ % signal_to_string(exit_signum_));
+			print_error(format(_("%1%: process terminated by signal %2$d: %3$s (core dumped)")) % command_ % exit_signum_ % strsignal(exit_signum_));
 		} else {
-			print_error(format("%1%: process terminated by signal %2%") % command_ % signal_to_string(exit_signum_));
+			print_error(format(_("%1%: process terminated by signal %2$d: %3$s")) % command_ % exit_signum_ % strsignal(exit_signum_));
 		}
 	}
 

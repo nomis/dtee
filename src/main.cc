@@ -15,10 +15,16 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include <libintl.h>
+
 #include "application.h"
 
 int main(int argc, char *argv[]) {
 	try {
+		setlocale(LC_ALL, "");
+		bindtextdomain(GETTEXT_PACKAGE, GETTEXT_LOCALEDIR);
+		textdomain(GETTEXT_PACKAGE);
+
 		dtee::Application application;
 		return application.run(argc, argv);
 	} catch (...) {

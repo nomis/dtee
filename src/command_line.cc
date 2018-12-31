@@ -27,17 +27,20 @@
 #include <typeinfo>
 #include <vector>
 
+#include <boost/format.hpp>
 #include <boost/program_options.hpp>
 
+#include "i18n.h"
+#include "print_error.h"
 #include "version.h"
 
-using ::std::string;
-using ::std::vector;
-
+using ::boost::format;
 using ::std::cerr;
 using ::std::cout;
 using ::std::endl;
 using ::std::flush;
+using ::std::string;
+using ::std::vector;
 
 namespace po = boost::program_options;
 
@@ -125,26 +128,26 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 	}
 
 	// LCOV_EXCL_BR_START
-	po::options_description visible_opts{"Output files"};
+	po::options_description visible_opts{_("Output files")};
 	visible_opts.add_options()
 		("out-append,o",
-				po::value<vector<string>>()->value_name("FILE"),
-				"append standard output to FILE")
+				po::value<vector<string>>()->value_name(_("FILE")),
+				_("append standard output to FILE"))
 		("out-overwrite,O",
-				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard output to FILE")
+				po::value<vector<string>>()->value_name(_("FILE")),
+				_("copy standard output to FILE"))
 		("err-append,e",
-				po::value<vector<string>>()->value_name("FILE"),
-				"append standard error to FILE")
+				po::value<vector<string>>()->value_name(_("FILE")),
+				_("append standard error to FILE"))
 		("err-overwrite,E",
-				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard error to FILE")
+				po::value<vector<string>>()->value_name(_("FILE")),
+				_("copy standard error to FILE"))
 		("combined-append,c",
-				po::value<vector<string>>()->value_name("FILE"),
-				"append standard output and error to FILE")
+				po::value<vector<string>>()->value_name(_("FILE")),
+				_("append standard output and error to FILE"))
 		("combined-overwrite,C",
-				po::value<vector<string>>()->value_name("FILE"),
-				"copy standard output and error to FILE")
+				po::value<vector<string>>()->value_name(_("FILE")),
+				_("copy standard output and error to FILE"))
 		;
 
 	po::options_description hidden_opts;
@@ -153,19 +156,21 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 		(BOOST_COMMAND_OPT.c_str(), po::value<vector<string>>())
 		;
 
-	po::options_description mode_opts{"Options"};
+	po::options_description mode_opts{_("Options")};
 	mode_opts.add_options()
-		("ignore-interrupts,i", po::bool_switch(), "ignore interrupt signals")
+		("ignore-interrupts,i", po::bool_switch(), _("ignore interrupt signals"))
 		;
 
 	(cron_mode_ ? hidden_opts : mode_opts).add_options()
-		("cron,q", po::bool_switch(), "operate in cron mode (suppress output unless the process outputs an error message or has a non-zero exit status)")
+		("cron,q", po::bool_switch(), _("operate in cron mode"
+				" (suppress output unless the process outputs"
+				" an error message or has a non-zero exit status)"))
 		;
 
-	po::options_description misc_opts{"Miscellaneous"};
+	po::options_description misc_opts{_("Miscellaneous")};
 	misc_opts.add_options()
-		("help,h", po::bool_switch(), "display this help and exit")
-		("version,V", po::bool_switch(), "output version information and exit")
+		("help,h", po::bool_switch(), _("display this help and exit"))
+		("version,V", po::bool_switch(), _("output version information and exit"))
 		;
 
 	visible_opts.add(mode_opts);
@@ -209,8 +214,8 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 			exit(EX_USAGE);
 		}
 	} catch (std::exception &e) {
-		cerr << display_name_ << ": " << e.what() << endl;
-		cerr << "Try '" << display_name_ << " -h' for more information." << endl;
+		print_error(format("%1%"), e);
+		cerr << format(_("Try '%1% %2%' for more information.")) % display_name_ % "-h" << endl;
 		exit(EX_USAGE);
 	}
 
@@ -218,25 +223,30 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 }
 
 void CommandLine::display_usage(const po::options_description &options) const {
-	cout << "Usage: " << display_name_ << " [OPTION]... COMMAND [ARG]..." << endl << endl;
-	cout << "Run COMMAND with standard output and standard error copied to each FILE" << endl;
+	cout << format(_("Usage: %1% [OPTION]... COMMAND [ARG]...")) % display_name_ << "\n\n";
 	if (cron_mode()) {
-		cout << "suppressing all output unless the process outputs an error message or has a" << endl;
-		cout << "non-zero exit status whereupon the original output will be written as normal" << endl;
-		cout << "and the exit code will be appended to standard error." << endl;
+		cout << _(
+			"Run COMMAND with standard output and standard error copied to each FILE\n"
+			"suppressing all output unless the process outputs an error message or has a\n"
+			"non-zero exit status whereupon the original output will be written as normal\n"
+			"and the exit code will be appended to standard error.\n");
 	} else {
-		cout << "while maintaining the original standard output and standard error as normal." << endl;
+		cout << _(
+			"Run COMMAND with standard output and standard error copied to each FILE\n"
+			"while maintaining the original standard output and standard error as normal.\n");
 	}
-	cout << endl;
-	cout << options << endl;
+	cout << "\n" << options << endl;
 }
 
 void CommandLine::display_version() const {
-	cout << DEFAULT_PROGRAM_NAME << " " << VERSION << endl;
-	cout << "Copyright 2018  Simon Arlott" << endl;
-	cout << "Licence GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>." << endl;
-	cout << "This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law." << endl;
-	cout << "This is free software: you are free to change and redistribute it." << endl;
+	cout << DEFAULT_PROGRAM_NAME << " " << VERSION << "\n";
+	cout << "Copyright 2018  Simon Arlott\n";
+	cout << format(_(
+		"Licence GPLv3+: GNU GPL version 3 or later <%1%>.\n"
+		"This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n"
+		"This is free software: you are free to change and redistribute it.\n"))
+		% "https://gnu.org/licenses/gpl.html";
+	cout << flush;
 }
 
 void CommandLine::display_variables() const {

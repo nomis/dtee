@@ -26,6 +26,7 @@
 #include <boost/format.hpp>
 
 #include "application.h"
+#include "i18n.h"
 #include "print_error.h"
 #include "temp_filename_pattern.h"
 
@@ -50,7 +51,7 @@ bool TempFile::open() {
 	errno = 0;
 	fd_ = ::mkostemp(filename.data(), O_CLOEXEC);
 	if (fd_ < 0) {
-		print_system_error(format("unable to create temporary file %1%: %2%") % pattern);
+		print_system_error(format(_("unable to create temporary file %1%: %2%")) % pattern);
 		return false;
 	} else {
 		filename_ = string(filename.data());

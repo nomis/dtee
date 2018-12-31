@@ -25,6 +25,7 @@
 #include <boost/format.hpp>
 
 #include "application.h"
+#include "i18n.h"
 #include "print_error.h"
 #include "temp_filename_pattern.h"
 
@@ -42,7 +43,7 @@ TempDirectory::TempDirectory(const string &name) {
 	errno = 0;
 	temp_dir = mkdtemp(filename.data());
 	if (temp_dir == nullptr) {
-		print_system_error(format("unable to create temporary directory %1%: %2%") % pattern);
+		print_system_error(format(_("unable to create temporary directory %1%: %2%")) % pattern);
 	} else {
 		name_ = temp_dir;
 	}

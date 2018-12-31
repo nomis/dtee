@@ -1,0 +1,16 @@
+src/application.cc
+src/command_line.cc
+src/cron.cc
+src/dispatch.cc
+src/file_output.cc
+src/input.cc
+src/main.cc
+src/print_error.cc
+src/process.cc
+src/signal_handler.cc
+src/stream_output.cc
+src/temp_directory.cc
+src/temp_file.cc
+src/temp_filename_pattern.cc
+src/to_string.cc
+src/uninterruptible.cc

@@ -1,4 +1,4 @@
-.PHONY: all debug compile debug-compile check coverage analyse clean distclean install uninstall
+.PHONY: all debug compile debug-compile check coverage analyse clean distclean install uninstall pot po
 
 BUILD_DIR=build
 RELEASE_DIR=$(BUILD_DIR)/release
@@ -90,3 +90,9 @@ install: | $(RELEASE_DIR)/
 
 uninstall: | $(RELEASE_DIR)/
 	$(NINJA) -C $(RELEASE_DIR)/ uninstall
+
+pot: | $(RELEASE_DIR)/
+	$(NINJA) -C $(RELEASE_DIR)/ dtee-pot
+
+po: | $(RELEASE_DIR)/
+	$(NINJA) -C $(RELEASE_DIR)/ dtee-update-po

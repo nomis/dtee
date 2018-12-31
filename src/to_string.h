@@ -24,7 +24,6 @@
 namespace dtee {
 
 std::string errno_to_string(int errno_copy = errno);
-std::string signal_to_string(int signum);
 
 } // namespace dtee
 

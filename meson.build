@@ -11,6 +11,8 @@ project('dtee',
 	meson_version: '>=0.46.0',
 )
 
+subdir('i18n')
+
 source_files = [
 	'src/application.cc',
 	'src/command_line.cc',
@@ -76,6 +78,12 @@ else # linux, freebsd, openbsd, dragonfly, gnu, cygwin
 	link_args = ['-Wl,--wrap=sigaction']
 endif
 
+if cpp.has_function('gettext')
+	gettext_deps = []
+else
+	gettext_deps = [cpp.find_library('intl')]
+endif
+
 python = import('python').find_installation()
 
 version_check = run_command(python, [files('docs/version_check.py'), files('docs/changelog.rst'), meson.project_version()])
@@ -86,6 +94,8 @@ endif
 dtee = executable('dtee',
 	source_files,
 	cpp_args: c_args + [
+		'-DGETTEXT_PACKAGE="dtee"',
+		'-DGETTEXT_LOCALEDIR="' + join_paths(get_option('prefix'), get_option('localedir')) + '"',
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
 		'-DBOOST_ASIO_DISABLE_THREADS',
 	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
@@ -96,7 +106,7 @@ dtee = executable('dtee',
 			'program_options',
 			'system',
 		]),
-	],
+	] + gettext_deps,
 	install: true)
 
 ln = find_program('ln')

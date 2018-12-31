@@ -11,6 +11,7 @@ Compile
 ~~~~~~~
   * `Boost <https://www.boost.org/>`_ 1.55+
   * `Clang <https://clang.llvm.org/>`_ 3.9+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 4.8+
+  * `GNU gettext <https://www.gnu.org/software/gettext/>`_
   * `GNU Make <https://www.gnu.org/software/make/>`_ 3.80+ (optional)
   * `Meson <https://mesonbuild.com/>`_ 0.46+
 
