@@ -132,7 +132,7 @@ if sphinx_build.found()
 	]
 
 	dtee_man = custom_target('dtee.1',
-		input: ['docs/'] + source_docs,
+		input: source_docs,
 		output: 'dtee.1',
 		command: [
 			sphinx_build,
@@ -141,7 +141,7 @@ if sphinx_build.found()
 			'-b', 'man',
 			'-D', 'version=' + meson.project_version(),
 			'-D', 'release=' + meson.project_version(),
-			'@INPUT0@',
+			'@CURRENT_SOURCE_DIR@/docs',
 			'@BUILD_ROOT@',
 		],
 		install: true,
