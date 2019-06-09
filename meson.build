@@ -123,12 +123,18 @@ sphinx_build = find_program('sphinx-build', required: false)
 if sphinx_build.found()
 	source_docs = [
 		'docs/architecture.rst',
+		'docs/changelog.rst',
 		'docs/conf.py',
 		'docs/dependencies.rst',
 		'docs/index.rst',
 		'docs/install.rst',
 		'docs/limitations.rst',
 		'docs/manual.rst',
+		'docs/packages.rst',
+		'docs/packages/debian.rst',
+		'docs/packages/fedora.rst',
+		'docs/packages/rhel.rst',
+		'docs/packages/ubuntu.rst',
 	]
 
 	dtee_man = custom_target('dtee.1',
