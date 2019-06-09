@@ -25,3 +25,14 @@ to ``/etc/yum.repos.d/dtee-rhel7.repo``.
 Run the following command::
 
     yum install dtee
+
+Red Hat Enterprise Linux 8
+--------------------------
+
+Save the repository configuration file
+:download:`dtee-rhel8.repo <../../yum/dtee-rhel8.repo>`
+to ``/etc/yum.repos.d/dtee-rhel8.repo``.
+
+Run the following command::
+
+    yum install dtee
