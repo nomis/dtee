@@ -272,12 +272,12 @@ bash = find_program('bash')
 
 xfail = get_option('test_expect_fail')
 xfail_general_writes = ['netbsd'].contains(host_machine.system())
-xfail_stream = xfail_general_writes or ['freebsd', 'openbsd', 'darwin'].contains(host_machine.system())
+xfail_stream = xfail_general_writes or ['freebsd', 'openbsd', 'dragonfly', 'darwin'].contains(host_machine.system())
 xfail_stream_1mb = xfail_stream
 xfail_stream_32mb = xfail_stream or ['cygwin'].contains(host_machine.system())
 xfail_stream_256mb = xfail_stream or ['cygwin'].contains(host_machine.system())
 xfail_writes_of_1_byte = xfail_general_writes or xfail_stream
-xfail_small_writes = xfail_general_writes or ['dragonfly'].contains(host_machine.system())
+xfail_small_writes = xfail_general_writes
 xfail_large_writes = xfail_general_writes
 
 test('dtee (no arguments)', bash, args: [files('tests/noargs-dtee.sh')], env: test_env, depends: all_test_txt)
