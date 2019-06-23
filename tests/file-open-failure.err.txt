@@ -1,1 +1,1 @@
-./dtee: file_not_writeable: EACCES
+./dtee: file_open_failure: EACCES

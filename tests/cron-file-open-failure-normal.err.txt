@@ -1,4 +1,4 @@
-./dtee: file_not_writeable: EACCES
+./dtee: cron_file_open_failure_normal: EACCES
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris
