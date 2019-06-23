@@ -78,9 +78,9 @@ else # linux, freebsd, openbsd, dragonfly, gnu, cygwin
 	link_args = ['-Wl,--wrap=sigaction']
 endif
 
-if cpp.has_function('gettext')
+if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	gettext_deps = []
-else
+else # freebsd, openbsd, netbsd, dragonfly, darwin, cygwin
 	gettext_deps = [cpp.find_library('intl')]
 endif
 
