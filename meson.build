@@ -80,7 +80,10 @@ endif
 
 if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	gettext_deps = []
-else # freebsd, openbsd, netbsd, dragonfly, darwin, cygwin
+elif host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd' or host_machine.system() == 'dragonfly'
+	# Workaround for https://github.com/mesonbuild/meson/issues/4468
+	gettext_deps = [cpp.find_library('intl', dirs: ['/usr/local/lib'])]
+else # netbsd, darwin, cygwin
 	gettext_deps = [cpp.find_library('intl')]
 endif
 
