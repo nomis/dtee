@@ -64,7 +64,7 @@ function is_acl_override() {
 	case "$UNAME" in
 		CYGWIN_*)
 			# Running with elevated permissions
-			id -G | grep -E '\<(114|544)\>'
+			id -G | grep -E '\<(544)\>'
 			return $?
 			;;
 
