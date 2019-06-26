@@ -18,7 +18,7 @@ Cygwin
 
 The build and test process makes use of symbolic links.
 
-`Allow unprivileged users to create symbolic links <https://blogs.windows.com/buildingapps/2016/12/02/symlinks-windows-10/>`_
+`Allow unprivileged users to create symbolic links <https://blogs.windows.com/windowsdeveloper/2016/12/02/symlinks-windows-10/>`_
 by enabling `Developer mode <https://docs.microsoft.com/en-us/windows/uwp/get-started/enable-your-device-for-development>`_.
 
 Set the following environment variable::
