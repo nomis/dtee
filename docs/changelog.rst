@@ -14,6 +14,10 @@ Changed
 ~~~~~~~
 
 * Normalise error messages.
+* Make signals non-interrupting by adding the ``SA_RESTART`` flag after
+  Boost.Asio sets the signal handler (`boostorg/asio issue #157
+  <https://github.com/boostorg/asio/issues/157>`_)  instead of trying to
+  wrap calls to |sigaction(2)|_.
 
 1.0.1_ |--| 2018-12-22
 ----------------------
@@ -81,6 +85,9 @@ Added
 .. _GNU Hurd: https://www.gnu.org/software/hurd/
 .. _Darwin: https://opensource.apple.com/
 .. _Cygwin: https://www.cygwin.com/
+
+.. |sigaction(2)| replace:: ``sigaction(2)``
+.. _sigaction(2): http://man7.org/linux/man-pages/man2/sigaction.2.html
 
 .. _Unreleased: https://github.com/nomis/dtee/compare/1.0.1...HEAD
 .. _1.0.1: https://github.com/nomis/dtee/compare/1.0.0...1.0.1

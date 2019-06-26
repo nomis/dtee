@@ -15,11 +15,6 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#if defined(__APPLE__)
-// Wrap sigaction manually because the linker can't do it 😩
-# define sigaction __wrap_sigaction
-#endif
-
 #include "signal_handler.h"
 
 #include <sys/types.h>
@@ -38,6 +33,8 @@
 #include "application.h"
 #include "print_error.h"
 
+static_assert(BOOST_ASIO_HAS_SIGACTION, "Boost must use sigaction() so that the SA_RESTART flag can be used");
+
 using ::boost::asio::io_service;
 using ::boost::format;
 using ::boost::system::error_code;
@@ -54,7 +51,7 @@ namespace dtee {
 
 SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::asio::io_service> &io, shared_ptr<ResultHandler> output)
 		: io_(io),
-		  child_exited_(*io_, SIGCHLD),
+		  child_exited_(*io_),
 		  interrupt_signals_(*io_),
 		  ignored_signals_(*io_),
 		  pipe_signal_(*io_),
@@ -64,19 +61,21 @@ SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::
 }
 
 void SignalHandler::start(pid_t pid) {
+	add_non_interrupting_signal(child_exited_, SIGCHLD);
+
 	if (handle_signals_) {
-		interrupt_signals_.add(SIGHUP);
-		interrupt_signals_.add(SIGTERM);
+		add_non_interrupting_signal(interrupt_signals_, SIGHUP);
+		add_non_interrupting_signal(interrupt_signals_, SIGTERM);
 
 		if (!ignore_sigint_) {
-			interrupt_signals_.add(SIGINT);
+			add_non_interrupting_signal(interrupt_signals_, SIGINT);
 		}
 
-		pipe_signal_.add(SIGPIPE);
+		add_non_interrupting_signal(pipe_signal_, SIGPIPE);
 	}
 
 	if (ignore_sigint_) {
-		ignored_signals_.add(SIGINT);
+		add_non_interrupting_signal(ignored_signals_, SIGINT);
 	}
 
 	child_ = pid;
@@ -84,6 +83,26 @@ void SignalHandler::start(pid_t pid) {
 	child_exited_.async_wait(bind(&SignalHandler::handle_child_exited, this, p::_1, p::_2));
 	interrupt_signals_.async_wait(bind(&SignalHandler::handle_interrupt_signals, this, p::_1, p::_2));
 	pipe_signal_.async_wait(bind(&SignalHandler::handle_pipe_signal, this, p::_1, p::_2));
+}
+
+// Workaround for missing SA_RESTART support in Boost.Asio (1.62)
+// https://github.com/boostorg/asio/issues/157
+//
+// This is not thread-safe when the same signal_number is added/removed from the signal_set
+void SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_set, int signal_number) {
+	struct sigaction act;
+
+	signal_set.add(signal_number);
+
+	if (::sigaction(signal_number, NULL, &act) != 0) {
+		print_system_error(format("sigaction: %1%"));
+	} else if ((act.sa_flags & SA_RESTART) == 0) {
+		act.sa_flags |= SA_RESTART;
+
+		if (::sigaction(signal_number, &act, NULL) != 0) {
+			print_system_error(format("sigaction: %1%"));
+		}
+	}
 }
 
 bool SignalHandler::stop() {

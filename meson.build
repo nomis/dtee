@@ -29,7 +29,6 @@ source_files = [
 	'src/temp_file.cc',
 	'src/temp_filename_pattern.cc',
 	'src/to_string.cc',
-	'src/uninterruptible.cc',
 	vcs_tag(input: 'src/version.h.in', output: 'version.h'),
 ]
 
@@ -70,14 +69,6 @@ else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
 
-if host_machine.system() == 'netbsd' # 😩
-	link_args = ['-Wl,--wrap=sigaction', '-Wl,--wrap=__sigaction14']
-elif host_machine.system() == 'darwin'
-	link_args = ['-Wl,-alias,_sigaction,___real_sigaction']
-else # linux, freebsd, openbsd, dragonfly, gnu, cygwin
-	link_args = ['-Wl,--wrap=sigaction']
-endif
-
 if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	gettext_deps = []
 elif host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd' or host_machine.system() == 'dragonfly'
@@ -102,7 +93,6 @@ dtee = executable('dtee',
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
 		'-DBOOST_ASIO_DISABLE_THREADS',
 	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
-	link_args: link_args,
 	dependencies: [
 		dependency('boost', modules: [
 			'filesystem',
