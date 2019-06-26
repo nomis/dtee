@@ -120,7 +120,9 @@ install:
       pip3 install --user meson ninja || exit 1;
     fi
   - if [ "$BUILD" = "docs" ] || [ $PIP_SPHINX -eq 1 ]; then
-      pip3 install --user Sphinx;
+      pip3 install --user --upgrade pip || exit 1;
+      pip3 install --user setuptools || exit 1;
+      pip3 install --user Sphinx || exit 1;
     fi
 
 script:
