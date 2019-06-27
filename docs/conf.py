@@ -38,5 +38,3 @@ texinfo_documents = [
 texinfo_show_urls = 'inline'
 
 linkcheck_timeout = 60
-if travis_ci:
-	linkcheck_ignore = [r'https://blogs\.windows\.com/']
