@@ -40,3 +40,21 @@ Run the following commands::
 
 .. _Bintray public key: https://bintray.com/bintray
 .. _APT: https://en.wikipedia.org/wiki/APT_(Debian)
+
+Debian 10 (buster)
+------------------
+
+Add the following APT_ data source
+:download:`dtee-debian-buster.list <../../apt/dtee-debian-buster.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
+
+    deb https://dl.bintray.com/dtee/debian/ buster main
+
+Run the following commands::
+
+    apt install apt-transport-https
+    apt update
+    apt install dtee
+
+.. _Bintray public key: https://bintray.com/bintray
+.. _APT: https://en.wikipedia.org/wiki/APT_(Debian)
