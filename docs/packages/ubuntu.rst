@@ -38,3 +38,20 @@ Run the following commands::
 
 .. _Bintray public key: https://bintray.com/bintray
 .. _APT: https://en.wikipedia.org/wiki/APT_(Debian)
+
+Ubuntu 20.04 LTS (Focal Fossa)
+------------------------------
+
+Add the following APT_ data source
+:download:`dtee-ubuntu-focal.list <../../apt/dtee-ubuntu-focal.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
+
+    deb https://dl.bintray.com/dtee/ubuntu/ focal main
+
+Run the following commands::
+
+    apt update
+    apt install dtee
+
+.. _Bintray public key: https://bintray.com/bintray
+.. _APT: https://en.wikipedia.org/wiki/APT_(Debian)
