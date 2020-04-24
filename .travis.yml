@@ -130,7 +130,7 @@ matrix:
           - meson
           - ninja
           update: true
-      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS=-Wno-error=non-virtual-dtor UNITY=0
+      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS="-Wno-error=non-virtual-dtor -Wno-error=shadow" UNITY=0
 
 install:
   - if [ "$BUILD" = "app" ]; then
