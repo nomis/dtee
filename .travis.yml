@@ -95,11 +95,11 @@ matrix:
           - meson
           - ninja
           update: true
-      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ UNITY=0
+      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS=-Wno-error=non-virtual-dtor UNITY=0
 
     - name: Xcode 10
       os: osx
-      osx_image: xcode10.1
+      osx_image: xcode10.3
       addons:
         homebrew:
           packages:
@@ -108,7 +108,20 @@ matrix:
           - meson
           - ninja
           update: true
-      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ UNITY=0
+      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS=-Wno-error=non-virtual-dtor UNITY=0
+
+    - name: Xcode 11
+      os: osx
+      osx_image: xcode11.3
+      addons:
+        homebrew:
+          packages:
+          - boost
+          - gettext
+          - meson
+          - ninja
+          update: true
+      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS=-Wno-error=non-virtual-dtor UNITY=0
 
 install:
   - if [ "$BUILD" = "app" ]; then
