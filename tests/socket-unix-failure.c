@@ -1,8 +1,10 @@
 #define __socket30 __dtee__hide___socket30
 #define socket __dtee__hide__socket
+#define setsockopt __dtee__hide__setsockopt
 
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <assert.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <stdbool.h>
@@ -10,6 +12,7 @@
 
 #undef socket
 #undef __socket30
+#undef setsockopt
 
 #include "allow-n-times.h"
 #include "is-dtee.h"
@@ -67,5 +70,39 @@ TEST_FCN_REPL(int, __socket30, (int domain, int type, int protocol)) {
 	}
 
 	return (*next___socket30)(domain, type, protocol);
+}
+#endif
+
+#if defined(__MACH__) && defined(__APPLE__) || defined(__FreeBSD__)
+static int dtee_test_setsockopt_failure(int sockfd __attribute__((unused)), int level __attribute__((unused)), int optname __attribute__((unused)), void *optval __attribute__((unused)), socklen_t *optlen __attribute__((unused))) {
+	assert(errno == EAFNOSUPPORT);
+	return -1;
+}
+
+TEST_FCN_REPL(int, setsockopt, (int sockfd, int level, int optname, void *optval, socklen_t *optlen)) {
+	int (*next_setsockopt)(int, int, int, void *, socklen_t *) = TEST_FCN_NEXT(setsockopt);
+
+	static __thread bool active = false;
+
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			if (errno == EAFNOSUPPORT
+					&& sockfd == -1
+					&& level == SOL_SOCKET
+					&& optname == SO_NOSIGPIPE) {
+				// Workaround Boost.Asio (1.74.0) bug on Darwin
+				// and FreeBSD where it calls setsockopt() on
+				// new sockets even if socket() returned -1
+				// https://github.com/boostorg/asio/pull/368
+				next_setsockopt = dtee_test_setsockopt_failure;
+			}
+		}
+
+		active = false;
+	}
+
+	return (*next_setsockopt)(sockfd, level, optname, optval, optlen);
 }
 #endif
