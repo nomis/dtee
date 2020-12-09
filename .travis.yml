@@ -93,19 +93,6 @@ matrix:
           packages: [libboost-filesystem-dev, libboost-program-options-dev, python3-pip, python3-sphinx, clang-6.0, llvm-6.0-dev]
       env: BUILD=app C_COMPILER=clang-6.0 CXX_COMPILER=clang++-6.0 UNITY=1
 
-    - name: Xcode 9
-      os: osx
-      osx_image: xcode9.4
-      addons:
-        homebrew:
-          packages:
-          - boost
-          - gettext
-          - meson
-          - ninja
-          update: true
-      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS=-Wno-error=non-virtual-dtor UNITY=0
-
     - name: Xcode 10
       os: osx
       osx_image: xcode10.3
@@ -121,7 +108,20 @@ matrix:
 
     - name: Xcode 11
       os: osx
-      osx_image: xcode11.3
+      osx_image: xcode11.6
+      addons:
+        homebrew:
+          packages:
+          - boost
+          - gettext
+          - meson
+          - ninja
+          update: true
+      env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS="-Wno-error=non-virtual-dtor -Wno-error=shadow" UNITY=0
+
+    - name: Xcode 12
+      os: osx
+      osx_image: xcode12.2
       addons:
         homebrew:
           packages:
