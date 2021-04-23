@@ -1,5 +1,5 @@
-dtee (double tee) |Build Status| |Download Release|
-===================================================
+dtee (double tee) |Build Status|
+================================
 
 .. image:: docs/logo.svg
    :alt: Logo (standard output and standard error represented as two separate
@@ -39,7 +39,5 @@ the docs_ directory.
 
 .. _docs: docs/
 
-.. |Build Status| image:: https://travis-ci.org/nomis/dtee.svg?branch=master
+.. |Build Status| image:: https://travis-ci.org/nomis/dtee.svg?branch=main
    :target: https://travis-ci.org/nomis/dtee
-.. |Download Release| image:: https://api.bintray.com/packages/dtee/source/dtee/images/download.svg
-   :target: https://bintray.com/dtee/source/dtee/_latestVersion

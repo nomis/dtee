@@ -1,15 +1,15 @@
 [dtee]
 name=dtee (6/$basearch)
-baseurl=https://dl.bintray.com/dtee/redhat/6/$basearch
+baseurl=https://dtee.bin.uuid.uk/redhat/6/$basearch
 enabled=1
 gpgcheck=0
 repo_gpgcheck=1
-gpgkey=https://dl.bintray.com/dtee/redhat/6/$basearch/repodata/repomd.xml.key
+gpgkey=https://dtee.bin.uuid.uk/redhat/6/$basearch/repodata/repomd.xml.key
 
 [dtee-source]
 name=dtee (6/Source)
-baseurl=https://dl.bintray.com/dtee/redhat/6/source
+baseurl=https://dtee.bin.uuid.uk/redhat/6/source
 enabled=0
 gpgcheck=0
 repo_gpgcheck=1
-gpgkey=https://dl.bintray.com/dtee/redhat/6/source/repodata/repomd.xml.key
+gpgkey=https://dtee.bin.uuid.uk/redhat/6/source/repodata/repomd.xml.key

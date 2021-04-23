@@ -1,6 +1,10 @@
 Red Hat Enterprise Linux
 ========================
 
+Repository :download:`public key <repo-key-rsa.asc>`::
+
+    4784 9A12 DAF9 BD2A F550 5FBB 4FF8 86F3 1820 6BD9
+
 Red Hat Enterprise Linux 6
 --------------------------
 
