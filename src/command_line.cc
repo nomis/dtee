@@ -240,7 +240,7 @@ void CommandLine::display_usage(const po::options_description &options) const {
 
 void CommandLine::display_version() const {
 	cout << DEFAULT_PROGRAM_NAME << " " << VERSION << "\n";
-	cout << "Copyright 2018  Simon Arlott\n";
+	cout << "Copyright 2018-2021  Simon Arlott\n";
 	cout << format(_(
 		"Licence GPLv3+: GNU GPL version 3 or later <%1%>.\n"
 		"This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n"
