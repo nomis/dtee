@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 #ifndef DTEE_APPLICATION_H_
 #define DTEE_APPLICATION_H_
 
-#include <list>
 #include <memory>
 #include <string>
 #include <vector>
@@ -46,11 +45,11 @@ public:
 	Application& operator=(const Application&) = delete;
 
 private:
-	void create_file_outputs(std::list<std::shared_ptr<Output>> &outputs,
+	void create_file_outputs(std::vector<std::shared_ptr<Output>> &outputs,
 			const std::string &name, FileOutputType type, bool append);
 	std::shared_ptr<Dispatch> create_dispatch();
-	std::list<std::shared_ptr<Output>> create_outputs();
-	std::list<std::shared_ptr<ResultHandler>> create_result_handlers();
+	std::vector<std::shared_ptr<Output>> create_outputs();
+	std::vector<std::shared_ptr<ResultHandler>> create_result_handlers();
 	bool io_run();
 	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
 

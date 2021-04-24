@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 #define DTEE_DISPATCH_H_
 
 #include <cstddef>
-#include <list>
 #include <memory>
 #include <vector>
 
@@ -30,7 +29,7 @@ namespace dtee {
 
 class Dispatch: public Output, public ResultHandler {
 public:
-	Dispatch(const std::list<std::shared_ptr<Output>> &outputs, const std::list<std::shared_ptr<ResultHandler>> &result_handlers);
+	Dispatch(const std::vector<std::shared_ptr<Output>> &outputs, const std::vector<std::shared_ptr<ResultHandler>> &result_handlers);
 	~Dispatch() override = default;
 
 	bool open() override;
@@ -40,8 +39,8 @@ public:
 	void interrupted(int signum = -1) override;
 
 private:
-	std::list<std::shared_ptr<Output>> outputs_;
-	std::list<std::shared_ptr<ResultHandler>> result_handlers_;
+	std::vector<std::shared_ptr<Output>> outputs_;
+	std::vector<std::shared_ptr<ResultHandler>> result_handlers_;
 };
 
 } // namespace dtee

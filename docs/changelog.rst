@@ -18,6 +18,7 @@ Changed
   Boost.Asio sets the signal handler (`boostorg/asio issue #157
   <https://github.com/boostorg/asio/issues/157>`_)  instead of trying to
   wrap calls to |sigaction(2)|_.
+* Use ``std::vector`` instead of ``std::list`` to improve performance.
 
 1.0.1_ |--| 2018-12-22
 ----------------------

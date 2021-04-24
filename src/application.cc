@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 #include <sysexits.h>
 #include <unistd.h>
 #include <csignal>
-#include <list>
 #include <memory>
 #include <string>
 #include <system_error>
@@ -45,7 +44,6 @@
 using ::boost::asio::io_service;
 using ::boost::format;
 using ::boost::system::error_code;
-using ::std::list;
 using ::std::make_shared;
 using ::std::shared_ptr;
 using ::std::string;
@@ -151,13 +149,13 @@ int Application::run(int argc, const char* const argv[]) {
 }
 
 shared_ptr<Dispatch> Application::create_dispatch() {
-	list<shared_ptr<Output>> outputs = create_outputs();
-	list<shared_ptr<ResultHandler>> result_handlers = create_result_handlers();
+	vector<shared_ptr<Output>> outputs = create_outputs();
+	vector<shared_ptr<ResultHandler>> result_handlers = create_result_handlers();
 	return make_shared<Dispatch>(outputs, result_handlers);
 }
 
-list<shared_ptr<Output>> Application::create_outputs() {
-	list<shared_ptr<Output>> outputs;
+vector<shared_ptr<Output>> Application::create_outputs() {
+	vector<shared_ptr<Output>> outputs;
 	shared_ptr<Output> original = make_shared<StreamOutput>();
 
 	if (command_line_.cron_mode()) {
@@ -180,15 +178,15 @@ list<shared_ptr<Output>> Application::create_outputs() {
 	return outputs;
 }
 
-void Application::create_file_outputs(list<shared_ptr<Output>> &outputs,
+void Application::create_file_outputs(vector<shared_ptr<Output>> &outputs,
 		const string &name, FileOutputType type, bool append) {
 	for (const auto& filename : command_line_.list(name)) {
 		outputs.push_back(make_shared<FileOutput>(filename, type, append));
 	}
 }
 
-list<shared_ptr<ResultHandler>> Application::create_result_handlers() {
-	list<shared_ptr<ResultHandler>> result_handlers;
+vector<shared_ptr<ResultHandler>> Application::create_result_handlers() {
+	vector<shared_ptr<ResultHandler>> result_handlers;
 
 	process_ = make_shared<Process>();
 	result_handlers.push_back(process_);
