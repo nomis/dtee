@@ -193,7 +193,7 @@ vector<shared_ptr<ResultHandler>> Application::create_result_handlers() {
 	process_ = make_shared<Process>();
 	result_handlers.push_back(process_);
 
-	if (command_line_.cron_mode()) {
+	if (cron_) {
 		result_handlers.push_back(cron_);
 	}
 
