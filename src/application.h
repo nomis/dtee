@@ -45,16 +45,16 @@ public:
 	Application& operator=(const Application&) = delete;
 
 private:
+	static bool run(boost::asio::io_service &io);
+
 	void create_file_outputs(std::vector<std::shared_ptr<Output>> &outputs,
 			const std::string &name, FileOutputType type, bool append);
 	std::shared_ptr<Dispatch> create_dispatch();
 	std::vector<std::shared_ptr<Output>> create_outputs();
 	std::vector<std::shared_ptr<ResultHandler>> create_result_handlers();
-	bool io_run();
 	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
 
 	CommandLine command_line_;
-	std::shared_ptr<boost::asio::io_service> io_;
 	std::shared_ptr<Process> process_;
 	std::shared_ptr<Cron> cron_;
 };

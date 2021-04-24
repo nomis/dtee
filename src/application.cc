@@ -60,10 +60,10 @@ namespace dtee {
 int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
 
-	io_ = make_shared<io_service>();
+	auto io = make_shared<io_service>();
 	auto output = create_dispatch();
-	auto input = make_unique<Input>(io_, output);
-	auto signal_handler = make_unique<SignalHandler>(command_line_, io_, output);
+	auto input = make_unique<Input>(io, output);
+	auto signal_handler = make_unique<SignalHandler>(command_line_, io, output);
 
 	bool output_ok = output->open();
 	bool input_ok = input->open();
@@ -81,17 +81,17 @@ int Application::run(int argc, const char* const argv[]) {
 	}
 
 	if (input_ok) {
-		io_->notify_fork(io_service::fork_event::fork_prepare);
+		io->notify_fork(io_service::fork_event::fork_prepare);
 		pid_t pid = fork();
 		if (pid > 0) {
-			io_->notify_fork(io_service::fork_event::fork_parent);
+			io->notify_fork(io_service::fork_event::fork_parent);
 			signal_handler->start(pid);
 			input->fork_parent();
 			input->start();
 
 			bool io_ok = true;
 
-			io_ok &= io_run();
+			io_ok &= run(*io);
 			io_ok &= input->stop();
 			io_ok &= signal_handler->stop();
 
@@ -115,7 +115,7 @@ int Application::run(int argc, const char* const argv[]) {
 
 			return process_->exit_status(ret_internal);
 		} else if (pid == 0) {
-			io_->notify_fork(io_service::fork_event::fork_child);
+			io->notify_fork(io_service::fork_event::fork_child);
 			input->fork_child();
 		} else {
 			print_system_error(format("fork: %1%"));
@@ -134,17 +134,17 @@ int Application::run(int argc, const char* const argv[]) {
 		}
 	}
 
-	// Files are opened with O_CLOEXEC so these are unnecessary
+	// Files are opened with O_CLOEXEC so these are unnecessary.
 	output.reset();
 	cron_.reset();
 
-	// Stop handling signals and close all sockets
+	// Stop handling signals and close all sockets.
 	input.reset();
 	signal_handler.reset();
 
 	// This is the only way to really close all file descriptors with Boost.Asio
 	// (not everything is CLOEXEC on all platforms).
-	io_.reset();
+	io.reset();
 
 	execute(command_line_.command());
 	return EX_SOFTWARE;
@@ -202,26 +202,26 @@ vector<shared_ptr<ResultHandler>> Application::create_result_handlers() {
 	return result_handlers;
 }
 
-bool Application::io_run() {
+bool Application::run(boost::asio::io_service &io) {
 	bool io_error = false;
 	error_code ec;
 
 	// Wait for events until the I/O service is explicitly stopped
 	do {
-		io_->run(ec);
+		io.run(ec);
 
 		if (ec) {
 			print_error(format("asio run: %1%"), ec);
 			io_error = true;
 			break;
 		}
-	} while (!io_->stopped());
+	} while (!io.stopped());
 
 	// Poll until there are no more events
 	size_t events;
 	do {
-		io_->reset();
-		events = io_->poll(ec);
+		io.reset();
+		events = io.poll(ec);
 
 		if (ec) {
 			print_error(format("asio poll: %1%"), ec);
