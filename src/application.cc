@@ -45,8 +45,10 @@ using ::boost::asio::io_service;
 using ::boost::format;
 using ::boost::system::error_code;
 using ::std::make_shared;
+using ::std::make_unique;
 using ::std::shared_ptr;
 using ::std::string;
+using ::std::unique_ptr;
 using ::std::vector;
 
 #ifdef GCOV_ENABLED
@@ -59,9 +61,9 @@ int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
 
 	io_ = make_shared<io_service>();
-	shared_ptr<Dispatch> output = create_dispatch();
-	shared_ptr<Input> input = make_shared<Input>(io_, output);
-	shared_ptr<SignalHandler> signal_handler = make_shared<SignalHandler>(command_line_, io_, output);
+	auto output = create_dispatch();
+	auto input = make_unique<Input>(io_, output);
+	auto signal_handler = make_unique<SignalHandler>(command_line_, io_, output);
 
 	bool output_ok = output->open();
 	bool input_ok = input->open();
