@@ -149,8 +149,10 @@ int Application::run(int argc, const char* const argv[]) {
 }
 
 shared_ptr<Dispatch> Application::create_dispatch() {
-	vector<shared_ptr<Output>> outputs = create_outputs();
-	vector<shared_ptr<ResultHandler>> result_handlers = create_result_handlers();
+	// These must be called in this order otherwise cron_ is not set before it
+	// is used as a result handler.
+	auto outputs = create_outputs();
+	auto result_handlers = create_result_handlers();
 	return make_shared<Dispatch>(outputs, result_handlers);
 }
 
