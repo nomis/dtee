@@ -11,7 +11,8 @@ Run the following command::
 
     yum install dtee
 
-Repository :download:`public key <repo-key-rsa.asc>`:
+Yum will prompt to confirm the repository
+:download:`public key <repo-key-rsa.asc>`:
 
 .. code-block:: none
 
