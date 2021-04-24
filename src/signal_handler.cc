@@ -49,7 +49,7 @@ extern "C" void __gcov_flush(void);
 
 namespace dtee {
 
-SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::asio::io_service> &io, shared_ptr<ResultHandler> output)
+SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::asio::io_service> io, shared_ptr<ResultHandler> output)
 		: io_(io),
 		  child_exited_(*io_),
 		  interrupt_signals_(*io_),
