@@ -225,13 +225,13 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 void CommandLine::display_usage(const po::options_description &options) const {
 	cout << format(_("Usage: %1% [OPTION]... COMMAND [ARG]...")) % display_name_ << "\n\n";
 	if (cron_mode()) {
-		cout << _(
+		cout << _( // i18n: Line wrap to a maximum of 79 characters.
 			"Run COMMAND with standard output and standard error copied to each FILE\n"
 			"suppressing all output unless the process outputs an error message or has a\n"
 			"non-zero exit status whereupon the original output will be written as normal\n"
 			"and the exit code will be appended to standard error.\n");
 	} else {
-		cout << _(
+		cout << _( // i18n: Line wrap to a maximum of 79 characters.
 			"Run COMMAND with standard output and standard error copied to each FILE\n"
 			"while maintaining the original standard output and standard error as normal.\n");
 	}
@@ -241,7 +241,7 @@ void CommandLine::display_usage(const po::options_description &options) const {
 void CommandLine::display_version() const {
 	cout << DEFAULT_PROGRAM_NAME << " " << VERSION << "\n";
 	cout << "Copyright 2018-2021  Simon Arlott\n";
-	cout << format(_(
+	cout << format(_( // i18n: Line wrap to a maximum of 79 characters.
 		"Licence GPLv3+: GNU GPL version 3 or later <%1%>.\n"
 		"This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n"
 		"This is free software: you are free to change and redistribute it.\n"))
