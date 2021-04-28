@@ -59,7 +59,7 @@ bool StreamOutput::output(OutputType type, const vector<char> &buffer, size_t le
 	return false;
 }
 
-bool StreamOutput::output(int fd, const char *fmt, const vector<char> &buffer, size_t len) {
+bool StreamOutput::output(int fd, const char *name_fmt, const vector<char> &buffer, size_t len) {
 	// It is not a good idea to write to a pipe ignoring signals because
 	// SIGINT can't be used to terminate this process. However, the process
 	// on the other end of the pipe will also get the SIGINT so we'll get
@@ -69,7 +69,7 @@ bool StreamOutput::output(int fd, const char *fmt, const vector<char> &buffer, s
 	errno = 0;
 	if (::write(fd, buffer.data(), len) != static_cast<ssize_t>(len)) {
 		auto errno_copy = errno;
-		print_system_error(format(fmt) % "write", errno_copy);
+		print_system_error(format(name_fmt) % "write", errno_copy);
 		return false;
 	}
 

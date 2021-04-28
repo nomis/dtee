@@ -35,7 +35,7 @@ public:
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
 private:
-	bool output(int fd, const char *name, const std::vector<char> &buffer, size_t len);
+	bool output(int fd, const char *name_fmt, const std::vector<char> &buffer, size_t len);
 
 	const char *stdout_fmt_;
 	const char *stderr_fmt_;
