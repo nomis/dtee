@@ -82,6 +82,8 @@ int Application::run(int argc, const char* const argv[]) {
 
 	if (input_ok) {
 		io->notify_fork(io_service::fork_event::fork_prepare);
+
+		errno = 0;
 		pid_t pid = fork();
 		if (pid > 0) {
 			io->notify_fork(io_service::fork_event::fork_parent);

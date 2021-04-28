@@ -94,11 +94,13 @@ void SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_
 
 	signal_set.add(signal_number);
 
+	errno = 0;
 	if (::sigaction(signal_number, NULL, &act) != 0) {
 		print_system_error(format("sigaction: %1%"));
 	} else if ((act.sa_flags & SA_RESTART) == 0) {
 		act.sa_flags |= SA_RESTART;
 
+		errno = 0;
 		if (::sigaction(signal_number, &act, NULL) != 0) {
 			print_system_error(format("sigaction: %1%"));
 		}
