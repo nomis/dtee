@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <sysexits.h>
 #include <unistd.h>
+
 #include <cerrno>
 #include <cstddef>
 
@@ -63,7 +64,9 @@ FileOutput::~FileOutput() {
 }
 
 void FileOutput::print_file_error() {
-	print_system_error(format(_("%1%: %2%")) % filename_);
+	auto errno_copy = errno;
+	// i18n: %1 = filename; %2 = errno message
+	print_system_error(format(_("%1%: %2%")) % filename_, errno_copy);
 }
 
 bool FileOutput::open() {

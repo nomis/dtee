@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+
 #include <algorithm>
 #include <cerrno>
 #include <cstddef>
@@ -34,7 +35,6 @@
 #include "application.h"
 #include "i18n.h"
 #include "print_error.h"
-#include "to_string.h"
 
 using ::boost::format;
 using ::std::min;
@@ -51,7 +51,8 @@ Cron::Cron(string command, shared_ptr<Output> fallback)
 }
 
 void Cron::print_file_error(format message) {
-	print_system_error(message % file_.name());
+	auto errno_copy = errno;
+	print_system_error(message % file_.name(), errno_copy);
 }
 
 bool Cron::open() {
@@ -71,6 +72,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 		errno = 0;
 		ssize_t written = ::write(file_.fd(), buffer.data(), len);
 		if (written != static_cast<ssize_t>(len)) {
+			// i18n: %1 = filename; %2 = errno message
 			print_file_error(format(_("error writing to buffer file %1%: %2%")));
 			error_ = true;
 
@@ -116,6 +118,7 @@ bool Cron::unspool_buffer_file() {
 	if (buffered_) {
 		errno = 0;
 		if (::lseek(file_.fd(), 0, SEEK_SET) != 0) {
+			// i18n: %1 = filename; %2 = errno message
 			print_file_error(format(_("error seeking to start of buffer file %1%: %2%")));
 			success = false;
 		} else {
@@ -127,6 +130,7 @@ bool Cron::unspool_buffer_file() {
 				errno = 0;
 				len = ::read(file_.fd(), buf.data(), buf.size());
 				if (len < 0) {
+					// i18n: %1 = filename; %2 = errno message
 					print_file_error(format(_("error reading buffer file %1%: %2%")));
 					success = false;
 					break;
@@ -151,16 +155,19 @@ bool Cron::report() {
 	bool success = unspool_buffer_file();
 
 	if (interrupt_signum_ >= 0) {
-		/* blah */
+		// i18n: %1 = signal number; %2 = signal name
 		print_error(format(_("received signal %1$d: %2$s")) % interrupt_signum_ % strsignal(interrupt_signum_));
 	}
 
 	if (exit_status_ >= 0) {
+		// i18n: %1 = program name; %2 = exit code
 		print_error(format(_("%1%: exited with status %2$d")) % command_ % exit_status_);
 	} else if (exit_signum_ >= 0) {
 		if (core_dumped_) {
+			// i18n: %1 = program name; %2 = signal number; %3 = signal name
 			print_error(format(_("%1%: process terminated by signal %2$d: %3$s (core dumped)")) % command_ % exit_signum_ % strsignal(exit_signum_));
 		} else {
+			// i18n: %1 = program name; %2 = signal number; %3 = signal name
 			print_error(format(_("%1%: process terminated by signal %2$d: %3$s")) % command_ % exit_signum_ % strsignal(exit_signum_));
 		}
 	}

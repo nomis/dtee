@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ namespace dtee {
 
 class StreamOutput: public Output {
 public:
-	StreamOutput() = default;
+	StreamOutput();
 	~StreamOutput() override = default;
 
 	bool open() override;
@@ -36,6 +36,9 @@ public:
 
 private:
 	bool output(int fd, const char *name, const std::vector<char> &buffer, size_t len);
+
+	const char *stdout_fmt_;
+	const char *stderr_fmt_;
 };
 
 } // namespace dtee

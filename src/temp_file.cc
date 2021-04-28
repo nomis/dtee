@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,9 @@
 
 #include <fcntl.h>
 #include <unistd.h>
+
 #include <cstdlib>
+#include <cerrno>
 #include <string>
 #include <vector>
 
@@ -51,7 +53,9 @@ bool TempFile::open() {
 	errno = 0;
 	fd_ = ::mkostemp(filename.data(), O_CLOEXEC);
 	if (fd_ < 0) {
-		print_system_error(format(_("unable to create temporary file %1%: %2%")) % pattern);
+		auto errno_copy = errno;
+		// i18n: %1 = filename; %2 = errno message
+		print_system_error(format(_("unable to create temporary file %1%: %2%")) % pattern, errno_copy);
 		return false;
 	} else {
 		filename_ = string(filename.data());

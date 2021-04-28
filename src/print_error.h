@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -24,14 +24,12 @@
 #include <boost/format.hpp>
 #include <boost/system/error_code.hpp>
 
-#include "to_string.h"
-
 namespace dtee {
 
 void print_error(const boost::format &message);
 void print_error(boost::format message, const boost::system::error_code &ec);
 void print_error(boost::format message, const std::exception &e);
-void print_system_error(boost::format message, std::string cause = errno_to_string());
+void print_system_error(boost::format message, int errno_copy);
 
 } // namespace dtee
 

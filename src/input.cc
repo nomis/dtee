@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+
 #include <algorithm>
 #include <cerrno>
 #include <climits>
@@ -107,6 +108,7 @@ bool Input::open() {
 			so_rcvbuf = MINIMUM_RCVBUF_SIZE;
 		}
 	} catch (std::exception &e) {
+		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("input socket: %1%")), e);
 		return false;
 	}
@@ -137,6 +139,7 @@ bool Input::open() {
 	try {
 		open_output(input_, input_ep, out_, out_ep_, so_sndbuf);
 	} catch (std::exception &e) {
+		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stdout socket: %1%")), e);
 		return false;
 	}
@@ -144,6 +147,7 @@ bool Input::open() {
 	try {
 		open_output(input_, input_ep, err_, err_ep_, so_sndbuf);
 	} catch (std::exception &e) {
+		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stderr socket: %1%")), e);
 		return false;
 	}
@@ -152,7 +156,7 @@ bool Input::open() {
 		if (out_ep_ == err_ep_) {
 			// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 			// so they both look the same.
-			print_error(format(_(
+			print_error(format(_( // i18n: %1 = socket path; %2 = socket path
 				"output socket endpoints are not unique:\n"
 				"\tstdout socket: %1%\n\tstderr socket: %2%"))
 				% out_ep_.path() % err_ep_.path());
@@ -205,12 +209,14 @@ void Input::close_outputs() {
 	try {
 		out_.close();
 	} catch (std::exception &e) {
+		// i18n: %1 = errno message
 		print_error(format(_("stdout socket: %1%")), e);
 	}
 
 	try {
 		err_.close();
 	} catch (std::exception &e) {
+		// i18n: %1 = errno message
 		print_error(format(_("stderr socket: %1%")), e);
 	}
 }
@@ -231,17 +237,22 @@ bool Input::stop() {
 void Input::fork_child() {
 	errno = 0;
 	if (::dup2(out_.native_handle(), STDOUT_FILENO) < 0) {
-		print_system_error(format(str(format(_("stdout: %1%")) % "dup2: %1%")));
+		auto errno_copy = errno;
+		// i18n: %1 = system call name; %2 = errno message
+		print_system_error(format(_("stdout: %1%: %2%")) % "dup2", errno_copy);
 	}
 
 	errno = 0;
 	if (::dup2(err_.native_handle(), STDERR_FILENO) < 0) {
-		print_system_error(format(str(format(_("stderr: %1%")) % "dup2: %1%")));
+		auto errno_copy = errno;
+		// i18n: %1 = system call name; %2 = errno message
+		print_system_error(format(_("stderr: %1%: %2%")) % "dup2", errno_copy);
 	}
 
 	try {
 		input_.close();
 	} catch (std::exception &e) {
+		// i18n: %1 = exception message
 		print_error(format(_("input socket: %1%")), e);
 	}
 
@@ -271,7 +282,8 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		input_.async_receive_from(buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		print_error(format(str(format(_("input socket: %1%")) % "recv: %1%")), ec);
+		// i18n: %1 = system call name; %2 = Boost.Asio error message
+		print_error(format(_("input socket: %1%: %2%")) % "recv", ec);
 
 		output_->interrupted();
 		io_error_ = true;

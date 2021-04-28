@@ -20,6 +20,8 @@
 #include <sys/types.h>
 #include <sysexits.h>
 #include <unistd.h>
+
+#include <cerrno>
 #include <csignal>
 #include <memory>
 #include <string>
@@ -120,7 +122,9 @@ int Application::run(int argc, const char* const argv[]) {
 			io->notify_fork(io_service::fork_event::fork_child);
 			input->fork_child();
 		} else {
-			print_system_error(format("fork: %1%"));
+			auto errno_copy = errno;
+			// i18n: %1 = function call name; %2 = errno message
+			print_system_error(format(_("%1%: %2%")) % "fork", errno_copy);
 			ret_internal = EX_OSERR;
 		}
 	} else {
@@ -213,7 +217,8 @@ bool Application::run(boost::asio::io_service &io) {
 		io.run(ec);
 
 		if (ec) {
-			print_error(format("asio run: %1%"), ec);
+			// i18n: %1 = function call name; %2 = Boost.Asio error message
+			print_error(format(_("%1%: %2%")) % "asio::io_service.run", ec);
 			io_error = true;
 			break;
 		}
@@ -226,7 +231,8 @@ bool Application::run(boost::asio::io_service &io) {
 		events = io.poll(ec);
 
 		if (ec) {
-			print_error(format("asio poll: %1%"), ec);
+			// i18n: %1 = function call name; %2 = Boost.Asio error message
+			print_error(format(_("%1%: %2%")) % "asio::io_service.poll", ec);
 			io_error = true;
 			break;
 		}
@@ -256,7 +262,9 @@ void Application::execute(const vector<string> &command) {
 
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
-	print_system_error(format(_("%1%: %2%")) % argv[0]);
+	auto errno_copy = errno;
+	// i18n: %1 = command name; %2 = errno message
+	print_system_error(format(_("%1%: %2%")) % argv[0], errno_copy);
 	exit(EX_NOINPUT);
 }
 

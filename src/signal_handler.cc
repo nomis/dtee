@@ -20,6 +20,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
 #include <cerrno>
 #include <csignal>
 #include <cstddef>
@@ -31,6 +32,7 @@
 #include <boost/system/error_code.hpp>
 
 #include "application.h"
+#include "i18n.h"
 #include "print_error.h"
 
 static_assert(BOOST_ASIO_HAS_SIGACTION, "Boost must use sigaction() so that the SA_RESTART flag can be used");
@@ -96,13 +98,17 @@ void SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_
 
 	errno = 0;
 	if (::sigaction(signal_number, NULL, &act) != 0) {
-		print_system_error(format("sigaction: %1%"));
+		auto errno_copy = errno;
+		// i18n: %1 = system call name; %2 = errno message
+		print_system_error(format(_("%1%: %2%")) % "sigaction", errno_copy);
 	} else if ((act.sa_flags & SA_RESTART) == 0) {
 		act.sa_flags |= SA_RESTART;
 
 		errno = 0;
 		if (::sigaction(signal_number, &act, NULL) != 0) {
-			print_system_error(format("sigaction: %1%"));
+			auto errno_copy = errno;
+			// i18n: %1 = system call name; %2 = errno message
+			print_system_error(format(_("%1%: %2%")) % "sigaction", errno_copy);
 		}
 	}
 }
@@ -121,7 +127,9 @@ void SignalHandler::handle_child_exited(const error_code &ec, int signal_number)
 		pid_t ret = ::waitpid(child_, &wait_status, WNOHANG);
 		if (ret <= 0) {
 			if (ret != 0) {
-				print_system_error(format("waitpid: %1%"));
+				auto errno_copy = errno;
+				// i18n: %1 = system call name; %2 = errno message
+				print_system_error(format(_("%1%: %2%")) % "waitpid", errno_copy);
 			}
 
 			output_->interrupted(signal_number);

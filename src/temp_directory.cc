@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,9 @@
 #include "temp_directory.h"
 
 #include <unistd.h>
+
 #include <cstdlib>
+#include <cerrno>
 #include <string>
 #include <vector>
 
@@ -43,7 +45,9 @@ TempDirectory::TempDirectory(const string &name) {
 	errno = 0;
 	temp_dir = mkdtemp(filename.data());
 	if (temp_dir == nullptr) {
-		print_system_error(format(_("unable to create temporary directory %1%: %2%")) % pattern);
+		auto errno_copy = errno;
+		// i18n: %1 = filename; %2 = errno message
+		print_system_error(format(_("unable to create temporary directory %1%: %2%")) % pattern, errno_copy);
 	} else {
 		name_ = temp_dir;
 	}

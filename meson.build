@@ -28,7 +28,6 @@ source_files = [
 	'src/temp_directory.cc',
 	'src/temp_file.cc',
 	'src/temp_filename_pattern.cc',
-	'src/to_string.cc',
 	vcs_tag(input: 'src/version.h.in', output: 'version.h'),
 ]
 

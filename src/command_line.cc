@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include <libgen.h>
 #include <stdlib.h>
 #include <sysexits.h>
+
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -215,6 +216,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 		}
 	} catch (std::exception &e) {
 		print_error(format("%1%"), e);
+		// i18n: %1 = program name; %2 = help argument
 		cerr << format(_("Try '%1% %2%' for more information.")) % display_name_ % "-h" << endl;
 		exit(EX_USAGE);
 	}
@@ -223,6 +225,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 }
 
 void CommandLine::display_usage(const po::options_description &options) const {
+	// i18n: %1 = program name
 	cout << format(_("Usage: %1% [OPTION]... COMMAND [ARG]...")) % display_name_ << "\n\n";
 	if (cron_mode()) {
 		cout << _( // i18n: Line wrap to a maximum of 79 characters.
@@ -240,7 +243,9 @@ void CommandLine::display_usage(const po::options_description &options) const {
 
 void CommandLine::display_version() const {
 	cout << DEFAULT_PROGRAM_NAME << " " << VERSION << "\n";
-	cout << "Copyright 2018-2021  Simon Arlott\n";
+	// i18n: %1 = list of years; %2 = name
+	cout << format(_("Copyright %1%  %2%\n")) % "2018-2021" % "Simon Arlott";
+	// i18n: %1 = licence URL
 	cout << format(_( // i18n: Line wrap to a maximum of 79 characters.
 		"Licence GPLv3+: GNU GPL version 3 or later <%1%>.\n"
 		"This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n"

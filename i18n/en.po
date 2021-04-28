@@ -1,6 +1,18 @@
-# English (United Kingdom) translation of dtee
+# dtee - run a program with standard output and standard error copied to files
 # Copyright 2018,2021  Simon Arlott
-# This file is distributed under the same licence as the dtee package.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 msgid ""
 msgstr ""
 "Language: en_GB\n"
@@ -9,7 +21,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/application.cc src/file_output.cc
+#. i18n: %1 = function call name; %2 = errno message
+#. i18n: %1 = function call name; %2 = Boost.Asio error message
+#. i18n: %1 = command name; %2 = errno message
+#. i18n: %1 = filename; %2 = errno message
+#. i18n: %1 = system call name; %2 = errno message
+#: src/application.cc src/file_output.cc src/signal_handler.cc
 #, boost-format
 msgid "%1%: %2%"
 msgstr "%1%: %2%"
@@ -74,11 +91,13 @@ msgstr "display this help and exit"
 msgid "output version information and exit"
 msgstr "output version information and exit"
 
+#. i18n: %1 = program name; %2 = help argument
 #: src/command_line.cc
 #, boost-format
 msgid "Try '%1% %2%' for more information."
 msgstr "Try '%1% %2%' for more information."
 
+#. i18n: %1 = program name
 #: src/command_line.cc
 #, boost-format
 msgid "Usage: %1% [OPTION]... COMMAND [ARG]..."
@@ -110,6 +129,13 @@ msgstr ""
 "while maintaining the original standard output and standard error as "
 "normal.\n"
 
+#. i18n: %1 = list of years; %2 = name
+#: src/command_line.cc
+#, boost-format
+msgid "Copyright %1%  %2%\n"
+msgstr "Copyright %1%  %2%\n"
+
+#. i18n: %1 = licence URL
 #. i18n: Line wrap to a maximum of 79 characters.
 #: src/command_line.cc
 #, boost-format
@@ -124,56 +150,70 @@ msgstr ""
 "law.\n"
 "This is free software: you are free to change and redistribute it.\n"
 
+#. i18n: %1 = filename; %2 = errno message
 #: src/cron.cc
 #, boost-format
 msgid "error writing to buffer file %1%: %2%"
 msgstr "error writing to buffer file %1%: %2%"
 
+#. i18n: %1 = filename; %2 = errno message
 #: src/cron.cc
 #, boost-format
 msgid "error seeking to start of buffer file %1%: %2%"
 msgstr "error seeking to start of buffer file %1%: %2%"
 
+#. i18n: %1 = filename; %2 = errno message
 #: src/cron.cc
 #, boost-format
 msgid "error reading buffer file %1%: %2%"
 msgstr "error reading buffer file %1%: %2%"
 
+#. i18n: %1 = signal number; %2 = signal name
 #: src/cron.cc
 #, c-format, boost-format
 msgid "received signal %1$d: %2$s"
 msgstr "received signal %1$d: %2$s"
 
+#. i18n: %1 = program name; %2 = exit code
 #: src/cron.cc
 #, boost-format
 msgid "%1%: exited with status %2$d"
 msgstr "%1%: exited with status %2$d"
 
+#. i18n: %1 = program name; %2 = signal number; %3 = signal name
 #: src/cron.cc
 #, boost-format
 msgid "%1%: process terminated by signal %2$d: %3$s (core dumped)"
 msgstr "%1%: process terminated by signal %2$d: %3$s (core dumped)"
 
+#. i18n: %1 = program name; %2 = signal number; %3 = signal name
 #: src/cron.cc
 #, boost-format
 msgid "%1%: process terminated by signal %2$d: %3$s"
 msgstr "%1%: process terminated by signal %2$d: %3$s"
 
+#. i18n: %1 = Boost.Asio error message
+#. i18n: %1 = exception message
 #: src/input.cc
 #, boost-format
 msgid "input socket: %1%"
 msgstr "input socket: %1%"
 
+#. i18n: %1 = Boost.Asio error message
+#. i18n: %1 = errno message
 #: src/input.cc
 #, boost-format
 msgid "stdout socket: %1%"
 msgstr "stdout socket: %1%"
 
+#. i18n: %1 = Boost.Asio error message
+#. i18n: %1 = errno message
 #: src/input.cc
 #, boost-format
 msgid "stderr socket: %1%"
 msgstr "stderr socket: %1%"
 
+#. i18n: %1 = socket path; %2 = socket path
 #: src/input.cc
 #, boost-format
 msgid ""
@@ -185,26 +225,37 @@ msgstr ""
 "\tstdout socket: %1%\n"
 "\tstderr socket: %2%"
 
+#. i18n: %1 = system call name; %2 = errno message
+#: src/input.cc src/stream_output.cc
+#, boost-format
+msgid "stdout: %1%: %2%"
+msgstr "stdout: %1%: %2%"
+
+#. i18n: %1 = system call name; %2 = errno message
+#: src/input.cc src/stream_output.cc
+#, boost-format
+msgid "stderr: %1%: %2%"
+msgstr "stderr: %1%: %2%"
+
+#. i18n: %1 = system call name; %2 = Boost.Asio error message
 #: src/input.cc
 #, boost-format
-msgid "stdout: %1%"
-msgstr "stdout: %1%"
+msgid "input socket: %1%: %2%"
+msgstr "input socket: %1%: %2%"
 
-#: src/input.cc
-#, boost-format
-msgid "stderr: %1%"
-msgstr "stderr: %1%"
-
+#. i18n: %1 = program name; %2 = error message
 #: src/print_error.cc
 #, boost-format
 msgid "%1%: %2%\n"
 msgstr "%1%: %2%\n"
 
+#. i18n: %1 = filename; %2 = errno message
 #: src/temp_directory.cc
 #, boost-format
 msgid "unable to create temporary directory %1%: %2%"
 msgstr "unable to create temporary directory %1%: %2%"
 
+#. i18n: %1 = filename; %2 = errno message
 #: src/temp_file.cc
 #, boost-format
 msgid "unable to create temporary file %1%: %2%"
