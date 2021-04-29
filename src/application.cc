@@ -95,7 +95,7 @@ int Application::run(int argc, const char* const argv[]) {
 
 			bool io_ok = true;
 
-			io_ok &= run(*io);
+			run(*io);
 			io_ok &= input->stop();
 			io_ok &= signal_handler->stop();
 
@@ -208,37 +208,18 @@ vector<shared_ptr<ResultHandler>> Application::create_result_handlers() {
 	return result_handlers;
 }
 
-bool Application::run(boost::asio::io_service &io) {
-	bool io_error = false;
-	error_code ec;
-
+void Application::run(boost::asio::io_service &io) {
 	// Wait for events until the I/O service is explicitly stopped
 	do {
-		io.run(ec);
-
-		if (ec) {
-			// i18n: %1 = function call name; %2 = Boost.Asio error message
-			print_error(format(_("%1%: %2%")) % "asio::io_service.run", ec);
-			io_error = true;
-			break;
-		}
+		io.run();
 	} while (!io.stopped());
 
 	// Poll until there are no more events
 	size_t events;
 	do {
 		io.reset();
-		events = io.poll(ec);
-
-		if (ec) {
-			// i18n: %1 = function call name; %2 = Boost.Asio error message
-			print_error(format(_("%1%: %2%")) % "asio::io_service.poll", ec);
-			io_error = true;
-			break;
-		}
+		events = io.poll();
 	} while (events > 0);
-
-	return !io_error;
 }
 
 void Application::execute(const vector<string> &command) {
