@@ -20,6 +20,12 @@ Changed
   wrap calls to |sigaction(2)|_.
 * Trivial performance improvements.
 
+Fixed
+~~~~~
+
+* Race condition between the command immediately exiting and being ready to
+  handle ``SIGCHLD``.
+
 1.0.1_ |--| 2018-12-22
 ----------------------
 
