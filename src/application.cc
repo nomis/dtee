@@ -83,6 +83,7 @@ int Application::run(int argc, const char* const argv[]) {
 	}
 
 	if (input_ok) {
+		signal_handler->fork_prepare();
 		io->notify_fork(io_service::fork_event::fork_prepare);
 
 		errno = 0;

@@ -19,6 +19,7 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include <unistd.h>
 
 #include <cerrno>
@@ -60,6 +61,18 @@ SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::
 		  output_(output),
 		  handle_signals_(command_line.cron_mode()),
 		  ignore_sigint_(command_line.ignore_interrupts()) {
+	::sigemptyset(&blocked_signals_);
+}
+
+SignalHandler::~SignalHandler() {
+	if (!::sigisemptyset(&blocked_signals_)) {
+		::sigprocmask(SIG_UNBLOCK, &blocked_signals_, NULL);
+	}
+}
+
+void SignalHandler::fork_prepare() {
+	::sigaddset(&blocked_signals_, SIGCHLD);
+	::sigprocmask(SIG_BLOCK, &blocked_signals_, NULL);
 }
 
 void SignalHandler::start(pid_t pid) {
@@ -85,6 +98,9 @@ void SignalHandler::start(pid_t pid) {
 	child_exited_.async_wait(bind(&SignalHandler::handle_child_exited, this, p::_1, p::_2));
 	interrupt_signals_.async_wait(bind(&SignalHandler::handle_interrupt_signals, this, p::_1, p::_2));
 	pipe_signal_.async_wait(bind(&SignalHandler::handle_pipe_signal, this, p::_1, p::_2));
+
+	::sigprocmask(SIG_UNBLOCK, &blocked_signals_, NULL);
+	::sigdelset(&blocked_signals_, SIGCHLD);
 }
 
 // Workaround for missing SA_RESTART support in Boost.Asio (1.62)

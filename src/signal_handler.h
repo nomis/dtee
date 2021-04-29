@@ -19,6 +19,7 @@
 #define DTEE_SIGNAL_HANDLER_H_
 
 #include <sys/types.h>
+#include <signal.h>
 
 #include <cstddef>
 #include <memory>
@@ -33,8 +34,9 @@ namespace dtee {
 class SignalHandler {
 public:
 	SignalHandler(const CommandLine &command_line, std::shared_ptr<boost::asio::io_service> io, std::shared_ptr<ResultHandler> output);
-	~SignalHandler() = default;
+	~SignalHandler();
 
+	void fork_prepare();
 	void start(pid_t pid);
 	bool stop();
 
@@ -61,6 +63,7 @@ private:
 	std::shared_ptr<ResultHandler> output_;
 	const bool handle_signals_;
 	const bool ignore_sigint_;
+	sigset_t blocked_signals_ = {};
 };
 
 } // namespace dtee
