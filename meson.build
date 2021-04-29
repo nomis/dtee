@@ -217,7 +217,9 @@ shared_library('test-mkostemp-failure', ['tests/mkostemp-failure.c'] , c_args: d
 shared_library('test-mkostemp-readonly', ['tests/mkostemp-readonly.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-mkostemp-writeonly', ['tests/mkostemp-writeonly.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-security-recreate-output-socket', ['tests/security-recreate-output-socket.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee, testlib_is_fd_unix_socket])
-shared_library('test-sigaction-no-restart', ['tests/sigaction-no-restart.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee, testlib_is_fd_unix_socket])
+shared_library('test-sigaction-no-restart', ['tests/sigaction-no-restart.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-sigaction-query-failure', ['tests/sigaction-query-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-sigaction-set-restart-failure', ['tests/sigaction-set-restart-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-socket-add-extra-source', ['tests/socket-add-extra-source.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee, testlib_is_fd_unix_socket])
 shared_library('test-socket-bind-failure', ['tests/socket-bind-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket])
 shared_library('test-socket-close-failure', ['tests/socket-close-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket])
@@ -502,3 +504,7 @@ endif
 test('write truncated (stdout)', bash, args: [files('tests/write-truncate-stdout.sh')], env: test_env, depends: all_test_txt)
 test('cron write truncated (stdout)', bash, args: [files('tests/cron-write-truncate-stdout.sh')], env: test_env, depends: all_test_txt)
 test('cron write truncated (cron)', bash, args: [files('tests/cron-write-truncate-cron.sh')], env: test_env, depends: all_test_txt)
+
+# Test errors in Boost.Asio workaround at SignalHandler::add_non_interrupting_signal()
+test('sigaction query failure', bash, args: [files('tests/sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
+test('sigaction set SA_RESTART failure', bash, args: [files('tests/sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)

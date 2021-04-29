@@ -101,6 +101,8 @@ void SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_
 		auto errno_copy = errno;
 		// i18n: %1 = system call name; %2 = errno message
 		print_system_error(format(_("%1%: %2%")) % "sigaction", errno_copy);
+
+		io_error_ = true;
 	} else if ((act.sa_flags & SA_RESTART) == 0) {
 		act.sa_flags |= SA_RESTART;
 
@@ -109,6 +111,8 @@ void SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_
 			auto errno_copy = errno;
 			// i18n: %1 = system call name; %2 = errno message
 			print_system_error(format(_("%1%: %2%")) % "sigaction", errno_copy);
+
+			io_error_ = true;
 		}
 	}
 }

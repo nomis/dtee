@@ -42,7 +42,7 @@ public:
 	SignalHandler& operator=(const SignalHandler&) = delete;
 
 private:
-	static void add_non_interrupting_signal(boost::asio::signal_set &signal_set, int signal_number);
+	void add_non_interrupting_signal(boost::asio::signal_set &signal_set, int signal_number);
 
 	void handle_child_exited(const boost::system::error_code &ec, int signal_number);
 	void handle_interrupt_signals(const boost::system::error_code &ec, int signal_number);
