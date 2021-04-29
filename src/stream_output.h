@@ -28,7 +28,7 @@ namespace dtee {
 
 class StreamOutput: public Output {
 public:
-	StreamOutput();
+	StreamOutput() = default;
 	~StreamOutput() override = default;
 
 	bool open() override;
@@ -36,9 +36,6 @@ public:
 
 private:
 	bool output(int fd, const char *name_fmt, const std::vector<char> &buffer, size_t len);
-
-	const char *stdout_fmt_;
-	const char *stderr_fmt_;
 };
 
 } // namespace dtee

@@ -36,13 +36,6 @@ using ::std::vector;
 
 namespace dtee {
 
-StreamOutput::StreamOutput() {
-	// i18n: %1 = system call name; %2 = errno message
-	stdout_fmt_ = _("stdout: %1%: %2%");
-	// i18n: %1 = system call name; %2 = errno message
-	stderr_fmt_ = _("stderr: %1%: %2%");
-}
-
 bool StreamOutput::open() {
 	return true;
 }
@@ -50,10 +43,12 @@ bool StreamOutput::open() {
 bool StreamOutput::output(OutputType type, const vector<char> &buffer, size_t len) {
 	switch(type) {
 	case OutputType::STDOUT:
-		return output(STDOUT_FILENO, stdout_fmt_, buffer, len);
+		// i18n: %1 = system call name; %2 = errno message
+		return output(STDOUT_FILENO, N_("stdout: %1%: %2%"), buffer, len);
 
 	case OutputType::STDERR:
-		return output(STDERR_FILENO, stderr_fmt_, buffer, len);
+		// i18n: %1 = system call name; %2 = errno message
+		return output(STDERR_FILENO, N_("stderr: %1%: %2%"), buffer, len);
 	}
 
 	return false;
@@ -69,7 +64,7 @@ bool StreamOutput::output(int fd, const char *name_fmt, const vector<char> &buff
 	errno = 0;
 	if (::write(fd, buffer.data(), len) != static_cast<ssize_t>(len)) {
 		auto errno_copy = errno;
-		print_system_error(format(name_fmt) % "write", errno_copy);
+		print_system_error(format(_(name_fmt)) % "write", errno_copy);
 		return false;
 	}
 
