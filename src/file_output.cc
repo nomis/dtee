@@ -43,12 +43,12 @@ FileOutput::FileOutput(const string &filename, FileOutputType type, bool append)
 	switch (type) {
 	case FileOutputType::STDOUT:
 		filtered_ = true;
-		type_ = OutputType::STDOUT;
+		filter_type_ = OutputType::STDOUT;
 		break;
 
 	case FileOutputType::STDERR:
 		filtered_ = true;
-		type_ = OutputType::STDERR;
+		filter_type_ = OutputType::STDERR;
 		break;
 
 	case FileOutputType::COMBINED:
@@ -91,7 +91,7 @@ bool FileOutput::open() {
 }
 
 bool FileOutput::output(OutputType type, const std::vector<char> &buffer, size_t len) {
-	if (!filtered_ || type == type_) {
+	if (!filtered_ || type == filter_type_) {
 		if (fd_ >= 0) {
 			errno = 0;
 			ssize_t written = ::write(fd_, buffer.data(), len);

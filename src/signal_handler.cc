@@ -57,9 +57,9 @@ SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::
 		  interrupt_signals_(*io_),
 		  ignored_signals_(*io_),
 		  pipe_signal_(*io_),
-		  output_(output) {
-	handle_signals_ = command_line.cron_mode();
-	ignore_sigint_ = command_line.ignore_interrupts();
+		  output_(output),
+		  handle_signals_(command_line.cron_mode()),
+		  ignore_sigint_(command_line.ignore_interrupts()) {
 }
 
 void SignalHandler::start(pid_t pid) {

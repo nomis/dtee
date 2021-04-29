@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -46,11 +46,11 @@ public:
 private:
 	void print_file_error();
 
-	bool filtered_;
-	OutputType type_;
+	const std::string filename_; //!< Output filename
+	const bool append_;
+	bool filtered_ = false;
+	OutputType filter_type_ = {};
 
-	std::string filename_; //!< Output filename
-	bool append_;
 	int fd_ = -1; //!< Output file
 	bool failed_ = false; //!< Failure state of writes to output file
 };

@@ -59,8 +59,8 @@ private:
 	boost::asio::signal_set pipe_signal_;
 
 	std::shared_ptr<ResultHandler> output_;
-	bool handle_signals_;
-	bool ignore_sigint_;
+	const bool handle_signals_;
+	const bool ignore_sigint_;
 };
 
 } // namespace dtee
