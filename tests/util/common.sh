@@ -21,7 +21,7 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
-COMMON_TEST_LD_PRELOAD=(test-execvp-fd-check test-fake-strerror test-fake-strsignal)
+COMMON_TEST_LD_PRELOAD=(test-execvp-fd-check test-fork-sigchld-check test-fake-strerror test-fake-strsignal)
 
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
