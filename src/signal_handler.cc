@@ -65,7 +65,7 @@ SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::
 }
 
 SignalHandler::~SignalHandler() {
-	if (!::sigisemptyset(&blocked_signals_)) {
+	if (::sigismember(&blocked_signals_, SIGCHLD)) {
 		::sigprocmask(SIG_UNBLOCK, &blocked_signals_, NULL);
 	}
 }
