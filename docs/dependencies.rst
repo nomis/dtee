@@ -10,13 +10,29 @@ Build
 Compile
 ~~~~~~~
   * `Boost <https://www.boost.org/>`_ 1.55+
+
+    ..
+       Upgrade when this issue is fixed:
+       https://github.com/boostorg/asio/issues/157
+
   * `Clang <https://clang.llvm.org/>`_ 3.9+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 4.8+
+
+    ..
+       Upgrade when C++17 can be relied upon, dropping the boost::filesystem
+       dependency.
+
   * `GNU gettext <https://www.gnu.org/software/gettext/>`_
   * `GNU Make <https://www.gnu.org/software/make/>`_ 3.80+ (optional)
   * `Meson <https://mesonbuild.com/>`_ 0.46+
 
+    ..
+       Upgrade when Meson can install symlinks.
+
     * `Ninja <https://ninja-build.org/>`_
     * `Python 3 <https://www.python.org/>`_
+
+..
+   Version upgrades must be satisfied by all supported Linux distributions.
 
 Static Analysis
 ~~~~~~~~~~~~~~~
@@ -40,3 +56,7 @@ Runtime
 Documentation
 -------------
   * `Sphinx <https://www.sphinx-doc.org/>`_ 1.3+
+
+  ..
+     Upgrade when this issue is fixed:
+     https://github.com/sphinx-doc/sphinx/issues/6525
