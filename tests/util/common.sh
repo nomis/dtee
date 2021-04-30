@@ -1,6 +1,3 @@
-TESTDIR="dtee@test"
-mkdir -p "$TESTDIR"
-
 BASEDIR="$(dirname "$0")"
 UTILDIR="$BASEDIR/util"
 NAME="$(basename "$0")"
@@ -9,6 +6,12 @@ NAME="${NAME/.sh}"
 if [ ! -z "$1" ]; then
 	NAME="${NAME},$1"
 fi
+
+cd tests || exit 1
+ln -sf ../dtee dtee
+ln -sf ../cronty cronty
+TESTDIR="dtee@test"
+mkdir -p "$TESTDIR"
 
 # GNU standard
 TEST_EX_OK=0
@@ -40,10 +43,10 @@ mkdir -p "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
 export TMPDIR="./$TESTDIR/$NAME.tmp"
 
 # /usr/include/sysexits.h
-. ./sysexits.txt
+. ../sysexits.txt
 
 # Signals
-. ./signal.txt
+. ../signal.txt
 
 # Version
 . ./version.txt
