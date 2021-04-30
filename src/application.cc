@@ -30,7 +30,6 @@
 
 #include <boost/asio.hpp>
 #include <boost/format.hpp>
-#include <boost/system/error_code.hpp>
 
 #include "command_line.h"
 #include "cron.h"
@@ -45,7 +44,6 @@
 
 using ::boost::asio::io_service;
 using ::boost::format;
-using ::boost::system::error_code;
 using ::std::make_shared;
 using ::std::make_unique;
 using ::std::shared_ptr;

@@ -21,9 +21,9 @@
 
 int main(int argc, char *argv[]) {
 	try {
-		setlocale(LC_ALL, "");
-		bindtextdomain(GETTEXT_PACKAGE, GETTEXT_LOCALEDIR);
-		textdomain(GETTEXT_PACKAGE);
+		::setlocale(LC_ALL, "");
+		::bindtextdomain(GETTEXT_PACKAGE, GETTEXT_LOCALEDIR);
+		::textdomain(GETTEXT_PACKAGE);
 
 		dtee::Application application;
 		return application.run(argc, argv);

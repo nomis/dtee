@@ -8,7 +8,7 @@ project('dtee',
 	],
 	version: '1.0.1',
 	license: 'GPL3+',
-	meson_version: '>=0.46.0',
+	meson_version: '>=0.53.0',
 )
 
 subdir('i18n')
@@ -167,6 +167,7 @@ endif
 test_env = [
 	'LC_ALL=C',
 	'LANG=C',
+	'LANGUAGE=',
 ]
 
 if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
@@ -199,6 +200,7 @@ testlib_allow_n_times = shared_library('test-allow-n-times', ['tests/allow-n-tim
 testlib_is_dtee = shared_library('test-is-dtee', ['tests/is-dtee.c', 'tests/is-dtee-' + host_machine.system() + '.c'], c_args: dlfcn_args, dependencies: dlfcn_deps + proc_deps)
 testlib_is_fd_unix_socket = shared_library('test-fd-unix-socket', ['tests/is-fd-unix-socket.c'], c_args: test_c_args)
 
+shared_library('test-bindtextdomain-override', ['tests/bindtextdomain-override.c'] , c_args: dlfcn_args + ['-DGETTEXT_LOCALEDIR="' + meson.current_build_dir() + '/dtee@test/locale"'], dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-dup2-failure', ['tests/dup2-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-execvp-fd-check', ['tests/execvp-fd-check.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-fake-getpid', ['tests/fake-getpid.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
@@ -261,7 +263,8 @@ signal_txt = custom_target('signal.txt',
 sysexits_txt = custom_target('sysexits.txt',
 	command: [generate_sysexits_txt],
 	output: 'sysexits.txt')
-all_test_txt = [signal_txt, sysexits_txt]
+version_txt = vcs_tag(input: 'tests/version.txt.in', output: 'version.txt')
+all_test_txt = [signal_txt, sysexits_txt, version_txt]
 
 bash = find_program('bash')
 
@@ -509,3 +512,9 @@ test('cron write truncated (cron)', bash, args: [files('tests/cron-write-truncat
 # Test errors in Boost.Asio workaround at SignalHandler::add_non_interrupting_signal()
 test('sigaction query failure', bash, args: [files('tests/sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
 test('sigaction set SA_RESTART failure', bash, args: [files('tests/sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
+
+foreach language, mo_file : all_test_i18n
+	test('i18n ' + language + ' dtee --help', bash, args: [files('tests/i18n-help-dtee.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
+	test('i18n ' + language + ' cronty --help', bash, args: [files('tests/i18n-help-cronty.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
+	test('i18n ' + language + ' dtee --version', bash, args: [files('tests/i18n-version.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
+endforeach

@@ -1,9 +1,14 @@
 TESTDIR="dtee@test"
 mkdir -p "$TESTDIR"
 
-UTIL_DIR="$(dirname "$0")/util"
+BASEDIR="$(dirname "$0")"
+UTILDIR="$BASEDIR/util"
 NAME="$(basename "$0")"
 NAME="${NAME/.sh}"
+
+if [ ! -z "$1" ]; then
+	NAME="${NAME},$1"
+fi
 
 # GNU standard
 TEST_EX_OK=0
@@ -35,10 +40,13 @@ mkdir -p "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
 export TMPDIR="./$TESTDIR/$NAME.tmp"
 
 # /usr/include/sysexits.h
-. sysexits.txt
+. ./sysexits.txt
 
 # Signals
-. signal.txt
+. ./signal.txt
+
+# Version
+. ./version.txt
 
 UNAME="$(uname)"
 SHORT_UNAME="$UNAME"
@@ -155,10 +163,10 @@ function after_test() {
 }
 
 function cmp_files() {
-	EXPECTED_TEXT="${0/.sh/.$1.txt}"
-	EXPECTED_EVAL="${0/.sh/.$1.eval.txt}"
-	EXPECTED_TEXT_UNAME="${0/.sh/.$1.$SHORT_UNAME.txt}"
-	EXPECTED_EVAL_UNAME="${0/.sh/.$1.eval.$SHORT_UNAME.txt}"
+	EXPECTED_TEXT="$BASEDIR/$NAME.$1.txt"
+	EXPECTED_EVAL="$BASEDIR/$NAME.$1.eval.txt"
+	EXPECTED_TEXT_UNAME="$BASEDIR/$NAME.$1.$SHORT_UNAME.txt"
+	EXPECTED_EVAL_UNAME="$BASEDIR/$NAME.$1.eval.$SHORT_UNAME.txt"
 	ACTUAL="$TESTDIR/$NAME.$1.txt"
 
 	if [ -e "$EXPECTED_TEXT_UNAME" ]; then
@@ -174,9 +182,12 @@ function cmp_files() {
 		EXPECTED="$TESTDIR/$NAME.$1.expected.txt"
 
 		rm -f "$EXPECTED"
+		OLD_IFS="$IFS"
+		IFS=""
 		while read -r line; do
 			eval echo "$line"
 		done < "$EXPECTED_EVAL" > "$EXPECTED"
+		IFS="$OLD_IFS"
 	else
 		echo "Missing file $EXPECTED_TEXT or $EXPECTED_EVAL or $EXPECTED_TEXT_UNAME or $EXPECTED_EVAL_UNAME"
 		diff -U4 /dev/null "$ACTUAL"
@@ -234,8 +245,8 @@ function check_variables_eq() {
 }
 
 function run_test() {
-	if [ -e "${0/.sh/.in.txt}" ]; then
-		STDIN_FILE="${0/.sh/.in.txt}"
+	if [ -e "$BASEDIR/$NAME.in.txt" ]; then
+		STDIN_FILE="$BASEDIR/$NAME.in.txt"
 	else
 		STDIN_FILE="/dev/null"
 	fi

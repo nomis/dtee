@@ -1,0 +1,22 @@
+Usage: ./cronty [OPTION]... COMMAND [ARG]...
+
+Run COMMAND with standard output and standard error copied to each FILE
+suppressing all output unless the process outputs an error message or has a
+non-zero exit status whereupon the original output will be written as normal
+and the exit code will be appended to standard error.
+
+Output files:
+  -o [ --out-append ] FILE         append standard output to FILE
+  -O [ --out-overwrite ] FILE      copy standard output to FILE
+  -e [ --err-append ] FILE         append standard error to FILE
+  -E [ --err-overwrite ] FILE      copy standard error to FILE
+  -c [ --combined-append ] FILE    append standard output and error to FILE
+  -C [ --combined-overwrite ] FILE copy standard output and error to FILE
+
+Options:
+  -i [ --ignore-interrupts ]       ignore interrupt signals
+
+Miscellaneous:
+  -h [ --help ]                    display this help and exit
+  -V [ --version ]                 output version information and exit
+

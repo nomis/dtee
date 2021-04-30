@@ -1,0 +1,23 @@
+Usage: ./dtee [OPTION]... COMMAND [ARG]...
+
+Run COMMAND with standard output and standard error copied to each FILE
+while maintaining the original standard output and standard error as normal.
+
+Output files:
+  -o [ --out-append ] FILE         append standard output to FILE
+  -O [ --out-overwrite ] FILE      copy standard output to FILE
+  -e [ --err-append ] FILE         append standard error to FILE
+  -E [ --err-overwrite ] FILE      copy standard error to FILE
+  -c [ --combined-append ] FILE    append standard output and error to FILE
+  -C [ --combined-overwrite ] FILE copy standard output and error to FILE
+
+Options:
+  -i [ --ignore-interrupts ]       ignore interrupt signals
+  -q [ --cron ]                    operate in cron mode (suppress output unless
+                                   the process outputs an error message or has 
+                                   a non-zero exit status)
+
+Miscellaneous:
+  -h [ --help ]                    display this help and exit
+  -V [ --version ]                 output version information and exit
+
