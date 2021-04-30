@@ -17,7 +17,7 @@ static void dtee_test_check_sigchld(void) {
 	assert(sigprocmask(SIG_SETMASK, NULL, &set) == 0);
 
 	if (!sigismember(&set, SIGCHLD)) {
-		struct sigaction act = { 0 };
+		struct sigaction act;
 
 		assert(sigaction(SIGCHLD, NULL, &act) == 0);
 		if (act.sa_handler == SIG_DFL || act.sa_handler == SIG_IGN) {
