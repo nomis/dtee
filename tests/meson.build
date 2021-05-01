@@ -347,10 +347,13 @@ test('cron write truncated (cron)', bash, args: [files('cron-write-truncate-cron
 test('sigaction query failure', bash, args: [files('sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
 test('sigaction set SA_RESTART failure', bash, args: [files('sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
 
-foreach language, mo_file : all_test_i18n
-	test('i18n ' + language + ' dtee --help', bash, args: [files('i18n-help-dtee.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
-	test('i18n ' + language + ' cronty --help', bash, args: [files('i18n-help-cronty.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
-	test('i18n ' + language + ' dtee --version', bash, args: [files('i18n-version.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
-	test('i18n ' + language + ' cron command exit code 42', bash, args: [files('i18n-cron-command-exit-42.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
-	test('i18n ' + language + ' cron command terminated by signal 15', bash, args: [files('i18n-cron-command-sigterm.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
-endforeach
+if host_machine.system() != 'cygwin'
+	# Can't override libintl_bindtextdomain on Cygwin
+	foreach language, mo_file : all_test_i18n
+		test('i18n ' + language + ' dtee --help', bash, args: [files('i18n-help-dtee.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
+		test('i18n ' + language + ' cronty --help', bash, args: [files('i18n-help-cronty.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
+		test('i18n ' + language + ' dtee --version', bash, args: [files('i18n-version.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
+		test('i18n ' + language + ' cron command exit code 42', bash, args: [files('i18n-cron-command-exit-42.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
+		test('i18n ' + language + ' cron command terminated by signal 15', bash, args: [files('i18n-cron-command-sigterm.sh'), language], env: test_env, depends: all_test_txt + [mo_file])
+	endforeach
+endif
