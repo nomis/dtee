@@ -32,7 +32,7 @@ if sphinx_build.found()
 			'-D', 'version=' + meson.project_version(),
 			'-D', 'release=' + meson.project_version(),
 			'@CURRENT_SOURCE_DIR@',
-			'@BUILD_ROOT@',
+			'@OUTDIR@',
 		],
 		install: true,
 		install_dir: join_paths(get_option('mandir'), 'man1'))
@@ -40,7 +40,7 @@ if sphinx_build.found()
 	custom_target('cronty.1',
 		input: dtee_man,
 		output: 'cronty.1',
-		command: [ln, '-s', '-f', '@INPUT@', '@OUTPUT@'],
+		command: [ln, '-s', '-f', 'dtee.1', '@OUTPUT@'],
 		install: true,
 		install_dir: join_paths(get_option('mandir'), 'man1'))
 endif
