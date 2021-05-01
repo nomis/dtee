@@ -1,1 +1,0 @@
-passthrough-stdout.out.txt

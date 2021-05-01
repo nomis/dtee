@@ -192,11 +192,7 @@ test('waitpid failure (no change)', bash, args: [files('waitpid-failure-no-chang
 test('cron waitpid failure (no children)', bash, args: [files('cron-waitpid-failure-no-children.sh')], env: test_env, depends: all_test_txt)
 test('cron waitpid failure (no change)', bash, args: [files('cron-waitpid-failure-no-change.sh')], env: test_env, depends: all_test_txt)
 
-if host_machine.system() != 'cygwin'
-	# Assume Cygwin is insecure because the underlying Unix socket implementation is UDP
-	test('security recreate the input socket after the parent process exits', bash, args: [files('security-recreate-input-socket.sh')], env: test_env, depends: all_test_txt)
-	test('security recreate the output socket after the child process exits', bash, args: [files('security-recreate-output-socket.sh')], env: test_env, depends: all_test_txt)
-endif
+subdir('security')
 
 test('pipe write failure (stdout)', bash, args: [files('pipe-write-failure-stdout.sh')], env: test_env, depends: all_test_txt)
 test('pipe write failure (stderr)', bash, args: [files('pipe-write-failure-stderr.sh')], env: test_env, depends: all_test_txt)

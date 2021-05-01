@@ -1,0 +1,1 @@
+recreate-input-socket.out.txt

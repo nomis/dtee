@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/util/common.sh
+. "$(dirname "$0")"/../util/common.sh
 
 no_ld_preload "test-execvp-fd-check"
 TEST_EXTRA_OUTPUT=1

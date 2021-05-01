@@ -1,0 +1,4 @@
+Parent process exited
+Reopened input socket ./dtee@test/security/recreate-input-socket.tmp/dtee.1.2.input.XXXXXX/i
+printf/fflush: ECONNRESET
+recv: EAGAIN
