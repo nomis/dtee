@@ -16,8 +16,8 @@ while [ "$(basename "$dir")" != "tests" ]; do
 done
 
 cd tests || exit 1
-ln -sf ../dtee dtee
-ln -sf ../cronty cronty
+ln -s ../dtee dtee
+ln -s ../cronty cronty
 BASETESTDIR="dtee@test"
 TESTDIR="$BASETESTDIR"
 if [ "$GROUP" != "" ]; then
