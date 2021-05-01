@@ -3,7 +3,7 @@ if version_check.returncode() != 0
 	error(version_check.stderr())
 endif
 
-sphinx_build = find_program('sphinx-build', required: false)
+sphinx_build = find_program('sphinx-build', required: get_option('strict_packaging'))
 if sphinx_build.found()
 	source_docs = [
 		'architecture.rst',

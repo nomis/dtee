@@ -1,1 +1,2 @@
+option('strict_packaging', type: 'boolean', value: false, description: 'Require all dependencies used for packaging')
 option('test_expect_fail', type: 'boolean', value: false, description: 'Expect test failures on known platforms')
