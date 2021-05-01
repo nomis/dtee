@@ -2,14 +2,17 @@ if host_machine.system() == 'linux' or host_machine.system() == 'gnu'
 	test_c_args = c_args + ['-D_DEFAULT_SOURCE']
 	dlfcn_args = test_c_args + ['-D_GNU_SOURCE', '-Wno-pedantic']
 	dlfcn_deps = [c.find_library('dl')]
+	wrap_gettext_deps = []
 elif host_machine.system() == 'darwin'
 	test_c_args = c_args
 	dlfcn_args = test_c_args
 	dlfcn_deps = []
+	wrap_gettext_deps = gettext_deps
 else # freebsd, openbsd, netbsd, dragonfly, cygwin
 	test_c_args = c_args
 	dlfcn_args = test_c_args + ['-Wno-pedantic']
 	dlfcn_deps = []
+	wrap_gettext_deps = []
 endif
 
 if host_machine.system() == 'freebsd' or host_machine.system() == 'openbsd' or host_machine.system() == 'netbsd' or host_machine.system() == 'dragonfly'
@@ -28,7 +31,7 @@ testlib_allow_n_times = shared_library('test-allow-n-times', ['allow-n-times.c']
 testlib_is_dtee = shared_library('test-is-dtee', ['is-dtee.c', 'is-dtee-' + host_machine.system() + '.c'], c_args: dlfcn_args, dependencies: dlfcn_deps + proc_deps)
 testlib_is_fd_unix_socket = shared_library('test-fd-unix-socket', ['is-fd-unix-socket.c'], c_args: test_c_args)
 
-shared_library('test-bindtextdomain-override', ['bindtextdomain-override.c'] , c_args: dlfcn_args + ['-DGETTEXT_LOCALEDIR="' + meson.current_build_dir() + '/dtee@test/locale"'], dependencies: dlfcn_deps + gettext_deps, link_with: [testlib_is_dtee])
+shared_library('test-bindtextdomain-override', ['bindtextdomain-override.c'] , c_args: dlfcn_args + ['-DGETTEXT_LOCALEDIR="' + meson.current_build_dir() + '/dtee@test/locale"'], dependencies: dlfcn_deps + wrap_gettext_deps, link_with: [testlib_is_dtee])
 shared_library('test-dup2-failure', ['dup2-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-execvp-fd-check', ['execvp-fd-check.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-fake-getpid', ['fake-getpid.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
