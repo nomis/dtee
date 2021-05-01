@@ -40,7 +40,7 @@ if sphinx_build.found()
 	custom_target('cronty.1',
 		input: dtee_man,
 		output: 'cronty.1',
-		command: [ln, '-s', '-f', 'dtee.1', '@OUTPUT@'],
+		command: [ln, '-s', '-f', '@PLAINNAME@', '@OUTPUT@'],
 		install: true,
 		install_dir: join_paths(get_option('mandir'), 'man1'))
 endif
