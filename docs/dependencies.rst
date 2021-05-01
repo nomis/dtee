@@ -15,7 +15,7 @@ Compile
        Upgrade when this issue is fixed:
        https://github.com/boostorg/asio/issues/157
 
-  * `Clang <https://clang.llvm.org/>`_ 3.9+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 4.8+
+  * `Clang <https://clang.llvm.org/>`_ 3.9+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 4.9+
 
     ..
        Upgrade when C++17 can be relied upon, dropping the boost::filesystem
