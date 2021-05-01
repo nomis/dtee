@@ -251,6 +251,14 @@ void CommandLine::display_version() const {
 		"This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law.\n"
 		"This is free software: you are free to change and redistribute it.\n"))
 		% "https://gnu.org/licenses/gpl.html";
+
+	// i18n: Prefix credits with "Translation: xx_XX\n"
+	auto translator_credits_noop = N_("translator-credits");
+	auto translator_credits = _(translator_credits_noop);
+	if (translator_credits != translator_credits_noop) {
+		cout << "\n" << translator_credits << "\n";
+	}
+
 	cout << flush;
 }
 

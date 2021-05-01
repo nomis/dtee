@@ -149,6 +149,11 @@ msgstr ""
 "law.\n"
 "This is free software: you are free to change and redistribute it.\n"
 
+#. i18n: Prefix credits with "Translation: xx_XX\n"
+#: src/command_line.cc
+msgid "translator-credits"
+msgstr "Translation: en_US"
+
 #. i18n: %1 = filename; %2 = errno message
 #: src/cron.cc
 #, boost-format
