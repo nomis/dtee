@@ -31,8 +31,8 @@ int main(int argc, char *argv[]) {
 		nanosleep(&ts, NULL);
 		errno = 0;
 	}
-	alarm(0);
 
+	alarm(10);
 	execvp(argv[2], &argv[2]);
 	abort();
 	return EXIT_SUCCESS;

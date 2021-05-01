@@ -93,7 +93,6 @@ int main(int argc, char *argv[]) {
 			nanosleep(&ts, NULL);
 			errno = 0;
 		}
-		alarm(0);
 		nanosleep(&ts, NULL);
 
 		// Signal the process
@@ -117,6 +116,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Unblock the fifo
+		alarm(10);
 		while (written > 0) {
 			char buf[BUFSIZ];
 
@@ -136,7 +136,6 @@ int main(int argc, char *argv[]) {
 			nanosleep(&ts, NULL);
 			errno = 0;
 		}
-		alarm(0);
 
 		if (!strcmp(extra_arg, "-i")) {
 			// Stop writing so that "cat" will now exit
@@ -144,6 +143,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Wait for the process to exit
+		alarm(10);
 		int wstatus = 0;
 		if (waitpid(pid, &wstatus, 0) != -1) {
 			printf("WIFEXITED=%d\n", WIFEXITED(wstatus) ? 1 : 0);
