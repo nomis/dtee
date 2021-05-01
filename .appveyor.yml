@@ -20,3 +20,6 @@ build_script:
 test_script:
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make check"'
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && cygdrop make check"'
+
+before_deploy:
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make DESTDIR=\"`pwd`/build/install\" install"'
