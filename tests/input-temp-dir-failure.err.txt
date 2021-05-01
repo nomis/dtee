@@ -1,1 +1,0 @@
-./dtee: unable to create temporary directory ./dtee@test/input-temp-dir-failure.tmp/dtee.1.2.input.XXXXXX: EROFS

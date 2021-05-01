@@ -1,3 +1,0 @@
-socket-setsockopt-monitor: setsockopt("./dtee@test/input-socket-rcvbuf-too-small.tmp/dtee.1.2.input.XXXXXX/i", SOL_SOCKET, SO_RCVBUF, max(PIPE_BUF,BUFSIZ), ...)
-socket-setsockopt-monitor: setsockopt("./dtee@test/input-socket-rcvbuf-too-small.tmp/dtee.1.2.input.XXXXXX/o", SOL_SOCKET, SO_SNDBUF, max(PIPE_BUF,BUFSIZ)/4, ...)
-socket-setsockopt-monitor: setsockopt("./dtee@test/input-socket-rcvbuf-too-small.tmp/dtee.1.2.input.XXXXXX/e", SOL_SOCKET, SO_SNDBUF, max(PIPE_BUF,BUFSIZ)/4, ...)
