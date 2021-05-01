@@ -1,6 +1,0 @@
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-0.file.out-overwrite1.txt: ENOSPC
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-0.file.out-overwrite1.txt: ENOSPC
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-0.file.out-overwrite1.txt: ENOSPC
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-0.file.out-overwrite1.txt: ENOSPC
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-0.file.out-overwrite1.txt: ENOSPC
-./dtee: dtee@test/cron-file-write-failure-recovery-exit-0.file.out-overwrite1.txt: ENOSPC

@@ -1,0 +1,6 @@
+./dtee: dtee@test/output/file-write-failure-recovery.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/file-write-failure-recovery.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/file-write-failure-recovery.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/file-write-failure-recovery.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/file-write-failure-recovery.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/file-write-failure-recovery.file.out-overwrite1.txt: ENOSPC

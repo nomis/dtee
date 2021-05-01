@@ -1,0 +1,7 @@
+./dtee: dtee@test/output/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/cron-file-write-failure-recovery-exit-42.file.out-overwrite1.txt: ENOSPC
+./dtee: dtee@test/output/cron-file-write-failure-recovery-exit-42.run: exited with status 42
