@@ -1,1 +1,1 @@
-../command-kill-ppid-sigterm.com.txt
+../command/kill-ppid-sigterm.com.txt

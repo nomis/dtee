@@ -1,1 +1,0 @@
-basic/passthrough-stdout-stderr1.err.txt

@@ -1,0 +1,1 @@
+./cronty: dtee@test/command/cronty-exit-code-42-no-stderr.run: exited with status 42
