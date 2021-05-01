@@ -1,5 +1,5 @@
-i18n = import('i18n')
-i18n.gettext(meson.project_name(),
+import('i18n').gettext(
+	meson.project_name(),
 	args: [
 		'--add-comments=i18n',
 		'--add-location=file',

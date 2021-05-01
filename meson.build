@@ -68,13 +68,6 @@ else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
 
-python = import('python').find_installation()
-
-version_check = run_command(python, [files('docs/version_check.py'), files('docs/changelog.rst'), meson.project_version()])
-if version_check.returncode() != 0
-	error(version_check.stderr())
-endif
-
 dtee = executable('dtee',
 	source_files,
 	cpp_args: c_args + [
@@ -101,48 +94,8 @@ custom_target('cronty',
 	install: true,
 	install_dir: get_option('bindir'))
 
-sphinx_build = find_program('sphinx-build', required: false)
-
-if sphinx_build.found()
-	source_docs = [
-		'docs/architecture.rst',
-		'docs/changelog.rst',
-		'docs/conf.py',
-		'docs/dependencies.rst',
-		'docs/index.rst',
-		'docs/install.rst',
-		'docs/limitations.rst',
-		'docs/manual.rst',
-		'docs/packages.rst',
-		'docs/packages/debian.rst',
-		'docs/packages/fedora.rst',
-		'docs/packages/rhel.rst',
-		'docs/packages/ubuntu.rst',
-	]
-
-	dtee_man = custom_target('dtee.1',
-		input: source_docs,
-		output: 'dtee.1',
-		command: [
-			sphinx_build,
-			'-n',
-			'-W',
-			'-b', 'man',
-			'-D', 'version=' + meson.project_version(),
-			'-D', 'release=' + meson.project_version(),
-			'@CURRENT_SOURCE_DIR@/docs',
-			'@BUILD_ROOT@',
-		],
-		install: true,
-		install_dir: join_paths(get_option('mandir'), 'man1'))
-
-	custom_target('cronty.1',
-		input: dtee_man,
-		output: 'cronty.1',
-		command: [ln, '-s', '-f', '@INPUT@', '@OUTPUT@'],
-		install: true,
-		install_dir: join_paths(get_option('mandir'), 'man1'))
-endif
+subdir('docs')
+subdir('tests')
 
 cppcheck = find_program('cppcheck', required: false)
 if cppcheck.found()
@@ -154,5 +107,3 @@ if cppcheck.found()
 			'--inline-suppr',
 		] + source_files)
 endif
-
-subdir('tests')
