@@ -75,6 +75,12 @@ case "$UNAME" in
 		SHLIB_PREFIX="./util/cyg"
 		SHLIB_EXT=.dll
 		SHORT_UNAME="CYGWIN"
+
+		# Windows can't find DLLs unless they're in the executable's
+		# directory or the PATH. This causes preloaded libraries to
+		# fail to find their dependencies. Make a link to all of them
+		# in the current directory.
+		ln -st . ./util/cyg*.dll 2>/dev/null
 		;;
 	*)
 		SHLIB_PREFIX="./util/lib"
