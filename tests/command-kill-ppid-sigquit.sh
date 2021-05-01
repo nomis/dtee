@@ -10,11 +10,11 @@ function test_prepare() {
 # a program handles core dumps, but this won't affect the test script)
 ulimit -S -c 0 || exit $TEST_EX_SKIP
 ulimit -H -c 0 || exit $TEST_EX_SKIP
-run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGQUIT
+run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGQUIT
 RET=$?
 
 test_prepare
-eval $(./test-waitpid ./dtee ./dtee -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGQUIT)
+eval $(./util/test-waitpid ./dtee ./dtee -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGQUIT)
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGQUIT)) \

@@ -3,15 +3,15 @@
 function test_prepare() {
 	rm -f "$TESTDIR/$NAME.canary"
 	FIFO=$(make_fifo "out")
-	./test-closed-pipe-reader "$TESTDIR/$NAME.canary" <"$FIFO" &
+	./util/test-closed-pipe-reader "$TESTDIR/$NAME.canary" <"$FIFO" &
 }
 
 FIFO=$(make_fifo "out")
 TEST_ALT_STDOUT="$FIFO"
-run_test ./test-closed-pipe-writer "$TESTDIR/$NAME.canary" "$RUN"
+run_test ./util/test-closed-pipe-writer "$TESTDIR/$NAME.canary" "$RUN"
 RET=$?
 
-eval $(TEST_WAITPID_CLOSED_STDOUT=1 ./test-waitpid ./dtee ./dtee "$RUN")
+eval $(TEST_WAITPID_CLOSED_STDOUT=1 ./util/test-waitpid ./dtee ./dtee "$RUN")
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGPIPE)) \

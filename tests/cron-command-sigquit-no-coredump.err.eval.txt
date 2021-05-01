@@ -1,1 +1,1 @@
-./dtee: ./test-kill-pid: process terminated by signal $SIGQUIT: SIGQUIT
+./dtee: ./util/test-kill-pid: process terminated by signal $SIGQUIT: SIGQUIT

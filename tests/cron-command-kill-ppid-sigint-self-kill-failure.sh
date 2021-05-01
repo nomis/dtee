@@ -8,11 +8,11 @@ function test_prepare() {
 
 TEST_LD_PRELOAD=(test-kill-failure)
 # If kill fails, we can only exit with a simulated SIGINT
-run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGINT
+run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGINT
 RET=$?
 
 test_prepare
-eval $(run_with_preload ./test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-kill-ppid $SIGINT)
+eval $(run_with_preload ./util/test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGINT)
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGINT)) \

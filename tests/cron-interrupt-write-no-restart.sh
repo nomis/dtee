@@ -13,7 +13,7 @@ TEST_LD_PRELOAD=(test-sigaction-no-restart)
 # Send SIGINT to the process while write() is blocked
 # The signal should interrupt the write()
 FIFO=$(make_fifo "block")
-run_test ./test-fifo-write-interrupt ./dtee -q "$TESTDIR/$NAME.file1.txt" "$FIFO" "$TESTDIR/$NAME.file2.txt"
+run_test ./util/test-fifo-write-interrupt ./dtee -q "$TESTDIR/$NAME.file1.txt" "$FIFO" "$TESTDIR/$NAME.file2.txt"
 RET=$?
 
 cmp_files "file1"

@@ -1,9 +1,9 @@
 . "$(dirname "$0")"/util/common.sh
 
-run_test ./test-kill-pid $SIGTERM
+run_test ./util/test-kill-pid $SIGTERM
 RET=$?
 
-eval $(./test-waitpid ./dtee ./dtee ./test-kill-pid $SIGTERM)
+eval $(./util/test-waitpid ./dtee ./dtee ./util/test-kill-pid $SIGTERM)
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGTERM)) \

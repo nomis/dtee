@@ -13,7 +13,7 @@ case "$UNAME" in
 esac
 
 TEST_LD_PRELOAD=(test-socket-recv-failure)
-run_test -q ./test-lorem-ipsum-late-exit
+run_test -q ./util/test-lorem-ipsum-late-exit
 RET=$?
 
 variables_must_eq RET $EX_IOERR

@@ -11,7 +11,7 @@ TEST_EXTRA_OUTPUT=1
 
 TEST_LD_PRELOAD=(test-mkdtemp-consistent test-fake-getpid test-fake-getuid)
 # It should not be possible to recreate the input socket and receive output from a command
-run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./test-security-recreate-input-socket
+run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-security-recreate-input-socket
 RET=$?
 
 variables_must_eq RET $((128 + $SIGTERM))

@@ -10,7 +10,7 @@ no_ld_preload "test-execvp-fd-check"
 # Send SIGINT to the process while write() is blocked
 # The signal should be handled (and ignored) without interrupting the write()
 FIFO=$(make_fifo "block")
-run_test ./test-fifo-write-interrupt ./dtee -i "$TESTDIR/$NAME.file1.txt" "$FIFO" "$TESTDIR/$NAME.file2.txt"
+run_test ./util/test-fifo-write-interrupt ./dtee -i "$TESTDIR/$NAME.file1.txt" "$FIFO" "$TESTDIR/$NAME.file2.txt"
 RET=$?
 
 cmp_files "file1"

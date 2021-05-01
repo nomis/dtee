@@ -2,10 +2,10 @@
 
 TEST_LD_PRELOAD=(test-kill-failure)
 # If kill fails, we can only exit with a simulated SIGINT
-run_test "-q" ./test-kill-pid $SIGINT
+run_test "-q" ./util/test-kill-pid $SIGINT
 RET=$?
 
-eval $(run_with_preload ./test-waitpid ./dtee ./dtee "-q" ./test-kill-pid $SIGINT)
+eval $(run_with_preload ./util/test-waitpid ./dtee ./dtee "-q" ./util/test-kill-pid $SIGINT)
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGINT)) \

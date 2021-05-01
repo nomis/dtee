@@ -1,2 +1,2 @@
 E
-./dtee: ./test-report: exited with status 0
+./dtee: ./util/test-report: exited with status 0

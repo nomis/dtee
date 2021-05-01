@@ -12,7 +12,7 @@ run_test \
 	-o "$TESTDIR/$NAME.file.out-append.txt" -O "$TESTDIR/$NAME.file.out-overwrite.txt" \
 	-e "$TESTDIR/$NAME.file.err-append.txt" -E "$TESTDIR/$NAME.file.err-overwrite.txt" \
 	-c "$TESTDIR/$NAME.file.com-append.txt" -C "$TESTDIR/$NAME.file.com-overwrite.txt" \
-	-q ./test-report 'Hello World!' ETAOIN SHRDLU 42</dev/null
+	-q ./util/test-report 'Hello World!' ETAOIN SHRDLU 42</dev/null
 RET=$?
 
 cmp_files "file.out-append"

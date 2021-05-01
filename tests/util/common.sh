@@ -49,23 +49,23 @@ export TMPDIR="./$TESTDIR/$NAME.tmp"
 . ../signal.txt
 
 # Version
-. ./version.txt
+. ./util/version.txt
 
 UNAME="$(uname)"
 SHORT_UNAME="$UNAME"
 
 case "$UNAME" in
 	Darwin)
-		SHLIB_PREFIX=./lib
+		SHLIB_PREFIX="./util/lib"
 		SHLIB_EXT=.dylib
 		;;
 	CYGWIN_*)
-		SHLIB_PREFIX=./cyg
+		SHLIB_PREFIX="./util/cyg"
 		SHLIB_EXT=.dll
 		SHORT_UNAME="CYGWIN"
 		;;
 	*)
-		SHLIB_PREFIX=./lib
+		SHLIB_PREFIX="./util/lib"
 		SHLIB_EXT=.so
 		;;
 esac

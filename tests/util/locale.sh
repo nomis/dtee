@@ -1,5 +1,5 @@
-mkdir -p "$TESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES"
-ln -sf "../../../../../i18n/test-${TEST_LANGUAGE}.mo" "$TESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES/dtee.mo"
+mkdir -p "util/$TESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES"
+ln -sf "../../../../../../i18n/test-${TEST_LANGUAGE}.mo" "util/$TESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES/dtee.mo"
 
 # Find the best possible system language to use when running the test
 

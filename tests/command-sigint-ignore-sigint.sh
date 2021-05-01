@@ -1,10 +1,10 @@
 . "$(dirname "$0")"/util/common.sh
 
 # Ignoring SIGINT does not affect behaviour when the child process receives SIGINT
-run_test -i ./test-kill-pid $SIGINT
+run_test -i ./util/test-kill-pid $SIGINT
 RET=$?
 
-eval $(./test-waitpid ./dtee ./dtee -i ./test-kill-pid $SIGINT)
+eval $(./util/test-waitpid ./dtee ./dtee -i ./util/test-kill-pid $SIGINT)
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGINT)) \
