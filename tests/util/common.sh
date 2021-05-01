@@ -41,6 +41,7 @@ if [ -e "${0/.sh/.run}" ]; then
 fi
 RUN="$TESTDIR/$NAME.run"
 
+EARLY_TEST_LD_PRELOAD=()
 COMMON_TEST_LD_PRELOAD=(test-execvp-fd-check test-fork-sigchld-check test-fake-strerror test-fake-strsignal)
 
 TEST_EXEC=./dtee
@@ -78,13 +79,8 @@ case "$UNAME" in
 
 		# Windows can't find DLLs unless they're in the executable's
 		# directory or the PATH. This causes preloaded libraries to
-		# fail to find their dependencies. Make a link to all of them
-		# in the current directory.
-		#
-		# These have to be hard links because AppVeyor doesn't have real
-		# symbolic links enabled and Cygwin symbolic links won't work
-		# when loading DLLs.
-		ln -ft . ./util/cyg*.dll 2>/dev/null
+		# fail to find their dependencies, so specify all of them here.
+		EARLY_TEST_LD_PRELOAD=(test-is-dtee test-allow-n-times test-fd-unix-socket ${EARLY_TEST_LD_PRELOAD[*]})
 		;;
 	*)
 		SHLIB_PREFIX="./util/lib"
@@ -153,6 +149,15 @@ function set_ld_preload() {
 
 function build_ld_preload() {
 	LD_PRELOAD_STR="$(get_ld_preload)"
+
+	count=${#EARLY_TEST_LD_PRELOAD[@]}
+	for ((i = 0; i < count; i++)); do
+		if [ -n "$LD_PRELOAD_STR" ]; then
+			LD_PRELOAD_STR="$LD_PRELOAD_STR:"
+		fi
+		LD_PRELOAD_STR="${LD_PRELOAD_STR}${SHLIB_PREFIX}${EARLY_TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
+	done
+
 	count=${#TEST_LD_PRELOAD[@]}
 	for ((i = 0; i < count; i++)); do
 		if [ -n "$LD_PRELOAD_STR" ]; then
@@ -160,6 +165,7 @@ function build_ld_preload() {
 		fi
 		LD_PRELOAD_STR="${LD_PRELOAD_STR}${SHLIB_PREFIX}${TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
 	done
+
 	count=${#COMMON_TEST_LD_PRELOAD[@]}
 	for ((i = 0; i < count; i++)); do
 		if [ -n "$LD_PRELOAD_STR" ]; then
@@ -167,6 +173,7 @@ function build_ld_preload() {
 		fi
 		LD_PRELOAD_STR="${LD_PRELOAD_STR}${SHLIB_PREFIX}${COMMON_TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
 	done
+
 	echo "$LD_PRELOAD_STR"
 }
 
