@@ -1,0 +1,10 @@
+argc=4
+argv[0]=./util/test-report
+argv[1]=Hello World!
+argv[2]=ETAOIN
+argv[3]=SHRDLU
+fd STDIN_FILENO closed error="EBADF"
+O
+fd STDOUT_FILENO open read=0 (00) write=2 sockname=./dtee@test/fork/cron-report-no-stdin.tmp/dtee.1.2.input.XXXXXX/o
+E
+fd STDER_FILENO open read=0 (00) write=2 sockname=./dtee@test/fork/cron-report-no-stdin.tmp/dtee.1.2.input.XXXXXX/e

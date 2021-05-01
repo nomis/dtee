@@ -1,0 +1,11 @@
+argc=4
+argv[0]=./util/test-report
+argv[1]=Hello World!
+argv[2]=ETAOIN
+argv[3]=SHRDLU
+fd STDIN_FILENO open read=1 (49) write=-1
+O
+fd STDOUT_FILENO open read=0 (00) write=2 sockname=./dtee@test/fork/cron-report-extra-fd.tmp/dtee.1.2.input.XXXXXX/o
+E
+fd STDER_FILENO open read=0 (00) write=2 sockname=./dtee@test/fork/cron-report-extra-fd.tmp/dtee.1.2.input.XXXXXX/e
+unknown open fd 42
