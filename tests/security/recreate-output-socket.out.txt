@@ -1,1 +1,1 @@
-../passthrough-stdout.out.txt
+../basic/passthrough-stdout.out.txt

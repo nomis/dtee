@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/util/common.sh
+. "$(dirname "$0")"/../util/common.sh
 
 # Ask for the version, get exit code 0 and version information
 FIFO=$(make_fifo "out")

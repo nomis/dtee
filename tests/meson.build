@@ -18,32 +18,7 @@ xfail_writes_of_1_byte = xfail_general_writes or xfail_stream
 xfail_small_writes = xfail_general_writes
 xfail_large_writes = xfail_general_writes
 
-test('dtee (no arguments)', bash, args: [files('noargs-dtee.sh')], env: test_env, depends: all_test_txt)
-test('cronty (no arguments)', bash, args: [files('noargs-cronty.sh')], env: test_env, depends: all_test_txt)
-test('dtee --help', bash, args: [files('help-dtee.sh')], env: test_env, depends: all_test_txt)
-test('cronty --help', bash, args: [files('help-cronty.sh')], env: test_env, depends: all_test_txt)
-test('dtee --version', bash, args: [files('version.sh')], env: test_env, depends: all_test_txt)
-
-test('passthrough stdout', bash, args: [files('passthrough-stdout.sh')], env: test_env, depends: all_test_txt)
-test('passthrough stderr', bash, args: [files('passthrough-stderr.sh')], env: test_env, depends: all_test_txt)
-test('passthrough stdout and stderr 1', bash, args: [files('passthrough-stdout-stderr1.sh')], env: test_env, depends: all_test_txt)
-test('passthrough stdout and stderr 2', bash, args: [files('passthrough-stdout-stderr2.sh')], env: test_env, depends: all_test_txt)
-test('interleaved characters', bash, args: [files('interleaved-characters.sh')], env: test_env, depends: all_test_txt)
-
-test('file stdout overwrite (new file)', bash, args: [files('file-stdout-overwrite-new.sh')], env: test_env, depends: all_test_txt)
-test('file stdout overwrite (existing)', bash, args: [files('file-stdout-overwrite-existing.sh')], env: test_env, depends: all_test_txt)
-test('file stdout append (new file)', bash, args: [files('file-stdout-append-new.sh')], env: test_env, depends: all_test_txt)
-test('file stdout append (existing)', bash, args: [files('file-stdout-append-existing.sh')], env: test_env, depends: all_test_txt)
-
-test('file stderr overwrite (new file)', bash, args: [files('file-stderr-overwrite-new.sh')], env: test_env, depends: all_test_txt)
-test('file stderr overwrite (existing)', bash, args: [files('file-stderr-overwrite-existing.sh')], env: test_env, depends: all_test_txt)
-test('file stderr append (new file)', bash, args: [files('file-stderr-append-new.sh')], env: test_env, depends: all_test_txt)
-test('file stderr append (existing)', bash, args: [files('file-stderr-append-existing.sh')], env: test_env, depends: all_test_txt)
-
-test('file combined overwrite (new file)', bash, args: [files('file-combined-overwrite-new.sh')], env: test_env, depends: all_test_txt)
-test('file combined overwrite (existing)', bash, args: [files('file-combined-overwrite-existing.sh')], env: test_env, depends: all_test_txt)
-test('file combined append (new file)', bash, args: [files('file-combined-append-new.sh')], env: test_env, depends: all_test_txt)
-test('file combined append (existing)', bash, args: [files('file-combined-append-existing.sh')], env: test_env, depends: all_test_txt)
+subdir('basic')
 
 test('write 0 bytes (stdout)', bash, args: [files('write-0-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
 test('write 0 bytes (stderr)', bash, args: [files('write-0-bytes-stderr.sh')], env: test_env, depends: all_test_txt)
