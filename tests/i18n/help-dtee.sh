@@ -1,11 +1,10 @@
-. "$(dirname "$0")"/util/common.sh
+. "$(dirname "$0")"/../util/common.sh
 TEST_LANGUAGE="$1"
-. "$(dirname "$0")"/util/locale.sh
+. "$(dirname "$0")"/../util/locale.sh
 
 TEST_LD_PRELOAD=(test-bindtextdomain-override)
 
-# Ask for help, get exit code 0 and usage information (excluding cron option) (translated)
-TEST_EXEC=./cronty
+# Ask for help, get exit code 0 and usage information (including cron option) (translated)
 LANGUAGE="$TEST_LANGUAGE" LANG= LC_ALL="$FOUND_LOCALE" run_test --help
 RET=$?
 

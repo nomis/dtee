@@ -7,10 +7,22 @@ if [ ! -z "$1" ]; then
 	NAME="${NAME},$1"
 fi
 
+GROUP=""
+dir="$BASEDIR"
+while [ "$(basename "$dir")" != "tests" ]; do
+	[ ! -z "$GROUP" ] && GROUP="/$GROUP"
+	GROUP="$(basename "$dir")$GROUP"
+	dir="$(dirname "$dir")"
+done
+
 cd tests || exit 1
 ln -sf ../dtee dtee
 ln -sf ../cronty cronty
-TESTDIR="dtee@test"
+BASETESTDIR="dtee@test"
+TESTDIR="$BASETESTDIR"
+if [ "$GROUP" != "" ]; then
+	TESTDIR="$BASETESTDIR/$GROUP"
+fi
 mkdir -p "$TESTDIR"
 
 # GNU standard
