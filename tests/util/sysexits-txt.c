@@ -4,8 +4,12 @@
 #include <sysexits.h>
 #include <unistd.h>
 
-int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
-	FILE *file = fopen("sysexits.txt", "w");
+int main(int argc, char *argv[]) {
+	if (argc != 2) {
+		return EX_USAGE;
+	}
+
+	FILE *file = fopen(argv[1], "w");
 
 	if (!file) {
 		return EX_CANTCREAT;

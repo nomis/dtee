@@ -88,11 +88,9 @@ executable('test-waitpid', ['waitpid.c'], c_args: test_c_args)
 executable('test-write-0-bytes', ['write-0-bytes.c'], c_args: test_c_args)
 executable('test-writes-of-n-bytes', ['writes-of-n-bytes.c'], c_args: test_c_args)
 
-signal_txt = custom_target('signal.txt',
-	command: [generate_signal_txt],
-	output: 'signal.txt')
-sysexits_txt = custom_target('sysexits.txt',
-	command: [generate_sysexits_txt],
-	output: 'sysexits.txt')
+signal_txt = custom_target('signal.txt', output: 'signal.txt',
+	command: [generate_signal_txt, '@OUTPUT@'])
+sysexits_txt = custom_target('sysexits.txt', output: 'sysexits.txt',
+	command: [generate_sysexits_txt, '@OUTPUT@'])
 version_txt = vcs_tag(input: 'version.txt.in', output: 'version.txt')
 all_test_txt = [signal_txt, sysexits_txt, version_txt]

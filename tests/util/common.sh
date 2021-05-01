@@ -55,10 +55,10 @@ mkdir -p "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
 export TMPDIR="./$TESTDIR/$NAME.tmp"
 
 # /usr/include/sysexits.h
-. ../sysexits.txt
+. ./util/sysexits.txt
 
 # Signals
-. ../signal.txt
+. ./util/signal.txt
 
 # Version
 . ./util/version.txt
