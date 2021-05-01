@@ -80,7 +80,11 @@ case "$UNAME" in
 		# directory or the PATH. This causes preloaded libraries to
 		# fail to find their dependencies. Make a link to all of them
 		# in the current directory.
-		ln -st . ./util/cyg*.dll 2>/dev/null
+		#
+		# These have to be hard links because AppVeyor doesn't have real
+		# symbolic links enabled and Cygwin symbolic links won't work
+		# when loading DLLs.
+		ln -ft . ./util/cyg*.dll 2>/dev/null
 		;;
 	*)
 		SHLIB_PREFIX="./util/lib"
