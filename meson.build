@@ -11,8 +11,6 @@ project('dtee',
 	meson_version: '>=0.53.0',
 )
 
-subdir('i18n')
-
 source_files = [
 	'src/application.cc',
 	'src/command_line.cc',
@@ -33,6 +31,8 @@ source_files = [
 
 c = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
+
+subdir('i18n')
 
 if not (c.get_id() == 'gcc' and c.version().version_compare('<5'))
 	if c.has_argument('-Wshadow')
