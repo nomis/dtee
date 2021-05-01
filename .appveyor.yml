@@ -16,10 +16,8 @@ build_script:
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && git clean -qfdx"'
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && git reset --hard"'
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make DESTDIR=\"`pwd`/build/install\" install"'
 
 test_script:
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make check"'
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && cygdrop make check"'
-
-before_deploy:
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make DESTDIR=\"`pwd`/build/install\" install"'
