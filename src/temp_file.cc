@@ -73,6 +73,7 @@ void TempFile::close() {
 		::close(fd_);
 	}
 	fd_ = -1;
+	filename_ = {};
 }
 
 } // namespace dtee

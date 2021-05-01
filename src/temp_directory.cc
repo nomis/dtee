@@ -43,7 +43,7 @@ TempDirectory::TempDirectory(const string &name) {
 	char *temp_dir;
 
 	errno = 0;
-	temp_dir = mkdtemp(filename.data());
+	temp_dir = ::mkdtemp(filename.data());
 	if (temp_dir == nullptr) {
 		auto errno_copy = errno;
 		// i18n: %1 = filename; %2 = errno message
