@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	const char *env_rlimit_core = getenv("DTEE_TEST_RLIMIT_CORE");
 	int signum;
 
-	if (argc != 2) {
+	if (argc != 2 && argc != 3) {
 		return EX_USAGE;
 	}
 
@@ -73,8 +73,10 @@ int main(int argc, char *argv[]) {
 
 	signum = strtol(argv[1], NULL, 10);
 
-	printf("Killing current process\n");
-	fflush(stdout);
+	if (argc < 3 || strcmp(argv[2], "quiet")) {
+		printf("Killing current process\n");
+		fflush(stdout);
+	}
 
 	kill(getpid(), signum);
 	return EXIT_SUCCESS;
