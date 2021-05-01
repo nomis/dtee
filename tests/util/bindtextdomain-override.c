@@ -1,6 +1,3 @@
-#define libintl_bindtextdomain __dtee__hide__libintl_bindtextdomain
-#define bindtextdomain __dtee__hide__bindtextdomain
-
 #include <dlfcn.h>
 #include <libintl.h>
 #include <stdbool.h>
