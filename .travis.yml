@@ -150,11 +150,10 @@ install:
 
 script:
   - if [ "$BUILD" = "app" ]; then
-      MESON_TESTTHREADS=1 make CC=$C_COMPILER CXX=$CXX_COMPILER MESON_OPTS="-Dtest_expect_fail=true" distclean check || exit 1;
+      MESON_TESTTHREADS=1 make CC=$C_COMPILER CXX=$CXX_COMPILER DESTDIR="`pwd`/build/install" MESON_OPTS="-Dtest_expect_fail=true" distclean check install || exit 1;
       if [ $UNITY -eq 1 ]; then
-         MESON_TESTTHREADS=1 make CC=$C_COMPILER CXX=$CXX_COMPILER MESON_OPTS="-Dtest_expect_fail=true --unity on" distclean check || exit 1;
+         MESON_TESTTHREADS=1 make CC=$C_COMPILER CXX=$CXX_COMPILER DESTDIR="`pwd`/build/install" MESON_OPTS="-Dtest_expect_fail=true --unity on" distclean check install || exit 1;
       fi;
-      make DESTDIR="`pwd`/build/install" install;
     elif [ "$BUILD" = "docs" ]; then
       make -C docs man html linkcheck || exit 1;
     fi
