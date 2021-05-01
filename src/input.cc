@@ -157,7 +157,7 @@ bool Input::open() {
 			// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 			// so they both look the same.
 			print_error(format(_( // i18n: %1 = socket path; %2 = socket path
-				"output socket endpoints are not unique:\n"
+				"output socket endpoints are indistinguishable:\n"
 				"\tstdout socket: %1%\n\tstderr socket: %2%"))
 				% out_ep_.path() % err_ep_.path());
 			return false;

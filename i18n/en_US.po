@@ -216,11 +216,11 @@ msgstr "stderr socket: %1%"
 #: src/input.cc
 #, boost-format
 msgid ""
-"output socket endpoints are not unique:\n"
+"output socket endpoints are indistinguishable:\n"
 "\tstdout socket: %1%\n"
 "\tstderr socket: %2%"
 msgstr ""
-"output socket endpoints are not unique:\n"
+"output socket endpoints are indistinguishable:\n"
 "\tstdout socket: %1%\n"
 "\tstderr socket: %2%"
 
