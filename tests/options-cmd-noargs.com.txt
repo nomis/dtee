@@ -1,1 +1,0 @@
-options-cmd-noargs.out.txt

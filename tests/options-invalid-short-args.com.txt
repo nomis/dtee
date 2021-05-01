@@ -1,1 +1,0 @@
-options-invalid-short-args.err.txt

@@ -1,1 +1,0 @@
-options-cmd-1-arg.out.txt

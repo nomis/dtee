@@ -1,1 +1,0 @@
-options-mixed-empty6.out.txt
