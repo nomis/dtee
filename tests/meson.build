@@ -34,7 +34,7 @@ testlib_allow_n_times = shared_library('test-allow-n-times', ['allow-n-times.c']
 testlib_is_dtee = shared_library('test-is-dtee', ['is-dtee.c', 'is-dtee-' + host_machine.system() + '.c'], c_args: dlfcn_args, dependencies: dlfcn_deps + proc_deps)
 testlib_is_fd_unix_socket = shared_library('test-fd-unix-socket', ['is-fd-unix-socket.c'], c_args: test_c_args)
 
-shared_library('test-bindtextdomain-override', ['bindtextdomain-override.c'] , c_args: dlfcn_args + ['-DGETTEXT_LOCALEDIR="' + meson.current_build_dir() + '/dtee@test/locale"'], dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-bindtextdomain-override', ['bindtextdomain-override.c'] , c_args: dlfcn_args + ['-DGETTEXT_LOCALEDIR="' + meson.current_build_dir() + '/dtee@test/locale"'], dependencies: dlfcn_deps + gettext_deps, link_with: [testlib_is_dtee])
 shared_library('test-dup2-failure', ['dup2-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-execvp-fd-check', ['execvp-fd-check.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-fake-getpid', ['fake-getpid.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
