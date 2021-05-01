@@ -1,5 +1,7 @@
 #include <dlfcn.h>
-#include <libintl.h>
+#ifndef __CYGWIN__
+# include <libintl.h>
+#endif
 #include <stdbool.h>
 #include <stddef.h>
 
