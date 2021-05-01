@@ -1,6 +1,7 @@
 environment:
   global:
     MESON_OPTS: '-Dtest_expect_fail=true --unity on'
+    MESON_TESTTHREADS: 1
     CYG_ARCH: x86_64
     CYG_BASE: 'C:\cygwin64'
 
