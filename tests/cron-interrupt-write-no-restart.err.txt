@@ -1,2 +1,0 @@
-./dtee: dtee@test/cron-interrupt-write-no-restart.block.fifo: Interrupted system call
-./dtee: received signal 2: SIGINT

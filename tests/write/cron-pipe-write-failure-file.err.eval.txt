@@ -1,0 +1,2 @@
+./dtee: dtee@test/write/cron-pipe-write-failure-file.file.fifo: EPIPE
+./dtee: received signal $SIGPIPE: SIGPIPE

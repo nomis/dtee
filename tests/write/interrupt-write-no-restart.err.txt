@@ -1,0 +1,1 @@
+./dtee: dtee@test/write/interrupt-write-no-restart.block.fifo: Interrupted system call
