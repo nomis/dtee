@@ -18,7 +18,7 @@ bool dtee_test_is_dtee(void) {
 }
 
 bool __dtee_test_is_dtee(const char *exe_name) {
-	return !strcmp(exe_name, "dtee");
+	return !strcmp(exe_name, "dtee") || !strcmp(exe_name, "cronty");
 }
 
 bool __dtee_test_is_dtee_test(const char *exe_name) {
