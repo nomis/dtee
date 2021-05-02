@@ -105,6 +105,7 @@ function is_acl_override() {
 }
 
 function no_ld_preload() {
+	set +x
 	NEW_ARRAY=()
 	count=${#COMMON_TEST_LD_PRELOAD[@]}
 	for ((i = 0; i < count; i++)); do
@@ -113,9 +114,10 @@ function no_ld_preload() {
 		fi
 	done
 	COMMON_TEST_LD_PRELOAD=$NEW_ARRAY
+	set -x
 }
 
-function get_ld_preload() {
+function __get_ld_preload() {
 	case "$UNAME" in
 		Darwin)
 			echo "$DYLD_INSERT_LIBRARIES"
@@ -127,28 +129,36 @@ function get_ld_preload() {
 	esac
 }
 
-function set_ld_preload() {
+function __set_ld_preload() {
 	case "$UNAME" in
 		Darwin)
 			if [ -n "$1" ]; then
+				set -x
 				export DYLD_INSERT_LIBRARIES="$1"
+				set +x
 			else
+				set -x
 				unset DYLD_INSERT_LIBRARIES
+				set +x
 			fi
 			;;
 
 		*)
 			if [ -n "$1" ]; then
+				set -x
 				export LD_PRELOAD="$1"
+				set +x
 			else
+				set -x
 				unset LD_PRELOAD
+				set +x
 			fi
 			;;
 	esac
 }
 
-function build_ld_preload() {
-	LD_PRELOAD_STR="$(get_ld_preload)"
+function __build_ld_preload() {
+	LD_PRELOAD_STR="$(__get_ld_preload)"
 
 	count=${#EARLY_TEST_LD_PRELOAD[@]}
 	for ((i = 0; i < count; i++)); do
@@ -177,24 +187,25 @@ function build_ld_preload() {
 	echo "$LD_PRELOAD_STR"
 }
 
-function periodic_cleanup() {
+function __periodic_cleanup() {
 	if [ "$UNAME" == "Darwin" ] && [ "$DTEE_TEST_COREDUMPS" == "1" ]; then
 		# Why dump the whole of RAM without using sparse files? 😖
 		rm -f /cores/core.* /private/cores/core.*
 	fi
 }
 
-function before_test() {
-	OLD_LD_PRELOAD="$(get_ld_preload)"
-	NEW_LD_PRELOAD="$(build_ld_preload)"
-	set_ld_preload "$NEW_LD_PRELOAD"
+function __before_test() {
+	OLD_LD_PRELOAD="$(__get_ld_preload)"
+	NEW_LD_PRELOAD="$(__build_ld_preload)"
+	__set_ld_preload "$NEW_LD_PRELOAD"
 }
 
-function after_test() {
-	set_ld_preload "$OLD_LD_PRELOAD"
+function __after_test() {
+	__set_ld_preload "$OLD_LD_PRELOAD"
 }
 
 function cmp_files() {
+	set +x
 	EXPECTED_TEXT="$BASEDIR/$NAME.$1.txt"
 	EXPECTED_EVAL="$BASEDIR/$NAME.$1.eval.txt"
 	EXPECTED_TEXT_UNAME="$BASEDIR/$NAME.$1.$SHORT_UNAME.txt"
@@ -223,12 +234,14 @@ function cmp_files() {
 	else
 		echo "Missing file $EXPECTED_TEXT or $EXPECTED_EVAL or $EXPECTED_TEXT_UNAME or $EXPECTED_EVAL_UNAME"
 		diff -U4 /dev/null "$ACTUAL"
+		set -x
 		return 1
 	fi
 
 	cmp "$EXPECTED" "$ACTUAL"
 	CMP=$?
 	[ $CMP -ne 0 ] && diff -U4 "$EXPECTED" "$ACTUAL"
+	set -x
 	return $CMP
 }
 
@@ -238,7 +251,7 @@ function make_fifo() {
 	echo "$TESTDIR/$NAME.$1.fifo"
 }
 
-function check_variables() {
+function __check_variables() {
 	set +x
 	CV_RET=0
 
@@ -267,16 +280,19 @@ function check_variables() {
 
 function variables_must_eq() {
 	set +x
-	check_variables "$@" || exit $TEST_EX_FAIL
+	__check_variables "$@" || exit $TEST_EX_FAIL
+	set -x
 	exit $TEXT_EX_OK
 }
 
 function check_variables_eq() {
 	set +x
-	check_variables "$@" || exit $TEST_EX_FAIL
+	__check_variables "$@" || exit $TEST_EX_FAIL
+	set -x
 }
 
 function run_test() {
+	set +x
 	if [ -e "$BASEDIR/$NAME.in.txt" ]; then
 		STDIN_FILE="$BASEDIR/$NAME.in.txt"
 	else
@@ -289,54 +305,69 @@ function run_test() {
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		rm -f "$TESTDIR/$NAME.extra-out.txt"
 	fi
-	periodic_cleanup
+	__periodic_cleanup
 	if [ $TEST_NO_STDIN -eq 1 ]; then
-		before_test
+		__before_test
+		set -x
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
-		after_test
+		set +x
+		__after_test
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		set -x
 		FIFO=$(make_fifo "extra-out1")
-		before_test
+		set +x
+		__before_test
+		set -x
 		DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt" 3>"$FIFO" &
 		PID=$!
-		after_test
 
 		cat <"$FIFO" >"$TESTDIR/$NAME.extra-out.txt"
 
 		wait $PID
 		RET1=$?
+		set +x
+		__after_test
 	elif [ -n "$TEST_ALT_STDOUT" ]; then
-		before_test
+		__before_test
+		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TEST_ALT_STDOUT" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
-		after_test
+		set +x
+		__after_test
 	elif [ -n "$TEST_ALT_STDERR" ]; then
-		before_test
+		__before_test
+		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TEST_ALT_STDERR"
 		RET1=$?
-		after_test
+		set +x
+		__after_test
 	else
-		before_test
+		__before_test
+		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RET1=$?
-		after_test
+		set +x
+		__after_test
 	fi
-	periodic_cleanup
+	__periodic_cleanup
 
 	if [ -z "$TEST_ALT_STDOUT" ]; then
 		cmp_files "out"
 		CMP_OUT=$?
+		set +x
 	fi
 
 	if [ -z "$TEST_ALT_STDERR" ]; then
 		cmp_files "err"
 		CMP_ERR=$?
+		set +x
 	fi
 
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		cmp_files "extra-out"
 		CMP_EXTRA_OUT1=$?
+		set +x
 	fi
 
 	# Only run these once because combined output is meaningless
@@ -355,37 +386,47 @@ function run_test() {
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		rm -f "$TESTDIR/$NAME.extra-out.txt"
 	fi
-	periodic_cleanup
+	__periodic_cleanup
 	if [ $TEST_NO_STDIN -eq 1 ]; then
-		before_test
+		__before_test
+		set -x
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
 		RET2=$?
-		after_test
+		set +x
+		__after_test
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
+		set -x
 		FIFO=$(make_fifo "extra-out2")
-		before_test
+		set +x
+		__before_test
+		set -x
 		DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1 3>"$FIFO" &
 		PID=$!
-		after_test
 
 		cat <"$FIFO" >"$TESTDIR/$NAME.extra-out.txt"
 
 		wait $PID
 		RET2=$?
+		set +x
+		__after_test
 	else
-		before_test
+		__before_test
+		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
 		RET2=$?
-		after_test
+		set +x
+		__after_test
 	fi
-	periodic_cleanup
+	__periodic_cleanup
 
 	cmp_files "com"
 	CMP_COM=$?
+	set +x
 
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		cmp_files "extra-out"
 		CMP_EXTRA_OUT2=$?
+		set +x
 	fi
 
 	declare -f test_cleanup >/dev/null && test_cleanup
@@ -400,9 +441,13 @@ function run_test() {
 }
 
 function run_with_preload() {
-	before_test
+	set +x
+	__before_test
+	set -x
 	"$@"
-	after_test
+	set +x
+	__after_test
+	set -x
 }
 
 set -x

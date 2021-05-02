@@ -1,3 +1,4 @@
+set +x
 mkdir -p "util/$BASETESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES"
 ln -sf "../../../../../../i18n/test-${TEST_LANGUAGE}.mo" "util/$BASETESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES/dtee.mo"
 
@@ -28,7 +29,7 @@ done < <(locale -a)
 
 count=${#FOUND_LOCALES[@]}
 for ((i = 0; i < count; i++)); do
-	[ ! -z "${FOUND_LOCALES[i]}" ] && FOUND_LOCALE="${FOUND_LOCALES[i]}" && return
+	[ ! -z "${FOUND_LOCALES[i]}" ] && FOUND_LOCALE="${FOUND_LOCALES[i]}" && set -x && return
 done
 
 echo "No locales found. At least one locale other than C or POSIX must be"
