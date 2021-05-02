@@ -8,7 +8,7 @@ TEST_LD_PRELOAD=(test-bindtextdomain-override)
 LANGUAGE="$TEST_LANGUAGE" LANG= LC_ALL="$FOUND_LOCALE" run_test "-q" ./util/test-kill-pid $SIGTERM quiet
 RET=$?
 
-eval $(LANGUAGE="$TEST_LANGUAGE" LANG= LC_ALL="$FOUND_LOCALE" ./util/test-waitpid ./dtee ./dtee "-q" ./util/test-kill-pid $SIGTERM quiet)
+LANGUAGE="$TEST_LANGUAGE" LANG= LC_ALL="$FOUND_LOCALE" eval_ret ./util/test-waitpid ./dtee ./dtee "-q" ./util/test-kill-pid $SIGTERM quiet
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGTERM)) \

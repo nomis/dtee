@@ -12,7 +12,7 @@ run_test -q -C "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-lorem-ipsum-wait-exit 0
 RET=$?
 
 test_prepare
-eval $(run_with_preload ./util/test-waitpid ./dtee ./dtee -q -C "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-lorem-ipsum-wait-exit 0)
+eval_ret run_with_preload ./util/test-waitpid ./dtee ./dtee -q -C "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-lorem-ipsum-wait-exit 0
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGCHLD)) \

@@ -11,7 +11,7 @@ run_test -o "$FIFO" ./util/test-closed-pipe-writer "$TESTDIR/$NAME.canary" "$RUN
 RET=$?
 
 test_prepare
-eval $(./util/test-waitpid ./dtee ./dtee -o "$FIFO" ./util/test-closed-pipe-writer "$TESTDIR/$NAME.canary" "$RUN")
+eval_ret ./util/test-waitpid ./dtee ./dtee -o "$FIFO" ./util/test-closed-pipe-writer "$TESTDIR/$NAME.canary" "$RUN"
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGPIPE)) \

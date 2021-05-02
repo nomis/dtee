@@ -5,7 +5,7 @@ TEST_LD_PRELOAD=(test-kill-failure)
 run_test "-q" ./util/test-kill-pid $SIGINT
 RET=$?
 
-eval $(run_with_preload ./util/test-waitpid ./dtee ./dtee "-q" ./util/test-kill-pid $SIGINT)
+eval_ret run_with_preload ./util/test-waitpid ./dtee ./dtee "-q" ./util/test-kill-pid $SIGINT
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGINT)) \

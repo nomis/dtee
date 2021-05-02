@@ -11,7 +11,7 @@ TEST_ALT_STDERR="$FIFO"
 run_test -q ./util/test-closed-pipe-writer "$TESTDIR/$NAME.canary" "$RUN"
 RET=$?
 
-eval $(TEST_WAITPID_CLOSED_STDERR=1 ./util/test-waitpid ./dtee ./dtee -q "$RUN")
+TEST_WAITPID_CLOSED_STDERR=1 eval_ret ./util/test-waitpid ./dtee ./dtee -q "$RUN"
 RET2=$?
 
 # If SIGPIPE is received while outputting the final report of the process

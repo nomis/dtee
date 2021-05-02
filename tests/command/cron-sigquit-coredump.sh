@@ -12,7 +12,7 @@ export DTEE_TEST_RLIMIT_CORE=RLIM_INFINITY
 run_test "-q" ./util/test-kill-pid $SIGQUIT
 RET=$?
 
-eval $(./util/test-waitpid ./dtee ./dtee "-q" ./util/test-kill-pid $SIGQUIT)
+eval_ret ./util/test-waitpid ./dtee ./dtee "-q" ./util/test-kill-pid $SIGQUIT
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGQUIT)) \

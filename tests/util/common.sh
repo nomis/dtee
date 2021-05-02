@@ -310,7 +310,7 @@ function run_test() {
 		__before_test
 		set -x
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
-		RET1=$?
+		RT_RET1=$?
 		set +x
 		__after_test
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
@@ -325,28 +325,28 @@ function run_test() {
 		cat <"$FIFO" >"$TESTDIR/$NAME.extra-out.txt"
 
 		wait $PID
-		RET1=$?
+		RT_RET1=$?
 		set +x
 		__after_test
 	elif [ -n "$TEST_ALT_STDOUT" ]; then
 		__before_test
 		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TEST_ALT_STDOUT" 2>"$TESTDIR/$NAME.err.txt"
-		RET1=$?
+		RT_RET1=$?
 		set +x
 		__after_test
 	elif [ -n "$TEST_ALT_STDERR" ]; then
 		__before_test
 		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TEST_ALT_STDERR"
-		RET1=$?
+		RT_RET1=$?
 		set +x
 		__after_test
 	else
 		__before_test
 		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
-		RET1=$?
+		RT_RET1=$?
 		set +x
 		__after_test
 	fi
@@ -373,10 +373,10 @@ function run_test() {
 	# Only run these once because combined output is meaningless
 	if [ -n "$TEST_ALT_STDOUT" ]; then
 		check_variables_eq CMP_ERR 0
-		return $RET1
+		return $RT_RET1
 	elif [ -n "$TEST_ALT_STDERR" ]; then
 		check_variables_eq CMP_OUT 0
-		return $RET1
+		return $RT_RET1
 	fi
 
 	declare -f test_cleanup >/dev/null && test_cleanup
@@ -391,7 +391,7 @@ function run_test() {
 		__before_test
 		set -x
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
-		RET2=$?
+		RT_RET2=$?
 		set +x
 		__after_test
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
@@ -406,14 +406,14 @@ function run_test() {
 		cat <"$FIFO" >"$TESTDIR/$NAME.extra-out.txt"
 
 		wait $PID
-		RET2=$?
+		RT_RET2=$?
 		set +x
 		__after_test
 	else
 		__before_test
 		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
-		RET2=$?
+		RT_RET2=$?
 		set +x
 		__after_test
 	fi
@@ -431,13 +431,13 @@ function run_test() {
 
 	declare -f test_cleanup >/dev/null && test_cleanup
 
-	echo RET2 $RET2
-	check_variables_eq RET1 $RET2 CMP_OUT 0 CMP_ERR 0 CMP_COM 0
+	echo RT_RET2 $RT_RET2
+	check_variables_eq RT_RET1 $RT_RET2 CMP_OUT 0 CMP_ERR 0 CMP_COM 0
 	if [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		check_variables_eq CMP_EXTRA_OUT1 0 CMP_EXTRA_OUT2 0
 	fi
 
-	return $RET1
+	return $RT_RET1
 }
 
 function run_with_preload() {
@@ -445,9 +445,20 @@ function run_with_preload() {
 	__before_test
 	set -x
 	"$@"
+	RWP_RET=$?
 	set +x
 	__after_test
 	set -x
+	return $RWP_RET
+}
+
+function eval_ret() {
+	set +x
+	EV_OUTPUT="$("$@")"
+	EV_RET=$?
+	eval $EV_OUTPUT
+	set -x
+	return $EV_RET
 }
 
 set -x

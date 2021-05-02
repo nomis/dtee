@@ -12,7 +12,7 @@ run_test -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGTERM
 RET=$?
 
 test_prepare
-eval $(run_with_preload ./util/test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGTERM)
+eval_ret run_with_preload ./util/test-waitpid ./dtee ./dtee -q -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGTERM
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGTERM)) \

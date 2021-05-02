@@ -10,7 +10,7 @@ run_test -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGKILL
 RET=$?
 
 test_prepare
-eval $(./util/test-waitpid ./dtee ./dtee -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGKILL)
+eval_ret ./util/test-waitpid ./dtee ./dtee -O "$DTEE_TEST_MONITOR_OUTPUT" ./util/test-kill-ppid $SIGKILL
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGKILL)) \

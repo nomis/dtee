@@ -3,7 +3,7 @@
 run_test ./util/test-kill-pid $SIGINT
 RET=$?
 
-eval $(./util/test-waitpid ./dtee ./dtee ./util/test-kill-pid $SIGINT)
+eval_ret ./util/test-waitpid ./dtee ./dtee ./util/test-kill-pid $SIGINT
 RET2=$?
 
 variables_must_eq RET $((128 + $SIGINT)) \
