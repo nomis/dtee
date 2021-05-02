@@ -51,6 +51,7 @@ Test
 Runtime
 -------
   * `Boost <https://www.boost.org/>`_
+  * `GNU libintl <https://www.gnu.org/software/gettext/>`_
   * UNIX domain sockets
 
 Documentation
