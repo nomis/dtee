@@ -24,7 +24,8 @@
 
 #ifdef __CYGWIN__
 // The only non-libintl function that dtee calls after bindtextdomain()
-// but before calling gettext() is basename().
+// but before calling gettext() is basename(). It is only possible to
+// override Cygwin functions, not those in the libintl DLL.
 
 static void dtee_test_bindtextdomain(void) {
 	static bool set = false;
