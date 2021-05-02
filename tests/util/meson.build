@@ -8,7 +8,12 @@ elif host_machine.system() == 'darwin'
 	dlfcn_args = test_c_args
 	dlfcn_deps = []
 	wrap_gettext_deps = gettext_deps
-else # freebsd, openbsd, netbsd, dragonfly, cygwin
+elif host_machine.system() == 'cygwin'
+	test_c_args = c_args
+	dlfcn_args = test_c_args + ['-Wno-pedantic']
+	dlfcn_deps = []
+	wrap_gettext_deps = gettext_deps
+else # freebsd, openbsd, netbsd, dragonfly
 	test_c_args = c_args
 	dlfcn_args = test_c_args + ['-Wno-pedantic']
 	dlfcn_deps = []
