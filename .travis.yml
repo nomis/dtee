@@ -96,51 +96,45 @@ matrix:
     - name: Xcode 10
       os: osx
       osx_image: xcode10.3
-      addons:
-        homebrew:
-          packages:
-          - boost
-          - gettext
-          - meson
-          - ninja
-          update: true
+## These are already installed but it takes 20 minutes to perform unnecessary upgrades of everything
+#      addons:
+#        homebrew:
+#          packages:
+#          - boost
+#          - gettext
       env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS=-Wno-error=non-virtual-dtor UNITY=0
 
     - name: Xcode 11
       os: osx
       osx_image: xcode11.6
-      addons:
-        homebrew:
-          packages:
-          - boost
-          - gettext
-          - meson
-          - ninja
-          update: true
+## These are already installed but it takes 20 minutes to perform unnecessary upgrades of everything
+#      addons:
+#        homebrew:
+#          packages:
+#          - boost
+#          - gettext
       env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS="-Wno-error=non-virtual-dtor -Wno-error=shadow" UNITY=0
 
     - name: Xcode 12
       os: osx
       osx_image: xcode12.2
-      addons:
-        homebrew:
-          packages:
-          - boost
-          - gettext
-          - meson
-          - ninja
-          update: true
+## These are already installed but it takes 20 minutes to perform unnecessary upgrades of everything
+#      addons:
+#        homebrew:
+#          packages:
+#          - boost
+#          - gettext
       env: BUILD=app C_COMPILER=cc CXX_COMPILER=c++ CXXFLAGS="-Wno-error=non-virtual-dtor -Wno-error=shadow" UNITY=0
 
 install:
   - if [ "$BUILD" = "app" ]; then
       if [ "$(uname)" = "Darwin" ]; then
         brew link --force gettext || exit 1;
-      else
-        pip3 install --user --upgrade 'pip>=20,<21' || exit 1;
-        pip3 install --user setuptools || exit 1;
-        pip3 install --user meson ninja || exit 1;
+        export PATH="$PATH:$(python3 -m site --user-base)/bin";
       fi;
+      pip3 install --user --upgrade 'pip>=20,<21' || exit 1;
+      pip3 install --user setuptools || exit 1;
+      pip3 install --user meson ninja || exit 1;
     fi
   - if [ "$BUILD" = "docs" ]; then
       pip3 install --user --upgrade 'pip>=20,<21' || exit 1;
