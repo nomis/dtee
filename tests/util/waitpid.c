@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 		close(write_pipefd[1]);
 
 		int wstatus = 0;
-		alarm(10);
+		alarm(20);
 		if (waitpid(pid, &wstatus, 0) != -1) {
 			printf("WIFEXITED=%d\n", WIFEXITED(wstatus) ? 1 : 0);
 			printf("WEXITSTATUS=%d\n", WEXITSTATUS(wstatus));

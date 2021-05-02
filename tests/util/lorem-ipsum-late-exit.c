@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 
 	// Wait for the parent process to exit before us
 	// because we don't want our exit status in the output
-	alarm(10);
+	alarm(20);
 	while (kill(ppid, 0) == 0) {
 		nanosleep(&ts, NULL);
 	}

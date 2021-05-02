@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 	const char *canary_file = argv[1];
 
 	// Wait for the signal to close stdin (it's a fifo so the writer must have opened it first)
-	alarm(10);
+	alarm(20);
 	while (stat(canary_file, &canary_stat) != 0) {
 		nanosleep(&ts, NULL);
 	}

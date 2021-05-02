@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
 	fflush(stdout);
 
 	// Wait for the process to read our output before killing it
-	alarm(10);
+	alarm(20);
 	while (stat(monitor_stdout, &stdout_stat) < 0 || stdout_stat.st_size == 0) {
 		nanosleep(&ts, NULL);
 	}
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 	kill(ppid, signum);
 
 	// Wait for the process to exit after handling the signal
-	alarm(10);
+	alarm(20);
 	while (kill(ppid, 0) == 0) {
 		nanosleep(&ts, NULL);
 	}

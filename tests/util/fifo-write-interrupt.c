@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 		struct stat file_stat = { .st_size = 0 };
 
 		// Wait for the message to be written to file1
-		alarm(10);
+		alarm(20);
 		errno = 0;
 		while (stat(file1_name, &file_stat) != 0 || file_stat.st_size == 0) {
 			nanosleep(&ts, NULL);
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Unblock the fifo
-		alarm(10);
+		alarm(20);
 		while (written > 0) {
 			char buf[BUFSIZ];
 
@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Wait for the message to be written to file 2
-		alarm(10);
+		alarm(20);
 		errno = 0;
 		while (stat(file2_name, &file_stat) != 0 || file_stat.st_size == 0) {
 			nanosleep(&ts, NULL);
@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// Wait for the process to exit
-		alarm(10);
+		alarm(20);
 		int wstatus = 0;
 		if (waitpid(pid, &wstatus, 0) != -1) {
 			printf("WIFEXITED=%d\n", WIFEXITED(wstatus) ? 1 : 0);

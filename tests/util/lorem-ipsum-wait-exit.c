@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Wait for the process to read our output before exiting
-	alarm(10);
+	alarm(20);
 	while (stat(monitor_output, &output_stat) < 0 || output_stat.st_size != message_len) {
 		nanosleep(&ts, NULL);
 	}

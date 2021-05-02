@@ -25,14 +25,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Wait for success
-	alarm(10);
+	alarm(20);
 	errno = 0;
 	while (stat(canary_file, &canary_stat) == 0 || errno != ENOENT) {
 		nanosleep(&ts, NULL);
 		errno = 0;
 	}
 
-	alarm(10);
+	alarm(20);
 	execvp(argv[2], &argv[2]);
 	abort();
 	return EXIT_SUCCESS;
