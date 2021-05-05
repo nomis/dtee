@@ -1,5 +1,7 @@
+i18n_package = meson.project_name()
+
 import('i18n').gettext(
-	meson.project_name(),
+	i18n_package,
 	args: [
 		'--add-comments=i18n',
 		'--add-location=file',

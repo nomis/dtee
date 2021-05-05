@@ -71,7 +71,7 @@ endif
 dtee = executable('dtee',
 	source_files,
 	cpp_args: c_args + [
-		'-DGETTEXT_PACKAGE="dtee"',
+		'-DGETTEXT_PACKAGE="' + i18n_package + '"',
 		'-DGETTEXT_LOCALEDIR="' + join_paths(get_option('prefix'), get_option('localedir')) + '"',
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
 		'-DBOOST_ASIO_DISABLE_THREADS',
