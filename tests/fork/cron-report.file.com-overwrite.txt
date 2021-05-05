@@ -5,6 +5,6 @@ argv[2]=ETAOIN
 argv[3]=SHRDLU
 fd STDIN_FILENO open read=1 (49) write=-1
 O
-fd STDOUT_FILENO open read=0 (00) write=2 sockname=./dtee@test/fork/cron-report.tmp/dtee.1.2.input.XXXXXX/o
+fd STDOUT_FILENO open read=0 (00) write=2 sockname=./dtee@test/fork/cron-report.tmp/dtee0000B456IXXXXXX/o
 E
-fd STDER_FILENO open read=0 (00) write=2 sockname=./dtee@test/fork/cron-report.tmp/dtee.1.2.input.XXXXXX/e
+fd STDER_FILENO open read=0 (00) write=2 sockname=./dtee@test/fork/cron-report.tmp/dtee0000B456IXXXXXX/e

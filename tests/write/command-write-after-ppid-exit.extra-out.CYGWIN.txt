@@ -1,2 +1,2 @@
-fd STDOUT_FILENO write=1 error="No error" sockname=./dtee@test/write/command-write-after-ppid-exit.tmp/dtee.1.2.input.XXXXXX/o
-fd STDERR_FILENO write=1 error="No error" sockname=./dtee@test/write/command-write-after-ppid-exit.tmp/dtee.1.2.input.XXXXXX/e
+fd STDOUT_FILENO write=1 error="No error" sockname=./dtee@test/write/command-write-after-ppid-exit.tmp/dtee0000B456IXXXXXX/o
+fd STDERR_FILENO write=1 error="No error" sockname=./dtee@test/write/command-write-after-ppid-exit.tmp/dtee0000B456IXXXXXX/e

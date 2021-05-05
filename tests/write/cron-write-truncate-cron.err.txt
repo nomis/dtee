@@ -1,2 +1,2 @@
-./dtee: error writing to buffer file ./dtee@test/write/cron-write-truncate-cron.tmp/dtee.1.2.output.XXXXXX: ENOSPC
+./dtee: error writing to buffer file ./dtee@test/write/cron-write-truncate-cron.tmp/dtee0000B456OXXXXXX: ENOSPC
 ./dtee: dtee@test/write/cron-write-truncate-cron.run: exited with status 0

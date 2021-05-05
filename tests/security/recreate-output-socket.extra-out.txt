@@ -1,3 +1,3 @@
-Input socket: ./dtee@test/security/recreate-output-socket.tmp/dtee.1.2.input.XXXXXX/i
-Output socket: ./dtee@test/security/recreate-output-socket.tmp/dtee.1.2.input.XXXXXX/o
+Input socket: ./dtee@test/security/recreate-output-socket.tmp/dtee0000B456IXXXXXX/i
+Output socket: ./dtee@test/security/recreate-output-socket.tmp/dtee0000B456IXXXXXX/o
 connect: ENOENT

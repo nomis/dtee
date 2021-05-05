@@ -1,5 +1,5 @@
-socket-setsockopt-monitor: setsockopt("./dtee@test/input/socket-rcvbuf-minimum-size.tmp/dtee.1.2.input.XXXXXX/o", SOL_SOCKET, SO_SNDBUF, max(PIPE_BUF,BUFSIZ), ...)
-socket-setsockopt-monitor: setsockopt("./dtee@test/input/socket-rcvbuf-minimum-size.tmp/dtee.1.2.input.XXXXXX/e", SOL_SOCKET, SO_SNDBUF, max(PIPE_BUF,BUFSIZ), ...)
+socket-setsockopt-monitor: setsockopt("./dtee@test/input/socket-rcvbuf-minimum-size.tmp/dtee0000B456IXXXXXX/o", SOL_SOCKET, SO_SNDBUF, max(PIPE_BUF,BUFSIZ), ...)
+socket-setsockopt-monitor: setsockopt("./dtee@test/input/socket-rcvbuf-minimum-size.tmp/dtee0000B456IXXXXXX/e", SOL_SOCKET, SO_SNDBUF, max(PIPE_BUF,BUFSIZ), ...)
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
 nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

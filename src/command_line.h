@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -45,6 +45,8 @@ public:
 	CommandLine(const CommandLine&) = delete;
 	CommandLine& operator=(const CommandLine&) = delete;
 
+	static const std::string DEFAULT_PROGRAM_NAME;
+
 private:
 	static std::vector<boost::program_options::option> end_of_opts_parser(std::vector<std::string> &args);
 
@@ -53,7 +55,6 @@ private:
 	void display_version() const;
 	void display_variables() const;
 
-	static const std::string DEFAULT_PROGRAM_NAME;
 	static const std::string CRON_MODE_NAME;
 	static const std::string BOOST_COMMAND_OPT;
 	static std::string internal_name_;

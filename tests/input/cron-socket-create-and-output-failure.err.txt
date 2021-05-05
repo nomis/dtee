@@ -1,4 +1,4 @@
-./dtee: unable to create temporary file ./dtee@test/input/cron-socket-create-and-output-failure.tmp/dtee.1.2.output.XXXXXX: EROFS
+./dtee: unable to create temporary file ./dtee@test/input/cron-socket-create-and-output-failure.tmp/dtee0000B456OXXXXXX: EROFS
 ./dtee: input socket: open: EAFNOSUPPORT
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,

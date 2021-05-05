@@ -1,4 +1,4 @@
-./dtee: error reading buffer file ./dtee@test/output/cron-file-read-failure-cron.tmp/dtee.1.2.output.XXXXXX: EBADF
+./dtee: error reading buffer file ./dtee@test/output/cron-file-read-failure-cron.tmp/dtee0000B456OXXXXXX: EBADF
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris

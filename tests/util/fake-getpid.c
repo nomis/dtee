@@ -6,7 +6,7 @@
 #include "dtee-fcn.h"
 
 static pid_t dtee_test_fake_getpid(void) {
-	return 2;
+	return 0xB456;
 }
 
 TEST_FCN_REPL(pid_t, getpid, (void)) {

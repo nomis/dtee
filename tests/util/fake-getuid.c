@@ -6,7 +6,7 @@
 #include "dtee-fcn.h"
 
 static uid_t dtee_test_fake_getuid(void) {
-	return 1;
+	return 0xA123;
 }
 
 TEST_FCN_REPL(uid_t, getuid, (void)) {

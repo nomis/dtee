@@ -71,7 +71,7 @@ Input::Input(shared_ptr<boost::asio::io_service> io, shared_ptr<Dispatch> output
 bool Input::open() {
 	// There is no equivalent of mkstemp() for local sockets,
 	// so we create them in a temporary directory instead.
-	TempDirectory temp_dir{"input"};
+	TempDirectory temp_dir{"I"};
 
 	if (!temp_dir.valid()) {
 		return false;
