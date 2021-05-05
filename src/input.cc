@@ -77,22 +77,15 @@ bool Input::open() {
 		return false;
 	}
 
-	const string input_name = temp_dir.register_file("i");
-	const datagram_protocol::endpoint input_ep{input_name};
-
-	const string out_name = temp_dir.register_file("o");
-	out_ep_ = datagram_protocol::endpoint{out_name};
-
-	const string err_name = temp_dir.register_file("e");
-	err_ep_ = datagram_protocol::endpoint{err_name};
-
 	// Ensure the receive buffer is large enough at least as large as both
 	// PIPE_BUF (for pipe writes) and BUFSIZ (for file writes)
 	const int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, max(BUFSIZ, platform::MINIMUM_RCVBUF_SIZE));
 
 	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
+	datagram_protocol::endpoint input_ep;
 
 	try {
+		input_ep = temp_dir.register_file("i");
 		input_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		input_.bind(input_ep);
 
@@ -137,6 +130,7 @@ bool Input::open() {
 	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
 
 	try {
+		out_ep_ = temp_dir.register_file("o");
 		open_output(input_, input_ep, out_, out_ep_, so_sndbuf);
 	} catch (std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
@@ -145,6 +139,7 @@ bool Input::open() {
 	}
 
 	try {
+		err_ep_ = temp_dir.register_file("e");
 		open_output(input_, input_ep, err_, err_ep_, so_sndbuf);
 	} catch (std::exception &e) {
 		// i18n: %1 = Boost.Asio error message

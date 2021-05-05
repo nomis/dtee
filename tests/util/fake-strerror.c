@@ -71,6 +71,9 @@ static char *dtee_test_strerror(int errnum) {
 #ifdef EMFILE
 	STRERROR_FOR(EMFILE)
 #endif
+#ifdef ENAMETOOLONG
+	STRERROR_FOR(ENAMETOOLONG)
+#endif
 #ifdef ENOENT
 	STRERROR_FOR(ENOENT)
 #endif
