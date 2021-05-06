@@ -206,6 +206,8 @@ void Input::close_outputs() {
 	} catch (std::exception &e) {
 		// i18n: %1 = errno message
 		print_error(format(_("stdout socket: %1%")), e);
+
+		io_error_ = true;
 	}
 
 	try {
@@ -213,6 +215,8 @@ void Input::close_outputs() {
 	} catch (std::exception &e) {
 		// i18n: %1 = errno message
 		print_error(format(_("stderr socket: %1%")), e);
+
+		io_error_ = true;
 	}
 }
 

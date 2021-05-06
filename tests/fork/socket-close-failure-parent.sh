@@ -16,5 +16,5 @@ RET=$?
 cmp_files "file.com-overwrite"
 CMP_COM_O=$?
 
-variables_must_eq RET $EXIT_SUCCESS \
+variables_must_eq RET $EX_IOERR \
 	CMP_COM_O 0
