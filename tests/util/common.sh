@@ -15,15 +15,14 @@ while [ "$(basename "$dir")" != "tests" ]; do
 	dir="$(dirname "$dir")"
 done
 
-cd tests || exit 1
-ln -s ../dtee dtee
-ln -s ../cronty cronty
+ln -s ../dtee tests/dtee
+ln -s ../cronty tests/cronty
 BASETESTDIR="dtee@test"
 TESTDIR="$BASETESTDIR"
 if [ "$GROUP" != "" ]; then
 	TESTDIR="$BASETESTDIR/$GROUP"
 fi
-mkdir -p "$TESTDIR"
+mkdir -p "tests/$TESTDIR"
 
 # GNU standard
 TEST_EX_OK=0
@@ -34,12 +33,31 @@ TEST_EX_SKIP=77
 EXIT_SUCCESS=0
 EXIT_FAILURE=1
 
+function __portable_realpath() {
+	TARGET="$1"
+	pushd "$(dirname "$TARGET")" >/dev/null || exit $TEST_EX_FAIL
+	TARGET="$(pwd)/$(basename "$TARGET")"
+	while [ -L "$TARGET" ]; do
+		TARGET="$(readlink -- "$TARGET")"
+		[ $? -eq 0 ] || exit $TEST_EX_FAIL
+		pushd "$(dirname "$TARGET")" >/dev/null || exit $TEST_EX_FAIL
+		TARGET="$(pwd)/$(basename "$TARGET")"
+		popd >/dev/null || exit $TEST_EX_FAIL
+	done
+	popd >/dev/null || exit $TEST_EX_FAIL
+	echo "$TARGET"
+}
+
 # Ensure commands that are run have relative path names in argv[0]
-rm -f "$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
+rm -f "tests/$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 if [ -e "${0/.sh/.run}" ]; then
-	ln -Lf "${0/.sh/.run}" "$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
+	RUN="$(__portable_realpath "${0/.sh/.run}")"
+	[ $? -eq 0 ] || exit $TEST_EX_FAIL
+	ln "$RUN" "tests/$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 fi
 RUN="$TESTDIR/$NAME.run"
+
+cd tests  || exit 1
 
 EARLY_TEST_LD_PRELOAD=()
 COMMON_TEST_LD_PRELOAD=(test-execvp-fd-check test-fork-sigchld-check test-fake-strerror test-fake-strsignal)
@@ -315,7 +333,8 @@ function run_test() {
 		__after_test
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		set -x
-		FIFO=$(make_fifo "extra-out1")
+		FIFO="$(make_fifo "extra-out1")"
+		[ $? -eq 0 ] || exit $TEST_EX_FAIL
 		set +x
 		__before_test
 		set -x
@@ -396,7 +415,8 @@ function run_test() {
 		__after_test
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		set -x
-		FIFO=$(make_fifo "extra-out2")
+		FIFO="$(make_fifo "extra-out2")"
+		[ $? -eq 0 ] || exit $TEST_EX_FAIL
 		set +x
 		__before_test
 		set -x
