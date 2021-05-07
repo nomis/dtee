@@ -94,7 +94,7 @@ int Application::run(int argc, const char* const argv[]) {
 
 			bool io_ok = true;
 
-			run(*io);
+			io_ok &= run(*io);
 			io_ok &= input->stop();
 			io_ok &= signal_handler->stop();
 
@@ -207,18 +207,25 @@ vector<shared_ptr<ResultHandler>> Application::create_result_handlers() {
 	return result_handlers;
 }
 
-void Application::run(boost::asio::io_service &io) {
-	// Wait for events until the I/O service is explicitly stopped
-	do {
-		io.run();
-	} while (!io.stopped());
+bool Application::run(boost::asio::io_service &io) {
+	try {
+		// Wait for events until the I/O service is explicitly stopped
+		do {
+			io.run();
+		} while (!io.stopped());
 
-	// Poll until there are no more events
-	size_t events;
-	do {
-		io.reset();
-		events = io.poll();
-	} while (events > 0);
+		// Poll until there are no more events
+		size_t events;
+		do {
+			io.reset();
+			events = io.poll();
+		} while (events > 0);
+
+		return true;
+	} catch (const std::exception &e) {
+		print_error(format("%1%"), e);
+		return false;
+	}
 }
 
 void Application::execute(const vector<string> &command) {
