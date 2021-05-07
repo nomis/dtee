@@ -18,14 +18,17 @@
 #include "application.h"
 
 #include <sys/types.h>
+#include <stdlib.h>
 #include <sysexits.h>
 #include <unistd.h>
 
 #include <cerrno>
 #include <csignal>
+#include <cxxabi.h>
 #include <memory>
 #include <string>
 #include <system_error>
+#include <typeinfo>
 #include <vector>
 
 #include <boost/asio.hpp>
@@ -48,6 +51,7 @@ using ::std::make_shared;
 using ::std::make_unique;
 using ::std::shared_ptr;
 using ::std::string;
+using ::std::type_info;
 using ::std::unique_ptr;
 using ::std::vector;
 
@@ -223,7 +227,17 @@ bool Application::run(boost::asio::io_service &io) {
 
 		return true;
 	} catch (const std::exception &e) {
-		print_error(format("%1%"), e);
+		const char *name = typeid(e).name();
+		int status = ~0;
+
+		unique_ptr<char, decltype(::free)*> demangled_name{
+			abi::__cxa_demangle(name, nullptr, 0, &status), ::free};
+		if (status == 0 && demangled_name.get() != nullptr) {
+			name = demangled_name.get();
+		}
+
+		// i18n: %1 = exception type name; %2 = exception message
+		print_error(format(_("%1%: %2%")) % name, e);
 		return false;
 	}
 }

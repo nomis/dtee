@@ -71,6 +71,7 @@ shared_library('test-socket-setsockopt-monitor', ['socket-setsockopt-monitor.c']
 shared_library('test-socket-shutdown-failure', ['socket-shutdown-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket])
 shared_library('test-socket-unix-failure', ['socket-unix-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee])
 shared_library('test-waitpid-failure', ['waitpid-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
+shared_library('test-write-throw-exception', ['write-throw-exception.cc'] , cpp_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-write-truncate-cron', ['write-truncate-cron.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 shared_library('test-write-truncate-stdout', ['write-truncate-stdout.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee])
 

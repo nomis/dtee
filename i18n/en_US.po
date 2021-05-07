@@ -22,6 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. i18n: %1 = function call name; %2 = errno message
+#. i18n: %1 = exception type name; %2 = exception message
 #. i18n: %1 = command name; %2 = errno message
 #. i18n: %1 = filename; %2 = errno message
 #. i18n: %1 = system call name; %2 = errno message

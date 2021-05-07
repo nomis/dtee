@@ -24,3 +24,6 @@ test('file combined overwrite (new file)', bash, suite: 'basic', args: [files('f
 test('file combined overwrite (existing)', bash, suite: 'basic', args: [files('file-combined-overwrite-existing.sh')], env: test_env, depends: all_test_txt)
 test('file combined append (new file)', bash, suite: 'basic', args: [files('file-combined-append-new.sh')], env: test_env, depends: all_test_txt)
 test('file combined append (existing)', bash, suite: 'basic', args: [files('file-combined-append-existing.sh')], env: test_env, depends: all_test_txt)
+
+test('throw exception', bash, suite: 'basic', args: [files('throw-exception.sh')], env: test_env, depends: all_test_txt)
+test('cron throw exception', bash, suite: 'basic', args: [files('cron-throw-exception.sh')], env: test_env, depends: all_test_txt)

@@ -1,3 +1,9 @@
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if defined(__APPLE__)
 # define TEST_FCN_DECL(ret, name, args) ret name args
 # define TEST_FCN_REPL(ret, name, args) \
@@ -14,7 +20,7 @@
   TEST_FCN_DECL(ret, name, args); \
   ret name args; \
   static __attribute__((constructor)) void test_fcn_init_##name(void) { \
-   real_##name = (void*)cygwin_internal(CW_HOOK, #name, name); \
+  real_##name = (void*)cygwin_internal(CW_HOOK, #name, name); \
   } \
   ret name args
 # define TEST_FCN_NEXT(name) real_##name
@@ -22,4 +28,8 @@
 # define TEST_FCN_DECL(ret, name, args)
 # define TEST_FCN_REPL(ret, name, args) ret name args
 # define TEST_FCN_NEXT(name) dlsym(RTLD_NEXT, #name)
+#endif
+
+#ifdef __cplusplus
+}
 #endif
