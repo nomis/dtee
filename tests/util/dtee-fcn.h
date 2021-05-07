@@ -16,11 +16,18 @@ extern "C" {
 #elif defined(__CYGWIN__)
 # include <sys/cygwin.h>
 # define TEST_FCN_DECL(ret, name, args) static ret (*real_##name) args
+# ifdef __cplusplus
+#  define TEST_FCN_REPEAT_DECL(ret, name, args)
+#  define TEST_FCN_CAST(ret, name, args, call) reinterpret_cast<ret (*) args>(call)
+# else
+#  define TEST_FCN_REPEAT_DECL(ret, name, args) TEST_FCN_DECL(ret, name, args)
+#  define TEST_FCN_CAST(ret, name, args, call) (void*)call
+# endif
 # define TEST_FCN_REPL(ret, name, args) \
-  TEST_FCN_DECL(ret, name, args); \
+  TEST_FCN_REPEAT_DECL(ret, name, args); \
   ret name args; \
   static __attribute__((constructor)) void test_fcn_init_##name(void) { \
-  real_##name = (void*)cygwin_internal(CW_HOOK, #name, name); \
+  real_##name = TEST_FCN_CAST(ret, name, args, cygwin_internal(CW_HOOK, #name, name)); \
   } \
   ret name args
 # define TEST_FCN_NEXT(name) real_##name
