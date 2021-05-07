@@ -37,7 +37,7 @@ EXIT_FAILURE=1
 # Ensure commands that are run have relative path names in argv[0]
 rm -f "$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 if [ -e "${0/.sh/.run}" ]; then
-	ln "${0/.sh/.run}" "$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
+	ln -Lf "${0/.sh/.run}" "$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 fi
 RUN="$TESTDIR/$NAME.run"
 
