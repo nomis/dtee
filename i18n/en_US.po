@@ -178,19 +178,19 @@ msgstr "error reading buffer file %1%: %2%"
 msgid "received signal %1%: %2%"
 msgstr "received signal %1%: %2%"
 
-#. i18n: %1 = program name; %2 = exit code
+#. i18n: %1 = command name; %2 = exit code
 #: src/cron.cc
 #, boost-format
 msgid "%1%: exited with status %2%"
 msgstr "%1%: exited with status %2%"
 
-#. i18n: %1 = program name; %2 = signal number; %3 = signal name
+#. i18n: %1 = command name; %2 = signal number; %3 = signal name
 #: src/cron.cc
 #, boost-format
 msgid "%1%: process terminated by signal %2%: %3% (core dumped)"
 msgstr "%1%: process terminated by signal %2%: %3% (core dumped)"
 
-#. i18n: %1 = program name; %2 = signal number; %3 = signal name
+#. i18n: %1 = command name; %2 = signal number; %3 = signal name
 #: src/cron.cc
 #, boost-format
 msgid "%1%: process terminated by signal %2%: %3%"
