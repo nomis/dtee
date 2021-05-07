@@ -19,6 +19,11 @@ test('waitpid failure (no change)', bash, suite: 'fork', args: [files('waitpid-f
 test('cron waitpid failure (no children)', bash, suite: 'fork', args: [files('cron-waitpid-failure-no-children.sh')], env: test_env, depends: all_test_txt)
 test('cron waitpid failure (no change)', bash, suite: 'fork', args: [files('cron-waitpid-failure-no-change.sh')], env: test_env, depends: all_test_txt)
 
+test('sigaction failure', bash, suite: 'fork', args: [files('sigaction-failure.sh')], env: test_env, depends: all_test_txt)
+test('cron sigaction failure', bash, suite: 'fork', args: [files('cron-sigaction-failure.sh')], env: test_env, depends: all_test_txt)
+
 # Test errors in Boost.Asio workaround at SignalHandler::add_non_interrupting_signal()
 test('sigaction query failure', bash, suite: 'fork', args: [files('sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
 test('sigaction set SA_RESTART failure', bash, suite: 'fork', args: [files('sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
+test('cron sigaction query failure', bash, suite: 'fork', args: [files('cron-sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
+test('cron sigaction set SA_RESTART failure', bash, suite: 'fork', args: [files('cron-sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)

@@ -1,0 +1,1 @@
+"./dtee: sigaction: EINVAL (signal $SIGCHLD: SIGCHLD)"

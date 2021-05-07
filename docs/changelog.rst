@@ -19,6 +19,8 @@ Changed
   <https://github.com/boostorg/asio/issues/157>`_)  instead of trying to
   wrap calls to |sigaction(2)|_.
 * Trivial performance improvements.
+* Improved robustness when signals are received between forking a child process
+  and executing the command.
 
 Fixed
 ~~~~~

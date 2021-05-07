@@ -156,19 +156,19 @@ bool Cron::report() {
 
 	if (interrupt_signum_ >= 0) {
 		// i18n: %1 = signal number; %2 = signal name
-		print_error(format(_("received signal %1$d: %2$s")) % interrupt_signum_ % strsignal(interrupt_signum_));
+		print_error(format(_("received signal %1%: %2%")) % interrupt_signum_ % strsignal(interrupt_signum_));
 	}
 
 	if (exit_status_ >= 0) {
 		// i18n: %1 = program name; %2 = exit code
-		print_error(format(_("%1%: exited with status %2$d")) % command_ % exit_status_);
+		print_error(format(_("%1%: exited with status %2%")) % command_ % exit_status_);
 	} else if (exit_signum_ >= 0) {
 		if (core_dumped_) {
 			// i18n: %1 = program name; %2 = signal number; %3 = signal name
-			print_error(format(_("%1%: process terminated by signal %2$d: %3$s (core dumped)")) % command_ % exit_signum_ % strsignal(exit_signum_));
+			print_error(format(_("%1%: process terminated by signal %2%: %3% (core dumped)")) % command_ % exit_signum_ % strsignal(exit_signum_));
 		} else {
 			// i18n: %1 = program name; %2 = signal number; %3 = signal name
-			print_error(format(_("%1%: process terminated by signal %2$d: %3$s")) % command_ % exit_signum_ % strsignal(exit_signum_));
+			print_error(format(_("%1%: process terminated by signal %2%: %3%")) % command_ % exit_signum_ % strsignal(exit_signum_));
 		}
 	}
 

@@ -174,44 +174,44 @@ msgstr "error reading buffer file %1%: %2%"
 
 #. i18n: %1 = signal number; %2 = signal name
 #: src/cron.cc
-#, c-format, boost-format
-msgid "received signal %1$d: %2$s"
-msgstr "received signal %1$d: %2$s"
+#, boost-format
+msgid "received signal %1%: %2%"
+msgstr "received signal %1%: %2%"
 
 #. i18n: %1 = program name; %2 = exit code
 #: src/cron.cc
 #, boost-format
-msgid "%1%: exited with status %2$d"
-msgstr "%1%: exited with status %2$d"
+msgid "%1%: exited with status %2%"
+msgstr "%1%: exited with status %2%"
 
 #. i18n: %1 = program name; %2 = signal number; %3 = signal name
 #: src/cron.cc
 #, boost-format
-msgid "%1%: process terminated by signal %2$d: %3$s (core dumped)"
-msgstr "%1%: process terminated by signal %2$d: %3$s (core dumped)"
+msgid "%1%: process terminated by signal %2%: %3% (core dumped)"
+msgstr "%1%: process terminated by signal %2%: %3% (core dumped)"
 
 #. i18n: %1 = program name; %2 = signal number; %3 = signal name
 #: src/cron.cc
 #, boost-format
-msgid "%1%: process terminated by signal %2$d: %3$s"
-msgstr "%1%: process terminated by signal %2$d: %3$s"
+msgid "%1%: process terminated by signal %2%: %3%"
+msgstr "%1%: process terminated by signal %2%: %3%"
 
-#. i18n: %1 = Boost.Asio error message
 #. i18n: %1 = exception message
+#. i18n: %1 = Boost.Asio error message
 #: src/input.cc
 #, boost-format
 msgid "input socket: %1%"
 msgstr "input socket: %1%"
 
 #. i18n: %1 = Boost.Asio error message
-#. i18n: %1 = errno message
+#. i18n: %1 = exception message
 #: src/input.cc
 #, boost-format
 msgid "stdout socket: %1%"
 msgstr "stdout socket: %1%"
 
 #. i18n: %1 = Boost.Asio error message
-#. i18n: %1 = errno message
+#. i18n: %1 = exception message
 #: src/input.cc
 #, boost-format
 msgid "stderr socket: %1%"
@@ -241,17 +241,23 @@ msgstr "stdout: %1%: %2%"
 msgid "stderr: %1%: %2%"
 msgstr "stderr: %1%: %2%"
 
-#. i18n: %1 = system call name; %2 = Boost.Asio error message
-#: src/input.cc
-#, boost-format
-msgid "input socket: %1%: %2%"
-msgstr "input socket: %1%: %2%"
-
 #. i18n: %1 = program name; %2 = error message
 #: src/print_error.cc
 #, boost-format
 msgid "%1%: %2%\n"
 msgstr "%1%: %2%\n"
+
+#. i18n: %3 = Boost.Asio error message; %1 = signal number; %2 = signal name
+#: src/signal_handler.cc
+#, boost-format
+msgid "signal handler: %3% (signal %1%: %2%)"
+msgstr "signal handler: %3% (signal %1%: %2%)"
+
+#. i18n: %1 = system call name; %4 = errno message; %2 = signal number; %3 = signal name
+#: src/signal_handler.cc
+#, boost-format
+msgid "%1%: %4% (signal %2%: %3%)"
+msgstr "%1%: %4% (signal %2%: %3%)"
 
 #. i18n: %1 = filename; %2 = errno message
 #: src/temp_directory.cc

@@ -101,7 +101,7 @@ bool Input::open() {
 			so_rcvbuf = MINIMUM_RCVBUF_SIZE;
 		}
 	} catch (std::exception &e) {
-		// i18n: %1 = Boost.Asio error message
+		// i18n: %1 = exception message
 		print_error(format(_("input socket: %1%")), e);
 		return false;
 	}
@@ -204,7 +204,7 @@ void Input::close_outputs() {
 	try {
 		out_.close();
 	} catch (std::exception &e) {
-		// i18n: %1 = errno message
+		// i18n: %1 = exception message
 		print_error(format(_("stdout socket: %1%")), e);
 
 		io_error_ = true;
@@ -213,7 +213,7 @@ void Input::close_outputs() {
 	try {
 		err_.close();
 	} catch (std::exception &e) {
-		// i18n: %1 = errno message
+		// i18n: %1 = exception message
 		print_error(format(_("stderr socket: %1%")), e);
 
 		io_error_ = true;
@@ -281,8 +281,8 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		input_.async_receive_from(buffer(buffer_), recv_ep_,
 				bind(&Input::handle_receive_from, this, p::_1, p::_2));
 	} else {
-		// i18n: %1 = system call name; %2 = Boost.Asio error message
-		print_error(format(_("input socket: %1%: %2%")) % "recv", ec);
+		// i18n: %1 = Boost.Asio error message
+		print_error(format(_("input socket: %1%")), ec);
 
 		output_->interrupted();
 		io_error_ = true;

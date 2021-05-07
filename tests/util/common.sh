@@ -228,7 +228,7 @@ function cmp_files() {
 		OLD_IFS="$IFS"
 		IFS=""
 		while read -r line; do
-			eval echo "$line"
+			eval echo "$line" || return 1
 		done < "$EXPECTED_EVAL" > "$EXPECTED"
 		IFS="$OLD_IFS"
 	else

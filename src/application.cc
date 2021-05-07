@@ -67,6 +67,7 @@ int Application::run(int argc, const char* const argv[]) {
 
 	bool output_ok = output->open();
 	bool input_ok = input->open();
+	bool signal_handler_ok = signal_handler->open();
 	int ret_internal = EXIT_SUCCESS;
 
 	if (!output_ok) {
@@ -80,8 +81,7 @@ int Application::run(int argc, const char* const argv[]) {
 		}
 	}
 
-	if (input_ok) {
-		signal_handler->fork_prepare();
+	if (input_ok && signal_handler_ok) {
 		io->notify_fork(io_service::fork_event::fork_prepare);
 
 		errno = 0;

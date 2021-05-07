@@ -19,7 +19,6 @@
 #define DTEE_SIGNAL_HANDLER_H_
 
 #include <sys/types.h>
-#include <signal.h>
 
 #include <cstddef>
 #include <memory>
@@ -28,15 +27,15 @@
 
 #include "command_line.h"
 #include "result_handler.h"
+#include "signal_block.h"
 
 namespace dtee {
 
 class SignalHandler {
 public:
 	SignalHandler(const CommandLine &command_line, std::shared_ptr<boost::asio::io_service> io, std::shared_ptr<ResultHandler> output);
-	~SignalHandler();
 
-	void fork_prepare();
+	bool open();
 	void start(pid_t pid);
 	bool stop();
 
@@ -44,7 +43,7 @@ public:
 	SignalHandler& operator=(const SignalHandler&) = delete;
 
 private:
-	void add_non_interrupting_signal(boost::asio::signal_set &signal_set, int signal_number);
+	bool add_non_interrupting_signal(boost::asio::signal_set &signal_set, int signal_number);
 
 	void handle_child_exited(const boost::system::error_code &ec, int signal_number);
 	void handle_interrupt_signals(const boost::system::error_code &ec, int signal_number);
@@ -55,6 +54,10 @@ private:
 	pid_t child_ = -1;
 	bool io_error_ = false;
 
+	// Must be before the signal_sets so that they are destructed first
+	// (removing the signal handlers before the signals are unblocked)
+	SignalBlock blocked_signals_;
+
 	boost::asio::signal_set child_exited_;
 	boost::asio::signal_set interrupt_signals_;
 	boost::asio::signal_set ignored_signals_;
@@ -63,7 +66,6 @@ private:
 	std::shared_ptr<ResultHandler> output_;
 	const bool handle_signals_;
 	const bool ignore_sigint_;
-	sigset_t blocked_signals_ = {};
 };
 
 } // namespace dtee

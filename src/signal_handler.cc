@@ -19,7 +19,7 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <signal.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <cerrno>
@@ -35,6 +35,7 @@
 #include "application.h"
 #include "i18n.h"
 #include "print_error.h"
+#include "signal_block.h"
 
 static_assert(BOOST_ASIO_HAS_SIGACTION, "Boost must use sigaction() so that the SA_RESTART flag can be used");
 
@@ -61,76 +62,77 @@ SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::
 		  output_(output),
 		  handle_signals_(command_line.cron_mode()),
 		  ignore_sigint_(command_line.ignore_interrupts()) {
-	sigemptyset(&blocked_signals_);
 }
 
-SignalHandler::~SignalHandler() {
-	if (sigismember(&blocked_signals_, SIGCHLD)) {
-		::sigprocmask(SIG_UNBLOCK, &blocked_signals_, NULL);
-	}
-}
+bool SignalHandler::open() {
+	bool ok = true;
 
-void SignalHandler::fork_prepare() {
-	sigaddset(&blocked_signals_, SIGCHLD);
-	::sigprocmask(SIG_BLOCK, &blocked_signals_, NULL);
-}
-
-void SignalHandler::start(pid_t pid) {
-	add_non_interrupting_signal(child_exited_, SIGCHLD);
+	ok &= add_non_interrupting_signal(child_exited_, SIGCHLD);
 
 	if (handle_signals_) {
-		add_non_interrupting_signal(interrupt_signals_, SIGHUP);
-		add_non_interrupting_signal(interrupt_signals_, SIGTERM);
+		ok &= add_non_interrupting_signal(interrupt_signals_, SIGHUP);
+		ok &= add_non_interrupting_signal(interrupt_signals_, SIGTERM);
 
 		if (!ignore_sigint_) {
-			add_non_interrupting_signal(interrupt_signals_, SIGINT);
+			ok &= add_non_interrupting_signal(interrupt_signals_, SIGINT);
 		}
 
-		add_non_interrupting_signal(pipe_signal_, SIGPIPE);
+		ok &= add_non_interrupting_signal(pipe_signal_, SIGPIPE);
 	}
 
 	if (ignore_sigint_) {
-		add_non_interrupting_signal(ignored_signals_, SIGINT);
+		ok &= add_non_interrupting_signal(ignored_signals_, SIGINT);
 	}
 
+	return ok;
+}
+
+void SignalHandler::start(pid_t pid) {
 	child_ = pid;
 
 	child_exited_.async_wait(bind(&SignalHandler::handle_child_exited, this, p::_1, p::_2));
 	interrupt_signals_.async_wait(bind(&SignalHandler::handle_interrupt_signals, this, p::_1, p::_2));
 	pipe_signal_.async_wait(bind(&SignalHandler::handle_pipe_signal, this, p::_1, p::_2));
 
-	::sigprocmask(SIG_UNBLOCK, &blocked_signals_, NULL);
-	sigdelset(&blocked_signals_, SIGCHLD);
+	blocked_signals_.clear();
 }
 
-// Workaround for missing SA_RESTART support in Boost.Asio (1.62)
-// https://github.com/boostorg/asio/issues/157
-//
-// This is not thread-safe when the same signal_number is added/removed from the signal_set
-void SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_set, int signal_number) {
+bool SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_set, int signal_number) {
+	error_code ec;
 	struct sigaction act;
 
-	signal_set.add(signal_number);
+	// Signal handlers are added before forking so the signals must be blocked
+	// to avoid consuming them before a command can be executed
+	blocked_signals_.add(signal_number);
 
+	signal_set.add(signal_number, ec);
+	if (ec) {
+		// i18n: %3 = Boost.Asio error message; %1 = signal number; %2 = signal name
+		print_error(format(_("signal handler: %3% (signal %1%: %2%)")) % signal_number % strsignal(signal_number), ec);
+		return false;
+	}
+
+
+	// Workaround for missing SA_RESTART support in Boost.Asio (1.62)
+	// https://github.com/chriskohlhoff/asio/issues/646
+	//
+	// This is not thread-safe when the same signal_number is added/removed from the signal_set
 	errno = 0;
-	if (::sigaction(signal_number, NULL, &act) != 0) {
-		auto errno_copy = errno;
-		// i18n: %1 = system call name; %2 = errno message
-		print_system_error(format(_("%1%: %2%")) % "sigaction", errno_copy);
+	if (::sigaction(signal_number, NULL, &act) == 0) {
+		if ((act.sa_flags & SA_RESTART) == 0) {
+			act.sa_flags |= SA_RESTART;
 
-		io_error_ = true;
-	} else if ((act.sa_flags & SA_RESTART) == 0) {
-		act.sa_flags |= SA_RESTART;
-
-		errno = 0;
-		if (::sigaction(signal_number, &act, NULL) != 0) {
-			auto errno_copy = errno;
-			// i18n: %1 = system call name; %2 = errno message
-			print_system_error(format(_("%1%: %2%")) % "sigaction", errno_copy);
-
-			io_error_ = true;
+			errno = 0;
+			if (::sigaction(signal_number, &act, NULL) == 0) {
+				return true;
+			}
 		}
 	}
+
+	auto errno_copy = errno;
+	// i18n: %1 = system call name; %4 = errno message; %2 = signal number; %3 = signal name
+	print_system_error(format(_("%1%: %4% (signal %2%: %3%)")) % "sigaction" % signal_number % strsignal(signal_number), errno_copy);
+	return false;
 }
 
 bool SignalHandler::stop() {
