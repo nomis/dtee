@@ -11,28 +11,10 @@ project('dtee',
 	meson_version: '>=0.53.0',
 )
 
-source_files = [
-	'src/application.cc',
-	'src/command_line.cc',
-	'src/dispatch.cc',
-	'src/cron.cc',
-	'src/file_output.cc',
-	'src/input.cc',
-	'src/main.cc',
-	'src/print_error.cc',
-	'src/process.cc',
-	'src/signal_block.cc',
-	'src/signal_handler.cc',
-	'src/stream_output.cc',
-	'src/temp_directory.cc',
-	'src/temp_file.cc',
-	'src/temp_filename_pattern.cc',
-	vcs_tag(input: 'src/version.h.in', output: 'version.h'),
-]
-
 c = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
 
+subdir('src')
 subdir('i18n')
 
 if not (c.get_id() == 'gcc' and c.version().version_compare('<5'))

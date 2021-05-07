@@ -33,7 +33,7 @@
 
 #include "i18n.h"
 #include "print_error.h"
-#include "version.h"
+#include "src/version.h"
 
 using ::boost::format;
 using ::std::cerr;
