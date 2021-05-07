@@ -15,8 +15,7 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_PROCESS_H_
-#define DTEE_PROCESS_H_
+#pragma once
 
 #include <cstddef>
 
@@ -46,5 +45,3 @@ protected:
 };
 
 } // namespace dtee
-
-#endif

@@ -15,8 +15,7 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_PRINT_ERROR_H_
-#define DTEE_PRINT_ERROR_H_
+#pragma once
 
 #include <exception>
 #include <string>
@@ -32,5 +31,3 @@ void print_error(boost::format message, const std::exception &e);
 void print_system_error(boost::format message, int errno_copy);
 
 } // namespace dtee
-
-#endif

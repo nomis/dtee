@@ -15,8 +15,7 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_I18N_H_
-#define DTEE_I18N_H_
+#pragma once
 
 #include <libintl.h>
 
@@ -32,6 +31,3 @@ static constexpr inline const char* N_(const char *msgid) {
 }
 
 } // namespace dtee
-
-#endif
-

@@ -15,8 +15,7 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_SIGNAL_BLOCK_H_
-#define DTEE_SIGNAL_BLOCK_H_
+#pragma once
 
 #include <signal.h>
 
@@ -38,5 +37,3 @@ private:
 };
 
 } // namespace dtee
-
-#endif

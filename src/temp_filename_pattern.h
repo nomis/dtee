@@ -15,8 +15,7 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_TEMP_FILENAME_PATTERN_H_
-#define DTEE_TEMP_FILENAME_PATTERN_H_
+#pragma once
 
 #include <string>
 
@@ -25,5 +24,3 @@ namespace dtee {
 std::string temp_filename_pattern(const std::string &name);
 
 } // namespace dtee
-
-#endif

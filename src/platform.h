@@ -15,8 +15,7 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_PLATFORM_H_
-#define DTEE_PLATFORM_H_
+#pragma once
 
 namespace dtee {
 
@@ -78,8 +77,6 @@ constexpr int MINIMUM_RCVBUF_SIZE = 2 * 1024 * 1024;
 constexpr bool Cygwin = false;
 #endif
 
-} // namesapce platform
+} // namespace platform
 
 } // namespace dtee
-
-#endif

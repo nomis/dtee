@@ -15,8 +15,7 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-#ifndef DTEE_INPUT_H_
-#define DTEE_INPUT_H_
+#pragma once
 
 #include <cstddef>
 #include <memory>
@@ -71,5 +70,3 @@ private:
 };
 
 } // namespace dtee
-
-#endif
