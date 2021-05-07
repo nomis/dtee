@@ -13,7 +13,7 @@ Compile
 
     ..
        Upgrade when this issue is fixed:
-       https://github.com/boostorg/asio/issues/157
+       https://github.com/chriskohlhoff/asio/issues/646
 
   * `Clang <https://clang.llvm.org/>`_ 3.9+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 5+
 

@@ -95,7 +95,7 @@ TEST_FCN_REPL(int, setsockopt, (int sockfd, int level, int optname, void *optval
 				// Workaround Boost.Asio (1.74.0) bug on Darwin
 				// and FreeBSD where it calls setsockopt() on
 				// new sockets even if socket() returned -1
-				// https://github.com/boostorg/asio/pull/368
+				// https://github.com/chriskohlhoff/asio/pull/772
 				next_setsockopt = dtee_test_setsockopt_failure;
 			}
 		}

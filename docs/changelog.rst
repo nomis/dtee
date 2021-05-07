@@ -15,8 +15,8 @@ Changed
 
 * Normalise error messages.
 * Make signals non-interrupting by adding the ``SA_RESTART`` flag after
-  Boost.Asio sets the signal handler (`boostorg/asio issue #157
-  <https://github.com/boostorg/asio/issues/157>`_)  instead of trying to
+  Boost.Asio sets the signal handler (`chriskohlhoff/asio issue #646
+  <https://github.com/chriskohlhoff/asio/issues/646>`_)  instead of trying to
   wrap calls to |sigaction(2)|_.
 * Trivial performance improvements.
 * Improved robustness when signals are received between forking a child process

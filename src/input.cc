@@ -174,7 +174,7 @@ void Input::open_output(datagram_protocol::socket &input,
 		// Workaround Boost.Asio (1.66.0) bug on OpenBSD 6.4
 		// Endpoint paths can't be compared correctly if they weren't both
 		// constructed by the application or both returned by the OS.
-		// https://github.com/boostorg/asio/issues/161
+		// https://github.com/chriskohlhoff/asio/issues/649
 		//
 		// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 		// so they both look the same. Retrieve the address after binding so that
