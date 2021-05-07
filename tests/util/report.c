@@ -12,10 +12,10 @@
 
 static bool std_report(int fd, const char *name, const char *message) {
 	bool ok = true;
-	char buf[1] = { 0 };
 
 	errno = 0;
 	if (fcntl(fd, F_GETFL) != -1) {
+		char buf[1] = { 0 };
 		ssize_t rlen = read(fd, buf, 1);
 		ssize_t wlen = write(fd, message, strlen(message));
 		struct sockaddr_un addr = { .sun_family = AF_UNSPEC, .sun_path = { 0 } };

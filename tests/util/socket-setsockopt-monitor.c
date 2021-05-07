@@ -63,7 +63,7 @@ TEST_FCN_REPL(int, setsockopt, (int sockfd, int level, int optname, const void *
 							fprintf(stderr, "socket-setsockopt-monitor: setsockopt(\"%s\", SOL_SOCKET, %s, %s, ...)\n",
 								addr.sun_path, name, value_str);
 						} else {
-							fprintf(stderr, "socket-setsockopt-monitor: setsockopt(\"%s\", SOL_SOCKET, %s, %u, ...)\n",
+							fprintf(stderr, "socket-setsockopt-monitor: setsockopt(\"%s\", SOL_SOCKET, %s, %d, ...)\n",
 								addr.sun_path, name, value);
 						}
 						fflush(stderr);
