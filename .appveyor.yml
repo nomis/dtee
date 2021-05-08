@@ -21,3 +21,6 @@ build_script:
 test_script:
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make check"'
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && cygdrop make check"'
+
+on_failure:
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && cd build/release && cat meson-logs/testlog.txt"'
