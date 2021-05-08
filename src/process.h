@@ -43,6 +43,8 @@ protected:
 	int exit_signum_ = -1; //!< Termination signal of child process
 	bool core_dumped_ = false; //!< Child process produced a core dump
 	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
+
+private:
 	bool error_ = false; //!< Internal error
 };
 
