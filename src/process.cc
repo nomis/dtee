@@ -65,7 +65,7 @@ int Process::interrupt_signum() {
 }
 
 int Process::exit_status(int internal_status) {
-	int default_status;
+	int default_status = EX_SOFTWARE;
 
 	// Replicate shell style exit status.
 	if (error_) {
@@ -79,8 +79,6 @@ int Process::exit_status(int internal_status) {
 		return exit_status_;
 	} else if (exit_signum_ >= 0) {
 		return SHELL_EXIT_CODE_SIGNAL + exit_signum_;
-	} else {
-		default_status = EX_SOFTWARE;
 	}
 
 	if (internal_status != EXIT_SUCCESS) {
