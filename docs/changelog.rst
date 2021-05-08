@@ -21,6 +21,8 @@ Changed
 * Trivial performance improvements.
 * Improved robustness when signals are received between forking a child process
   and executing the command.
+* Errors writing to additional output files will always be reflected in the exit
+  status even in cron mode.
 
 Fixed
 ~~~~~

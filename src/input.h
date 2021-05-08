@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@ public:
 	bool open();
 	void fork_parent();
 	void start();
-	bool stop();
 	void fork_child();
 
 	Input(const Input&) = delete;
@@ -60,8 +59,6 @@ private:
 	boost::asio::local::datagram_protocol::socket err_; //!< Standard error of child process
 	boost::asio::local::datagram_protocol::endpoint out_ep_; //!< Endpoint name for child process standard output
 	boost::asio::local::datagram_protocol::endpoint err_ep_; //!< Endpoint name for child process standard error
-
-	bool io_error_ = false;
 
 	std::vector<char> buffer_; //!< Incoming data
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data

@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -40,6 +40,10 @@ void Process::interrupted(int signum) {
 	interrupt_signum_ = signum;
 }
 
+void Process::error(ErrorType type __attribute__((unused))) {
+	error_ = true;
+}
+
 int Process::interrupt_signum() {
 	switch (interrupt_signum_) {
 		// Replicate these signals that caused us to terminate.
@@ -64,7 +68,9 @@ int Process::exit_status(int internal_status) {
 	int default_status;
 
 	// Replicate shell style exit status.
-	if (interrupt_signum_ >= 0) {
+	if (error_) {
+		default_status = EX_IOERR;
+	} else if (interrupt_signum_ >= 0) {
 		// This can only happen if kill(getpid(), ...) failed.
 		return SHELL_EXIT_CODE_SIGNAL + interrupt_signum_;
 	} else if (exit_status_ == EXIT_SUCCESS) {

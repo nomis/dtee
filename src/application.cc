@@ -95,19 +95,11 @@ int Application::run(int argc, const char* const argv[]) {
 			signal_handler->start(pid);
 			input->fork_parent();
 			input->start();
-
-			bool io_ok = true;
-
-			io_ok &= run(*io);
-			io_ok &= input->stop();
-			io_ok &= signal_handler->stop();
+			run(*io, *output);
+			signal_handler->stop();
 
 			if (cron_) {
-				io_ok &= cron_->report();
-			}
-
-			if (!io_ok) {
-				ret_internal = EX_IOERR;
+				cron_->report();
 			}
 
 			int signum = process_->interrupt_signum();
@@ -208,10 +200,11 @@ vector<shared_ptr<ResultHandler>> Application::create_result_handlers() {
 		result_handlers.push_back(cron_);
 	}
 
+
 	return result_handlers;
 }
 
-bool Application::run(boost::asio::io_service &io) {
+void Application::run(boost::asio::io_service &io, ResultHandler &output) {
 	try {
 		// Wait for events until the I/O service is explicitly stopped
 		do {
@@ -219,13 +212,9 @@ bool Application::run(boost::asio::io_service &io) {
 		} while (!io.stopped());
 
 		// Poll until there are no more events
-		size_t events;
 		do {
 			io.reset();
-			events = io.poll();
-		} while (events > 0);
-
-		return true;
+		} while (io.poll() > 0);
 	} catch (const std::exception &e) {
 		const char *name = typeid(e).name();
 		int status = ~0;
@@ -238,7 +227,8 @@ bool Application::run(boost::asio::io_service &io) {
 
 		// i18n: %1 = exception type name; %2 = exception message
 		print_error(format(_("%1%: %2%")) % name, e);
-		return false;
+
+		output.error(ErrorType::APPLICATION);
 	}
 }
 

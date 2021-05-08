@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ public:
 
 	void terminated(int status, int signum, bool core_dumped) override;
 	void interrupted(int signum) override;
+	void error(ErrorType type) override;
 
 	int interrupt_signum();
 	int exit_status(int internal_status);
@@ -42,6 +43,7 @@ protected:
 	int exit_signum_ = -1; //!< Termination signal of child process
 	bool core_dumped_ = false; //!< Child process produced a core dump
 	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
+	bool error_ = false; //!< Internal error
 };
 
 } // namespace dtee

@@ -44,7 +44,7 @@ public:
 	Application& operator=(const Application&) = delete;
 
 private:
-	static bool run(boost::asio::io_service &io);
+	static void run(boost::asio::io_service &io, ResultHandler &output);
 
 	void create_file_outputs(std::vector<std::shared_ptr<Output>> &outputs,
 			const std::string &name, FileOutputType type, bool append);

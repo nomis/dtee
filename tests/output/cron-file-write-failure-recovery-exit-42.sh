@@ -17,6 +17,6 @@ CMP_OUT1_O=$?
 cmp_files "file.out-overwrite2"
 CMP_OUT2_O=$?
 
-variables_must_eq RET 42 \
+variables_must_eq RET $EX_IOERR \
 	CMP_OUT1_O 0 \
 	CMP_OUT2_O 0

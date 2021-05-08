@@ -36,7 +36,7 @@ public:
 
 	bool open();
 	void start(pid_t pid);
-	bool stop();
+	void stop();
 
 	SignalHandler(const SignalHandler&) = delete;
 	SignalHandler& operator=(const SignalHandler&) = delete;
@@ -51,7 +51,6 @@ private:
 	std::shared_ptr<boost::asio::io_service> io_;
 
 	pid_t child_ = -1;
-	bool io_error_ = false;
 
 	// Must be before the signal_sets so that they are destructed first
 	// (removing the signal handlers before the signals are unblocked)

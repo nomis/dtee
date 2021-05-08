@@ -135,10 +135,8 @@ bool SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_
 	return false;
 }
 
-bool SignalHandler::stop() {
+void SignalHandler::stop() {
 	interrupt_signals_.clear();
-
-	return !io_error_;
 }
 
 void SignalHandler::handle_child_exited(const error_code &ec, int signal_number) {
@@ -155,7 +153,6 @@ void SignalHandler::handle_child_exited(const error_code &ec, int signal_number)
 			}
 
 			output_->interrupted(signal_number);
-			io_error_ = true;
 		} else {
 			bool core_dumped = false;
 			int exit_status = -1;

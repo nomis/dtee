@@ -207,7 +207,7 @@ void Input::close_outputs() {
 		// i18n: %1 = exception message
 		print_error(format(_("stdout socket: %1%")), e);
 
-		io_error_ = true;
+		output_->error(ErrorType::INPUT);
 	}
 
 	try {
@@ -216,7 +216,7 @@ void Input::close_outputs() {
 		// i18n: %1 = exception message
 		print_error(format(_("stderr socket: %1%")), e);
 
-		io_error_ = true;
+		output_->error(ErrorType::INPUT);
 	}
 }
 
@@ -227,10 +227,6 @@ void Input::fork_parent() {
 void Input::start() {
 	input_.async_receive_from(buffer(buffer_), recv_ep_,
 			bind(&Input::handle_receive_from, this, p::_1, p::_2));
-}
-
-bool Input::stop() {
-	return !io_error_;
 }
 
 void Input::fork_child() {
@@ -268,9 +264,9 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		// input socket after it has been unlinked (even if the same
 		// path is created).
 		if (recv_ep_ == out_ep_) {
-			io_error_ |= !output_->output(OutputType::STDOUT, buffer_, len);
+			output_->output(OutputType::STDOUT, buffer_, len);
 		} else if (recv_ep_ == err_ep_) {
-			io_error_ |= !output_->output(OutputType::STDERR, buffer_, len);
+			output_->output(OutputType::STDERR, buffer_, len);
 		} else {
 			// Ignore data from any other sockets
 #ifdef GCOV_ENABLED
@@ -284,8 +280,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("input socket: %1%")), ec);
 
-		output_->interrupted();
-		io_error_ = true;
+		output_->error(ErrorType::INPUT);
 		io_->stop();
 	}
 }

@@ -46,6 +46,10 @@ bool Dispatch::output(OutputType type, const std::vector<char> &buffer, size_t l
 		success &= output->output(type, buffer, len);
 	}
 
+	if (!success) {
+		error(ErrorType::OUTPUT);
+	}
+
 	return success;
 }
 
@@ -58,6 +62,12 @@ void Dispatch::terminated(int status, int signum, bool core_dumped) {
 void Dispatch::interrupted(int signum) {
 	for (auto& result_handler : result_handlers_) {
 		result_handler->interrupted(signum);
+	}
+}
+
+void Dispatch::error(ErrorType type) {
+	for (auto& result_handler : result_handlers_) {
+		result_handler->error(type);
 	}
 }
 

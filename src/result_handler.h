@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -21,6 +21,12 @@
 
 namespace dtee {
 
+enum class ErrorType {
+	APPLICATION,
+	INPUT,
+	OUTPUT,
+};
+
 class ResultHandler {
 public:
 	ResultHandler() = default;
@@ -28,6 +34,7 @@ public:
 
 	virtual void terminated(int status, int signum, bool core_dumped) = 0;
 	virtual void interrupted(int signum) = 0;
+	virtual void error(ErrorType type) = 0;
 
 	ResultHandler(const ResultHandler&) = delete;
 	ResultHandler& operator=(const ResultHandler&) = delete;

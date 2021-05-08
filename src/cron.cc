@@ -112,6 +112,17 @@ void Cron::interrupted(int signum) {
 	unspool_buffer_file();
 }
 
+void Cron::error(ErrorType type) {
+	Process::error(type);
+
+	// Ignore errors writing to other output files.
+	if (type != ErrorType::OUTPUT) {
+		error_ = true;
+
+		unspool_buffer_file();
+	}
+}
+
 bool Cron::unspool_buffer_file() {
 	bool success = true;
 
