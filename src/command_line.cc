@@ -18,7 +18,6 @@
 #include "command_line.h"
 
 #include <libgen.h>
-#include <stdlib.h>
 #include <sysexits.h>
 
 #include <cstdlib>
@@ -39,6 +38,7 @@ using ::boost::format;
 using ::std::cerr;
 using ::std::cout;
 using ::std::endl;
+using ::std::exit;
 using ::std::flush;
 using ::std::string;
 using ::std::vector;
