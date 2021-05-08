@@ -64,7 +64,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 	bool success = true;
 
 	if (type == OutputType::STDERR) {
-		error_ = true;
+		report_ = true;
 		success &= unspool_buffer_file();
 	}
 
@@ -74,7 +74,7 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 		if (written != static_cast<ssize_t>(len)) {
 			// i18n: %1 = filename; %2 = errno message
 			print_file_error(format(_("error writing to buffer file %1%: %2%")));
-			error_ = true;
+			report_ = true;
 
 			unspool_buffer_file();
 
@@ -97,14 +97,14 @@ void Cron::terminated(int status, int signum, bool core_dumped) {
 	Process::terminated(status, signum, core_dumped);
 
 	if (status != EXIT_SUCCESS) {
-		error_ = true;
+		report_ = true;
 	}
 }
 
 void Cron::interrupted(int signum) {
 	Process::interrupted(signum);
 
-	error_ = true;
+	report_ = true;
 
 	// The return status of this is ignored, so an I/O error won't be
 	// recorded but if we've been interrupted then the exit status has
@@ -117,7 +117,7 @@ void Cron::error(ErrorType type) {
 
 	// Ignore errors writing to other output files.
 	if (type != ErrorType::OUTPUT) {
-		error_ = true;
+		report_ = true;
 
 		unspool_buffer_file();
 	}
@@ -159,7 +159,7 @@ bool Cron::unspool_buffer_file() {
 }
 
 bool Cron::report() {
-	if (terminated_ && !error_) {
+	if (terminated_ && !report_) {
 		return true;
 	}
 

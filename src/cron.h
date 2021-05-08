@@ -54,7 +54,7 @@ private:
 	TempFile file_; //!< Temporary output file
 
 	bool buffered_ = false; //!< Output is being buffered
-	bool error_ = false; //!< Error state of child process
+	bool report_ = false; //!< Output a status report
 };
 
 } // namespace dtee
