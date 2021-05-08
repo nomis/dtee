@@ -18,12 +18,12 @@
 #include "application.h"
 
 #include <sys/types.h>
-#include <stdlib.h>
 #include <sysexits.h>
 #include <unistd.h>
 
 #include <cerrno>
 #include <csignal>
+#include <cstdlib>
 #include <cxxabi.h>
 #include <memory>
 #include <string>
@@ -49,6 +49,7 @@ using ::boost::asio::io_service;
 using ::boost::format;
 using ::std::make_shared;
 using ::std::make_unique;
+using ::std::raise;
 using ::std::shared_ptr;
 using ::std::string;
 using ::std::type_info;
@@ -109,7 +110,7 @@ int Application::run(int argc, const char* const argv[]) {
 #ifdef GCOV_ENABLED
 				__gcov_flush(); // LCOV_EXCL_LINE
 #endif
-				kill(getpid(), signum);
+				raise(signum);
 			}
 
 			return process_->exit_status(ret_internal);

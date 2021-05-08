@@ -78,6 +78,6 @@ int main(int argc, char *argv[]) {
 		fflush(stdout);
 	}
 
-	kill(getpid(), signum);
+	raise(signum);
 	return EXIT_SUCCESS;
 }

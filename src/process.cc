@@ -71,7 +71,7 @@ int Process::exit_status(int internal_status) {
 	if (error_) {
 		default_status = EX_IOERR;
 	} else if (interrupt_signum_ >= 0) {
-		// This can only happen if kill(getpid(), ...) failed.
+		// This can only happen if std::raise() failed.
 		return SHELL_EXIT_CODE_SIGNAL + interrupt_signum_;
 	} else if (exit_status_ == EXIT_SUCCESS) {
 		default_status = EXIT_SUCCESS;
