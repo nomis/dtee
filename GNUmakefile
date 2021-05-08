@@ -1,4 +1,4 @@
-.PHONY: all debug compile debug-compile check coverage analyse clean distclean install uninstall pot po
+.PHONY: all debug compile debug-compile check coverage analyse clean distclean install uninstall pot po potfiles
 
 BUILD_DIR=build
 RELEASE_DIR=$(BUILD_DIR)/release
@@ -91,8 +91,11 @@ install: | $(RELEASE_DIR)/
 uninstall: | $(RELEASE_DIR)/
 	$(NINJA) -C $(RELEASE_DIR)/ uninstall
 
-pot: | $(RELEASE_DIR)/
+potfiles:
+	ls -1 src/*.cc >i18n/POTFILES
+
+pot: potfiles | $(RELEASE_DIR)/
 	$(NINJA) -C $(RELEASE_DIR)/ dtee-pot
 
-po: | $(RELEASE_DIR)/
+po:  potfiles | $(RELEASE_DIR)/
 	$(NINJA) -C $(RELEASE_DIR)/ dtee-update-po
