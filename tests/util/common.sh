@@ -1,7 +1,7 @@
 BASEDIR="$(dirname "$0")"
 UTILDIR="$BASEDIR/util"
 NAME="$(basename "$0")"
-NAME="${NAME/.sh}"
+NAME="${NAME%*.sh}"
 
 if [ ! -z "$1" ]; then
 	NAME="${NAME},$1"
@@ -50,8 +50,8 @@ function __portable_realpath() {
 
 # Ensure commands that are run have relative path names in argv[0]
 rm -f "tests/$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
-if [ -e "${0/.sh/.run}" ]; then
-	RUN="$(__portable_realpath "${0/.sh/.run}")"
+if [ -e "${0%*.sh}.run" ]; then
+	RUN="$(__portable_realpath "${0%*.sh}.run")"
 	[ $? -eq 0 ] || exit $TEST_EX_FAIL
 	ln "$RUN" "tests/$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 fi
