@@ -10,11 +10,18 @@ int main(int argc, char *argv[]) {
 	struct timespec ts = { 0, 10 * 1000 * 1000 }; // 10ms
 	pid_t ppid = getppid();
 	int lines = 6;
+	const char *message = NULL;
 
-	if (argc > 2) {
+	if (argc > 3) {
 		return EX_USAGE;
-	} else if (argc == 2) {
+	}
+
+	if (argc >= 2) {
 		lines = strtoul(argv[1], NULL, 10);
+	}
+
+	if (argc >= 3) {
+		message = argv[2];
 	}
 
 	if (lines-- > 0) {
@@ -39,6 +46,11 @@ int main(int argc, char *argv[]) {
 	}
 	if (lines-- > 0) {
 		printf("in culpa qui officia deserunt mollit anim id est laborum.\n");
+		fflush(stdout);
+	}
+
+	if (message != NULL) {
+		printf("%s\n", message);
 		fflush(stdout);
 	}
 

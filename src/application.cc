@@ -228,6 +228,10 @@ void Application::run(boost::asio::io_service &io, ResultHandler &output) {
 		// i18n: %1 = exception type name; %2 = exception message
 		print_error(format(_("%1%: %2%")) % name, e);
 
+		// Stop immediately because there is no guarantee that further I/O
+		// handling will work without either missing SIGCHLD for the command
+		// (which would prevent us from ever exiting) or outputting further
+		// exception messages indefinitely.
 		output.error(ErrorType::APPLICATION);
 	}
 }
