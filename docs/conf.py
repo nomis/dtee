@@ -38,3 +38,4 @@ texinfo_documents = [
 texinfo_show_urls = 'inline'
 
 linkcheck_timeout = 60
+linkcheck_ignore = [r'https://github.com/.+/.+/(compare|commits)/.+']
