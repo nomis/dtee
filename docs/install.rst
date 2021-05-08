@@ -16,17 +16,4 @@ build, test and runtime requirements.
 Cygwin
 ------
 
-The build and test process makes use of symbolic links.
-
-`Allow unprivileged users to create symbolic links <https://blogs.windows.com/windowsdeveloper/2016/12/02/symlinks-windows-10/>`_
-by enabling `Developer mode <https://docs.microsoft.com/en-us/windows/uwp/get-started/enable-your-device-for-development>`_.
-
-Set the following environment variable::
-
-    CYGWIN=winsymlinks:nativestrict
-
-Set the following ``git`` configuration option::
-
-    git config core.symlinks true
-
 Some of the tests cannot be run from an elevated process and will be skipped.
