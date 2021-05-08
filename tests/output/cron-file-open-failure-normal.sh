@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 is_acl_override && exit $TEST_EX_SKIP
 

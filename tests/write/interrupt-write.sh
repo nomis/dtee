@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file1.txt" "$TESTDIR/$NAME.file2.txt"

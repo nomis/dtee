@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 # Ask for help, get exit code 0 and usage information (including cron option)
 FIFO=$(make_fifo "out")

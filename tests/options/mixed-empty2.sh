@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 # Empty filename followed by empty command with empty argument
 run_test "--debug-options" "-o" "" "" ""

@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 TEST_LD_PRELOAD=(test-write-throw-exception)
 # If there's an exception then dtee will exit

@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 if [ "$SHORT_UNAME" == "CYGWIN" ]; then
 	export DTEE_TEST_GETSOCKOPT_RCVBUF="$((4 * 1024 * 1024))"

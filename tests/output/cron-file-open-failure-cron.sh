@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 # If the temporary output file cannot be opened, it should fallback to using stdout/stderr as normal
 TEST_LD_PRELOAD=(test-mkostemp-failure test-fake-getpid test-fake-getuid)

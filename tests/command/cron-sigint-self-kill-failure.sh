@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 TEST_LD_PRELOAD=(test-kill-failure)
 # If kill fails, we can only exit with a simulated SIGINT

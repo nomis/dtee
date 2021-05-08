@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 # Ignoring SIGINT does not affect behaviour when the child process receives SIGINT
 run_test -i ./util/test-kill-pid $SIGINT

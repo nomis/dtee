@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 if [ "$UNAME" == "GNU" ]; then
 	exit $TEST_EX_SKIP

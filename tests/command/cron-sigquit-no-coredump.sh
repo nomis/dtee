@@ -1,4 +1,4 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 
 # Windows Subsystem for Linux (4.4.0-43) always claims to have written a core dump on SIGQUIT
 [[ $(uname -r) =~ Microsoft ]] && exit $TEST_EX_SKIP

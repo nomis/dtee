@@ -1,6 +1,6 @@
-BASEDIR="$(dirname "$0")"
+BASEDIR="$(dirname -- "$0")"
 UTILDIR="$BASEDIR/util"
-NAME="$(basename "$0")"
+NAME="$(basename -- "$0")"
 NAME="${NAME%*.sh}"
 
 if [ ! -z "$1" ]; then
@@ -9,10 +9,10 @@ fi
 
 GROUP=""
 dir="$BASEDIR"
-while [ "$(basename "$dir")" != "tests" ]; do
+while [ "$(basename -- "$dir")" != "tests" ]; do
 	[ ! -z "$GROUP" ] && GROUP="/$GROUP"
-	GROUP="$(basename "$dir")$GROUP"
-	dir="$(dirname "$dir")"
+	GROUP="$(basename -- "$dir")$GROUP"
+	dir="$(dirname -- "$dir")"
 done
 
 ln -s ../dtee tests/dtee
@@ -35,13 +35,13 @@ EXIT_FAILURE=1
 
 function __portable_realpath() {
 	TARGET="$1"
-	pushd "$(dirname "$TARGET")" >/dev/null || exit $TEST_EX_FAIL
-	TARGET="$(pwd)/$(basename "$TARGET")"
+	pushd -- "$(dirname -- "$TARGET")" >/dev/null || exit $TEST_EX_FAIL
+	TARGET="$(pwd)/$(basename -- "$TARGET")"
 	while [ -L "$TARGET" ]; do
 		TARGET="$(readlink -- "$TARGET")"
 		[ $? -eq 0 ] || exit $TEST_EX_FAIL
-		pushd "$(dirname "$TARGET")" >/dev/null || exit $TEST_EX_FAIL
-		TARGET="$(pwd)/$(basename "$TARGET")"
+		pushd -- "$(dirname -- "$TARGET")" >/dev/null || exit $TEST_EX_FAIL
+		TARGET="$(pwd)/$(basename -- "$TARGET")"
 		popd >/dev/null || exit $TEST_EX_FAIL
 	done
 	popd >/dev/null || exit $TEST_EX_FAIL
@@ -53,7 +53,7 @@ rm -f "tests/$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 if [ -e "${0%*.sh}.run" ]; then
 	RUN="$(__portable_realpath "${0%*.sh}.run")"
 	[ $? -eq 0 ] || exit $TEST_EX_FAIL
-	ln "$RUN" "tests/$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
+	ln -- "$RUN" "tests/$TESTDIR/$NAME.run" || exit $TEST_EX_FAIL
 fi
 RUN="$TESTDIR/$NAME.run"
 
@@ -256,7 +256,7 @@ function cmp_files() {
 		return 1
 	fi
 
-	cmp "$EXPECTED" "$ACTUAL"
+	cmp -- "$EXPECTED" "$ACTUAL"
 	CMP=$?
 	[ $CMP -ne 0 ] && diff -U4 "$EXPECTED" "$ACTUAL"
 	set -x
@@ -265,7 +265,7 @@ function cmp_files() {
 
 function make_fifo() {
 	rm -f "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
-	mkfifo "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
+	mkfifo -- "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
 	echo "$TESTDIR/$NAME.$1.fifo"
 }
 

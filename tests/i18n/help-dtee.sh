@@ -1,6 +1,6 @@
-. "$(dirname "$0")"/../util/common.sh
+. "$(dirname -- "$0")"/../util/common.sh
 TEST_LANGUAGE="$1"
-. "$(dirname "$0")"/../util/locale.sh
+. "$(dirname -- "$0")"/../util/locale.sh
 
 TEST_LD_PRELOAD=(test-bindtextdomain-override)
 
