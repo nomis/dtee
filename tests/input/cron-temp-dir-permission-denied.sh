@@ -1,9 +1,9 @@
 . "$(dirname -- "$0")"/../util/common.sh
 
-if [ ! -d "$TMPDIR/permission-denied" ]; then
-	mkdir -p "$TMPDIR/permission-denied"
-fi
-chmod 000 "$TMPDIR/permission-denied"
+is_acl_override && exit $TEST_EX_SKIP
+
+rmdir "$TMPDIR/permission-denied"
+(umask 0333; mkdir -p "$TMPDIR/permission-denied"; chmod a-w "$TMPDIR/permission-denied")
 export TMPDIR="$TMPDIR/permission-denied/tmp"
 
 run_test -q "$RUN"
