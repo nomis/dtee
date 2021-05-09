@@ -22,9 +22,17 @@
 namespace dtee {
 
 enum class ErrorType {
-	APPLICATION,
-	INPUT,
-	OUTPUT,
+	NONE,
+
+	OPEN_OUTPUT,
+	OPEN_INPUT,
+	SIGNAL_HANDLER,
+	FORK,
+	CLOSE_OUTPUT,
+	RUN_EXCEPTION,
+	READ_INPUT,
+	WRITE_OUTPUT,
+	EXECUTE_COMMAND,
 };
 
 class ResultHandler {

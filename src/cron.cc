@@ -116,7 +116,7 @@ void Cron::error(ErrorType type) {
 	Process::error(type);
 
 	// Ignore errors writing to other output files.
-	if (type != ErrorType::OUTPUT) {
+	if (type != ErrorType::WRITE_OUTPUT) {
 		report_ = true;
 
 		unspool_buffer_file();

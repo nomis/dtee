@@ -74,6 +74,7 @@ bool Input::open() {
 	TempDirectory temp_dir{"I"};
 
 	if (!temp_dir.valid()) {
+		output_->error(ErrorType::OPEN_INPUT);
 		return false;
 	}
 
@@ -103,6 +104,8 @@ bool Input::open() {
 	} catch (std::exception &e) {
 		// i18n: %1 = exception message
 		print_error(format(_("input socket: %1%")), e);
+
+		output_->error(ErrorType::OPEN_INPUT);
 		return false;
 	}
 
@@ -135,6 +138,8 @@ bool Input::open() {
 	} catch (std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stdout socket: %1%")), e);
+
+		output_->error(ErrorType::OPEN_INPUT);
 		return false;
 	}
 
@@ -144,6 +149,8 @@ bool Input::open() {
 	} catch (std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stderr socket: %1%")), e);
+
+		output_->error(ErrorType::OPEN_INPUT);
 		return false;
 	}
 
@@ -155,6 +162,8 @@ bool Input::open() {
 				"output socket endpoints are indistinguishable:\n"
 				"\tstdout socket: %1%\n\tstderr socket: %2%"))
 				% out_ep_.path() % err_ep_.path());
+
+			output_->error(ErrorType::OPEN_INPUT);
 			return false;
 		}
 	}
@@ -207,7 +216,7 @@ void Input::close_outputs() {
 		// i18n: %1 = exception message
 		print_error(format(_("stdout socket: %1%")), e);
 
-		output_->error(ErrorType::INPUT);
+		output_->error(ErrorType::CLOSE_OUTPUT);
 	}
 
 	try {
@@ -216,7 +225,7 @@ void Input::close_outputs() {
 		// i18n: %1 = exception message
 		print_error(format(_("stderr socket: %1%")), e);
 
-		output_->error(ErrorType::INPUT);
+		output_->error(ErrorType::CLOSE_OUTPUT);
 	}
 }
 
@@ -280,7 +289,7 @@ void Input::handle_receive_from(const error_code &ec, size_t len) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("input socket: %1%")), ec);
 
-		output_->error(ErrorType::INPUT);
+		output_->error(ErrorType::READ_INPUT);
 		io_->stop();
 	}
 }

@@ -84,6 +84,10 @@ bool SignalHandler::open() {
 		ok &= add_non_interrupting_signal(ignored_signals_, SIGINT);
 	}
 
+	if (!ok) {
+		output_->error(ErrorType::SIGNAL_HANDLER);
+	}
+
 	return ok;
 }
 

@@ -33,9 +33,10 @@ public:
 	void terminated(int status, int signum, bool core_dumped) override;
 	void interrupted(int signum) override;
 	void error(ErrorType type) override;
+	void fork_child();
 
-	int interrupt_signum();
-	int exit_status(int internal_status);
+	void exit_by_interrupt() const;
+	int exit_status() const;
 
 protected:
 	bool terminated_ = false; //!< Child process terminated
@@ -45,7 +46,7 @@ protected:
 	int interrupt_signum_ = -1; //!< Signal received that caused us to exit
 
 private:
-	bool error_ = false; //!< Internal error
+	ErrorType error_ = ErrorType::NONE; //!< Internal error
 };
 
 } // namespace dtee

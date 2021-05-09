@@ -22,11 +22,12 @@
 #include <csignal>
 #include <cstddef>
 #include <cstdlib>
-#include <vector>
+
+#ifdef GCOV_ENABLED
+extern "C" void __gcov_flush(void);
+#endif
 
 namespace dtee {
-
-using ::std::vector;
 
 void Process::terminated(int status, int signum, bool core_dumped) {
 	terminated_ = true;
@@ -40,51 +41,75 @@ void Process::interrupted(int signum) {
 	interrupt_signum_ = signum;
 }
 
-void Process::error(ErrorType type __attribute__((unused))) {
-	error_ = true;
+void Process::error(ErrorType type) {
+	error_ = type;
 }
 
-int Process::interrupt_signum() {
+void Process::fork_child() {
+	error_ = ErrorType::NONE;
+}
+
+void Process::exit_by_interrupt() const {
+#ifdef GCOV_ENABLED
+	__gcov_flush(); // LCOV_EXCL_LINE
+#endif
+
 	switch (interrupt_signum_) {
 		// Replicate these signals that caused us to terminate.
 	case SIGHUP:
 	case SIGINT:
 	case SIGPIPE:
 	case SIGTERM:
-		return interrupt_signum_;
+		std::raise(interrupt_signum_);
+		break;
 	}
 
 	switch (exit_signum_) {
-	case SIGINT:
 		// Replicate interrupted signal status so that shells
 		// behave correctly if the command is interrupted.
-		return exit_signum_;
+	case SIGINT:
+		std::raise(exit_signum_);
+		break;
 	}
-
-	return -1;
 }
 
-int Process::exit_status(int internal_status) {
-	int default_status = EX_SOFTWARE;
+int Process::exit_status() const {
+	switch (error_) {
+	case ErrorType::OPEN_OUTPUT:
+		return EX_CANTCREAT;
+
+	case ErrorType::FORK:
+		return EX_OSERR;
+
+	case ErrorType::OPEN_INPUT:
+	case ErrorType::SIGNAL_HANDLER:
+		return EX_UNAVAILABLE;
+
+	case ErrorType::CLOSE_OUTPUT:
+	case ErrorType::RUN_EXCEPTION:
+	case ErrorType::READ_INPUT:
+	case ErrorType::WRITE_OUTPUT:
+		return EX_IOERR;
+
+	case ErrorType::EXECUTE_COMMAND:
+		return EX_NOINPUT;
+
+	case ErrorType::NONE:
+		break;
+	}
 
 	// Replicate shell style exit status.
-	if (error_) {
-		default_status = EX_IOERR;
-	} else if (interrupt_signum_ >= 0) {
+	if (interrupt_signum_ >= 0) {
 		// This can only happen if std::raise() failed.
 		return SHELL_EXIT_CODE_SIGNAL + interrupt_signum_;
 	} else if (exit_status_ == EXIT_SUCCESS) {
-		default_status = EXIT_SUCCESS;
+		return EXIT_SUCCESS;
 	} else if (exit_status_ >= 0) {
 		return exit_status_;
 	} else if (exit_signum_ >= 0) {
 		return SHELL_EXIT_CODE_SIGNAL + exit_signum_;
-	}
-
-	if (internal_status != EXIT_SUCCESS) {
-		return internal_status;
 	} else {
-		return default_status;
+		return EX_SOFTWARE;
 	}
 }
 

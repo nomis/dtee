@@ -18,7 +18,6 @@
 #include "application.h"
 
 #include <sys/types.h>
-#include <sysexits.h>
 #include <unistd.h>
 
 #include <cerrno>
@@ -70,29 +69,18 @@ int Application::run(int argc, const char* const argv[]) {
 	auto input = make_unique<Input>(io, output);
 	auto signal_handler = make_unique<SignalHandler>(command_line_, io, output);
 
-	bool output_ok = output->open();
-	bool input_ok = input->open();
-	bool signal_handler_ok = signal_handler->open();
-	int ret_internal = EXIT_SUCCESS;
-
-	if (!output_ok) {
-		ret_internal = EX_CANTCREAT;
-
-		if (!command_line_.cron_mode()) {
-			// If we're running from cron then we have output an error message
-			// for the failed output files but must continue to execute the
-			// requested command.
-			return ret_internal;
-		}
+	if (!output->open() && !command_line_.cron_mode()) {
+		// If we're running from cron then we have output an error message
+		// but must continue to execute the requested command.
+		return process_->exit_status();
 	}
 
-	if (input_ok && signal_handler_ok) {
-		io->notify_fork(io_service::fork_event::fork_prepare);
+	pid_t pid;
 
-		errno = 0;
-		pid_t pid = fork();
+	if (input->open()
+			&& signal_handler->open()
+			&& fork(*io, pid)) {
 		if (pid > 0) {
-			io->notify_fork(io_service::fork_event::fork_parent);
 			signal_handler->start(pid);
 			input->fork_parent();
 			input->start();
@@ -103,37 +91,17 @@ int Application::run(int argc, const char* const argv[]) {
 				cron_->report();
 			}
 
-			int signum = process_->interrupt_signum();
-
-			if (signum >= 0) {
-				signal_handler.reset();
-#ifdef GCOV_ENABLED
-				__gcov_flush(); // LCOV_EXCL_LINE
-#endif
-				raise(signum);
-			}
-
-			return process_->exit_status(ret_internal);
-		} else if (pid == 0) {
-			io->notify_fork(io_service::fork_event::fork_child);
-			input->fork_child();
+			signal_handler.reset();
+			process_->exit_by_interrupt();
+			return process_->exit_status();
 		} else {
-			auto errno_copy = errno;
-			// i18n: %1 = function call name; %2 = errno message
-			print_system_error(format(_("%1%: %2%")) % "fork", errno_copy);
-			ret_internal = EX_OSERR;
+			process_->fork_child();
+			input->fork_child();
 		}
-	} else {
-		ret_internal = EX_UNAVAILABLE;
-	}
-
-	if (ret_internal != EXIT_SUCCESS) {
-		if (!command_line_.cron_mode()) {
-			// If we're running from cron then we have output an error message
-			// for the failed preparation to handle input but must continue to
-			// execute the requested command.
-			return ret_internal;
-		}
+	} else if (!command_line_.cron_mode()) {
+		// If we're running from cron then we have output an error message
+		// but must continue to execute the requested command.
+		return process_->exit_status();
 	}
 
 	// Files are opened with O_CLOEXEC so these are unnecessary.
@@ -149,7 +117,7 @@ int Application::run(int argc, const char* const argv[]) {
 	io.reset();
 
 	execute(command_line_.command());
-	return EX_SOFTWARE;
+	return process_->exit_status();
 }
 
 shared_ptr<Dispatch> Application::create_dispatch() {
@@ -201,8 +169,31 @@ vector<shared_ptr<ResultHandler>> Application::create_result_handlers() {
 		result_handlers.push_back(cron_);
 	}
 
-
 	return result_handlers;
+}
+
+bool Application::fork(boost::asio::io_service &io, pid_t &pid) {
+	io.notify_fork(io_service::fork_event::fork_prepare);
+
+	errno = 0;
+	pid = ::fork();
+	if (pid > 0) {
+		io.notify_fork(io_service::fork_event::fork_parent);
+		return true;
+	} else if (pid == 0) {
+		io.notify_fork(io_service::fork_event::fork_child);
+		return true;
+	} else {
+		auto errno_copy = errno;
+
+		io.notify_fork(io_service::fork_event::fork_parent);
+
+		// i18n: %1 = function call name; %2 = errno message
+		print_system_error(format(_("%1%: %2%")) % "fork", errno_copy);
+
+		process_->error(ErrorType::FORK);
+		return false;
+	}
 }
 
 void Application::run(boost::asio::io_service &io, ResultHandler &output) {
@@ -233,7 +224,7 @@ void Application::run(boost::asio::io_service &io, ResultHandler &output) {
 		// handling will work without either missing SIGCHLD for the command
 		// (which would prevent us from ever exiting) or outputting further
 		// exception messages indefinitely.
-		output.error(ErrorType::APPLICATION);
+		output.error(ErrorType::RUN_EXCEPTION);
 	}
 }
 
@@ -258,10 +249,12 @@ void Application::execute(const vector<string> &command) {
 
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
+
 	auto errno_copy = errno;
 	// i18n: %1 = command name; %2 = errno message
 	print_system_error(format(_("%1%: %2%")) % argv[0], errno_copy);
-	exit(EX_NOINPUT);
+
+	process_->error(ErrorType::EXECUTE_COMMAND);
 }
 
 } // namespace dtee

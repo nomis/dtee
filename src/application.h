@@ -17,6 +17,8 @@
 */
 #pragma once
 
+#include <sys/types.h>
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -51,7 +53,8 @@ private:
 	std::shared_ptr<Dispatch> create_dispatch();
 	std::vector<std::shared_ptr<Output>> create_outputs();
 	std::vector<std::shared_ptr<ResultHandler>> create_result_handlers();
-	void execute(const std::vector<std::string> &command) __attribute__((noreturn));
+	bool fork(boost::asio::io_service &io, pid_t &pid);
+	void execute(const std::vector<std::string> &command);
 
 	CommandLine command_line_;
 	std::shared_ptr<Process> process_;

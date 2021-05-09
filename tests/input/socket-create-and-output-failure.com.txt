@@ -1,2 +1,1 @@
 ./dtee: input_and_output_failure: EACCES
-./dtee: input socket: open: EAFNOSUPPORT

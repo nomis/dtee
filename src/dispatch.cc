@@ -36,6 +36,10 @@ bool Dispatch::open() {
 		success &= output->open();
 	}
 
+	if (!success) {
+		error(ErrorType::OPEN_OUTPUT);
+	}
+
 	return success;
 }
 
@@ -47,7 +51,7 @@ bool Dispatch::output(OutputType type, const std::vector<char> &buffer, size_t l
 	}
 
 	if (!success) {
-		error(ErrorType::OUTPUT);
+		error(ErrorType::WRITE_OUTPUT);
 	}
 
 	return success;
