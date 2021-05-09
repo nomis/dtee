@@ -74,6 +74,7 @@ TEST_FCN_REPL(char*, __gnu_basename, (char *path)) {
 	return (*next___gnu_basename)(path);
 }
 #else
+# ifndef __FreeBSD__
 TEST_FCN_DECL(char*, bindtextdomain, (const char *domainname, const char *dirname));
 
 static char * dtee_test_override_bindtextdomain(const char *domainname, const char *dirname) {
@@ -102,6 +103,7 @@ TEST_FCN_REPL(char*, bindtextdomain, (const char *domainname, const char *dirnam
 
 	return (*next_bindtextdomain)(domainname, dirname);
 }
+# endif
 
 TEST_FCN_DECL(char*, libintl_bindtextdomain, (const char *domainname, const char *dirname));
 

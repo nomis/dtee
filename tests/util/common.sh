@@ -70,7 +70,7 @@ TEST_ALT_STDERR=
 
 # Use a consistent and isolated temporary directory
 if [ -e "$TESTDIR/$NAME.tmp" ]; then
-	chmod u+rwx -R "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
+	chmod -R u+rwx "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
 	rm -rf "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
 fi
 mkdir -p "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
