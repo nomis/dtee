@@ -47,10 +47,6 @@ using ::std::shared_ptr;
 
 namespace p = ::std::placeholders;
 
-#ifdef GCOV_ENABLED
-extern "C" void __gcov_flush(void);
-#endif
-
 namespace dtee {
 
 SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::asio::io_service> io, shared_ptr<ResultHandler> output)
@@ -67,21 +63,21 @@ SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::
 bool SignalHandler::open() {
 	bool ok = true;
 
-	ok &= add_non_interrupting_signal(child_exited_, SIGCHLD);
+	ok = ok && add(child_exited_, SIGCHLD);
 
 	if (handle_signals_) {
-		ok &= add_non_interrupting_signal(interrupt_signals_, SIGHUP);
-		ok &= add_non_interrupting_signal(interrupt_signals_, SIGTERM);
+		ok = ok && add(interrupt_signals_, SIGHUP);
+		ok = ok && add(interrupt_signals_, SIGTERM);
 
 		if (!ignore_sigint_) {
-			ok &= add_non_interrupting_signal(interrupt_signals_, SIGINT);
+			ok = ok && add(interrupt_signals_, SIGINT);
 		}
 
-		ok &= add_non_interrupting_signal(pipe_signal_, SIGPIPE);
+		ok = ok && add(pipe_signal_, SIGPIPE);
 	}
 
 	if (ignore_sigint_) {
-		ok &= add_non_interrupting_signal(ignored_signals_, SIGINT);
+		ok = ok && add(ignored_signals_, SIGINT);
 	}
 
 	if (!ok) {
@@ -101,7 +97,7 @@ void SignalHandler::start(pid_t pid) {
 	blocked_signals_.clear();
 }
 
-bool SignalHandler::add_non_interrupting_signal(boost::asio::signal_set &signal_set, int signal_number) {
+bool SignalHandler::add(boost::asio::signal_set &signal_set, int signal_number) {
 	error_code ec;
 	struct sigaction act;
 
