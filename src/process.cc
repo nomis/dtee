@@ -20,8 +20,6 @@
 #include <sysexits.h>
 
 #include <csignal>
-#include <cstddef>
-#include <cstdlib>
 
 #ifdef GCOV_ENABLED
 extern "C" void __gcov_flush(void);
@@ -95,6 +93,7 @@ int Process::exit_status() const {
 
 	case ErrorType::MAIN_LOOP_EXCEPTION:
 		return EX_SOFTWARE;
+
 	case ErrorType::NONE:
 		break;
 	}
@@ -103,8 +102,6 @@ int Process::exit_status() const {
 	if (interrupt_signum_ >= 0) {
 		// This can only happen if std::raise() failed.
 		return SHELL_EXIT_CODE_SIGNAL + interrupt_signum_;
-	} else if (exit_status_ == EXIT_SUCCESS) {
-		return EXIT_SUCCESS;
 	} else if (exit_status_ >= 0) {
 		return exit_status_;
 	} else if (exit_signum_ >= 0) {
