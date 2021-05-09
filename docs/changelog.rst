@@ -29,6 +29,7 @@ Fixed
 
 * Race condition between the command immediately exiting and being ready to
   handle ``SIGCHLD``.
+* Handle errors when the temporary directory name is too long or unusable.
 
 1.0.1_ |--| 2018-12-22
 ----------------------
