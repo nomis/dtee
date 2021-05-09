@@ -24,6 +24,8 @@
 
 #include <cerrno>
 #include <cstddef>
+#include <string>
+#include <vector>
 
 #include <boost/format.hpp>
 
@@ -33,6 +35,7 @@
 
 using ::boost::format;
 using ::std::string;
+using ::std::vector;
 
 namespace dtee {
 
@@ -89,7 +92,7 @@ bool FileOutput::open() {
 	}
 }
 
-bool FileOutput::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+bool FileOutput::output(OutputType type, const vector<char> &buffer, size_t len) {
 	if (!filtered_ || type == filter_type_) {
 		if (fd_ >= 0) {
 			errno = 0;

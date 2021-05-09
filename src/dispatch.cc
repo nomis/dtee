@@ -17,15 +17,15 @@
 */
 #include "dispatch.h"
 
-#include <cstddef>
-#include <string>
+#include <memory>
 #include <vector>
 
-using ::std::string;
+using ::std::shared_ptr;
+using ::std::vector;
 
 namespace dtee {
 
-Dispatch::Dispatch(const std::vector<std::shared_ptr<Output>> &outputs, const std::vector<std::shared_ptr<ResultHandler>> &result_handlers)
+Dispatch::Dispatch(const vector<shared_ptr<Output>> &outputs, const vector<shared_ptr<ResultHandler>> &result_handlers)
 		: outputs_(outputs), result_handlers_(result_handlers) {
 }
 
@@ -43,7 +43,7 @@ bool Dispatch::open() {
 	return success;
 }
 
-bool Dispatch::output(OutputType type, const std::vector<char> &buffer, size_t len) {
+bool Dispatch::output(OutputType type, const vector<char> &buffer, size_t len) {
 	bool success = true;
 
 	for (auto& output : outputs_) {

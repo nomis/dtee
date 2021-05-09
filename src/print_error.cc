@@ -29,9 +29,7 @@
 #include "i18n.h"
 
 using ::boost::format;
-using ::boost::system::error_code;
 using ::std::cerr;
-using ::std::exception;
 using ::std::string;
 
 namespace dtee {
@@ -44,11 +42,11 @@ void print_error(const format &message) {
 	cerr.write(line.c_str(), line.length());
 }
 
-void print_error(format message, const error_code &ec) {
+void print_error(format message, const boost::system::error_code &ec) {
 	print_error(message % ec.message());
 }
 
-void print_error(format message, const exception &e) {
+void print_error(format message, const std::exception &e) {
 	print_error(message % e.what());
 }
 

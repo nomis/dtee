@@ -74,7 +74,7 @@ void CommandLine::update_name(const string &program_name) {
 	}
 }
 
-vector<po::option> CommandLine::end_of_opts_parser(std::vector<std::string> &args) {
+vector<po::option> CommandLine::end_of_opts_parser(vector<string> &args) {
 	vector<po::option> result;
 	vector<string>::const_iterator i{args.cbegin()};
 	bool capture;

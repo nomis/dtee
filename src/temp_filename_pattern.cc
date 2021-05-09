@@ -35,10 +35,13 @@
 #if __cplusplus < 201703L
 using ::boost::filesystem::temp_directory_path;
 #endif
+
 using ::boost::format;
+
 #if __cplusplus >= 201703L
 using ::std::filesystem::temp_directory_path;
 #endif
+
 using ::std::string;
 
 namespace dtee {
@@ -47,7 +50,7 @@ namespace dtee {
 //   mkdtemp: The last six characters of template must be "XXXXXX" and these are replaced with a string that makes the directory name unique.
 //   mkostemp: The last six characters of template must be "XXXXXX" and these are replaced with a string that makes the filename unique.
 string temp_filename_pattern(const string &name) {
-	const string pattern_file{str(format("%s%08X%sXXXXXX") % CommandLine::DEFAULT_PROGRAM_NAME % getpid() % name)};
+	const string pattern_file{(format("%s%08X%sXXXXXX") % CommandLine::DEFAULT_PROGRAM_NAME % getpid() % name).str()};
 	return (temp_directory_path() / pattern_file).string();
 }
 

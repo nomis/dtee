@@ -25,6 +25,8 @@
 extern "C" void __gcov_flush(void);
 #endif
 
+using ::std::raise;
+
 namespace dtee {
 
 void Process::terminated(int status, int signum, bool core_dumped) {
@@ -58,7 +60,7 @@ void Process::exit_by_interrupt() const {
 	case SIGINT:
 	case SIGPIPE:
 	case SIGTERM:
-		std::raise(interrupt_signum_);
+		raise(interrupt_signum_);
 		break;
 	}
 
@@ -66,7 +68,7 @@ void Process::exit_by_interrupt() const {
 		// Replicate interrupted signal status so that shells
 		// behave correctly if the command is interrupted.
 	case SIGINT:
-		std::raise(exit_signum_);
+		raise(exit_signum_);
 		break;
 	}
 }
