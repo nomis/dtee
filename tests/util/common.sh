@@ -282,7 +282,7 @@ function cmp_files() {
 
 function make_fifo() {
 	rm -f "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
-	mkfifo -- "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
+	mkfifo "$TESTDIR/$NAME.$1.fifo" || exit $TEST_EX_FAIL
 	echo "$TESTDIR/$NAME.$1.fifo"
 }
 
