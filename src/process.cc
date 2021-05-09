@@ -86,7 +86,7 @@ int Process::exit_status() const {
 		return EX_UNAVAILABLE;
 
 	case ErrorType::CLOSE_OUTPUT:
-	case ErrorType::RUN_EXCEPTION:
+	case ErrorType::MAIN_LOOP_EXCEPTION:
 	case ErrorType::READ_INPUT:
 	case ErrorType::WRITE_OUTPUT:
 		return EX_IOERR;

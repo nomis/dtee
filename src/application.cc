@@ -84,7 +84,7 @@ int Application::run(int argc, const char* const argv[]) {
 			signal_handler->start(pid);
 			input->fork_parent();
 			input->start();
-			run(*io, *output);
+			main_loop(*io, *output);
 			signal_handler->stop();
 
 			if (cron_) {
@@ -196,7 +196,7 @@ bool Application::fork(boost::asio::io_service &io, pid_t &pid) {
 	}
 }
 
-void Application::run(boost::asio::io_service &io, ResultHandler &output) {
+void Application::main_loop(boost::asio::io_service &io, ResultHandler &output) {
 	try {
 		// Wait for events until the I/O service is explicitly stopped
 		do {
@@ -224,7 +224,7 @@ void Application::run(boost::asio::io_service &io, ResultHandler &output) {
 		// handling will work without either missing SIGCHLD for the command
 		// (which would prevent us from ever exiting) or outputting further
 		// exception messages indefinitely.
-		output.error(ErrorType::RUN_EXCEPTION);
+		output.error(ErrorType::MAIN_LOOP_EXCEPTION);
 	}
 }
 
