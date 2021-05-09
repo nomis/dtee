@@ -101,7 +101,7 @@ bool Input::open() {
 		} else {
 			so_rcvbuf = MINIMUM_RCVBUF_SIZE;
 		}
-	} catch (std::exception &e) {
+	} catch (const std::exception &e) {
 		// i18n: %1 = exception message
 		print_error(format(_("input socket: %1%")), e);
 
@@ -135,7 +135,7 @@ bool Input::open() {
 	try {
 		out_ep_ = temp_dir.register_file("o");
 		open_output(input_, input_ep, out_, out_ep_, so_sndbuf);
-	} catch (std::exception &e) {
+	} catch (const std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stdout socket: %1%")), e);
 
@@ -146,7 +146,7 @@ bool Input::open() {
 	try {
 		err_ep_ = temp_dir.register_file("e");
 		open_output(input_, input_ep, err_, err_ep_, so_sndbuf);
-	} catch (std::exception &e) {
+	} catch (const std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stderr socket: %1%")), e);
 
@@ -212,7 +212,7 @@ void Input::open_output(datagram_protocol::socket &input,
 void Input::close_outputs() {
 	try {
 		out_.close();
-	} catch (std::exception &e) {
+	} catch (const std::exception &e) {
 		// i18n: %1 = exception message
 		print_error(format(_("stdout socket: %1%")), e);
 
@@ -221,7 +221,7 @@ void Input::close_outputs() {
 
 	try {
 		err_.close();
-	} catch (std::exception &e) {
+	} catch (const std::exception &e) {
 		// i18n: %1 = exception message
 		print_error(format(_("stderr socket: %1%")), e);
 
@@ -255,7 +255,7 @@ void Input::fork_child() {
 
 	try {
 		input_.close();
-	} catch (std::exception &e) {
+	} catch (const std::exception &e) {
 		// i18n: %1 = exception message
 		print_error(format(_("input socket: %1%")), e);
 	}

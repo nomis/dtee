@@ -22,6 +22,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <exception>
 #include <iostream>
 #include <string>
 #include <typeinfo>
@@ -214,7 +215,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 			display_usage(visible_opts);
 			exit(EX_USAGE);
 		}
-	} catch (std::exception &e) {
+	} catch (const std::exception &e) {
 		print_error(format("%1%"), e);
 		// i18n: %1 = program name; %2 = help argument
 		cerr << format(_("Try '%1% %2%' for more information.")) % display_name_ % "-h" << endl;

@@ -24,6 +24,7 @@
 #include <csignal>
 #include <cstdlib>
 #include <cxxabi.h>
+#include <exception>
 #include <memory>
 #include <string>
 #include <system_error>
