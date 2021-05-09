@@ -1,9 +1,10 @@
 . "$(dirname -- "$0")"/../util/common.sh
 
-is_acl_override && exit $TEST_EX_SKIP
+is_acl_directory_traversal_override && exit $TEST_EX_SKIP
 
-rmdir "$TMPDIR/permission-denied"
-(umask 0333; mkdir -p "$TMPDIR/permission-denied"; chmod a-w "$TMPDIR/permission-denied")
+mkdir -p "$TMPDIR/permission-denied/tmp"
+chmod 000 "$TMPDIR/permission-denied"
+
 export TMPDIR="$TMPDIR/permission-denied/tmp"
 
 run_test -q "$RUN"

@@ -69,7 +69,10 @@ TEST_ALT_STDOUT=
 TEST_ALT_STDERR=
 
 # Use a consistent and isolated temporary directory
-rm -rf "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
+if [ -e "$TESTDIR/$NAME.tmp" ]; then
+	chmod u+rwx -R "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
+	rm -rf "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
+fi
 mkdir -p "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
 export TMPDIR="./$TESTDIR/$NAME.tmp"
 
@@ -118,6 +121,20 @@ function is_acl_override() {
 		*)
 			# Running as root
 			return [ "$(id -u)" -eq 0 ]
+			;;
+	esac
+}
+
+function is_acl_directory_traversal_override() {
+	# Is -x on directories ineffective?
+	case "$UNAME" in
+		CYGWIN_*)
+			return 0
+			;;
+
+		*)
+			is_acl_override
+			return $?
 			;;
 	esac
 }
