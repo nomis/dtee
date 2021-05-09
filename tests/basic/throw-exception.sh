@@ -5,4 +5,4 @@ TEST_LD_PRELOAD=(test-write-throw-exception)
 run_test ./util/test-lorem-ipsum-late-exit 1 THROW
 RET=$?
 
-variables_must_eq RET $EX_IOERR
+variables_must_eq RET $EX_SOFTWARE

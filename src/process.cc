@@ -78,15 +78,14 @@ int Process::exit_status() const {
 	case ErrorType::OPEN_OUTPUT:
 		return EX_CANTCREAT;
 
-	case ErrorType::FORK:
-		return EX_OSERR;
-
 	case ErrorType::OPEN_INPUT:
 	case ErrorType::SIGNAL_HANDLER:
 		return EX_UNAVAILABLE;
 
+	case ErrorType::FORK:
+		return EX_OSERR;
+
 	case ErrorType::CLOSE_OUTPUT:
-	case ErrorType::MAIN_LOOP_EXCEPTION:
 	case ErrorType::READ_INPUT:
 	case ErrorType::WRITE_OUTPUT:
 		return EX_IOERR;
@@ -94,6 +93,8 @@ int Process::exit_status() const {
 	case ErrorType::EXECUTE_COMMAND:
 		return EX_NOINPUT;
 
+	case ErrorType::MAIN_LOOP_EXCEPTION:
+		return EX_SOFTWARE;
 	case ErrorType::NONE:
 		break;
 	}
