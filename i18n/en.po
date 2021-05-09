@@ -266,8 +266,20 @@ msgstr "%1%: %4% (signal %2%: %3%)"
 msgid "unable to create temporary directory %1%: %2%"
 msgstr "unable to create temporary directory %1%: %2%"
 
+#. i18n: %1 = exception message
+#: src/temp_directory.cc
+#, boost-format
+msgid "unable to create temporary directory: %1%"
+msgstr "unable to create temporary directory: %1%"
+
 #. i18n: %1 = filename; %2 = errno message
 #: src/temp_file.cc
 #, boost-format
 msgid "unable to create temporary file %1%: %2%"
 msgstr "unable to create temporary file %1%: %2%"
+
+#. i18n: %1 = exception message
+#: src/temp_file.cc
+#, boost-format
+msgid "unable to create temporary file: %1%"
+msgstr "unable to create temporary file: %1%"

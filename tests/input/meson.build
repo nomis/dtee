@@ -1,4 +1,7 @@
 test('temporary directory create failure', bash, suite: 'input', args: [files('temp-dir-failure.sh')], env: test_env, depends: all_test_txt)
+test('temporary directory not found', bash, suite: 'input', args: [files('temp-dir-not-found.sh')], env: test_env, depends: all_test_txt)
+test('temporary directory permission denied', bash, suite: 'input', args: [files('temp-dir-permission-denied.sh')], env: test_env, depends: all_test_txt)
+test('temporary directory too long', bash, suite: 'input', args: [files('temp-dir-too-long.sh')], env: test_env, depends: all_test_txt)
 test('socket name too long', bash, suite: 'input', args: [files('socket-name-too-long.sh')], env: test_env, depends: all_test_txt)
 test('socket create failure (input)', bash, suite: 'input', args: [files('socket-create-failure.sh')], env: test_env, depends: all_test_txt)
 test('socket create failure (stdout)', bash, suite: 'input', args: [files('socket-create-failure-2.sh')], env: test_env, depends: all_test_txt)
@@ -14,6 +17,9 @@ test('socket shutdown failure (stdout)', bash, suite: 'input', args: [files('soc
 test('socket shutdown failure (stderr)', bash, suite: 'input', args: [files('socket-shutdown-failure-2.sh')], env: test_env, depends: all_test_txt)
 
 test('cron temporary directory create failure', bash, suite: 'input', args: [files('cron-temp-dir-failure.sh')], env: test_env, depends: all_test_txt)
+test('cron temporary directory not found', bash, suite: 'input', args: [files('cron-temp-dir-not-found.sh')], env: test_env, depends: all_test_txt)
+test('cron temporary directory permission denied', bash, suite: 'input', args: [files('cron-temp-dir-permission-denied.sh')], env: test_env, depends: all_test_txt)
+test('cron temporary directory too long', bash, suite: 'input', args: [files('cron-temp-dir-too-long.sh')], env: test_env, depends: all_test_txt)
 test('cron socket name too long', bash, suite: 'input', args: [files('cron-socket-name-too-long.sh')], env: test_env, depends: all_test_txt)
 test('cron socket create failure', bash, suite: 'input', args: [files('cron-socket-create-failure.sh')], env: test_env, depends: all_test_txt)
 test('cron socket create and output file open failure', bash, suite: 'input', args: [files('cron-socket-create-and-output-failure.sh')], env: test_env, depends: all_test_txt)

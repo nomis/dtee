@@ -1,0 +1,14 @@
+./dtee: unable to create temporary file: boost::filesystem::status: EACCES: "./dtee@test/input/cron-temp-dir-permission-denied.tmp/permission-denied/tmp"
+./dtee: unable to create temporary directory: boost::filesystem::status: EACCES: "./dtee@test/input/cron-temp-dir-permission-denied.tmp/permission-denied/tmp"
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+commodo fatback meatball proident. Do commodo tongue jerky doner. Pork loin
+eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+occaecat sunt swine deserunt. Proident turkey dolor est duis qui jowl magna
+in culpa qui officia deserunt mollit anim id est laborum.
+elit ham hock enim boudin brisket laborum t-bone. Drumstick sirloin pig.

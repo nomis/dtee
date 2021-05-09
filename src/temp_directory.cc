@@ -21,6 +21,7 @@
 
 #include <cstdlib>
 #include <cerrno>
+#include <exception>
 #include <string>
 #include <vector>
 
@@ -38,18 +39,23 @@ using ::std::vector;
 namespace dtee {
 
 TempDirectory::TempDirectory(const string &name) {
-	const string pattern = temp_filename_pattern(name);
-	vector<char> filename{pattern.cbegin(), pattern.cend() + 1};
-	char *temp_dir;
+	try {
+		const string pattern = temp_filename_pattern(name);
+		vector<char> filename{pattern.cbegin(), pattern.cend() + 1};
+		char *temp_dir;
 
-	errno = 0;
-	temp_dir = ::mkdtemp(filename.data());
-	if (temp_dir == nullptr) {
-		auto errno_copy = errno;
-		// i18n: %1 = filename; %2 = errno message
-		print_system_error(format(_("unable to create temporary directory %1%: %2%")) % pattern, errno_copy);
-	} else {
-		name_ = temp_dir;
+		errno = 0;
+		temp_dir = ::mkdtemp(filename.data());
+		if (temp_dir == nullptr) {
+			auto errno_copy = errno;
+			// i18n: %1 = filename; %2 = errno message
+			print_system_error(format(_("unable to create temporary directory %1%: %2%")) % pattern, errno_copy);
+		} else {
+			name_ = temp_dir;
+		}
+	} catch (const std::exception &e) {
+		// i18n: %1 = exception message
+		print_error(format(_("unable to create temporary directory: %1%")), e);
 	}
 }
 

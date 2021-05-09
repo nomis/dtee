@@ -83,6 +83,9 @@ static char *dtee_test_strerror(int errnum) {
 #ifdef ENOTCONN
 	STRERROR_FOR(ENOTCONN)
 #endif
+#ifdef ENOTDIR
+	STRERROR_FOR(ENOTDIR)
+#endif
 #ifdef EPERM
 	STRERROR_FOR(EPERM)
 #endif
