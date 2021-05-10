@@ -64,7 +64,7 @@ dtee = executable('dtee',
 			'filesystem',
 			'program_options',
 			'system',
-		]),
+		], include_type: 'system'),
 	] + gettext_deps,
 	install: true)
 
