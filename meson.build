@@ -14,9 +14,6 @@ project('dtee',
 c = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
 
-subdir('src')
-subdir('i18n')
-
 if not (c.get_id() == 'gcc' and c.version().version_compare('<5'))
 	if c.has_argument('-Wshadow')
 		add_project_arguments('-Wshadow', language: 'c')
@@ -36,11 +33,11 @@ if cpp.has_argument('-pipe')
 endif
 
 if host_machine.system() == 'freebsd' or host_machine.system() == 'dragonfly'
-	c_args = []
+	c_args = ['-isystem/usr/local/include']
 elif host_machine.system() == 'openbsd'
-	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_BSD_SOURCE']
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_BSD_SOURCE', '-isystem/usr/local/include']
 elif host_machine.system() == 'netbsd'
-	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_NETBSD_SOURCE']
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_NETBSD_SOURCE', '-isystem/usr/pkg/include']
 elif host_machine.system() == 'gnu'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-DPIPE_BUF=4096', '-DPATH_MAX=4096']
 elif host_machine.system() == 'darwin'
@@ -52,6 +49,9 @@ elif host_machine.system() == 'cygwin'
 else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
 endif
+
+subdir('src')
+subdir('i18n')
 
 dtee = executable('dtee',
 	source_files,
