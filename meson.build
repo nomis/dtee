@@ -44,7 +44,9 @@ elif host_machine.system() == 'netbsd'
 elif host_machine.system() == 'gnu'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-DPIPE_BUF=4096', '-DPATH_MAX=4096']
 elif host_machine.system() == 'darwin'
-	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_DARWIN_C_SOURCE']
+	# Workaround Apple clang bug where /usr/local/include is built-in but not considered a system directory by setting "-isystem/usr/local/include"
+	# Workaround Meson bug where "-isystem/usr/local/include" is filtered out of the command line by adding an extra "/" (https://github.com/mesonbuild/meson/issues/8755)
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_DARWIN_C_SOURCE', '-isystem/usr/local/include/']
 elif host_machine.system() == 'cygwin'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_GNU_SOURCE']
 else # linux
