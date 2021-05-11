@@ -144,9 +144,9 @@ install:
 
 script:
   - if [ "$BUILD" = "app" ]; then
-      make CC=$C_COMPILER CXX=$CXX_COMPILER DESTDIR="`pwd`/build/install" MESON_OPTS="-Dtest_expect_fail=true" distclean check install || exit 1;
+      make CC=$C_COMPILER CXX=$CXX_COMPILER DESTDIR="`pwd`/build/install" distclean check install || exit 1;
       if [ $UNITY -eq 1 ]; then
-          make CC=$C_COMPILER CXX=$CXX_COMPILER DESTDIR="`pwd`/build/install" MESON_OPTS="-Dtest_expect_fail=true --unity on" distclean check install || exit 1;
+          make CC=$C_COMPILER CXX=$CXX_COMPILER DESTDIR="`pwd`/build/install" MESON_OPTS="--unity on" distclean check install || exit 1;
       fi;
     elif [ "$BUILD" = "docs" ]; then
       make -C docs man html linkcheck || exit 1;
