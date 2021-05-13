@@ -23,7 +23,6 @@
 #include <cerrno>
 #include <csignal>
 #include <cstdlib>
-#include <cxxabi.h>
 #include <exception>
 #include <memory>
 #include <string>
@@ -32,6 +31,7 @@
 #include <vector>
 
 #include <boost/asio.hpp>
+#include <boost/core/demangle.hpp>
 #include <boost/format.hpp>
 
 #include "command_line.h"
@@ -46,6 +46,7 @@
 #include "stream_output.h"
 
 using ::boost::asio::io_service;
+using ::boost::core::demangle;
 using ::boost::format;
 using ::std::make_shared;
 using ::std::make_unique;
@@ -209,17 +210,8 @@ void Application::main_loop(boost::asio::io_service &io, ResultHandler &output) 
 			io.reset();
 		} while (io.poll() > 0);
 	} catch (const std::exception &e) {
-		const char *name = typeid(e).name();
-		int status = ~0;
-
-		unique_ptr<char, decltype(::free)*> demangled_name{
-			abi::__cxa_demangle(name, nullptr, 0, &status), ::free};
-		if (status == 0 && demangled_name.get() != nullptr) {
-			name = demangled_name.get();
-		}
-
 		// i18n: %1 = exception type name; %2 = exception message
-		print_error(format(_("%1%: %2%")) % name, e);
+		print_error(format(_("%1%: %2%")) % demangle(typeid(e).name()), e);
 
 		// Stop immediately because there is no guarantee that further I/O
 		// handling will work without either missing SIGCHLD for the command
