@@ -62,6 +62,9 @@ static char *dtee_test_strerror(int errnum) {
 #ifdef ECONNRESET
 	STRERROR_FOR(ECONNRESET)
 #endif
+#ifdef EFAULT
+	STRERROR_FOR(EFAULT)
+#endif
 #ifdef EINVAL
 	STRERROR_FOR(EINVAL)
 #endif

@@ -4,7 +4,7 @@ xfail_stream_1mb = xfail_stream
 xfail_stream_32mb = xfail_stream or ['cygwin'].contains(host_machine.system())
 xfail_stream_256mb = xfail_stream or ['cygwin'].contains(host_machine.system())
 xfail_writes_of_1_byte = xfail_general_writes or xfail_stream
-xfail_small_writes = xfail_general_writes
+xfail_small_writes = xfail_general_writes or ['dragonfly'].contains(host_machine.system())
 xfail_large_writes = xfail_general_writes
 
 test('write 0 bytes (stdout)', bash, suite: 'write', args: [files('write-0-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
