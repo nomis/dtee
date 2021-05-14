@@ -100,8 +100,8 @@ msgstr "Try '%1% %2%' for more information.\n"
 #. i18n: %1 = program name
 #: src/command_line.cc
 #, boost-format
-msgid "Usage: %1% [OPTION]... COMMAND [ARG]..."
-msgstr "Usage: %1% [OPTION]... COMMAND [ARG]..."
+msgid "Usage: %1% [OPTION]... COMMAND [ARG]...\n"
+msgstr "Usage: %1% [OPTION]... COMMAND [ARG]...\n"
 
 #. i18n: Line wrap to a maximum of 79 characters.
 #: src/command_line.cc

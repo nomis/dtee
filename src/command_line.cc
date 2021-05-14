@@ -228,7 +228,7 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 
 void CommandLine::display_usage(const po::options_description &options) const {
 	// i18n: %1 = program name
-	cout << format(_("Usage: %1% [OPTION]... COMMAND [ARG]...")) % display_name_ << "\n\n";
+	cout << format(_("Usage: %1% [OPTION]... COMMAND [ARG]...\n")) % display_name_ << "\n";
 	if (cron_mode()) {
 		cout << _( // i18n: Line wrap to a maximum of 79 characters.
 			"Run COMMAND with standard output and standard error copied to each FILE\n"
