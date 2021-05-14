@@ -35,11 +35,9 @@ using ::std::string;
 namespace dtee {
 
 void print_error(const format &message) {
-	// i18n: %1 = program name; %2 = error message
-	const string line = str(format(_("%1%: %2%\n")) % CommandLine::display_name() % message);
-
 	cerr.clear();
-	cerr.write(line.c_str(), line.length());
+	// i18n: %1 = program name; %2 = error message
+	cerr << (format(_("%1%: %2%\n")) % CommandLine::display_name() % message).str();
 }
 
 void print_error(format message, const boost::system::error_code &ec) {

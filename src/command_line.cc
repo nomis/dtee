@@ -217,8 +217,9 @@ void CommandLine::parse(int argc, const char* const argv[]) {
 		}
 	} catch (const std::exception &e) {
 		print_error(format("%1%"), e);
+		cerr.clear();
 		// i18n: %1 = program name; %2 = help argument
-		cerr << format(_("Try '%1% %2%' for more information.")) % display_name_ % "-h" << endl;
+		cerr << (format(_("Try '%1% %2%' for more information.\n")) % display_name_ % "-h").str();
 		exit(EX_USAGE);
 	}
 

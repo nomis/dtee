@@ -94,8 +94,8 @@ msgstr "output version information and exit"
 #. i18n: %1 = program name; %2 = help argument
 #: src/command_line.cc
 #, boost-format
-msgid "Try '%1% %2%' for more information."
-msgstr "Try '%1% %2%' for more information."
+msgid "Try '%1% %2%' for more information.\n"
+msgstr "Try '%1% %2%' for more information.\n"
 
 #. i18n: %1 = program name
 #: src/command_line.cc
