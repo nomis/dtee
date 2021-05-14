@@ -37,7 +37,7 @@ if host_machine.system() == 'freebsd' or host_machine.system() == 'dragonfly'
 elif host_machine.system() == 'openbsd'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_BSD_SOURCE', '-isystem/usr/local/include']
 elif host_machine.system() == 'netbsd'
-	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_NETBSD_SOURCE', '-isystem/usr/pkg/include']
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_NETBSD_SOURCE']
 elif host_machine.system() == 'gnu'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-DPIPE_BUF=4096', '-DPATH_MAX=4096']
 elif host_machine.system() == 'darwin'
@@ -48,6 +48,12 @@ elif host_machine.system() == 'cygwin'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_GNU_SOURCE']
 else # linux
 	c_args = ['-D_POSIX_C_SOURCE=200809L']
+endif
+
+if host_machine.system() == 'netbsd'
+	rpath = '/usr/pkg/lib'
+else # linux, freebsd, openbsd, netbsd, dragonfly, gnu, darwin, cygwin
+	rpath = ''
 endif
 
 subdir('src')
@@ -68,6 +74,8 @@ dtee = executable('dtee',
 			'system',
 		], include_type: 'system'),
 	] + gettext_deps,
+	build_rpath: rpath,
+	install_rpath: rpath,
 	install: true)
 
 ln = find_program('ln')

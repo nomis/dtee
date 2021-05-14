@@ -43,10 +43,10 @@ constexpr bool OpenBSD = false;
 #endif
 
 #if defined(__NetBSD__)
-constexpr bool NetBSD = true;
+constexpr bool NetBSD_ = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 128 * 1024;
 #else
-constexpr bool NetBSD = false;
+constexpr bool NetBSD_ = false;
 #endif
 
 #if defined(__DragonFly__)
