@@ -14,13 +14,11 @@ project('dtee',
 c = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')
 
-if not (c.get_id() == 'gcc' and c.version().version_compare('<5'))
-	if c.has_argument('-Wshadow')
-		add_project_arguments('-Wshadow', language: 'c')
-	endif
-	if cpp.has_argument('-Wshadow')
-		add_project_arguments('-Wshadow', language: 'cpp')
-	endif
+if c.has_argument('-Wshadow')
+	add_project_arguments('-Wshadow', language: 'c')
+endif
+if cpp.has_argument('-Wshadow')
+	add_project_arguments('-Wshadow', language: 'cpp')
 endif
 
 if c.has_argument('-pipe')
