@@ -1,9 +1,8 @@
 . "$(dirname -- "$0")"/../util/common.sh
 
 # Provide no arguments, get exit code 64 and usage information (excluding cron option)
-FIFO=$(make_fifo "out")
-./cronty >"$FIFO" &
-PID=$!
+./cronty 1>"$TESTDIR/$NAME.out" 2>"$TESTDIR/$NAME.err"
+RET=$?
 
 USAGE=0
 CRON=0
@@ -13,11 +12,14 @@ while read -r line; do
 	"Usage: ./cronty "*) USAGE=1 ;;
 	*"operate in cron mode"*) CRON=1 ;;
 	esac
-done <"$FIFO"
+done <"$TESTDIR/$NAME.out"
 
-wait $PID
-RET=$?
+ERR=0
+while read -r line; do
+	ERR=1
+done <"$TESTDIR/$NAME.err"
 
 variables_must_eq RET $EX_USAGE \
 	USAGE 1 \
-	CRON 0
+	CRON 0 \
+	ERR 0

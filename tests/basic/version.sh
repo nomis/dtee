@@ -1,9 +1,8 @@
 . "$(dirname -- "$0")"/../util/common.sh
 
 # Ask for the version, get exit code 0 and version information
-FIFO=$(make_fifo "out")
-./dtee --version >"$FIFO" &
-PID=$!
+./dtee --version 1>"$TESTDIR/$NAME.out" 2>"$TESTDIR/$NAME.err"
+RET=$?
 
 VERSION=0
 COPYRIGHT=0
@@ -21,10 +20,12 @@ while read -r line; do
 	*Translation*) TRANSLATION=1 ;;
 	*translator*credits*) CREDITS=1 ;;
 	esac
-done <"$FIFO"
+done <"$TESTDIR/$NAME.out"
 
-wait $PID
-RET=$?
+ERR=0
+while read -r line; do
+	ERR=1
+done <"$TESTDIR/$NAME.err"
 
 variables_must_eq RET $EXIT_SUCCESS \
 	VERSION 1 \
@@ -32,4 +33,5 @@ variables_must_eq RET $EXIT_SUCCESS \
 	LICENCE 1 \
 	EMPTY 0 \
 	TRANSLATION 0 \
-	CREDITS 0
+	CREDITS 0 \
+	ERR 0
