@@ -90,7 +90,7 @@ bool Input::open() {
 		input_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		input_.bind(input_ep);
 
-		if (!platform::Hurd) {
+		if (!platform::hurd) {
 			input_.get_option(so_rcvbuf);
 
 			if (so_rcvbuf.value() < MINIMUM_RCVBUF_SIZE) {
@@ -111,7 +111,7 @@ bool Input::open() {
 
 	int buffer_size = so_rcvbuf.value();
 
-	if (platform::Linux) {
+	if (platform::linux) {
 		// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
 		// From Boost (1.62): "Linux puts additional stuff into the
 		//     buffers so that only about half is actually available to the application.
@@ -154,7 +154,7 @@ bool Input::open() {
 		return false;
 	}
 
-	if (platform::OpenBSD || platform::Hurd || platform::Cygwin) {
+	if (platform::openbsd || platform::hurd || platform::cygwin) {
 		if (out_ep_ == err_ep_) {
 			// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 			// so they both look the same.
@@ -179,7 +179,7 @@ void Input::open_output(datagram_protocol::socket &input,
 	output.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 	output.bind(output_ep);
 
-	if (platform::OpenBSD || platform::Hurd) {
+	if (platform::openbsd || platform::hurd) {
 		// Workaround Boost.Asio (1.66.0) bug on OpenBSD 6.4
 		// Endpoint paths can't be compared correctly if they weren't both
 		// constructed by the application or both returned by the OS.
@@ -194,12 +194,12 @@ void Input::open_output(datagram_protocol::socket &input,
 	output.connect(input_ep);
 	output.shutdown(datagram_protocol::socket::shutdown_receive);
 
-	if (!platform::Hurd) {
+	if (!platform::hurd) {
 		// Not supported on GNU (Hurd 0.9, Mach 1.8)
 		output.set_option(so_sndbuf);
 	}
 
-	if (platform::Cygwin) {
+	if (platform::cygwin) {
 		// On Cygwin, getsockname() does not return the same value as
 		// recvfrom() or getpeername() does for the other socket.
 		// Send an empty message to obtain the real socket address.

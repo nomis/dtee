@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2021  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,60 +22,62 @@ namespace dtee {
 namespace platform {
 
 #if defined(__linux__)
-constexpr bool Linux = true;
+constexpr bool linux = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 0;
 #else
-constexpr bool Linux = false;
+constexpr bool linux = false;
 #endif
 
 #if defined(__FreeBSD__)
-constexpr bool FreeBSD = true;
+constexpr bool freebsd = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #else
-constexpr bool FreeBSD = false;
+constexpr bool freebsd = false;
 #endif
 
 #if defined(__OpenBSD__)
-constexpr bool OpenBSD = true;
+constexpr bool openbsd = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #else
-constexpr bool OpenBSD = false;
+constexpr bool openbsd = false;
 #endif
 
 #if defined(__NetBSD__)
-constexpr bool NetBSD_ = true;
+constexpr bool netbsd = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 128 * 1024;
 #else
-constexpr bool NetBSD_ = false;
+constexpr bool netbsd = false;
 #endif
 
 #if defined(__DragonFly__)
-constexpr bool DragonFlyBSD = true;
+constexpr bool dragonflybsd = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #else
-constexpr bool DragonFlyBSD = false;
+constexpr bool dragonflybsd = false;
 #endif
 
 #if defined(__GNU__)
-constexpr bool Hurd = true;
+constexpr bool hurd = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 0;
 #else
-constexpr bool Hurd = false;
+constexpr bool hurd = false;
 #endif
 
 #if defined(__APPLE__)
-constexpr bool Darwin = true;
+constexpr bool darwin = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #else
-constexpr bool Darwin = false;
+constexpr bool darwin = false;
 #endif
 
 #if defined(__CYGWIN__)
-constexpr bool Cygwin = true;
+constexpr bool cygwin = true;
 constexpr int MINIMUM_RCVBUF_SIZE = 2 * 1024 * 1024;
 #else
-constexpr bool Cygwin = false;
+constexpr bool cygwin = false;
 #endif
+
+static_assert(MINIMUM_RCVBUF_SIZE >= 0, "Unknown platform");
 
 } // namespace platform
 
