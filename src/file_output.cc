@@ -65,7 +65,7 @@ FileOutput::~FileOutput() {
 	}
 }
 
-void FileOutput::print_file_error() {
+void FileOutput::print_file_error() const {
 	auto errno_copy = errno;
 	// i18n: %1 = filename; %2 = errno message
 	print_system_error(format(_("%1%: %2%")) % filename_, errno_copy);

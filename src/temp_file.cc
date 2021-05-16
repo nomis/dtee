@@ -71,7 +71,7 @@ bool TempFile::open() {
 	}
 }
 
-string TempFile::name() {
+string TempFile::name() const {
 	return filename_;
 }
 

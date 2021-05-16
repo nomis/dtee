@@ -43,7 +43,7 @@ public:
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 
 private:
-	void print_file_error();
+	void print_file_error() const;
 
 	const std::string filename_; //!< Output filename
 	const bool append_;

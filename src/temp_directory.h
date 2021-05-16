@@ -27,7 +27,7 @@ public:
 	explicit TempDirectory(const std::string &name);
 	~TempDirectory();
 
-	bool valid();
+	bool valid() const;
 	std::string register_file(const std::string &name); //!< Register filenames that will be unlinked before the directory is unlinked
 
 	TempDirectory(const TempDirectory&) = delete;

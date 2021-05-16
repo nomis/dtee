@@ -69,7 +69,7 @@ TempDirectory::~TempDirectory() {
 	}
 }
 
-bool TempDirectory::valid() {
+bool TempDirectory::valid() const {
 	return !name_.empty();
 }
 

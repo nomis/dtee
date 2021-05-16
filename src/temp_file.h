@@ -31,8 +31,8 @@ public:
 	static std::string template_filename(const std::string &name);
 
 	bool open();
-	std::string name();
-	inline int fd() { return fd_; }
+	std::string name() const;
+	constexpr inline int fd() const { return fd_; }
 	void close();
 
 	TempFile(const TempFile&) = delete;
