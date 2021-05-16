@@ -22,59 +22,59 @@ namespace dtee {
 namespace platform {
 
 #if defined(__linux__)
-constexpr bool linux = true;
-constexpr int MINIMUM_RCVBUF_SIZE = 0;
+constexpr const bool linux = true;
+constexpr const int MINIMUM_RCVBUF_SIZE = 0;
 #else
-constexpr bool linux = false;
+constexpr const bool linux = false;
 #endif
 
 #if defined(__FreeBSD__)
-constexpr bool freebsd = true;
-constexpr int MINIMUM_RCVBUF_SIZE = 512 * 1024;
+constexpr const bool freebsd = true;
+constexpr const int MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #else
-constexpr bool freebsd = false;
+constexpr const bool freebsd = false;
 #endif
 
 #if defined(__OpenBSD__)
-constexpr bool openbsd = true;
-constexpr int MINIMUM_RCVBUF_SIZE = 512 * 1024;
+constexpr const bool openbsd = true;
+constexpr const int MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #else
-constexpr bool openbsd = false;
+constexpr const bool openbsd = false;
 #endif
 
 #if defined(__NetBSD__)
-constexpr bool netbsd = true;
-constexpr int MINIMUM_RCVBUF_SIZE = 128 * 1024;
+constexpr const bool netbsd = true;
+constexpr const int MINIMUM_RCVBUF_SIZE = 128 * 1024;
 #else
-constexpr bool netbsd = false;
+constexpr const bool netbsd = false;
 #endif
 
 #if defined(__DragonFly__)
-constexpr bool dragonflybsd = true;
-constexpr int MINIMUM_RCVBUF_SIZE = 512 * 1024;
+constexpr const bool dragonflybsd = true;
+constexpr const int MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #else
-constexpr bool dragonflybsd = false;
+constexpr const bool dragonflybsd = false;
 #endif
 
 #if defined(__GNU__)
-constexpr bool hurd = true;
-constexpr int MINIMUM_RCVBUF_SIZE = 0;
+constexpr const bool hurd = true;
+constexpr const int MINIMUM_RCVBUF_SIZE = 0;
 #else
-constexpr bool hurd = false;
+constexpr const bool hurd = false;
 #endif
 
 #if defined(__APPLE__)
-constexpr bool darwin = true;
-constexpr int MINIMUM_RCVBUF_SIZE = 512 * 1024;
+constexpr const bool darwin = true;
+constexpr const int MINIMUM_RCVBUF_SIZE = 512 * 1024;
 #else
-constexpr bool darwin = false;
+constexpr const bool darwin = false;
 #endif
 
 #if defined(__CYGWIN__)
-constexpr bool cygwin = true;
-constexpr int MINIMUM_RCVBUF_SIZE = 2 * 1024 * 1024;
+constexpr const bool cygwin = true;
+constexpr const int MINIMUM_RCVBUF_SIZE = 2 * 1024 * 1024;
 #else
-constexpr bool cygwin = false;
+constexpr const bool cygwin = false;
 #endif
 
 static_assert(MINIMUM_RCVBUF_SIZE >= 0, "Unknown platform");

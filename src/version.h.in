@@ -19,6 +19,6 @@
 
 namespace dtee {
 
-constexpr const char *VERSION = "@VCS_TAG@";
+constexpr const char * const VERSION = "@VCS_TAG@";
 
 } // namespace dtee
