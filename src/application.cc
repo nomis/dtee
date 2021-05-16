@@ -45,6 +45,10 @@
 #include "signal_handler.h"
 #include "stream_output.h"
 
+#ifdef GCOV_ENABLED
+extern "C" void __gcov_flush(void);
+#endif
+
 using ::boost::asio::io_service;
 using ::boost::core::demangle;
 using ::boost::format;
@@ -56,10 +60,6 @@ using ::std::string;
 using ::std::type_info;
 using ::std::unique_ptr;
 using ::std::vector;
-
-#ifdef GCOV_ENABLED
-extern "C" void __gcov_flush(void);
-#endif
 
 namespace dtee {
 

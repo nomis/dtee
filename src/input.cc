@@ -39,6 +39,10 @@
 #include "print_error.h"
 #include "temp_directory.h"
 
+#ifdef GCOV_ENABLED
+extern "C" void __gcov_flush(void);
+#endif
+
 using ::boost::asio::buffer;
 using ::boost::asio::io_service;
 using ::boost::asio::local::datagram_protocol;
@@ -51,10 +55,6 @@ using ::std::string;
 using ::std::vector;
 
 namespace p = ::std::placeholders;
-
-#ifdef GCOV_ENABLED
-extern "C" void __gcov_flush(void);
-#endif
 
 namespace dtee {
 
