@@ -22,9 +22,7 @@
 
 #include <algorithm>
 #include <cerrno>
-#include <climits>
 #include <cstddef>
-#include <cstdio>
 #include <exception>
 #include <functional>
 #include <memory>
@@ -69,22 +67,28 @@ Input::Input(shared_ptr<boost::asio::io_service> io, shared_ptr<Dispatch> output
 }
 
 bool Input::open() {
-	// There is no equivalent of mkstemp() for local sockets,
-	// so we create them in a temporary directory instead.
+	// There is no equivalent of mkstemp() for local sockets, so we
+	// create them in a temporary directory instead. It will be deleted
+	// automatically when the variable goes out of scope at the end of
+	// the function.
 	TempDirectory temp_dir{"I"};
+	datagram_protocol::endpoint input_ep;
+	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
 
-	if (!temp_dir.valid()) {
+	if (temp_dir.valid()
+			&& open_input(temp_dir, input_ep, so_rcvbuf)
+			&& open_outputs(temp_dir, input_ep, so_rcvbuf)) {
+		prepare_buffer(so_rcvbuf);
+		return true;
+	} else {
 		output_->error(ErrorType::OPEN_INPUT);
 		return false;
 	}
+}
 
-	// Ensure the receive buffer is large enough at least as large as both
-	// PIPE_BUF (for pipe writes) and BUFSIZ (for file writes)
-	const int MINIMUM_RCVBUF_SIZE = max(PIPE_BUF, max(BUFSIZ, platform::MINIMUM_RCVBUF_SIZE));
-
-	datagram_protocol::socket::receive_buffer_size so_rcvbuf;
-	datagram_protocol::endpoint input_ep;
-
+bool Input::open_input(TempDirectory &temp_dir,
+		datagram_protocol::endpoint &input_ep,
+		datagram_protocol::socket::receive_buffer_size &so_rcvbuf) {
 	try {
 		input_ep = temp_dir.register_file("i");
 		input_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
@@ -101,56 +105,33 @@ bool Input::open() {
 		} else {
 			so_rcvbuf = MINIMUM_RCVBUF_SIZE;
 		}
+
+		return true;
 	} catch (const std::exception &e) {
 		// i18n: %1 = exception message
 		print_error(format(_("input socket: %1%")), e);
-
-		output_->error(ErrorType::OPEN_INPUT);
 		return false;
 	}
+}
 
-	int buffer_size = so_rcvbuf.value();
-
-	if (platform::linux) {
-		// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
-		// From Boost (1.62): "Linux puts additional stuff into the
-		//     buffers so that only about half is actually available to the application.
-		//     The retrieved value is divided by 2 here to make it appear as though the
-		//     correct value has been set."
-		//
-		// Boost is wrong because the kernel is not specified as using half the buffer size.
-		// It would be simpler if the kernel didn't return its doubled value either.
-		// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
-		buffer_size *= 2;
-	}
-
-	if (buffer_size < MINIMUM_RCVBUF_SIZE) {
-		buffer_size = MINIMUM_RCVBUF_SIZE;
-	}
-
-	buffer_.resize(buffer_size);
-
-	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
-
+bool Input::open_outputs(TempDirectory &temp_dir,
+		const datagram_protocol::endpoint &input_ep,
+		const datagram_protocol::socket::receive_buffer_size &so_rcvbuf) {
 	try {
 		out_ep_ = temp_dir.register_file("o");
-		open_output(input_, input_ep, out_, out_ep_, so_sndbuf);
+		open_output(input_ep, out_, out_ep_, so_rcvbuf);
 	} catch (const std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stdout socket: %1%")), e);
-
-		output_->error(ErrorType::OPEN_INPUT);
 		return false;
 	}
 
 	try {
 		err_ep_ = temp_dir.register_file("e");
-		open_output(input_, input_ep, err_, err_ep_, so_sndbuf);
+		open_output(input_ep, err_, err_ep_, so_rcvbuf);
 	} catch (const std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stderr socket: %1%")), e);
-
-		output_->error(ErrorType::OPEN_INPUT);
 		return false;
 	}
 
@@ -162,8 +143,6 @@ bool Input::open() {
 				"output socket endpoints are indistinguishable:\n"
 				"\tstdout socket: %1%\n\tstderr socket: %2%"))
 				% out_ep_.path() % err_ep_.path());
-
-			output_->error(ErrorType::OPEN_INPUT);
 			return false;
 		}
 	}
@@ -171,11 +150,12 @@ bool Input::open() {
 	return true;
 }
 
-void Input::open_output(datagram_protocol::socket &input,
-		const datagram_protocol::endpoint &input_ep,
+void Input::open_output(const datagram_protocol::endpoint &input_ep,
 		datagram_protocol::socket &output,
 		datagram_protocol::endpoint &output_ep,
-		const datagram_protocol::socket::send_buffer_size &so_sndbuf) {
+		const datagram_protocol::socket::receive_buffer_size &so_rcvbuf) {
+	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
+
 	output.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 	output.bind(output_ep);
 
@@ -205,8 +185,29 @@ void Input::open_output(datagram_protocol::socket &input,
 		// Send an empty message to obtain the real socket address.
 		vector<char> empty;
 		output.send(buffer(empty));
-		input.receive_from(buffer(empty), output_ep);
+		input_.receive_from(buffer(empty), output_ep);
 	}
+}
+
+void Input::prepare_buffer(
+		const datagram_protocol::socket::receive_buffer_size &so_rcvbuf) {
+	int buffer_size = so_rcvbuf.value();
+
+	if (platform::linux) {
+		// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
+		// From Boost (1.62): "Linux puts additional stuff into the
+		//     buffers so that only about half is actually available to the application.
+		//     The retrieved value is divided by 2 here to make it appear as though the
+		//     correct value has been set."
+		//
+		// Boost is wrong because the kernel is not specified as using half the buffer size.
+		// It would be simpler if the kernel didn't return its doubled value either.
+		// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
+		buffer_size *= 2;
+	}
+
+	buffer_size = max(buffer_size, MINIMUM_RCVBUF_SIZE);
+	buffer_.resize(buffer_size);
 }
 
 void Input::close_outputs() {

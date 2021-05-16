@@ -23,7 +23,7 @@
 
 namespace dtee {
 
-constexpr int SHELL_EXIT_CODE_SIGNAL = 0x80;
+constexpr const int SHELL_EXIT_CODE_SIGNAL = 0x80;
 
 class Process: virtual public ResultHandler {
 public:

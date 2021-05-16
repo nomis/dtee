@@ -17,7 +17,10 @@
 */
 #pragma once
 
+#include <algorithm>
+#include <climits>
 #include <cstddef>
+#include <cstdio>
 #include <memory>
 #include <string>
 #include <vector>
@@ -27,8 +30,15 @@
 
 #include "dispatch.h"
 #include "input.h"
+#include "platform.h"
+#include "temp_directory.h"
 
 namespace dtee {
+
+// Ensure the receive buffer is large enough; at least as large as both
+// PIPE_BUF (for pipe writes) and BUFSIZ (for file writes)
+constexpr const int MINIMUM_RCVBUF_SIZE = std::max(PIPE_BUF,
+	std::max(BUFSIZ, platform::MINIMUM_RCVBUF_SIZE));
 
 class Input {
 public:
@@ -44,11 +54,19 @@ public:
 	Input& operator=(const Input&) = delete;
 
 private:
-	static void open_output(boost::asio::local::datagram_protocol::socket &input,
+	bool open_input(TempDirectory &temp_dir,
+			boost::asio::local::datagram_protocol::endpoint &input_ep,
+			boost::asio::local::datagram_protocol::socket::receive_buffer_size &so_rcvbuf);
+	bool open_outputs(TempDirectory &temp_dir,
+			const boost::asio::local::datagram_protocol::endpoint &input_ep,
+			const boost::asio::local::datagram_protocol::socket::receive_buffer_size &so_rcvbuf);
+	void open_output(
 			const boost::asio::local::datagram_protocol::endpoint &input_ep,
 			boost::asio::local::datagram_protocol::socket &output,
 			boost::asio::local::datagram_protocol::endpoint &output_ep,
-			const boost::asio::local::datagram_protocol::socket::send_buffer_size &so_sndbuf);
+			const boost::asio::local::datagram_protocol::socket::receive_buffer_size &so_rcvbuf);
+	void prepare_buffer(
+			const boost::asio::local::datagram_protocol::socket::receive_buffer_size &so_rcvbuf);
 	void close_outputs();
 
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);
@@ -57,6 +75,7 @@ private:
 	boost::asio::local::datagram_protocol::socket input_; //!< Incoming socket for data from child process
 	boost::asio::local::datagram_protocol::socket out_; //!< Standard output of child process
 	boost::asio::local::datagram_protocol::socket err_; //!< Standard error of child process
+	boost::asio::local::datagram_protocol::endpoint input_ep_; //!< Endpoint name for data from child process
 	boost::asio::local::datagram_protocol::endpoint out_ep_; //!< Endpoint name for child process standard output
 	boost::asio::local::datagram_protocol::endpoint err_ep_; //!< Endpoint name for child process standard error
 
