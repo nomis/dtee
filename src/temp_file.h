@@ -32,7 +32,7 @@ public:
 
 	bool open();
 	std::string name() const;
-	constexpr inline int fd() const { return fd_; }
+	inline int fd() const { return fd_; }
 	void close();
 
 	TempFile(const TempFile&) = delete;
