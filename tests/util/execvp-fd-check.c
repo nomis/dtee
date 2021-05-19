@@ -12,6 +12,7 @@ static void dtee_test_check_fds(void) {
 		int desc_flags = fcntl(fd, F_GETFD);
 		int status_flags = fcntl(fd, F_GETFL);
 		bool open = (desc_flags != -1) && (status_flags != -1);
+		bool blocking = (status_flags & O_NONBLOCK) == 0;
 		bool cloexec = (desc_flags & FD_CLOEXEC) != 0;
 
 		switch (fd) {
@@ -31,6 +32,20 @@ static void dtee_test_check_fds(void) {
 				fflush(stderr);
 				abort();
 			}
+			break;
+		}
+
+		switch (fd) {
+		case STDOUT_FILENO:
+		case STDERR_FILENO:
+			if (!blocking) {
+				fprintf(stderr, "execvp-fd-check: fd %d is not blocking\n", fd);
+				fflush(stderr);
+				abort();
+			}
+			break;
+
+		default:
 			break;
 		}
 	}
