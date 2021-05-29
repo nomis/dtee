@@ -61,7 +61,7 @@ bool TempFile::open() {
 			return false;
 		} else {
 			filename_ = string(filename.data());
-			unlink(filename_.c_str());
+			::unlink(filename_.c_str());
 			return true;
 		}
 	} catch (const std::exception &e) {
