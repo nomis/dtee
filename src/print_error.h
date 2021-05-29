@@ -26,8 +26,20 @@
 namespace dtee {
 
 void print_error(const boost::format &message);
-void print_error(boost::format message, const boost::system::error_code &ec);
-void print_error(boost::format message, const std::exception &e);
-void print_system_error(boost::format message, int errno_copy);
+
+void print_error(boost::format &message, const boost::system::error_code &ec);
+void inline print_error(boost::format &&message, const boost::system::error_code &ec) {
+	print_error(message, ec);
+}
+
+void print_error(boost::format &message, const std::exception &e);
+void inline print_error(boost::format &&message, const std::exception &e) {
+	print_error(message, e);
+}
+
+void print_system_error(boost::format &message, int errno_copy);
+void inline print_system_error(boost::format &&message, int errno_copy) {
+	print_system_error(message, errno_copy);
+}
 
 } // namespace dtee

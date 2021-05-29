@@ -40,15 +40,15 @@ void print_error(const format &message) {
 	cerr << (format(_("%1%: %2%\n")) % CommandLine::display_name() % message).str();
 }
 
-void print_error(format message, const boost::system::error_code &ec) {
+void print_error(format &message, const boost::system::error_code &ec) {
 	print_error(message % ec.message());
 }
 
-void print_error(format message, const std::exception &e) {
+void print_error(format &message, const std::exception &e) {
 	print_error(message % e.what());
 }
 
-void print_system_error(format message, int errno_copy) {
+void print_system_error(format &message, int errno_copy) {
 	print_error(message % std::error_code(errno_copy, std::system_category()).message());
 }
 
