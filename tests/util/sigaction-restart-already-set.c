@@ -6,6 +6,7 @@
 #include <signal.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #undef sigaction
 #undef __sigaction14
@@ -23,7 +24,7 @@ static int dtee_test_sigaction_restart_already_set(int signum, const dtee_sigact
 	if (act == NULL && oldact != NULL) {
 		int ret = (*next_sigaction)(signum, act, oldact);
 		if (ret == -1) {
-			return ret;
+			abort();
 		}
 
 		// Set SA_RESTART if it's not already set
@@ -33,7 +34,7 @@ static int dtee_test_sigaction_restart_already_set(int signum, const dtee_sigact
 			errno = 0;
 			ret = (*next_sigaction)(signum, oldact, NULL);
 			if (ret == -1) {
-				return ret;
+				abort();
 			}
 		}
 	}
@@ -65,7 +66,7 @@ static int dtee_test___sigaction14_restart_already_set(int signum, const dtee_si
 	if (act == NULL && oldact != NULL) {
 		int ret = (*next___sigaction14)(signum, act, oldact);
 		if (ret == -1) {
-			return ret;
+			abort();
 		}
 
 		// Set SA_RESTART if it's not already set
@@ -75,7 +76,7 @@ static int dtee_test___sigaction14_restart_already_set(int signum, const dtee_si
 			errno = 0;
 			ret = (*next___sigaction14)(signum, oldact, NULL);
 			if (ret == -1) {
-				return ret;
+				abort();
 			}
 		}
 	}
