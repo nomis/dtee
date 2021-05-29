@@ -19,12 +19,9 @@ static bool kernel_core_pattern(char *buf, size_t buflen) {
 	}
 
 	memset(buf, 0, buflen);
-	if (read(fd, buf, buflen) <= 0) {
-		return false;
-	}
-
+	int ret = read(fd, buf, buflen);
 	close(fd);
-	return true;
+	return ret > 0;
 }
 #endif
 
