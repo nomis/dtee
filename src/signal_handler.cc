@@ -118,21 +118,24 @@ bool SignalHandler::add(boost::asio::signal_set &signal_set, int signal_number) 
 	//
 	// This is not thread-safe when the same signal_number is added/removed from the signal_set
 	errno = 0;
-	if (::sigaction(signal_number, NULL, &act) == 0) {
+	int ret = ::sigaction(signal_number, NULL, &act);
+	if (ret == 0) {
 		if ((act.sa_flags & SA_RESTART) == 0) {
 			act.sa_flags |= SA_RESTART;
 
 			errno = 0;
-			if (::sigaction(signal_number, &act, NULL) == 0) {
-				return true;
-			}
+			ret = ::sigaction(signal_number, &act, NULL);
 		}
 	}
 
-	auto errno_copy = errno;
-	// i18n: %1 = system call name; %4 = errno message; %2 = signal number; %3 = signal name
-	print_system_error(format(_("%1%: %4% (signal %2%: %3%)")) % "sigaction" % signal_number % strsignal(signal_number), errno_copy);
-	return false;
+	if (ret != 0) {
+		auto errno_copy = errno;
+		// i18n: %1 = system call name; %4 = errno message; %2 = signal number; %3 = signal name
+		print_system_error(format(_("%1%: %4% (signal %2%: %3%)")) % "sigaction" % signal_number % strsignal(signal_number), errno_copy);
+		return false;
+	}
+
+	return true;
 }
 
 void SignalHandler::stop() {

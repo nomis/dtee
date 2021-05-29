@@ -59,6 +59,7 @@ shared_library('test-security-recreate-output-socket', ['security-recreate-outpu
 shared_library('test-sigaction-failure', ['sigaction-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir())
 shared_library('test-sigaction-no-restart', ['sigaction-no-restart.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir())
 shared_library('test-sigaction-query-failure', ['sigaction-query-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir())
+shared_library('test-sigaction-restart-already-set', ['sigaction-restart-already-set.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir())
 shared_library('test-sigaction-set-restart-failure', ['sigaction-set-restart-failure.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir())
 shared_library('test-socket-add-extra-source', ['socket-add-extra-source.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee, testlib_is_fd_unix_socket], build_rpath: meson.current_build_dir())
 shared_library('test-socket-bind-failure', ['socket-bind-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket], build_rpath: meson.current_build_dir())

@@ -25,5 +25,7 @@ test('cron sigaction failure', bash, suite: 'fork', args: [files('cron-sigaction
 # Test errors in Boost.Asio workaround at SignalHandler::add_non_interrupting_signal()
 test('sigaction query failure', bash, suite: 'fork', args: [files('sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
 test('sigaction set SA_RESTART failure', bash, suite: 'fork', args: [files('sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
+test('sigaction already has SA_RESTART set', bash, suite: 'fork', args: [files('sigaction-restart-already-set.sh')], env: test_env, depends: all_test_txt)
 test('cron sigaction query failure', bash, suite: 'fork', args: [files('cron-sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
 test('cron sigaction set SA_RESTART failure', bash, suite: 'fork', args: [files('cron-sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
+test('cron sigaction already has SA_RESTART set', bash, suite: 'fork', args: [files('cron-sigaction-restart-already-set.sh')], env: test_env, depends: all_test_txt)
