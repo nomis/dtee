@@ -75,7 +75,6 @@ private:
 	boost::asio::local::datagram_protocol::socket input_; //!< Incoming socket for data from child process
 	boost::asio::local::datagram_protocol::socket out_; //!< Standard output of child process
 	boost::asio::local::datagram_protocol::socket err_; //!< Standard error of child process
-	boost::asio::local::datagram_protocol::endpoint input_ep_; //!< Endpoint name for data from child process
 	boost::asio::local::datagram_protocol::endpoint out_ep_; //!< Endpoint name for child process standard output
 	boost::asio::local::datagram_protocol::endpoint err_ep_; //!< Endpoint name for child process standard error
 
