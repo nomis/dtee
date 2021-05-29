@@ -23,15 +23,16 @@ int main(int argc, char *argv[]) {
 		return EX_USAGE;
 	}
 
-	struct stat in_stat;
-	if (stat(argv[1], &in_stat) < 0) {
-		perror("stat");
-		return EX_NOINPUT;
-	}
-
 	int in_fd = open(argv[1], O_RDONLY);
 	if (in_fd < 0) {
 		perror("open");
+		return EX_NOINPUT;
+	}
+
+	struct stat in_stat;
+	if (fstat(in_fd, &in_stat) < 0) {
+		perror("stat");
+		close(in_fd);
 		return EX_NOINPUT;
 	}
 
