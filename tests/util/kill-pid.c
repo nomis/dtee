@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 #if defined(__linux__)
-static bool kernel_core_pattern(char *buf, size_t buflen) {
+static int kernel_core_pattern(char *buf, size_t buflen) {
 	int fd = open("/proc/sys/kernel/core_pattern", O_RDONLY);
 	if (fd < 0) {
 		return false;
@@ -21,7 +21,7 @@ static bool kernel_core_pattern(char *buf, size_t buflen) {
 	memset(buf, 0, buflen);
 	int ret = read(fd, buf, buflen);
 	close(fd);
-	return ret > 0;
+	return ret;
 }
 #endif
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 #if defined(__linux__)
 		char buf[BUFSIZ] = { 0 };
 
-		if (value == 0 && kernel_core_pattern(buf, sizeof(buf)) && buf[0] == '|') {
+		if (value == 0 && kernel_core_pattern(buf, sizeof(buf)) >= 1 && buf[0] == '|') {
 			// If kernel.core_pattern is a pipe and fs.suid_dumpable is non-zero,
 			// then core dumps happen even if RLIMIT_CORE is 0 or the executable is
 			// not readable. However, they don't happen if RLIMIT_CORE is the special
