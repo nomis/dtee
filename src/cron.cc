@@ -51,9 +51,8 @@ Cron::Cron(string command, shared_ptr<Output> fallback)
 		  file_("O") {
 }
 
-void Cron::print_file_error(format message) {
-	auto errno_copy = errno;
-	print_system_error(message % file_.name(), errno_copy);
+void Cron::print_file_error(const char *message_fmt, int errno_copy) {
+	print_system_error(format(message_fmt) % file_.name(), errno_copy);
 }
 
 bool Cron::open() {
@@ -73,8 +72,9 @@ bool Cron::output(OutputType type, const vector<char> &buffer, size_t len) {
 		errno = 0;
 		ssize_t written = ::write(file_.fd(), buffer.data(), len);
 		if (written != static_cast<ssize_t>(len)) {
+			auto errno_copy = errno;
 			// i18n: %1 = filename; %2 = errno message
-			print_file_error(format(_("error writing to buffer file %1%: %2%")));
+			print_file_error(_("error writing to buffer file %1%: %2%"), errno_copy);
 			report_ = true;
 
 			unspool_buffer_file();
@@ -130,8 +130,9 @@ bool Cron::unspool_buffer_file() {
 	if (buffered_) {
 		errno = 0;
 		if (::lseek(file_.fd(), 0, SEEK_SET) != 0) {
+			auto errno_copy = errno;
 			// i18n: %1 = filename; %2 = errno message
-			print_file_error(format(_("error seeking to start of buffer file %1%: %2%")));
+			print_file_error(_("error seeking to start of buffer file %1%: %2%"), errno_copy);
 			success = false;
 		} else {
 			ssize_t len;
@@ -142,8 +143,9 @@ bool Cron::unspool_buffer_file() {
 				errno = 0;
 				len = ::read(file_.fd(), buf.data(), buf.size());
 				if (len < 0) {
+					auto errno_copy = errno;
 					// i18n: %1 = filename; %2 = errno message
-					print_file_error(format(_("error reading buffer file %1%: %2%")));
+					print_file_error(_("error reading buffer file %1%: %2%"), errno_copy);
 					success = false;
 					break;
 				} else if (len > 0) {

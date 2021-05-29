@@ -46,7 +46,7 @@ public:
 	bool report();
 
 private:
-	void print_file_error(boost::format message);
+	void print_file_error(const char *message_fmt, int errno_copy);
 	bool unspool_buffer_file();
 
 	std::string command_; //!< Name of command being executed
