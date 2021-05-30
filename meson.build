@@ -6,7 +6,7 @@ project('dtee',
 		'warning_level=3',
 		'werror=true',
 	],
-	version: '1.0.1',
+	version: '1.1.0',
 	license: 'GPL3+',
 	meson_version: '>=0.53.0',
 )

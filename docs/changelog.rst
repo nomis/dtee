@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+1.1.0_ |--| 2021-05-30
+----------------------
+
+Bug fixes and support for internationalisation.
+
 Added
 ~~~~~
 
@@ -100,7 +105,8 @@ Added
 .. |sigaction(2)| replace:: ``sigaction(2)``
 .. _sigaction(2): http://man7.org/linux/man-pages/man2/sigaction.2.html
 
-.. _Unreleased: https://github.com/nomis/dtee/compare/1.0.1...HEAD
+.. _Unreleased: https://github.com/nomis/dtee/compare/1.1.0...HEAD
+.. _1.1.0: https://github.com/nomis/dtee/compare/1.0.1...1.1.0
 .. _1.0.1: https://github.com/nomis/dtee/compare/1.0.0...1.0.1
 .. _1.0.0: https://github.com/nomis/dtee/compare/0.0.1...1.0.0
 .. _0.0.1: https://github.com/nomis/dtee/compare/0.0.0...0.0.1
