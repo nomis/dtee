@@ -8,7 +8,6 @@ Added
 ~~~~~
 
 * Internationalisation of output text messages.
-* No-op localisation to English.
 
 Changed
 ~~~~~~~
