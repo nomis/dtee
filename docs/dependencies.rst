@@ -9,7 +9,7 @@ Build
 
 Compile
 ~~~~~~~
-  * `Boost <https://www.boost.org/>`_ 1.55+
+  * `Boost <https://www.boost.org/>`_ 1.56+
 
     ..
        Upgrade when this issue is fixed:
