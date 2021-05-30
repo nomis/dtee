@@ -8,20 +8,6 @@ Install the :download:`repository public key <repo-key-rsa.asc>`::
 Follow the instructions for your release. If you are using a newer release than
 the ones listed then use the builds for the most recent prior version.
 
-Ubuntu 16.04 LTS (Xenial Xerus)
--------------------------------
-
-Add the following APT_ data source
-:download:`dtee-ubuntu-xenial.list <../../apt/dtee-ubuntu-xenial.list>`
-to ``/etc/apt/sources.list.d/dtee.list``::
-
-    deb https://dtee.bin.uuid.uk/ubuntu/ xenial main
-
-Run the following commands::
-
-    apt update
-    apt install dtee
-
 Ubuntu 18.04 LTS (Bionic Beaver)
 --------------------------------
 
