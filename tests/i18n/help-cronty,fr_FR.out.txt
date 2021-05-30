@@ -1,0 +1,26 @@
+Utilisation : ./cronty [OPTION]... COMMANDE [ARG]...
+
+Exécutez COMMAND avec la sortie standard et l'erreur standard copiée dans
+chaque FICHIER en supprimant toutes les sorties à moins que le processus
+n'émette un message d'erreur ou n'ait un état de sortie différent de zéro,
+après quoi la sortie d'origine sera écrite normalement et le code de sortie
+sera ajouté à l'erreur standard.
+
+Fichiers de sortie:
+  -o [ --out-append ] FICHIER         ajouter la sortie standard vers FICHIER
+  -O [ --out-overwrite ] FICHIER      copier la sortie standard vers FICHIER
+  -e [ --err-append ] FICHIER         ajouter l'erreur standard vers FICHIER
+  -E [ --err-overwrite ] FICHIER      copier l'erreur standard vers FICHIER
+  -c [ --combined-append ] FICHIER    ajouter la sortie standard et l'erreur 
+                                      standard vers FICIHER
+  -C [ --combined-overwrite ] FICHIER copier la sortie standard et l'erreur 
+                                      standard vers FICIHER
+
+Les options:
+  -i [ --ignore-interrupts ]          ignorer les signaux d'interruption
+
+Varié:
+  -h [ --help ]                       afficher l'aide-mémoire et quitter
+  -V [ --version ]                    afficher le nom et la version du logiciel
+                                      et quitter
+

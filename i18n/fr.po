@@ -1,0 +1,292 @@
+# dtee - run a program with standard output and standard error copied to files
+# Copyright 2018,2021  Simon Arlott
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# Some translations taken from the French translation of coreutils:
+#   Copyright © 2004, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Free Software Foundation, Inc.
+#
+# Beware: there are several " " (U+202F, NARROW NO-BREAK SPACE) in this file
+# before and after punctuation characters.
+msgid ""
+msgstr ""
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. i18n: %1 = function call name; %2 = errno message
+#. i18n: %1 = exception type name; %2 = exception message
+#. i18n: %1 = command name; %2 = errno message
+#. i18n: %1 = filename; %2 = errno message
+#. i18n: %1 = system call name; %2 = errno message
+#: src/application.cc src/file_output.cc src/signal_handler.cc
+#, boost-format
+msgid "%1%: %2%"
+msgstr "%1% : %2%"
+
+#: src/command_line.cc
+msgid "Output files"
+msgstr "Fichiers de sortie"
+
+#: src/command_line.cc
+msgid "FILE"
+msgstr "FICHIER"
+
+#: src/command_line.cc
+msgid "append standard output to FILE"
+msgstr "ajouter la sortie standard vers FICHIER"
+
+#: src/command_line.cc
+msgid "copy standard output to FILE"
+msgstr "copier la sortie standard vers FICHIER"
+
+#: src/command_line.cc
+msgid "append standard error to FILE"
+msgstr "ajouter l'erreur standard vers FICHIER"
+
+#: src/command_line.cc
+msgid "copy standard error to FILE"
+msgstr "copier l'erreur standard vers FICHIER"
+
+#: src/command_line.cc
+msgid "append standard output and error to FILE"
+msgstr "ajouter la sortie standard et l'erreur standard vers FICIHER"
+
+#: src/command_line.cc
+msgid "copy standard output and error to FILE"
+msgstr "copier la sortie standard et l'erreur standard vers FICIHER"
+
+#: src/command_line.cc
+msgid "Options"
+msgstr "Les options"
+
+#: src/command_line.cc
+msgid "ignore interrupt signals"
+msgstr "ignorer les signaux d'interruption"
+
+#: src/command_line.cc
+msgid ""
+"operate in cron mode (suppress output unless the process outputs an error "
+"message or has a non-zero exit status)"
+msgstr ""
+"fonctionner en mode cron (supprimer la sortie sauf si le processus émet un "
+"message d'erreur ou a un état de sortie différent de zéro)"
+
+#: src/command_line.cc
+msgid "Miscellaneous"
+msgstr "Varié"
+
+#: src/command_line.cc
+msgid "display this help and exit"
+msgstr "afficher l'aide-mémoire et quitter"
+
+#: src/command_line.cc
+msgid "output version information and exit"
+msgstr "afficher le nom et la version du logiciel et quitter"
+
+#. i18n: %1 = program name; %2 = help argument
+#: src/command_line.cc
+#, boost-format
+msgid "Try '%1% %2%' for more information.\n"
+msgstr "Saisissez « %1% %2% » pour plus d'informations.\n"
+
+#. i18n: %1 = program name
+#: src/command_line.cc
+#, boost-format
+msgid "Usage: %1% [OPTION]... COMMAND [ARG]...\n"
+msgstr "Utilisation : %1% [OPTION]... COMMANDE [ARG]...\n"
+
+#. i18n: Line wrap to a maximum of 79 characters.
+#: src/command_line.cc
+msgid ""
+"Run COMMAND with standard output and standard error copied to each FILE\n"
+"suppressing all output unless the process outputs an error message or has a\n"
+"non-zero exit status whereupon the original output will be written as "
+"normal\n"
+"and the exit code will be appended to standard error.\n"
+msgstr ""
+"Exécutez COMMAND avec la sortie standard et l'erreur standard copiée dans\n"
+"chaque FICHIER en supprimant toutes les sorties à moins que le processus\n"
+"n'émette un message d'erreur ou n'ait un état de sortie différent de zéro,\n"
+"après quoi la sortie d'origine sera écrite normalement et le code de sortie\n"
+"sera ajouté à l'erreur standard.\n"
+
+#. i18n: Line wrap to a maximum of 79 characters.
+#: src/command_line.cc
+msgid ""
+"Run COMMAND with standard output and standard error copied to each FILE\n"
+"while maintaining the original standard output and standard error as "
+"normal.\n"
+msgstr ""
+"Exécutez COMMANDE avec la sortie standard et l'erreur standard copiées dans\n"
+"chaque FICHIER tout en conservant la sortie standard d'origine et l'erreur\n"
+"standard comme d'habitude.\n"
+
+#. i18n: %1 = list of years; %2 = name
+#: src/command_line.cc
+#, boost-format
+msgid "Copyright %1%  %2%\n"
+msgstr "Droits d'auteur %1%  %2%\n"
+
+#. i18n: %1 = licence URL
+#. i18n: Line wrap to a maximum of 79 characters.
+#: src/command_line.cc
+#, boost-format
+msgid ""
+"Licence GPLv3+: GNU GPL version 3 or later <%1%>.\n"
+"This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted by "
+"law.\n"
+"This is free software: you are free to change and redistribute it.\n"
+msgstr ""
+"Licence GPLv3+ : GNU GPL version 3 ou ultérieure <%1%>.\n"
+"Ce logiciel n'est accompagné d'ABSOLUMENT AUCUNE GARANTIE, dans les limites\n"
+"autorisées par la loi applicable.\n"
+"C'est logiciel libre : vous êtes libre de le modifier et de le "
+"redistribuer.\n"
+
+#. i18n: Prefix credits with "Translation: xx_XX\n"
+#: src/command_line.cc
+msgid "translator-credits"
+msgstr "Traduction : fr_FR"
+
+#. i18n: %1 = filename; %2 = errno message
+#: src/cron.cc
+#, boost-format
+msgid "error writing to buffer file %1%: %2%"
+msgstr "erreur d'écriture dans le fichier tampon: %1% : %2%"
+
+#. i18n: %1 = filename; %2 = errno message
+#: src/cron.cc
+#, boost-format
+msgid "error seeking to start of buffer file %1%: %2%"
+msgstr "erreur de déplacement vers le début du fichier tampon %1% : %2%"
+
+#. i18n: %1 = filename; %2 = errno message
+#: src/cron.cc
+#, boost-format
+msgid "error reading buffer file %1%: %2%"
+msgstr "erreur de lecture du fichier tampon %1% : %2%"
+
+#. i18n: %1 = signal number; %2 = signal name
+#: src/cron.cc
+#, boost-format
+msgid "received signal %1%: %2%"
+msgstr "réception du signal %1% : %2%"
+
+#. i18n: %1 = command name; %2 = exit code
+#: src/cron.cc
+#, boost-format
+msgid "%1%: exited with status %2%"
+msgstr "%1% : quitté avec le code d'état %2%"
+
+#. i18n: %1 = command name; %2 = signal number; %3 = signal name
+#: src/cron.cc
+#, boost-format
+msgid "%1%: process terminated by signal %2%: %3% (core dumped)"
+msgstr "%1% : processus terminé avec le signal %2% : %3% (core dumpé)"
+
+#. i18n: %1 = command name; %2 = signal number; %3 = signal name
+#: src/cron.cc
+#, boost-format
+msgid "%1%: process terminated by signal %2%: %3%"
+msgstr "%1% : processus terminé avec le signal %2% : %3%"
+
+#. i18n: %1 = exception message
+#. i18n: %1 = Boost.Asio error message
+#: src/input.cc
+#, boost-format
+msgid "input socket: %1%"
+msgstr "entrée socket : %1%"
+
+#. i18n: %1 = Boost.Asio error message
+#. i18n: %1 = exception message
+#: src/input.cc
+#, boost-format
+msgid "stdout socket: %1%"
+msgstr "socket de sortie standard : %1%"
+
+#. i18n: %1 = Boost.Asio error message
+#. i18n: %1 = exception message
+#: src/input.cc
+#, boost-format
+msgid "stderr socket: %1%"
+msgstr "socket d'erreur standard : %1%"
+
+#. i18n: %1 = socket path; %2 = socket path
+#: src/input.cc
+#, boost-format
+msgid ""
+"output socket endpoints are indistinguishable:\n"
+"\tstdout socket: %1%\n"
+"\tstderr socket: %2%"
+msgstr ""
+"les points de terminaison de socket de sortie sont indiscernables :\n"
+"\tsocket de sortie standard : %1%\n"
+"\tsocket d'erreur standard : %2%"
+
+#. i18n: %1 = system call name; %2 = errno message
+#: src/input.cc src/stream_output.cc
+#, boost-format
+msgid "stdout: %1%: %2%"
+msgstr "sortie standard : %1% : %2%"
+
+#. i18n: %1 = system call name; %2 = errno message
+#: src/input.cc src/stream_output.cc
+#, boost-format
+msgid "stderr: %1%: %2%"
+msgstr "erreur standard : %1% : %2%"
+
+#. i18n: %1 = program name; %2 = error message
+#: src/print_error.cc
+#, boost-format
+msgid "%1%: %2%\n"
+msgstr "%1% : %2%\n"
+
+#. i18n: %3 = Boost.Asio error message; %1 = signal number; %2 = signal name
+#: src/signal_handler.cc
+#, boost-format
+msgid "signal handler: %3% (signal %1%: %2%)"
+msgstr "gestionnaire de signaux : %3% (le signal %1% : %2%)"
+
+#. i18n: %1 = system call name; %4 = errno message; %2 = signal number; %3 = signal name
+#: src/signal_handler.cc
+#, boost-format
+msgid "%1%: %4% (signal %2%: %3%)"
+msgstr "%1% : %4% (le signal %2% : %3%)"
+
+#. i18n: %1 = filename; %2 = errno message
+#: src/temp_directory.cc
+#, boost-format
+msgid "unable to create temporary directory %1%: %2%"
+msgstr "impossible de créer le répertoire temporaire %1% : %2%"
+
+#. i18n: %1 = exception message
+#: src/temp_directory.cc
+#, boost-format
+msgid "unable to create temporary directory: %1%"
+msgstr "impossible de créer le répertoire temporaire : %1%"
+
+#. i18n: %1 = filename; %2 = errno message
+#: src/temp_file.cc
+#, boost-format
+msgid "unable to create temporary file %1%: %2%"
+msgstr "impossible de créer le fichier temporaire %1% : %2%"
+
+#. i18n: %1 = exception message
+#: src/temp_file.cc
+#, boost-format
+msgid "unable to create temporary file: %1%"
+msgstr "impossible de créer le fichier temporaire : %1%"

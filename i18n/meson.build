@@ -30,6 +30,7 @@ endif
 test_languages = [
 	['en', 'en_GB'],
 	['en_US', 'en_US'],
+	['fr', 'fr_FR'],
 ]
 
 msgfmt = [find_program('msgfmt'), '@INPUT@', '-o', '@OUTPUT@']

@@ -1,0 +1,1 @@
+cron-command-exit-42,fr_FR.err.txt

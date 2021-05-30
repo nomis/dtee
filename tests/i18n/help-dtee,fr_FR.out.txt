@@ -1,0 +1,28 @@
+Utilisation : ./dtee [OPTION]... COMMANDE [ARG]...
+
+Exécutez COMMANDE avec la sortie standard et l'erreur standard copiées dans
+chaque FICHIER tout en conservant la sortie standard d'origine et l'erreur
+standard comme d'habitude.
+
+Fichiers de sortie:
+  -o [ --out-append ] FICHIER         ajouter la sortie standard vers FICHIER
+  -O [ --out-overwrite ] FICHIER      copier la sortie standard vers FICHIER
+  -e [ --err-append ] FICHIER         ajouter l'erreur standard vers FICHIER
+  -E [ --err-overwrite ] FICHIER      copier l'erreur standard vers FICHIER
+  -c [ --combined-append ] FICHIER    ajouter la sortie standard et l'erreur 
+                                      standard vers FICIHER
+  -C [ --combined-overwrite ] FICHIER copier la sortie standard et l'erreur 
+                                      standard vers FICIHER
+
+Les options:
+  -i [ --ignore-interrupts ]          ignorer les signaux d'interruption
+  -q [ --cron ]                       fonctionner en mode cron (supprimer la 
+                                      sortie sauf si le processus émet un 
+                                      message d'erreur ou a un état de sortie 
+                                      différent de zéro)
+
+Varié:
+  -h [ --help ]                       afficher l'aide-mémoire et quitter
+  -V [ --version ]                    afficher le nom et la version du logiciel
+                                      et quitter
+

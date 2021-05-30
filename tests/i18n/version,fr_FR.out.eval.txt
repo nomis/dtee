@@ -1,0 +1,8 @@
+"dtee $VERSION"
+"Droits d'auteur 2018-2021  Simon Arlott"
+"Licence GPLv3+ : GNU GPL version 3 ou ultérieure <https://gnu.org/licenses/gpl.html>."
+"Ce logiciel n'est accompagné d'ABSOLUMENT AUCUNE GARANTIE, dans les limites"
+"autorisées par la loi applicable."
+"C'est logiciel libre : vous êtes libre de le modifier et de le redistribuer."
+""
+"Traduction : fr_FR"

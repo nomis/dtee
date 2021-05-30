@@ -1,0 +1,1 @@
+./dtee : dtee@test/i18n/cron-command-exit-42,fr_FR.run : quitté avec le code d'état 42
