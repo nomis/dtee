@@ -21,9 +21,7 @@
 
 #include <csignal>
 
-#ifdef GCOV_ENABLED
-extern "C" void __gcov_flush(void);
-#endif
+#include "gcov.h"
 
 using ::std::raise;
 

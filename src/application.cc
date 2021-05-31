@@ -45,9 +45,7 @@
 #include "signal_handler.h"
 #include "stream_output.h"
 
-#ifdef GCOV_ENABLED
-extern "C" void __gcov_flush(void);
-#endif
+#include "gcov.h"
 
 using ::boost::asio::io_service;
 using ::boost::core::demangled_name;

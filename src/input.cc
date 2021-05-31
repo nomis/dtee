@@ -39,9 +39,7 @@
 #include "print_error.h"
 #include "temp_directory.h"
 
-#ifdef GCOV_ENABLED
-extern "C" void __gcov_flush(void);
-#endif
+#include "gcov.h"
 
 using ::boost::asio::buffer;
 using ::boost::asio::io_service;

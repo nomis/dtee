@@ -43,7 +43,6 @@ $(RELEASE_DIR)/: | $(BUILD_DIR)/
 $(COVERAGE_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(COVERAGE_DIR)/"
 	mkdir $(COVERAGE_DIR)/
-	# meson (0.48.0) will not tell lcov to use llvm-cov, so this will fail when using clang
 	meson --buildtype=debug $(COVERAGE_DIR)/ -Db_coverage=true $(MESON_OPTS) || (rm -rf "$(COVERAGE_DIR)/"; false)
 $(DEBUG_DIR)/: | $(BUILD_DIR)/
 	rm -rf "$(DEBUG_DIR)/"
