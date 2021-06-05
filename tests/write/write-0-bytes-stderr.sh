@@ -5,7 +5,7 @@ function test_prepare() {
 }
 
 # Writes of 0 bytes should work and not be considered EOF
-run_test -E "$TESTDIR/$NAME.file.err-overwrite.txt" ./util/test-write-0-bytes STDERR_FILENO 0
+run_test -E "$TESTDIR/$NAME.file.err-overwrite.txt" ./util/test-write-0-bytes STDERR_FILENO $EXIT_SUCCESS 0
 RET=$?
 
 cmp_files "file.err-overwrite"

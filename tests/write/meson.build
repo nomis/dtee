@@ -21,6 +21,8 @@ test('writes of max(PIPE_BUF, BUFSIZ) bytes (stdout)', bash, suite: 'write', arg
 test('writes of max(PIPE_BUF, BUFSIZ) bytes (stderr)', bash, suite: 'write', args: [files('writes-of-max-PIPE_BUF-BUFSIZ-bytes-stderr.sh')], priority: 1000, env: test_env, depends: all_test_txt, should_fail: xfail and xfail_large_writes)
 test('cron write 0 bytes (stdout)', bash, suite: 'write', args: [files('cron-write-0-bytes-stdout.sh')], env: test_env, depends: all_test_txt)
 test('cron write 0 bytes (stderr)', bash, suite: 'write', args: [files('cron-write-0-bytes-stderr.sh')], env: test_env, depends: all_test_txt)
+test('cron write 0 bytes only (stdout)', bash, suite: 'write', args: [files('cron-write-0-bytes-only-stdout.sh')], env: test_env, depends: all_test_txt)
+test('cron write 0 bytes only (stderr)', bash, suite: 'write', args: [files('cron-write-0-bytes-only-stderr.sh')], env: test_env, depends: all_test_txt)
 test('cron writes of 1 byte (stdout)', bash, suite: 'write', args: [files('cron-writes-of-1-byte-stdout.sh')], priority: 2000, env: test_env, depends: all_test_txt, timeout: 180, should_fail: xfail and xfail_writes_of_1_byte)
 test('cron writes of 1 byte (stderr)', bash, suite: 'write', args: [files('cron-writes-of-1-byte-stderr.sh')], priority: 2000, env: test_env, depends: all_test_txt, timeout: 180, should_fail: xfail and xfail_writes_of_1_byte)
 test('cron writes of min(PIPE_BUF, BUFSIZ) bytes (stdout)', bash, suite: 'write', args: [files('cron-writes-of-min-PIPE_BUF-BUFSIZ-bytes-stdout.sh')], priority: 1000, env: test_env, depends: all_test_txt, should_fail: xfail and xfail_small_writes)

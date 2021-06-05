@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,7 +9,7 @@
 int main(int argc, char *argv[]) {
 	int fd;
 
-	if (argc != 3) {
+	if (argc != 4) {
 		return EX_USAGE;
 	}
 
@@ -20,18 +21,26 @@ int main(int argc, char *argv[]) {
 		abort();
 	}
 
-	const char *before = "Before\n";
-	int len = strlen(before);
-	if (write(fd, before, strlen(before)) != len) {
-		return EX_IOERR;
+	bool quiet = atoi(argv[3]);
+
+	if (!quiet) {
+		const char *before = "Before\n";
+		int len = strlen(before);
+		if (write(fd, before, strlen(before)) != len) {
+			return EX_IOERR;
+		}
 	}
+
 	if (write(fd, "", 0) != 0) {
 		return EX_IOERR;
 	}
-	const char *after = "After\n";
-	len = strlen(after);
-	if (write(fd, after, strlen(after)) != len) {
-		return EX_IOERR;
+
+	if (!quiet) {
+		const char *after = "After\n";
+		int len = strlen(after);
+		if (write(fd, after, strlen(after)) != len) {
+			return EX_IOERR;
+		}
 	}
 
 	// Alter exit status in cron mode so that it will output the message

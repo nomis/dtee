@@ -1,3 +1,1 @@
-Before
-After
-./dtee: ./util/test-write-0-bytes: exited with status 0
+cron-write-0-bytes-stderr.err.txt

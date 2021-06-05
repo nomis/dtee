@@ -1,0 +1,1 @@
+cron-write-0-bytes-only-stderr.err.txt

@@ -1,0 +1,1 @@
+./dtee: ./util/test-write-0-bytes: exited with status 0
