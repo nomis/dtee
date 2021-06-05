@@ -26,3 +26,15 @@ extern "C" {
 #  undef GCOV_ENABLED
 # endif
 #endif
+
+namespace dtee {
+
+// LCOV_EXCL_START
+static void inline coverage_flush() {
+#ifdef GCOV_ENABLED
+	::__gcov_flush();
+#endif
+}
+// LCOV_EXCL_STOP
+
+} // namespace dtee

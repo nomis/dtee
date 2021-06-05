@@ -21,7 +21,7 @@
 
 #include <csignal>
 
-#include "gcov.h"
+#include "coverage.h"
 
 using ::std::raise;
 
@@ -48,9 +48,7 @@ void Process::fork_child() {
 }
 
 void Process::exit_by_interrupt() const {
-#ifdef GCOV_ENABLED
-	__gcov_flush(); // LCOV_EXCL_LINE
-#endif
+	coverage_flush(); // LCOV_EXCL_LINE
 
 	switch (interrupt_signum_) {
 		// Replicate these signals that caused us to terminate.

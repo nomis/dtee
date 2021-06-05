@@ -39,8 +39,6 @@
 #include "print_error.h"
 #include "temp_directory.h"
 
-#include "gcov.h"
-
 using ::boost::asio::buffer;
 using ::boost::asio::io_service;
 using ::boost::asio::local::datagram_protocol;
@@ -264,22 +262,18 @@ void Input::fork_child() {
 
 void Input::handle_receive_from(const error_code &ec, size_t len) {
 	if (!ec) {
-		// It is not practical to prevent the same endpoint path from
-		// being used by a new socket (especially if it is a relative
-		// path) after it has been unlinked because multiple binds are
-		// only prevented for the file inode not the path. However, it
-		// will not be possible to make additional connections to the
-		// input socket after it has been unlinked (even if the same
-		// path is created).
 		if (recv_ep_ == out_ep_) {
 			output_->output(OutputType::STDOUT, buffer_, len);
 		} else if (recv_ep_ == err_ep_) {
 			output_->output(OutputType::STDERR, buffer_, len);
 		} else {
-			// Ignore data from any other sockets
-#ifdef GCOV_ENABLED
-			__gcov_flush(); // LCOV_EXCL_LINE
-#endif
+			// It is not practical to prevent the same endpoint path from
+			// being used by a new socket (especially if it is a relative
+			// path) after it has been unlinked because multiple binds are
+			// only prevented for the file inode not the path. However, it
+			// will not be possible to make additional connections to the
+			// input socket after it has been unlinked (even if the same
+			// path is created). Ignore data from any other sockets.
 		}
 
 		input_.async_receive_from(buffer(buffer_), recv_ep_,

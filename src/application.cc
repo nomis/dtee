@@ -35,6 +35,7 @@
 #include <boost/format.hpp>
 
 #include "command_line.h"
+#include "coverage.h"
 #include "cron.h"
 #include "dispatch.h"
 #include "file_output.h"
@@ -44,8 +45,6 @@
 #include "process.h"
 #include "signal_handler.h"
 #include "stream_output.h"
-
-#include "gcov.h"
 
 using ::boost::asio::io_service;
 using ::boost::core::demangled_name;
@@ -233,9 +232,7 @@ void Application::execute(const vector<string> &command) {
 	}
 	argv.push_back(nullptr);
 
-#ifdef GCOV_ENABLED
-	__gcov_flush(); // LCOV_EXCL_LINE
-#endif
+	coverage_flush(); // LCOV_EXCL_LINE
 
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
