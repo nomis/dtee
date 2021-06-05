@@ -1,6 +1,6 @@
 set +x
 mkdir -p "util/$BASETESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES"
-ln -sf "../../../../../../i18n/test-${TEST_LANGUAGE}.mo" "util/$BASETESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES/dtee.mo"
+ln -s "../../../../../../i18n/test-${TEST_LANGUAGE}.mo" "util/$BASETESTDIR/locale/$TEST_LANGUAGE/LC_MESSAGES/dtee.mo"
 
 # Find the best possible system language to use when running the test
 FOUND_LOCALES=("" "" "" "")
