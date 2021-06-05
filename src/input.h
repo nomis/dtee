@@ -63,7 +63,7 @@ private:
 	void open_output(
 			const boost::asio::local::datagram_protocol::endpoint &input_ep,
 			boost::asio::local::datagram_protocol::socket &output,
-			boost::asio::local::datagram_protocol::endpoint &output_ep,
+			std::string &output_path,
 			const boost::asio::local::datagram_protocol::socket::receive_buffer_size &so_rcvbuf);
 	void prepare_buffer(
 			const boost::asio::local::datagram_protocol::socket::receive_buffer_size &so_rcvbuf);
@@ -75,8 +75,8 @@ private:
 	boost::asio::local::datagram_protocol::socket input_; //!< Incoming socket for data from child process
 	boost::asio::local::datagram_protocol::socket out_; //!< Standard output of child process
 	boost::asio::local::datagram_protocol::socket err_; //!< Standard error of child process
-	boost::asio::local::datagram_protocol::endpoint out_ep_; //!< Endpoint name for child process standard output
-	boost::asio::local::datagram_protocol::endpoint err_ep_; //!< Endpoint name for child process standard error
+	std::string out_path_; //!< Endpoint path for child process standard output
+	std::string err_path_; //!< Endpoint path for child process standard error
 
 	std::vector<char> buffer_; //!< Incoming data
 	boost::asio::local::datagram_protocol::endpoint recv_ep_; //!< Sender of incoming data

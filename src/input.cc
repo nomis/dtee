@@ -114,8 +114,8 @@ bool Input::open_outputs(TempDirectory &temp_dir,
 		const datagram_protocol::endpoint &input_ep,
 		const datagram_protocol::socket::receive_buffer_size &so_rcvbuf) {
 	try {
-		out_ep_ = temp_dir.register_file("o");
-		open_output(input_ep, out_, out_ep_, so_rcvbuf);
+		out_path_ = temp_dir.register_file("o");
+		open_output(input_ep, out_, out_path_, so_rcvbuf);
 	} catch (const std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stdout socket: %1%")), e);
@@ -123,8 +123,8 @@ bool Input::open_outputs(TempDirectory &temp_dir,
 	}
 
 	try {
-		err_ep_ = temp_dir.register_file("e");
-		open_output(input_ep, err_, err_ep_, so_rcvbuf);
+		err_path_ = temp_dir.register_file("e");
+		open_output(input_ep, err_, err_path_, so_rcvbuf);
 	} catch (const std::exception &e) {
 		// i18n: %1 = Boost.Asio error message
 		print_error(format(_("stderr socket: %1%")), e);
@@ -132,13 +132,13 @@ bool Input::open_outputs(TempDirectory &temp_dir,
 	}
 
 	if (platform::openbsd || platform::hurd || platform::cygwin) {
-		if (out_ep_ == err_ep_) {
+		if (out_path_ == err_path_) {
 			// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 			// so they both look the same.
 			print_error(format(_( // i18n: %1 = socket path; %2 = socket path
 				"output socket endpoints are indistinguishable:\n"
 				"\tstdout socket: %1%\n\tstderr socket: %2%"))
-				% out_ep_.path() % err_ep_.path());
+				% out_path_ % err_path_);
 			return false;
 		}
 	}
@@ -147,13 +147,12 @@ bool Input::open_outputs(TempDirectory &temp_dir,
 }
 
 void Input::open_output(const datagram_protocol::endpoint &input_ep,
-		datagram_protocol::socket &output,
-		datagram_protocol::endpoint &output_ep,
+		datagram_protocol::socket &output, std::string &output_path,
 		const datagram_protocol::socket::receive_buffer_size &so_rcvbuf) {
 	datagram_protocol::socket::send_buffer_size so_sndbuf{so_rcvbuf.value()};
 
 	output.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
-	output.bind(output_ep);
+	output.bind(output_path);
 
 	if (platform::openbsd || platform::hurd) {
 		// Workaround Boost.Asio (1.66.0) bug on OpenBSD 6.4
@@ -164,7 +163,7 @@ void Input::open_output(const datagram_protocol::endpoint &input_ep,
 		// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 		// so they both look the same. Retrieve the address after binding so that
 		// this can be checked.
-		output_ep = output.local_endpoint();
+		output_path = output.local_endpoint().path();
 	}
 
 	output.connect(input_ep);
@@ -180,8 +179,12 @@ void Input::open_output(const datagram_protocol::endpoint &input_ep,
 		// recvfrom() or getpeername() does for the other socket.
 		// Send an empty message to obtain the real socket address.
 		vector<char> empty;
+		datagram_protocol::endpoint output_ep;
+
 		output.send(buffer(empty));
 		input_.receive_from(buffer(empty), output_ep);
+
+		output_path = output_ep.path();
 	}
 }
 
@@ -262,9 +265,10 @@ void Input::fork_child() {
 
 void Input::handle_receive_from(const error_code &ec, size_t len) {
 	if (!ec) {
-		if (recv_ep_ == out_ep_) {
+		const auto recv_path = recv_ep_.path();
+		if (recv_path == out_path_) {
 			output_->output(OutputType::STDOUT, buffer_, len);
-		} else if (recv_ep_ == err_ep_) {
+		} else if (recv_path == err_path_) {
 			output_->output(OutputType::STDERR, buffer_, len);
 		} else {
 			// It is not practical to prevent the same endpoint path from
