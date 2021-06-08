@@ -283,12 +283,13 @@ bool CommandLine::flag(const string &name) const {
 }
 
 const vector<string>& CommandLine::list(const string &name) const {
+	static const std::vector<std::string> empty_list{};
 	const auto& value = variables_[name];
 
 	if (!value.empty()) {
 		return value.as<vector<string>>();
 	} else {
-		return empty_list_;
+		return empty_list;
 	}
 }
 
