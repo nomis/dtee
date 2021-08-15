@@ -8,6 +8,20 @@ Install the :download:`repository public key <repo-key-rsa.asc>`::
 Follow the instructions for your release. If you are using a newer release than
 the ones listed then use the builds for the most recent prior version.
 
+Debian 11 (bullseye)
+--------------------
+
+Add the following APT_ data source
+:download:`dtee-debian-bullseye.list <../../apt/dtee-debian-bullseye.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
+
+    deb https://dtee.bin.uuid.uk/debian/ bullseye main
+
+Run the following commands::
+
+    apt update
+    apt install dtee
+
 Debian 10 (buster)
 ------------------
 
@@ -19,7 +33,6 @@ to ``/etc/apt/sources.list.d/dtee.list``::
 
 Run the following commands::
 
-    apt install apt-transport-https
     apt update
     apt install dtee
 
