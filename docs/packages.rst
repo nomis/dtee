@@ -25,5 +25,10 @@ Packages are available for:
    packages/fedora
    packages/rhel
 
+Arch Linux package
+------------------
+
+A `package for dtee <https://aur.archlinux.org/packages/dtee/>`_ is available
+from the `Arch User Repository <https://aur.archlinux.org/>`_.
+
 .. _dtee-package repository: https://github.com/nomis/dtee-package
-.. _APT: https://en.wikipedia.org/wiki/APT_(Debian)
