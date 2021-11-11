@@ -64,4 +64,4 @@ cronty
 .. _cronic: https://habilis.net/cronic/
 
 .. |tee(1)| replace:: ``tee(1)``
-.. _tee(1): http://man7.org/linux/man-pages/man1/tee.1.html
+.. _tee(1): https://man7.org/linux/man-pages/man1/tee.1.html

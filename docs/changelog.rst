@@ -103,7 +103,7 @@ Added
 .. _Cygwin: https://www.cygwin.com/
 
 .. |sigaction(2)| replace:: ``sigaction(2)``
-.. _sigaction(2): http://man7.org/linux/man-pages/man2/sigaction.2.html
+.. _sigaction(2): https://man7.org/linux/man-pages/man2/sigaction.2.html
 
 .. _Unreleased: https://github.com/nomis/dtee/compare/1.1.0...HEAD
 .. _1.1.0: https://github.com/nomis/dtee/compare/1.0.1...1.1.0

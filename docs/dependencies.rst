@@ -37,7 +37,7 @@ Compile
 Static Analysis
 ~~~~~~~~~~~~~~~
   * `Clang Static Analyzer <https://clang-analyzer.llvm.org/>`_
-  * `Cppcheck <http://cppcheck.sourceforge.net/>`_
+  * `Cppcheck <https://cppcheck.sourceforge.io/>`_
 
 Test
 ~~~~

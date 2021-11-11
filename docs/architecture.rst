@@ -77,13 +77,13 @@ communication.
 
 
 .. |cron(8)| replace:: ``cron(8)``
-.. _cron(8): http://man7.org/linux/man-pages/man8/cron.8.html
+.. _cron(8): https://man7.org/linux/man-pages/man8/cron.8.html
 
 .. |sctp(7)| replace:: ``sctp(7)``
-.. _sctp(7): http://man7.org/linux/man-pages/man7/sctp.7.html
+.. _sctp(7): https://man7.org/linux/man-pages/man7/sctp.7.html
 
 .. |unix(7)| replace:: ``unix(7)``
-.. _unix(7): http://man7.org/linux/man-pages/man7/unix.7.html
+.. _unix(7): https://man7.org/linux/man-pages/man7/unix.7.html
 
 .. |LD_PRELOAD| replace:: ``LD_PRELOAD``
-.. _LD_PRELOAD: http://man7.org/linux/man-pages/man8/ld.so.8.html
+.. _LD_PRELOAD: https://man7.org/linux/man-pages/man8/ld.so.8.html

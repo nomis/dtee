@@ -73,16 +73,16 @@ allow it to:
 * Read output from child processes if ``dtee`` is killed.
 
 .. |sendfile(2)| replace:: ``sendfile(2)``
-.. _sendfile(2): http://man7.org/linux/man-pages/man2/sendfile.2.html
+.. _sendfile(2): https://man7.org/linux/man-pages/man2/sendfile.2.html
 
 .. |waitpid(2)| replace:: ``waitpid(2)``
-.. _waitpid(2): http://man7.org/linux/man-pages/man2/waitpid.2.html
+.. _waitpid(2): https://man7.org/linux/man-pages/man2/waitpid.2.html
 
 .. |write(2)| replace:: ``write(2)``
-.. _write(2): http://man7.org/linux/man-pages/man2/write.2.html
+.. _write(2): https://man7.org/linux/man-pages/man2/write.2.html
 
 .. |PIPE_BUF| replace:: ``PIPE_BUF``
-.. _PIPE_BUF: http://man7.org/linux/man-pages/man0/limits.h.0p.html
+.. _PIPE_BUF: https://man7.org/linux/man-pages/man0/limits.h.0p.html
 
 .. |BUFSIZ| replace:: ``BUFSIZ``
-.. _BUFSIZ: http://man7.org/linux/man-pages/man0/stdio.h.0p.html
+.. _BUFSIZ: https://man7.org/linux/man-pages/man0/stdio.h.0p.html
