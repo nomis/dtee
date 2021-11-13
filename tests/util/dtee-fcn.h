@@ -26,7 +26,7 @@ extern "C" {
 # define TEST_FCN_REPL(ret, name, args) \
   TEST_FCN_REPEAT_DECL(ret, name, args); \
   ret name args; \
-  static __attribute__((constructor)) void test_fcn_init_##name(void) { \
+  static __attribute__((constructor(2000))) void test_fcn_init_##name(void) { \
   real_##name = TEST_FCN_CAST(ret, name, args, cygwin_internal(CW_HOOK, #name, name)); \
   } \
   ret name args

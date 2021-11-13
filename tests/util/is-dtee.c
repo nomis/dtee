@@ -5,7 +5,7 @@
 
 static bool is_dtee_cached = false;
 
-static void __attribute__((constructor)) dtee_test_is_dtee_init(void) {
+static void __attribute__((constructor(1000))) dtee_test_is_dtee_init(void) {
 	// Cache this outside of any other function call, otherwise it's too
 	// easy to end up with a mess like pthread_init() calling getpid()
 	// calling dtee_test_is_dtee() calling open() calling a pthreads

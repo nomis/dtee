@@ -236,7 +236,7 @@ TEST_FCN_REPL(int, __xpg_strerror_r, (int errnum, char *buf, size_t buflen)) {
 #endif
 
 #if REWRITE_ERRLIST
-static void __attribute__((constructor)) dtee_test_rewrite_errlist(void) {
+static void __attribute__((constructor(3000))) dtee_test_rewrite_errlist(void) {
 	char **errlist = (char **)_sys_errlist; // 🙈
 
 	for (int i = 0; i < _sys_nerr; i++) {
