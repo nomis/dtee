@@ -245,5 +245,11 @@ static void __attribute__((constructor(3000))) dtee_test_rewrite_errlist(void) {
 			errlist[i] = msg;
 		}
 	}
+
+	// For some reason the replacement has no effect unless a call is made to
+	// *any* standard library function from within any constructor function in
+	// this library (even if it happens after modifying _sys_errlist)...
+	char *(*next_strerror)(int) = TEST_FCN_NEXT(strerror);
+	(*next_strerror)(1);
 }
 #endif
