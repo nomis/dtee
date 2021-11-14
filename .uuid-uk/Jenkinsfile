@@ -1,0 +1,235 @@
+def common = library(
+	identifier: "uuid@main",
+	retriever: modernSCM([
+		$class: "GitSCMSource",
+		remote: "https://github.com/nomis/jenkins-uuid.git",
+		credentialsId: "09218456-3c5d-493e-be04-d951b1d560c9",
+	])
+).uk.uuid.jenkins.pipeline
+
+def application_agent() {
+	return "${PLATFORM} && ${COMPILER} && Python && Boost && gettext"
+}
+
+def application_matrix_main() {
+	return COMPILER == "GCC"
+}
+
+def c_compiler() {
+	return COMPILER.toLowerCase()
+}
+
+def cxx_compiler() {
+	if (COMPILER.startsWith("GCC")) {
+		return "g++" + COMPILER.substring(3).toLowerCase()
+	} else if (COMPILER.startsWith("Clang")) {
+		return "clang++" + COMPILER.substring(5).toLowerCase()
+	} else {
+		return COMPILER.toLowerCase()
+	}
+}
+
+def compiler_packages() {
+	if (COMPILER == "GCC") {
+		return 'meson ninja Sphinx'
+	} else if (COMPILER == "Clang-3.9") {
+		// https://github.com/mesonbuild/meson/issues/9569
+		return '"meson!=0.57.*,!=0.58.*,!=0.59.*,!=0.60,!=0.60.1" ninja'
+	} else {
+		return 'meson ninja'
+	}
+}
+
+def docs_agent() {
+	if (SPHINX == "==1.3") {
+		return "${PLATFORM} && Python-2"
+	} else {
+		return "${PLATFORM} && Python"
+	}
+}
+
+def docs_matrix_main() {
+	return SPHINX == ">=4"
+}
+
+def docs_pipenv_python() {
+	if (SPHINX == "==1.3") {
+		return "--python 2"
+	} else {
+		return ""
+	}
+}
+
+def docs_packages() {
+	if (SPHINX == "==1.3") {
+		return '"docutils<0.13" "Jinja2<3" "Pygments<2.6" "MarkupSafe<2"'
+	} else if (SPHINX == "~=1.0" || SPHINX == "~=2.0") {
+		return '"docutils<0.18"'
+	} else {
+		return ""
+	}
+}
+
+pipeline {
+	agent none
+	triggers {
+		cron("${common.Cron.schedule(this)}")
+	}
+	environment {
+		PIPENV_VENV_IN_PROJECT = "1"
+		PIPENV_SKIP_LOCK = "1"
+	}
+	stages {
+		stage("Application") {
+			matrix {
+				agent {
+					label application_agent()
+				}
+				axes {
+					axis {
+						name "PLATFORM"
+						values "Linux"
+					}
+					axis {
+						name "COMPILER"
+						values "GCC-5", "GCC-6", "GCC-7", "GCC-8", "GCC-9", "GCC", "Clang-3.9", "Clang-4.0", "Clang-5.0", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang"
+					}
+				}
+				stages {
+					stage("Checkout") {
+						steps {
+							sh "git clean -fdx"
+						}
+					}
+					stage("Prepare") {
+						steps {
+							sh "pipenv install ${compiler_packages()}"
+						}
+					}
+					stage("Build") {
+						steps {
+							sh "CC=${c_compiler()} CXX=${cxx_compiler()} pipenv run meson --buildtype=release build/release/ -Db_lto=true -Dtest_expect_fail=true"
+							sh "pipenv run ninja -C build/release/ -j 1"
+						}
+						post {
+							failure {
+								sh "cat build/release/meson-logs/meson-log.txt"
+							}
+						}
+					}
+					stage("Test") {
+						steps {
+							dir("build/release/") {
+								sh "pipenv run meson test --no-rebuild --print-errorlogs --num-processes 1"
+							}
+						}
+						post {
+							always {
+								script {
+									if (application_matrix_main()) {
+										junit "build/release/meson-logs/testlog.junit.xml"
+									}
+								}
+							}
+							failure {
+								sh "cat build/release/meson-logs/meson-log.txt"
+							}
+						}
+					}
+					stage("Install") {
+						steps {
+							sh "DESTDIR=\"`pwd`/build/install\" pipenv run ninja -C build/release/ -j 1 install"
+						}
+						post {
+							failure {
+								sh "cat build/release/meson-logs/meson-log.txt"
+							}
+						}
+					}
+				}
+				post {
+					cleanup {
+						cleanWs()
+					}
+				}
+			}
+		}
+		stage("Docs") {
+			matrix {
+				agent {
+					label docs_agent()
+				}
+				axes {
+					axis {
+						name "PLATFORM"
+						values "Linux"
+					}
+					axis {
+						name "SPHINX"
+						values "==1.3", "~=1.0", "~=2.0", "~=3.0", ">=4"
+					}
+				}
+				stages {
+					stage("Checkout") {
+						steps {
+							cleanWs()
+							checkout scm
+						}
+					}
+					stage("Prepare") {
+						steps {
+							sh "pipenv ${docs_pipenv_python()} install ${docs_packages()} \"Sphinx${SPHINX}\""
+						}
+					}
+					stage("Build Manual") {
+						steps {
+							sh "pipenv run make -C docs man"
+						}
+					}
+					stage("Build Website") {
+						steps {
+							sh "pipenv run make -C docs html"
+						}
+						post {
+							success {
+								script {
+									if (docs_matrix_main()) {
+										publishHTML([
+											allowMissing: false,
+											alwaysLinkToLastBuild: false,
+											keepAll: false,
+											reportName: "Documentation",
+											reportDir: "docs/build/html/",
+											reportTitles: "dtee",
+											reportFiles: "index.html",
+										])
+									}
+								}
+							}
+						}
+					}
+					stage("Check Links") {
+						when {
+							expression { docs_matrix_main() }
+						}
+						steps {
+							sh "pipenv run make -C docs linkcheck"
+						}
+					}
+				}
+				post {
+					cleanup {
+						cleanWs()
+					}
+				}
+			}
+		}
+	}
+	post {
+		always {
+			script {
+				common.Email.send(this)
+			}
+		}
+	}
+}
