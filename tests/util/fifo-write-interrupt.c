@@ -102,8 +102,6 @@ int main(int argc, char *argv[]) {
 		nanosleep(&ts, NULL);
 		kill(pid, SIGCONT);
 		nanosleep(&ts, NULL);
-		kill(pid, SIGWINCH);
-		nanosleep(&ts, NULL);
 		kill(pid, SIGINT);
 		nanosleep(&ts, NULL);
 

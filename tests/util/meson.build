@@ -77,6 +77,7 @@ shared_library('test-write-truncate-cron', ['write-truncate-cron.c'] , c_args: d
 shared_library('test-write-truncate-stdout', ['write-truncate-stdout.c'] , c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir())
 
 executable('test-closed-pipe-reader', ['closed-pipe-reader.c'], c_args: test_c_args)
+default_signal_handlers = executable('test-default-signal-handlers', ['default-signal-handlers.c'], c_args: test_c_args)
 executable('test-closed-pipe-writer', ['closed-pipe-writer.c'], c_args: test_c_args)
 executable('test-fifo-write-interrupt', ['fifo-write-interrupt.c'] , c_args: test_c_args)
 executable('test-lorem-ipsum-late-exit', ['lorem-ipsum-late-exit.c'], c_args: test_c_args)

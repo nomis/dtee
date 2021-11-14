@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 	int null = open("/dev/null", O_RDWR);
 	if (null < 0) {
 		perror("open");
-		return EXIT_FAILURE;
+		return EX_OSERR;
 	}
 
 	// This is a bit of a mess. It would be easier to write our output to a
@@ -33,14 +33,14 @@ int main(int argc, char *argv[]) {
 	int read_pipefd[2];
 	if (pipe(read_pipefd) < 0) {
 		perror("pipe");
-		return EXIT_FAILURE;
+		return EX_OSERR;
 	}
 	close(read_pipefd[1]);
 
 	int write_pipefd[2];
 	if (pipe(write_pipefd) < 0) {
 		perror("pipe");
-		return EXIT_FAILURE;
+		return EX_OSERR;
 	}
 	close(write_pipefd[0]);
 
@@ -63,6 +63,7 @@ int main(int argc, char *argv[]) {
 			return EXIT_SUCCESS;
 		} else {
 			perror("waitpid");
+			return EX_OSERR;
 		}
 	} else if (pid == 0) {
 		if (dup2(closed_stdin ? read_pipefd[0] : null, STDIN_FILENO) < 0) {
@@ -82,5 +83,6 @@ int main(int argc, char *argv[]) {
 		execvp(argv[1], &argv[2]);
 		abort();
 	}
-	return EXIT_FAILURE;
+	perror("fork");
+	return EX_OSERR;
 }

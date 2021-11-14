@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
 		if (setrlimit(RLIMIT_CORE, &rlim) < 0) {
 			perror("setrlimit");
-			return EXIT_FAILURE;
+			return EX_OSERR;
 		}
 	}
 
@@ -75,6 +75,10 @@ int main(int argc, char *argv[]) {
 		fflush(stdout);
 	}
 
-	raise(signum);
-	return EXIT_SUCCESS;
+	if (raise(signum) != 0) {
+		perror("raise");
+	}
+
+	printf("Current process is still running\n");
+	return signum;
 }

@@ -4,7 +4,7 @@ test_env = [
 	'LANGUAGE=',
 ]
 
-bash = find_program('bash')
+bash = find_program('bash').full_path()
 xfail = get_option('test_expect_fail')
 
 subdir('util')
