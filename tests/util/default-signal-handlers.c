@@ -1,5 +1,3 @@
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -29,28 +27,7 @@ int main(int argc, char *argv[]) {
 	signal(SIGCHLD, SIG_DFL);
 	signal(SIGCONT, SIG_DFL);
 
-	pid_t pid = fork();
-	if (pid > 0) {
-		int wstatus = 0;
-		if (waitpid(pid, &wstatus, 0) != -1) {
-			if (WIFSIGNALED(wstatus)) {
-				if (raise(WTERMSIG(wstatus)) != 0) {
-					perror("raise");
-					return EX_OSERR;
-				}
-				return 0x80 + WTERMSIG(wstatus);
-			} else if (WIFEXITED(wstatus)) {
-				return WEXITSTATUS(wstatus);
-			}
-			return EX_SOFTWARE;
-		} else {
-			perror("waitpid");
-			return EX_OSERR;
-		}
-	} else if (pid == 0) {
-		execvp(argv[1], &argv[1]);
-		return EX_UNAVAILABLE;
-	}
-	perror("fork");
-	return EX_OSERR;
+	execvp(argv[1], &argv[1]);
+	perror("execvp");
+	return EX_UNAVAILABLE;
 }

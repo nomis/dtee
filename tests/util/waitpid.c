@@ -81,8 +81,11 @@ int main(int argc, char *argv[]) {
 		close(write_pipefd[1]);
 
 		execvp(argv[1], &argv[2]);
-		abort();
+		perror("execvp");
+		return EX_UNAVAILABLE;
+	} else {
+		perror("fork");
+		return EX_OSERR;
 	}
-	perror("fork");
 	return EX_OSERR;
 }
