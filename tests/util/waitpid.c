@@ -87,5 +87,5 @@ int main(int argc, char *argv[]) {
 		perror("fork");
 		return EX_OSERR;
 	}
-	return EX_OSERR;
+	return EX_SOFTWARE;
 }
