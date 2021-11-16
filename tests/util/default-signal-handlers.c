@@ -31,15 +31,20 @@ int main(int argc, char *argv[]) {
 	assert(restore_signal(&set, SIGHUP));
 	assert(restore_signal(&set, SIGINT));
 	assert(restore_signal(&set, SIGQUIT));
+	assert(restore_signal(&set, SIGILL));
 	assert(restore_signal(&set, SIGABRT));
+	assert(restore_signal(&set, SIGFPE));
 	assert(restore_signal(&set, SIGSEGV));
 	assert(restore_signal(&set, SIGPIPE));
 	assert(restore_signal(&set, SIGALRM));
 	assert(restore_signal(&set, SIGTERM));
+	assert(restore_signal(&set, SIGUSR1));
+	assert(restore_signal(&set, SIGUSR2));
 	assert(restore_signal(&set, SIGCHLD));
 	assert(restore_signal(&set, SIGCONT));
 
-	// Also unblock the signals!
+	// Also unblock the signals because java.lang.ProcessBuilder may start
+	// processes with SIGQUIT blocked.
 
 	if (sigprocmask(SIG_UNBLOCK, &set, NULL) != 0) {
 		perror("sigprocmask");
