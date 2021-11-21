@@ -201,7 +201,7 @@ pipeline {
 						}
 						post {
 							failure {
-								sh "cat build/release/meson-logs/meson-log.txt"
+								sh "cat build/meson-logs/meson-log.txt"
 							}
 						}
 					}
