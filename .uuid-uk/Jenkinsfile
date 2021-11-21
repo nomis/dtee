@@ -107,6 +107,9 @@ pipeline {
 						values "GCC-5", "GCC-6", "GCC-7", "GCC-8", "GCC-9", "GCC", "Clang-3.9", "Clang-4.0", "Clang-5.0", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang"
 					}
 				}
+				environment {
+					TMPDIR = "${WORKSPACE_TMP}"
+				}
 				stages {
 					stage("Checkout") {
 						steps {
