@@ -15,31 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-def LIBRARY_BRANCH = "main"
-def common = library(
-	identifier: "uuid@${LIBRARY_BRANCH}",
-	changelog: false,
-	retriever: modernSCM([
-		$class: "GitSCMSource",
-		remote: "https://github.com/nomis/jenkins-uuid.git",
-		credentialsId: "09218456-3c5d-493e-be04-d951b1d560c9",
-		traits: [
-			[$class: "CloneOptionTrait", extension: [shallow: true, depth: 1, noTags: true]],
-			[$class: "RefSpecsSCMSourceTrait", templates: [
-				[value: "+refs/heads/${LIBRARY_BRANCH}:refs/remotes/origin/${LIBRARY_BRANCH}"],
-			]],
-		],
-	])
-).uk.uuid.jenkins.pipeline
-
-def common = library(
-	identifier: "uuid@main",
-	retriever: modernSCM([
-		$class: "GitSCMSource",
-		remote: "https://github.com/nomis/jenkins-uuid.git",
-		credentialsId: "09218456-3c5d-493e-be04-d951b1d560c9",
-	])
-).uk.uuid.jenkins.pipeline
+@Library("uuid")
+import uk.uuid.jenkins.pipeline.Cron
+import uk.uuid.jenkins.pipeline.Email
 
 def application_agent() {
 	return "${PLATFORM} && ${COMPILER} && Python && Boost && gettext"
@@ -107,7 +85,7 @@ def docs_packages() {
 pipeline {
 	agent none
 	triggers {
-		cron("${common.Cron.schedule(this)}")
+		cron("${Cron.schedule(this)}")
 	}
 	environment {
 		PIPENV_VENV_IN_PROJECT = "1"
@@ -262,7 +240,7 @@ pipeline {
 	post {
 		always {
 			script {
-				common.Email.send(this)
+				Email.send(this)
 			}
 		}
 	}
