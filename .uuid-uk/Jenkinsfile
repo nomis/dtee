@@ -19,12 +19,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import uk.uuid.jenkins.pipeline.Cron
 import uk.uuid.jenkins.pipeline.Email
 
-def application_agent() {
-	return "${PLATFORM} && ${COMPILER} && Python && Boost && gettext"
+def application_matrix_main() {
+	return COMPILER == "GCC-10"
 }
 
-def application_matrix_main() {
-	return COMPILER == "GCC"
+def application_with_docs() {
+	return application_matrix_main() && BUILD_TYPE == "release"
+}
+
+def application_with_coverage() {
+	return application_matrix_main() && BUILD_TYPE == "debug"
+}
+
+def application_use_test_results() {
+	return application_matrix_main() && BUILD_TYPE == "release"
+}
+
+def application_agent() {
+	def labels = "${PLATFORM} && ${COMPILER} && Python && Boost && gettext"
+	if (application_with_coverage()) {
+		labels += " && lcov && gcovr"
+	}
+	return labels
 }
 
 def c_compiler() {
@@ -41,8 +57,16 @@ def cxx_compiler() {
 	}
 }
 
-def compiler_packages() {
-	if (COMPILER == "GCC") {
+def gcov_compiler() {
+	if (COMPILER.startsWith("GCC")) {
+		return "gcov" + COMPILER.substring(3).toLowerCase()
+	} else {
+		return "gcov"
+	}
+}
+
+def application_packages() {
+	if (application_with_docs()) {
 		return 'meson ninja Sphinx'
 	} else if (COMPILER == "Clang-3.9") {
 		// https://github.com/mesonbuild/meson/issues/9569
@@ -52,16 +76,16 @@ def compiler_packages() {
 	}
 }
 
+def docs_matrix_main() {
+	return SPHINX == ">=4"
+}
+
 def docs_agent() {
 	if (SPHINX == "==1.3") {
 		return "${PLATFORM} && Python-2"
 	} else {
 		return "${PLATFORM} && Python"
 	}
-}
-
-def docs_matrix_main() {
-	return SPHINX == ">=4"
 }
 
 def docs_pipenv_python() {
@@ -94,9 +118,6 @@ pipeline {
 	stages {
 		stage("Application") {
 			matrix {
-				agent {
-					label application_agent()
-				}
 				axes {
 					axis {
 						name "PLATFORM"
@@ -104,11 +125,35 @@ pipeline {
 					}
 					axis {
 						name "COMPILER"
-						values "GCC-5", "GCC-6", "GCC-7", "GCC-8", "GCC-9", "GCC", "Clang-3.9", "Clang-4.0", "Clang-5.0", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang"
+						values "GCC-5", "GCC-6", "GCC-7", "GCC-8", "GCC-9", "GCC-10", "Clang-3.9", "Clang-4.0", "Clang-5.0", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang-12"
+					}
+					axis {
+						name "BUILD_TYPE"
+						values "release", "debug"
 					}
 				}
+				excludes {
+					exclude {
+						axis {
+							name "BUILD_TYPE"
+							values "debug"
+						}
+						axis {
+							name "COMPILER"
+							notValues "GCC-10", "Clang-12"
+						}
+					}
+				}
+				agent {
+					label application_agent()
+				}
 				environment {
+					PATH = "${WORKSPACE_TMP}/PATH:${env.PATH}"
 					TMPDIR = "${WORKSPACE_TMP}"
+					CC = "${c_compiler()}"
+					CXX = "${cxx_compiler()}"
+					GCOV = "${gcov_compiler()}"
+					DESTDIR= "${WORKSPACE_TMP}/DESTDIR"
 				}
 				stages {
 					stage("Checkout") {
@@ -118,13 +163,23 @@ pipeline {
 					}
 					stage("Prepare") {
 						steps {
-							sh "pipenv install ${compiler_packages()}"
+							sh "pipenv install ${application_packages()}"
+
+							script {
+								if (application_with_coverage() && GCOV != "gcov") {
+									writeFile(
+										file: "${WORKSPACE_TMP}/PATH/gcov",
+										text: '#!/bin/sh\nexec "$GCOV" "$@"\n',
+									)
+									sh "chmod a+x \"${WORKSPACE_TMP}/PATH/gcov\""
+								}
+							}
 						}
 					}
 					stage("Build") {
 						steps {
-							sh "CC=${c_compiler()} CXX=${cxx_compiler()} pipenv run meson --buildtype=release build/release/ -Db_lto=true -Dtest_expect_fail=true"
-							sh "pipenv run ninja -C build/release/ -j 1"
+							sh "pipenv run meson --buildtype=${BUILD_TYPE} build/ -Db_lto=${BUILD_TYPE == 'release'} -Db_coverage=${application_with_coverage()} -Dtest_expect_fail=true"
+							sh "pipenv run ninja -C build/ -j 1"
 						}
 						post {
 							failure {
@@ -134,28 +189,49 @@ pipeline {
 					}
 					stage("Test") {
 						steps {
-							dir("build/release/") {
+							dir("build") {
 								sh "pipenv run meson test --no-rebuild --print-errorlogs --num-processes 1"
 							}
 						}
 						post {
 							always {
 								script {
-									if (application_matrix_main()) {
-										junit "build/release/meson-logs/testlog.junit.xml"
+									if (application_use_test_results()) {
+										junit "build/meson-logs/testlog.junit.xml"
 									}
 								}
 							}
 						}
 					}
-					stage("Install") {
+					stage("Coverage") {
+						when {
+							expression { application_with_coverage() }
+						}
 						steps {
-							sh "DESTDIR=\"`pwd`/build/install\" pipenv run ninja -C build/release/ -j 1 install"
+							sh "pipenv run ninja -C build/ -j 1 coverage-html"
+							sh "pipenv run ninja -C build/ -j 1 coverage-xml"
 						}
 						post {
-							failure {
-								sh "cat build/release/meson-logs/meson-log.txt"
+							success {
+								publishCoverage(
+									adapters: [cobertura("build/meson-logs/coverage.xml")],
+									sourceFileResolver: sourceFiles("NEVER_STORE"),
+								)
+								publishHTML([
+									allowMissing: false,
+									alwaysLinkToLastBuild: false,
+									keepAll: false,
+									reportName: "Coverage",
+									reportDir: "build/meson-logs/coveragereport",
+									reportTitles: "dtee",
+									reportFiles: "index.html",
+								])
 							}
+						}
+					}
+					stage("Install") {
+						steps {
+							sh "pipenv run ninja -C build/ -j 1 install"
 						}
 					}
 				}
@@ -168,9 +244,6 @@ pipeline {
 		}
 		stage("Docs") {
 			matrix {
-				agent {
-					label docs_agent()
-				}
 				axes {
 					axis {
 						name "PLATFORM"
@@ -180,6 +253,9 @@ pipeline {
 						name "SPHINX"
 						values "==1.3", "~=1.0", "~=2.0", "~=3.0", ">=4"
 					}
+				}
+				agent {
+					label docs_agent()
 				}
 				stages {
 					stage("Checkout") {
