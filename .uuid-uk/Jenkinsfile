@@ -35,12 +35,14 @@ def application_use_test_results() {
 	return application_matrix_main() && BUILD_TYPE == "release"
 }
 
-def application_agent() {
-	def labels = "${PLATFORM} && ${COMPILER} && Python && Boost && gettext"
+def application_agent_labels() {
+	def labels = [PLATFORM, COMPILER, "Python", "Boost", "gettext"]
+
 	if (application_with_coverage()) {
-		labels += " && lcov && gcovr"
+		labels.addAll(["lcov", "gcovr"])
 	}
-	return labels
+
+	return labels.join(" && ")
 }
 
 def c_compiler() {
@@ -66,26 +68,42 @@ def gcov_compiler() {
 }
 
 def application_packages() {
-	if (application_with_docs()) {
-		return 'meson ninja Sphinx'
-	} else if (COMPILER == "Clang-3.9") {
+	def packages = []
+
+	if (COMPILER == "Clang-3.9") {
 		// https://github.com/mesonbuild/meson/issues/9569
-		return '"meson!=0.57.*,!=0.58.*,!=0.59.*,!=0.60,!=0.60.1" ninja'
+		packages.add('"meson!=0.57.*,!=0.58.*,!=0.59.*,!=0.60,!=0.60.1"')
 	} else {
-		return 'meson ninja'
+		packages.add('meson')
 	}
+
+	packages.add('ninja')
+
+	if (application_with_docs()) {
+		packages.add('Sphinx')
+	}
+
+	if (application_with_coverage()) {
+		packages.add('gcovr')
+	}
+
+	return packages.join(" ")
 }
 
 def docs_matrix_main() {
 	return SPHINX == ">=4"
 }
 
-def docs_agent() {
+def docs_agent_labels() {
+	def labels = [PLATFORM]
+
 	if (SPHINX == "==1.3") {
-		return "${PLATFORM} && Python-2"
+		labels.add("Python-2")
 	} else {
-		return "${PLATFORM} && Python"
+		labels.add("Python")
 	}
+
+	return labels.join(" && ")
 }
 
 def docs_pipenv_python() {
@@ -145,7 +163,7 @@ pipeline {
 					}
 				}
 				agent {
-					label application_agent()
+					label application_agent_labels()
 				}
 				environment {
 					PATH = "${WORKSPACE_TMP}/PATH:${env.PATH}"
@@ -255,7 +273,7 @@ pipeline {
 					}
 				}
 				agent {
-					label docs_agent()
+					label docs_agent_labels()
 				}
 				stages {
 					stage("Checkout") {
