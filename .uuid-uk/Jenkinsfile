@@ -196,7 +196,7 @@ pipeline {
 					}
 					stage("Build") {
 						steps {
-							sh "pipenv run meson --buildtype=${BUILD_TYPE} build/ -Db_lto=${BUILD_TYPE == 'release'} -Db_coverage=${application_with_coverage()} -Dtest_expect_fail=true"
+							sh "pipenv run meson --buildtype=${BUILD_TYPE} build/ -Db_lto=${BUILD_TYPE == 'release'} -Db_coverage=${application_with_coverage()} -Dtest_expect_fail=true --unity on --unity-size 10000"
 							sh "pipenv run ninja -C build/ -j 1"
 						}
 						post {
