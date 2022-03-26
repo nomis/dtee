@@ -288,7 +288,11 @@ pipeline {
 					stage("Prepare") {
 						steps {
 							sh "pipenv ${docs_pipenv_python()} install ${docs_packages()} \"Sphinx${SPHINX}\""
-							sh "pipenv graph"
+							script {
+								if (docs_pipenv_python() != "--python 2") {
+									sh "pipenv graph"
+								}
+							}
 						}
 					}
 					stage("Build Manual") {
