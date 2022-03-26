@@ -1,5 +1,5 @@
 /*
-Copyright 2021  Simon Arlott
+Copyright 2021-2022  Simon Arlott
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -182,6 +182,7 @@ pipeline {
 					stage("Prepare") {
 						steps {
 							sh "pipenv install ${application_packages()}"
+							sh "pipenv graph"
 
 							script {
 								if (application_with_coverage() && GCOV != "gcov") {
@@ -285,6 +286,7 @@ pipeline {
 					stage("Prepare") {
 						steps {
 							sh "pipenv ${docs_pipenv_python()} install ${docs_packages()} \"Sphinx${SPHINX}\""
+							sh "pipenv graph"
 						}
 					}
 					stage("Build Manual") {
