@@ -8,6 +8,20 @@ Install the :download:`repository public key <repo-key-rsa.asc>`::
 Follow the instructions for your release. If you are using a newer release than
 the ones listed then use the builds for the most recent prior version.
 
+Ubuntu 22.04 LTS (Jammy Jellyfish)
+----------------------------------
+
+Add the following APT_ data source
+:download:`dtee-ubuntu-jammy.list <../../apt/dtee-ubuntu-jammy.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
+
+    deb https://dtee.bin.uuid.uk/ubuntu/ jammy main
+
+Run the following commands::
+
+    apt update
+    apt install dtee
+
 Ubuntu 20.04 LTS (Focal Fossa)
 ------------------------------
 
