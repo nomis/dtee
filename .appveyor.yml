@@ -4,6 +4,9 @@ environment:
     CYG_ARCH: x86_64
     CYG_BASE: 'C:\cygwin64'
 
+init:
+  - 'FOR /F "tokens=* USEBACKQ" %%F IN (`%CYG_BASE%\bin\cygpath -u %APPVEYOR_BUILD_FOLDER%`) DO SET BUILD_FOLDER=%%F'
+
 install:
   - '"%CYG_BASE%\setup-%CYG_ARCH%.exe" --quiet-mode --no-shortcuts --packages bash,binutils,cygutils-extra,cygwin-devel,gettext-devel,git,gcc-core,gcc-g++,libboost-devel,libgcc1,libintl8,libintl-devel,libstdc++6,make,meson,ninja,python3,windows-default-manifest'
   - '"%CYG_BASE%\bin\cygcheck" -dc'
@@ -12,15 +15,16 @@ install:
   - '"%CYG_BASE%\bin\bash" -lc "mount"'
 
 build_script:
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && git config --local core.symlinks true"'
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && git clean -qfdx"'
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && git reset --hard"'
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make"'
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make DESTDIR=\"`pwd`/build/install\" install"'
+  - '"%CYG_BASE%\bin\bash" -lc "git config --global --add safe.directory \"$BUILD_FOLDER\""'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && git config --local core.symlinks true"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && git clean -qfdx"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && git reset --hard"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && make"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && make DESTDIR=\"`pwd`/build/install\" install"'
 
 test_script:
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && make check"'
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && cygdrop make check"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && make check"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && cygdrop make check"'
 
 on_failure:
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$APPVEYOR_BUILD_FOLDER\" && cd build/release && cat meson-logs/testlog.txt"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && cd build/release && cat meson-logs/testlog.txt"'
