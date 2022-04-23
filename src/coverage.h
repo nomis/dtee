@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2021  Simon Arlott
+	Copyright 2021-2022  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ extern "C" {
 namespace dtee {
 
 // LCOV_EXCL_START
-static void inline coverage_flush() {
+static void inline coverage_dump() {
 #ifdef GCOV_ENABLED
-	::__gcov_flush();
+	::__gcov_dump();
 #endif
 }
 // LCOV_EXCL_STOP

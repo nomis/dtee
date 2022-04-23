@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021  Simon Arlott
+	Copyright 2018,2021-2022  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -232,7 +232,7 @@ void Application::execute(const vector<string> &command) {
 	}
 	argv.push_back(nullptr);
 
-	coverage_flush(); // LCOV_EXCL_LINE
+	coverage_dump(); // LCOV_EXCL_LINE
 
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
