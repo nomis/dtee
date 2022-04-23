@@ -20,7 +20,7 @@ import uk.uuid.jenkins.pipeline.Cron
 import uk.uuid.jenkins.pipeline.Email
 
 def application_matrix_main() {
-	return COMPILER == "GCC-10"
+	return COMPILER == "GCC-12"
 }
 
 def application_with_docs() {
@@ -145,7 +145,7 @@ pipeline {
 					}
 					axis {
 						name "COMPILER"
-						values "GCC-5", "GCC-6", "GCC-7", "GCC-8", "GCC-9", "GCC-10", "Clang-3.9", "Clang-4.0", "Clang-5.0", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang-12"
+						values "GCC-5", "GCC-6", "GCC-7", "GCC-8", "GCC-9", "GCC-10", "GCC-11", "GCC-12", "Clang-3.9", "Clang-4.0", "Clang-5.0", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang-12", "Clang-13", "Clang-14"
 					}
 					axis {
 						name "BUILD_TYPE"
@@ -160,7 +160,7 @@ pipeline {
 						}
 						axis {
 							name "COMPILER"
-							notValues "GCC-10", "Clang-12"
+							notValues "GCC-12", "Clang-14"
 						}
 					}
 				}
