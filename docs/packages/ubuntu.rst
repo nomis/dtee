@@ -3,7 +3,7 @@ Ubuntu
 
 Install the :download:`repository public key <repo-key-rsa.asc>`::
 
-    wget https://dtee.bin.uuid.uk/ubuntu/repo-key.asc -O - | apt-key add -
+    wget https://dtee.bin.uuid.uk/ubuntu/repo-key.asc -O /etc/apt/trusted.gpg.d/dtee.asc
 
 Follow the instructions for your release. If you are using a newer release than
 the ones listed then use the builds for the most recent prior version.
