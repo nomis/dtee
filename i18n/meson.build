@@ -6,7 +6,6 @@ import('i18n').gettext(
 		'--add-comments=i18n',
 		'--add-location=file',
 		'--boost',
-		'--directory=' + meson.source_root(),
 		'--from-code=UTF-8',
 		'--keyword=N_',
 		'--no-wrap',
