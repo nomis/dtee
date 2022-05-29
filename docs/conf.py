@@ -18,7 +18,7 @@ manual_doc = 'manual'
 version = u''
 release = u''
 
-language = None
+language = 'en'
 exclude_patterns = ['build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 todo_include_todos = False
