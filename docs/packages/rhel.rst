@@ -8,6 +8,17 @@ Yum will prompt to confirm the repository
 
    4784 9A12 DAF9 BD2A F550 5FBB 4FF8 86F3 1820 6BD9
 
+Red Hat Enterprise Linux 9
+--------------------------
+
+Save the repository configuration file
+:download:`dtee-rhel9.repo <../../yum/dtee-rhel9.repo>`
+to ``/etc/yum.repos.d/dtee-rhel9.repo``.
+
+Run the following command::
+
+    yum install dtee
+
 Red Hat Enterprise Linux 8
 --------------------------
 

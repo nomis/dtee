@@ -1,0 +1,15 @@
+[dtee]
+name=dtee (9/$basearch)
+baseurl=https://dtee.bin.uuid.uk/redhat/9/$basearch
+enabled=1
+gpgcheck=0
+repo_gpgcheck=1
+gpgkey=https://dtee.bin.uuid.uk/redhat/9/$basearch/repodata/repomd.xml.key
+
+[dtee-source]
+name=dtee (9/Source)
+baseurl=https://dtee.bin.uuid.uk/redhat/9/source
+enabled=0
+gpgcheck=0
+repo_gpgcheck=1
+gpgkey=https://dtee.bin.uuid.uk/redhat/9/source/repodata/repomd.xml.key
