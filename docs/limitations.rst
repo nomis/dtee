@@ -17,6 +17,11 @@ Linux) the writes occur in |PIPE_BUF|_ sized chunks so it works as normal, but
 why are you using an interactive program that outputs such large quantities of
 data?
 
+It is not possible to open ``/dev/stdout`` or ``/dev/stderr`` because they are
+sockets. No program would need to do this but like the use of ``/dev/stdin``
+it may be desirable in scripts to work around limitations in file descriptor
+handling (however this is unlikely for an interactive program).
+
 For more details read the :doc:`architecture <architecture>` document.
 
 FreeBSD/OpenBSD/Darwin
