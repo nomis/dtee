@@ -99,6 +99,8 @@ def docs_agent_labels() {
 
 	if (SPHINX == "==1.3") {
 		labels.add("Python-2")
+	} else if (SPHINX == "~=3.0") {
+		labels.add("(Python-3.6 || Python-3.7 || Python-3.8 || Python-3.9)")
 	} else {
 		labels.add("Python")
 	}
