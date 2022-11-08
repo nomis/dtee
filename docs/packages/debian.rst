@@ -36,19 +36,4 @@ Run the following commands::
     apt update
     apt install dtee
 
-Debian 9 (stretch)
-------------------
-
-Add the following APT_ data source
-:download:`dtee-debian-stretch.list <../../apt/dtee-debian-stretch.list>`
-to ``/etc/apt/sources.list.d/dtee.list``::
-
-    deb https://dtee.bin.uuid.uk/debian/ stretch main
-
-Run the following commands::
-
-    apt install apt-transport-https
-    apt update
-    apt install dtee
-
 .. _APT: https://en.wikipedia.org/wiki/APT_(Debian)

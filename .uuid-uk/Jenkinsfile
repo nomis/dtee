@@ -176,7 +176,7 @@ pipeline {
 					CC = "${c_compiler()}"
 					CXX = "${cxx_compiler()}"
 					GCOV = "${gcov_compiler()}"
-					DESTDIR= "${WORKSPACE_TMP}/DESTDIR"
+					DESTDIR = "${WORKSPACE_TMP}/DESTDIR"
 				}
 				stages {
 					stage("Checkout") {
