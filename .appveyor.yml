@@ -15,6 +15,10 @@ install:
   - '"%CYG_BASE%\bin\bash" -lc "id"'
   - '"%CYG_BASE%\bin\bash" -lc "cygdrop id"'
   - '"%CYG_BASE%\bin\bash" -lc "mount"'
+  - '"%CYG_BASE%\bin\bash" -lc "which meson"'
+  - '"%CYG_BASE%\bin\bash" -lc "which ninja"'
+  - '"%CYG_BASE%\bin\bash" -lc "meson --version"'
+  - '"%CYG_BASE%\bin\bash" -lc "ninja --version"'
 
 build_script:
   - '"%CYG_BASE%\bin\bash" -lc "git config --global --add safe.directory \"$BUILD_FOLDER\""'
