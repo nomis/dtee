@@ -3,11 +3,13 @@ environment:
     MESON_OPTS: '-Dtest_expect_fail=true --unity on --unity-size 10000'
     CYG_ARCH: x86_64
     CYG_BASE: 'C:\cygwin64'
+    CYGWIN_MIRROR: https://cygwin.mirror.constant.com
 
 init:
   - 'FOR /F "tokens=* USEBACKQ" %%F IN (`%CYG_BASE%\bin\cygpath -u %APPVEYOR_BUILD_FOLDER%`) DO SET BUILD_FOLDER=%%F'
 
 install:
+  - 'curl -qsS --fail --retry 5 --max-time 300 --compressed https://cygwin.com/setup-%CYG_ARCH%.exe -o "%CYG_BASE%\setup-%CYG_ARCH%.exe"'
   - '"%CYG_BASE%\setup-%CYG_ARCH%.exe" --quiet-mode --no-shortcuts --packages bash,binutils,cygutils-extra,cygwin-devel,gettext-devel,git,gcc-core,gcc-g++,libboost-devel,libgcc1,libintl8,libintl-devel,libstdc++6,make,meson,ninja,python3,windows-default-manifest'
   - '"%CYG_BASE%\bin\cygcheck" -dc'
   - '"%CYG_BASE%\bin\bash" -lc "id"'
