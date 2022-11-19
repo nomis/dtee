@@ -46,7 +46,7 @@ Test
   * `GNU Diff Utilities <https://www.gnu.org/software/diffutils/>`_
   * `GNU Find Utilities <https://www.gnu.org/software/findutils/>`_
   * `GNU GCC gcov <https://gcc.gnu.org/onlinedocs/gcc/Gcov.html>`_
-  * `Lcov <https://github.com/linux-test-project/lcov>`_
+  * `lcov <https://github.com/linux-test-project/lcov>`_
 
 Runtime
 -------
