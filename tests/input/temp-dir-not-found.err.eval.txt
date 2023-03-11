@@ -1,0 +1,1 @@
+./dtee: unable to create temporary directory: boost::filesystem::temp_directory_path: $BOOST_ERROR_CODE_ENOTDIR: \"./dtee@test/input/temp-dir-not-found.tmp/not-found\"

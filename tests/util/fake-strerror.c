@@ -41,63 +41,7 @@ static char *dtee_test_strerror(int errnum) {
 		return #__errnum; \
 		break;
 
-#ifdef EACCES
-	STRERROR_FOR(EACCES)
-#endif
-#ifdef EAFNOSUPPORT
-	STRERROR_FOR(EAFNOSUPPORT)
-#endif
-#ifdef EAGAIN
-	STRERROR_FOR(EAGAIN)
-#endif
-#ifdef EBADF
-	STRERROR_FOR(EBADF)
-#endif
-#ifdef ECHILD
-	STRERROR_FOR(ECHILD)
-#endif
-#ifdef ECONNREFUSED
-	STRERROR_FOR(ECONNREFUSED)
-#endif
-#ifdef ECONNRESET
-	STRERROR_FOR(ECONNRESET)
-#endif
-#ifdef EFAULT
-	STRERROR_FOR(EFAULT)
-#endif
-#ifdef EINVAL
-	STRERROR_FOR(EINVAL)
-#endif
-#ifdef EIO
-	STRERROR_FOR(EIO)
-#endif
-#ifdef EMFILE
-	STRERROR_FOR(EMFILE)
-#endif
-#ifdef ENAMETOOLONG
-	STRERROR_FOR(ENAMETOOLONG)
-#endif
-#ifdef ENOENT
-	STRERROR_FOR(ENOENT)
-#endif
-#ifdef ENOSPC
-	STRERROR_FOR(ENOSPC)
-#endif
-#ifdef ENOTCONN
-	STRERROR_FOR(ENOTCONN)
-#endif
-#ifdef ENOTDIR
-	STRERROR_FOR(ENOTDIR)
-#endif
-#ifdef EPERM
-	STRERROR_FOR(EPERM)
-#endif
-#ifdef EPIPE
-	STRERROR_FOR(EPIPE)
-#endif
-#ifdef EROFS
-	STRERROR_FOR(EROFS)
-#endif
+#include "for-each-strerror.h"
 
 #undef STRERROR_FOR
 

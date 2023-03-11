@@ -1,0 +1,1 @@
+./dtee: stdout socket: shutdown: $BOOST_ERROR_CODE_ENOTCONN

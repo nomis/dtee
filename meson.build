@@ -57,6 +57,12 @@ endif
 subdir('src')
 subdir('i18n')
 
+boost = dependency('boost', modules: [
+		'filesystem',
+		'program_options',
+		'system',
+	], include_type: 'system')
+
 dtee = executable('dtee',
 	source_files,
 	cpp_args: c_args + [
@@ -65,13 +71,7 @@ dtee = executable('dtee',
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
 		'-DBOOST_ASIO_DISABLE_THREADS',
 	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
-	dependencies: [
-		dependency('boost', modules: [
-			'filesystem',
-			'program_options',
-			'system',
-		], include_type: 'system'),
-	] + gettext_deps,
+	dependencies: [boost] + gettext_deps,
 	build_rpath: rpath,
 	install_rpath: rpath,
 	install: true)

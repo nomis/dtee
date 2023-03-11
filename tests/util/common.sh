@@ -1,5 +1,7 @@
 BASEDIR="$(dirname -- "$0")"
-UTILDIR="$BASEDIR/util"
+UTILDIR="$BASEDIR/../util"
+. "$UTILDIR/preload.sh"
+
 NAME="$(basename -- "$0")"
 NAME="${NAME%*.sh}"
 
@@ -59,9 +61,6 @@ RUN="$TESTDIR/$NAME.run"
 
 cd tests  || exit 1
 
-EARLY_TEST_LD_PRELOAD=()
-COMMON_TEST_LD_PRELOAD=(test-execvp-fd-check test-fork-sigchld-check test-fake-strerror test-fake-strsignal)
-
 TEST_EXEC=./dtee
 TEST_NO_STDIN=0
 TEST_EXTRA_OUTPUT=0
@@ -76,6 +75,9 @@ fi
 mkdir -p "$TESTDIR/$NAME.tmp" || exit $TEST_EX_FAIL
 export TMPDIR="./$TESTDIR/$NAME.tmp"
 
+# boost::system::error_code.what()
+. ./util/boost-error_code-what.txt
+
 # /usr/include/sysexits.h
 . ./util/sysexits.txt
 
@@ -89,23 +91,8 @@ UNAME="$(uname)"
 SHORT_UNAME="$UNAME"
 
 case "$UNAME" in
-	Darwin)
-		SHLIB_PREFIX="./util/lib"
-		SHLIB_EXT=.dylib
-		;;
 	CYGWIN_*)
-		SHLIB_PREFIX="./util/cyg"
-		SHLIB_EXT=.dll
 		SHORT_UNAME="CYGWIN"
-
-		# Windows can't find DLLs unless they're in the executable's
-		# directory or the PATH. This causes preloaded libraries to
-		# fail to find their dependencies, so specify all of them here.
-		EARLY_TEST_LD_PRELOAD=(test-is-dtee test-allow-n-times test-fd-unix-socket ${EARLY_TEST_LD_PRELOAD[*]})
-		;;
-	*)
-		SHLIB_PREFIX="./util/lib"
-		SHLIB_EXT=.so
 		;;
 esac
 
@@ -139,89 +126,6 @@ function is_acl_directory_traversal_override() {
 	esac
 }
 
-function no_ld_preload() {
-	set +x
-	NEW_ARRAY=()
-	count=${#COMMON_TEST_LD_PRELOAD[@]}
-	for ((i = 0; i < count; i++)); do
-		if [ "${COMMON_TEST_LD_PRELOAD[i]}" != "$1" ] ; then
-			NEW_ARRAY+=(${COMMON_TEST_LD_PRELOAD[i]})
-		fi
-	done
-	COMMON_TEST_LD_PRELOAD=$NEW_ARRAY
-	set -x
-}
-
-function __get_ld_preload() {
-	case "$UNAME" in
-		Darwin)
-			echo "$DYLD_INSERT_LIBRARIES"
-			;;
-
-		*)
-			echo "$LD_PRELOAD"
-			;;
-	esac
-}
-
-function __set_ld_preload() {
-	case "$UNAME" in
-		Darwin)
-			if [ -n "$1" ]; then
-				set -x
-				export DYLD_INSERT_LIBRARIES="$1"
-				set +x
-			else
-				set -x
-				unset DYLD_INSERT_LIBRARIES
-				set +x
-			fi
-			;;
-
-		*)
-			if [ -n "$1" ]; then
-				set -x
-				export LD_PRELOAD="$1"
-				set +x
-			else
-				set -x
-				unset LD_PRELOAD
-				set +x
-			fi
-			;;
-	esac
-}
-
-function __build_ld_preload() {
-	LD_PRELOAD_STR="$(__get_ld_preload)"
-
-	count=${#EARLY_TEST_LD_PRELOAD[@]}
-	for ((i = 0; i < count; i++)); do
-		if [ -n "$LD_PRELOAD_STR" ]; then
-			LD_PRELOAD_STR="$LD_PRELOAD_STR:"
-		fi
-		LD_PRELOAD_STR="${LD_PRELOAD_STR}${SHLIB_PREFIX}${EARLY_TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
-	done
-
-	count=${#TEST_LD_PRELOAD[@]}
-	for ((i = 0; i < count; i++)); do
-		if [ -n "$LD_PRELOAD_STR" ]; then
-			LD_PRELOAD_STR="$LD_PRELOAD_STR:"
-		fi
-		LD_PRELOAD_STR="${LD_PRELOAD_STR}${SHLIB_PREFIX}${TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
-	done
-
-	count=${#COMMON_TEST_LD_PRELOAD[@]}
-	for ((i = 0; i < count; i++)); do
-		if [ -n "$LD_PRELOAD_STR" ]; then
-			LD_PRELOAD_STR="$LD_PRELOAD_STR:"
-		fi
-		LD_PRELOAD_STR="${LD_PRELOAD_STR}${SHLIB_PREFIX}${COMMON_TEST_LD_PRELOAD[i]}${SHLIB_EXT}"
-	done
-
-	echo "$LD_PRELOAD_STR"
-}
-
 function __periodic_cleanup() {
 	if [ "$UNAME" == "Darwin" ] && [ "$DTEE_TEST_COREDUMPS" == "1" ]; then
 		# Why dump the whole of RAM without using sparse files? 😖
@@ -229,15 +133,7 @@ function __periodic_cleanup() {
 	fi
 }
 
-function __before_test() {
-	OLD_LD_PRELOAD="$(__get_ld_preload)"
-	NEW_LD_PRELOAD="$(__build_ld_preload)"
-	__set_ld_preload "$NEW_LD_PRELOAD"
-}
 
-function __after_test() {
-	__set_ld_preload "$OLD_LD_PRELOAD"
-}
 
 function cmp_files() {
 	set +x
@@ -342,18 +238,18 @@ function run_test() {
 	fi
 	__periodic_cleanup
 	if [ $TEST_NO_STDIN -eq 1 ]; then
-		__before_test
+		preload_setup
 		set -x
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RT_RET1=$?
 		set +x
-		__after_test
+		preload_cleanup
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		set -x
 		FIFO="$(make_fifo "extra-out1")"
 		[ $? -eq 0 ] || exit $TEST_EX_FAIL
 		set +x
-		__before_test
+		preload_setup
 		set -x
 		DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt" 3>"$FIFO" &
 		PID=$!
@@ -363,28 +259,28 @@ function run_test() {
 		wait $PID
 		RT_RET1=$?
 		set +x
-		__after_test
+		preload_cleanup
 	elif [ -n "$TEST_ALT_STDOUT" ]; then
-		__before_test
+		preload_setup
 		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TEST_ALT_STDOUT" 2>"$TESTDIR/$NAME.err.txt"
 		RT_RET1=$?
 		set +x
-		__after_test
+		preload_cleanup
 	elif [ -n "$TEST_ALT_STDERR" ]; then
-		__before_test
+		preload_setup
 		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TEST_ALT_STDERR"
 		RT_RET1=$?
 		set +x
-		__after_test
+		preload_cleanup
 	else
-		__before_test
+		preload_setup
 		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.out.txt" 2>"$TESTDIR/$NAME.err.txt"
 		RT_RET1=$?
 		set +x
-		__after_test
+		preload_cleanup
 	fi
 	__periodic_cleanup
 
@@ -424,18 +320,18 @@ function run_test() {
 	fi
 	__periodic_cleanup
 	if [ $TEST_NO_STDIN -eq 1 ]; then
-		__before_test
+		preload_setup
 		set -x
 		"$TEST_EXEC" "$@" <&- 1>"$TESTDIR/$NAME.com.txt" 2>&1
 		RT_RET2=$?
 		set +x
-		__after_test
+		preload_cleanup
 	elif [ $TEST_EXTRA_OUTPUT -eq 1 ]; then
 		set -x
 		FIFO="$(make_fifo "extra-out2")"
 		[ $? -eq 0 ] || exit $TEST_EX_FAIL
 		set +x
-		__before_test
+		preload_setup
 		set -x
 		DTEE_TEST_EXTRA_OUTPUT_FD=3 "$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1 3>"$FIFO" &
 		PID=$!
@@ -445,14 +341,14 @@ function run_test() {
 		wait $PID
 		RT_RET2=$?
 		set +x
-		__after_test
+		preload_cleanup
 	else
-		__before_test
+		preload_setup
 		set -x
 		"$TEST_EXEC" "$@" <"$STDIN_FILE" 1>"$TESTDIR/$NAME.com.txt" 2>&1
 		RT_RET2=$?
 		set +x
-		__after_test
+		preload_cleanup
 	fi
 	__periodic_cleanup
 
@@ -479,12 +375,12 @@ function run_test() {
 
 function run_with_preload() {
 	set +x
-	__before_test
+	preload_setup
 	set -x
 	"$@"
 	RWP_RET=$?
 	set +x
-	__after_test
+	preload_cleanup
 	set -x
 	return $RWP_RET
 }

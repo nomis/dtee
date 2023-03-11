@@ -1,0 +1,1 @@
+./dtee: input socket: open: $BOOST_ERROR_CODE_EAFNOSUPPORT

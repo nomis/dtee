@@ -13,6 +13,7 @@ int main(int argc, char *argv[]) {
 	FILE *file = fopen(argv[1], "w");
 
 	if (!file) {
+		perror(argv[1]);
 		return EX_CANTCREAT;
 	}
 

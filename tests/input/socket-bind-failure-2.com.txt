@@ -1,1 +1,0 @@
-./dtee: stdout socket: bind: EACCES

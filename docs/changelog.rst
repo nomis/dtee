@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Error message checks in tests when building with Boost 1.78.
+
 1.1.0_ |--| 2021-05-30
 ----------------------
 

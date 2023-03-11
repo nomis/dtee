@@ -1,1 +1,0 @@
-./dtee: unable to create temporary directory: boost::filesystem::status: EACCES: "./dtee@test/input/temp-dir-permission-denied.tmp/permission-denied/tmp"

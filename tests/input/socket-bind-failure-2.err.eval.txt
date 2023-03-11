@@ -1,0 +1,1 @@
+./dtee: stdout socket: bind: $BOOST_ERROR_CODE_EACCES

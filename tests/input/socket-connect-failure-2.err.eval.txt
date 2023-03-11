@@ -1,0 +1,1 @@
+./dtee: stderr socket: connect: $BOOST_ERROR_CODE_EACCES
