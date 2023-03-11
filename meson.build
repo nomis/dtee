@@ -8,7 +8,7 @@ project('dtee',
 	],
 	version: '1.1.0',
 	license: 'GPL3+',
-	meson_version: '>=0.55.0',
+	meson_version: '>=0.61.0',
 )
 
 c = meson.get_compiler('c')
@@ -76,14 +76,7 @@ dtee = executable('dtee',
 	install_rpath: rpath,
 	install: true)
 
-ln = find_program('ln')
-
-custom_target('cronty',
-	input: dtee,
-	output: 'cronty',
-	command: [ln, '-s', '-f', '@INPUT@', '@OUTPUT@'],
-	install: true,
-	install_dir: get_option('bindir'))
+install_symlink('cronty', pointing_to: 'dtee', install_dir: get_option('bindir'))
 
 subdir('docs')
 subdir('tests')

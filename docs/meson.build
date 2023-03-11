@@ -21,6 +21,8 @@ if sphinx_build.found()
 		'packages/ubuntu.rst',
 	]
 
+	man_dir = join_paths(get_option('mandir'), 'man1')
+
 	dtee_man = custom_target('dtee.1',
 		input: source_docs,
 		output: 'dtee.1',
@@ -35,12 +37,7 @@ if sphinx_build.found()
 			'@OUTDIR@',
 		],
 		install: true,
-		install_dir: join_paths(get_option('mandir'), 'man1'))
+		install_dir: man_dir)
 
-	custom_target('cronty.1',
-		input: dtee_man,
-		output: 'cronty.1',
-		command: [ln, '-s', '-f', '@PLAINNAME@', '@OUTPUT@'],
-		install: true,
-		install_dir: join_paths(get_option('mandir'), 'man1'))
+	install_symlink('cronty.1', pointing_to: 'dtee.1', install_dir: man_dir)
 endif

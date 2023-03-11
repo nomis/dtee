@@ -18,7 +18,7 @@ while [ "$(basename -- "$dir")" != "tests" ]; do
 done
 
 ln -s ../dtee tests/dtee
-ln -s ../cronty tests/cronty
+ln -s dtee tests/cronty
 BASETESTDIR="dtee@test"
 TESTDIR="$BASETESTDIR"
 if [ "$GROUP" != "" ]; then
