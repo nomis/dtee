@@ -1,1 +1,1 @@
-Killing parent process
+kill-ppid-sigkill.out.txt

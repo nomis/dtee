@@ -1,1 +1,1 @@
-./dtee: file_open_failure: EACCES
+file-open-failure.err.txt

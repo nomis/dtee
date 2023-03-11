@@ -1,1 +1,1 @@
-Killing parent process
+kill-ppid-sigint.out.txt

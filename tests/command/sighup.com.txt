@@ -1,1 +1,1 @@
-Killing current process
+sighup.out.txt

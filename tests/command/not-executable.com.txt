@@ -1,1 +1,1 @@
-./dtee: ./command_not_executable: EACCES
+not-executable.err.txt

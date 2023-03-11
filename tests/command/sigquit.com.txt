@@ -1,1 +1,1 @@
-Killing current process
+sigquit.out.txt

@@ -1,2 +1,1 @@
-./dtee: ./cron_command_not_executable: EACCES
-./dtee: ./cron_command_not_executable: exited with status 66
+cron-not-executable.err.txt

@@ -1,1 +1,1 @@
-./dtee: input_and_output_failure: EACCES
+socket-create-and-output-failure.err.txt

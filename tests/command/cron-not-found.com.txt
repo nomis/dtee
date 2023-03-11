@@ -1,2 +1,1 @@
-./dtee: ./command_not_found: ENOENT
-./dtee: ./command_not_found: exited with status 66
+cron-not-found.err.txt

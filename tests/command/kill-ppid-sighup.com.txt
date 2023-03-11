@@ -1,1 +1,1 @@
-Killing parent process
+kill-ppid-sighup.out.txt
