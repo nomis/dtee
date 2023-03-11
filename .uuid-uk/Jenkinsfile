@@ -200,6 +200,10 @@ pipeline {
 									sh "chmod a+x \"${WORKSPACE_TMP}/PATH/gcov\""
 								}
 							}
+
+							dir(DESTDIR) {
+								deleteDir()
+							}
 						}
 					}
 					stage("Build") {
