@@ -32,7 +32,7 @@ function no_ld_preload() {
 			NEW_ARRAY+=(${COMMON_TEST_LD_PRELOAD[i]})
 		fi
 	done
-	COMMON_TEST_LD_PRELOAD=$NEW_ARRAY
+	COMMON_TEST_LD_PRELOAD=("${NEW_ARRAY[@]}")
 	set -x
 }
 
