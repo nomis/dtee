@@ -6,6 +6,7 @@ function test_prepare() {
 }
 
 no_ld_preload "test-execvp-fd-check"
+no_ld_preload "test-sigaction-restart-check"
 
 # Disable the use of SA_RESTART to prove that it is having the desired effect
 TEST_LD_PRELOAD=(test-sigaction-no-restart)

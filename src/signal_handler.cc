@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018-2019,2021  Simon Arlott
+	Copyright 2018-2019,2021,2023  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -99,24 +99,30 @@ void SignalHandler::start(pid_t pid) {
 
 bool SignalHandler::add(boost::asio::signal_set &signal_set, int signal_number) {
 	error_code ec;
-	struct sigaction act;
 
 	// Signal handlers are added before forking so the signals must be blocked
 	// to avoid consuming them before a command can be executed
 	blocked_signals_.add(signal_number);
 
+#if BOOST_ASIO_VERSION >= 102700
+	signal_set.add(signal_number, boost::asio::signal_set::flags::restart, ec);
+#else
 	signal_set.add(signal_number, ec);
+#endif
+
 	if (ec) {
 		// i18n: %3 = Boost.Asio error message; %1 = signal number; %2 = signal name
 		print_error(format(_("signal handler: %3% (signal %1%: %2%)")) % signal_number % strsignal(signal_number), ec);
 		return false;
 	}
 
-
-	// Workaround for missing SA_RESTART support in Boost.Asio (1.62)
+#if BOOST_ASIO_VERSION < 102700
+	// Workaround for missing SA_RESTART support in Boost.Asio (1.62; added in 1.82)
 	// https://github.com/chriskohlhoff/asio/issues/646
 	//
 	// This is not thread-safe when the same signal_number is added/removed from the signal_set
+	struct sigaction act;
+
 	errno = 0;
 	int ret = ::sigaction(signal_number, NULL, &act);
 	if (ret == 0) {
@@ -134,6 +140,7 @@ bool SignalHandler::add(boost::asio::signal_set &signal_set, int signal_number) 
 		print_system_error(format(_("%1%: %4% (signal %2%: %3%)")) % "sigaction" % signal_number % strsignal(signal_number), errno_copy);
 		return false;
 	}
+#endif
 
 	return true;
 }

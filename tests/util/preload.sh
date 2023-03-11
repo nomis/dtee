@@ -1,5 +1,8 @@
 EARLY_TEST_LD_PRELOAD=()
 COMMON_TEST_LD_PRELOAD=(test-execvp-fd-check test-fork-sigchld-check test-fake-strerror test-fake-strsignal)
+if [ "$DTEE_HAS_BOOST_ASIO_1_27_0" = "1" ]; then
+	COMMON_TEST_LD_PRELOAD=(test-sigaction-restart-check "${COMMON_TEST_LD_PRELOAD[@]}")
+fi
 
 UNAME="$(uname)"
 

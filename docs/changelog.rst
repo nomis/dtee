@@ -4,6 +4,12 @@ Change log
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Use the new Boost.Asio interface for setting the ``SA_RESTART`` flag on signal
+  handlers when using Boost 1.82+.
+
 Fixed
 ~~~~~
 

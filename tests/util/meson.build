@@ -34,6 +34,9 @@ else # freebsd, openbsd, netbsd, dragonfly, darwin, cygwin
 	has_generic_sendfile = false
 endif
 
+has_boost_asio_1_27_0 = boost.version().version_compare('>=1.82')
+test_env += 'DTEE_HAS_BOOST_ASIO_1_27_0=' + (has_boost_asio_1_27_0 ? '1' : '0')
+
 testlib_allow_n_times = shared_library('test-allow-n-times', ['allow-n-times.c'], c_args: test_c_args, build_rpath: meson.current_build_dir())
 testlib_is_dtee = shared_library('test-is-dtee', ['is-dtee.c', 'is-dtee-' + host_machine.system() + '.c'], c_args: dlfcn_args, dependencies: dlfcn_deps + proc_deps, build_rpath: meson.current_build_dir())
 testlib_is_fd_unix_socket = shared_library('test-fd-unix-socket', ['is-fd-unix-socket.c'], c_args: test_c_args, build_rpath: meson.current_build_dir())
@@ -66,6 +69,7 @@ testlib_all_libraries = [
 	shared_library('test-sigaction-no-restart', ['sigaction-no-restart.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-sigaction-query-failure', ['sigaction-query-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-sigaction-restart-already-set', ['sigaction-restart-already-set.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
+	shared_library('test-sigaction-restart-check', ['sigaction-restart-check.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-sigaction-set-restart-failure', ['sigaction-set-restart-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-socket-add-extra-source', ['socket-add-extra-source.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee, testlib_is_fd_unix_socket], build_rpath: meson.current_build_dir()),
 	shared_library('test-socket-bind-failure', ['socket-bind-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_allow_n_times, testlib_is_dtee, testlib_is_fd_unix_socket], build_rpath: meson.current_build_dir()),

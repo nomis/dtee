@@ -22,10 +22,12 @@ test('cron waitpid failure (no change)', default_signal_handlers, suite: 'fork',
 test('sigaction failure', default_signal_handlers, suite: 'fork', args: [bash, files('sigaction-failure.sh')], env: test_env, depends: all_test_txt)
 test('cron sigaction failure', default_signal_handlers, suite: 'fork', args: [bash, files('cron-sigaction-failure.sh')], env: test_env, depends: all_test_txt)
 
-# Test errors in Boost.Asio workaround at SignalHandler::add_non_interrupting_signal()
-test('sigaction query failure', default_signal_handlers, suite: 'fork', args: [bash, files('sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
-test('sigaction set SA_RESTART failure', default_signal_handlers, suite: 'fork', args: [bash, files('sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
-test('sigaction already has SA_RESTART set', default_signal_handlers, suite: 'fork', args: [bash, files('sigaction-restart-already-set.sh')], env: test_env, depends: all_test_txt)
-test('cron sigaction query failure', default_signal_handlers, suite: 'fork', args: [bash, files('cron-sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
-test('cron sigaction set SA_RESTART failure', default_signal_handlers, suite: 'fork', args: [bash, files('cron-sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
-test('cron sigaction already has SA_RESTART set', default_signal_handlers, suite: 'fork', args: [bash, files('cron-sigaction-restart-already-set.sh')], env: test_env, depends: all_test_txt)
+if not has_boost_asio_1_27_0
+	# Test errors in Boost.Asio workaround at SignalHandler::add()
+	test('sigaction query failure', default_signal_handlers, suite: 'fork', args: [bash, files('sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
+	test('sigaction set SA_RESTART failure', default_signal_handlers, suite: 'fork', args: [bash, files('sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
+	test('sigaction already has SA_RESTART set', default_signal_handlers, suite: 'fork', args: [bash, files('sigaction-restart-already-set.sh')], env: test_env, depends: all_test_txt)
+	test('cron sigaction query failure', default_signal_handlers, suite: 'fork', args: [bash, files('cron-sigaction-query-failure.sh')], env: test_env, depends: all_test_txt)
+	test('cron sigaction set SA_RESTART failure', default_signal_handlers, suite: 'fork', args: [bash, files('cron-sigaction-set-restart-failure.sh')], env: test_env, depends: all_test_txt)
+	test('cron sigaction already has SA_RESTART set', default_signal_handlers, suite: 'fork', args: [bash, files('cron-sigaction-restart-already-set.sh')], env: test_env, depends: all_test_txt)
+endif
