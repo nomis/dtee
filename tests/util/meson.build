@@ -107,7 +107,7 @@ executable('test-writes-of-n-bytes', ['writes-of-n-bytes.c'], c_args: test_c_arg
 
 boost_error_code_what_txt = custom_target('boost-error_code-what.txt', output: 'boost-error_code-what.txt',
 	command: [bash, files('run-with-preload.sh'), generate_boost_error_code_what_txt, '../@OUTPUT@'],
-	depends: testlib_all_libraries)
+	env: test_env, depends: testlib_all_libraries)
 signal_txt = custom_target('signal.txt', output: 'signal.txt',
 	command: [generate_signal_txt, '@OUTPUT@'])
 sysexits_txt = custom_target('sysexits.txt', output: 'sysexits.txt',
