@@ -1,23 +1,22 @@
 Ubuntu
 ======
 
-Install the :download:`repository public key <repo-key-rsa.asc>`::
-
-    wget https://dtee.bin.uuid.uk/ubuntu/repo-key.asc -O /etc/apt/trusted.gpg.d/dtee.asc
-
 Follow the instructions for your release. If you are using a newer release than
 the ones listed then use the builds for the most recent prior version.
 
 Ubuntu 22.04 LTS (Jammy Jellyfish)
 ----------------------------------
 
-Add the following APT_ data source
-:download:`dtee-ubuntu-jammy.list <../../apt/dtee-ubuntu-jammy.list>`
-to ``/etc/apt/sources.list.d/dtee.list``::
+Run the following commands to install the :download:`repository public key
+<repo-key-rsa.gpg>`, APT_ data source :download:`dtee-ubuntu-jammy.list
+<../../apt/dtee-ubuntu-jammy.list>` and then ``dtee``::
 
-    deb https://dtee.bin.uuid.uk/ubuntu/ jammy main
+    wget https://dtee.bin.uuid.uk/ubuntu/repo-key.gpg \
+        -O /etc/apt/keyrings/dtee.gpg
 
-Run the following commands::
+    echo "deb [signed-by=/etc/apt/keyrings/dtee.gpg]" \
+        "https://dtee.bin.uuid.uk/ubuntu/ jammy main" \
+        >/etc/apt/sources.list.d/dtee.list
 
     apt update
     apt install dtee
@@ -25,27 +24,18 @@ Run the following commands::
 Ubuntu 20.04 LTS (Focal Fossa)
 ------------------------------
 
-Add the following APT_ data source
-:download:`dtee-ubuntu-focal.list <../../apt/dtee-ubuntu-focal.list>`
-to ``/etc/apt/sources.list.d/dtee.list``::
+Run the following commands to install the :download:`repository public key
+<repo-key-rsa.gpg>`, APT_ data source :download:`dtee-ubuntu-focal.list
+<../../apt/dtee-ubuntu-focal.list>` and then ``dtee``::
 
-    deb https://dtee.bin.uuid.uk/ubuntu/ focal main
+    mkdir -m 0755 -p /etc/apt/keyrings
 
-Run the following commands::
+    wget https://dtee.bin.uuid.uk/ubuntu/repo-key.gpg \
+        -O /etc/apt/keyrings/dtee.gpg
 
-    apt update
-    apt install dtee
-
-Ubuntu 18.04 LTS (Bionic Beaver)
---------------------------------
-
-Add the following APT_ data source
-:download:`dtee-ubuntu-bionic.list <../../apt/dtee-ubuntu-bionic.list>`
-to ``/etc/apt/sources.list.d/dtee.list``::
-
-    deb https://dtee.bin.uuid.uk/ubuntu/ bionic main
-
-Run the following commands::
+    echo "deb [signed-by=/etc/apt/keyrings/dtee.gpg]" \
+        "https://dtee.bin.uuid.uk/ubuntu/ focal main" \
+        >/etc/apt/sources.list.d/dtee.list
 
     apt update
     apt install dtee

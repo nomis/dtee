@@ -1,1 +1,1 @@
-deb https://dtee.bin.uuid.uk/debian/ bullseye main
+deb [signed-by=/etc/apt/keyrings/dtee.gpg] https://dtee.bin.uuid.uk/debian/ bullseye main
