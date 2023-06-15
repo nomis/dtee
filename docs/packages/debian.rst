@@ -8,6 +8,20 @@ Install the :download:`repository public key <repo-key-rsa.asc>`::
 Follow the instructions for your release. If you are using a newer release than
 the ones listed then use the builds for the most recent prior version.
 
+Debian 12 (bookworm)
+--------------------
+
+Add the following APT_ data source
+:download:`dtee-debian-bookworm.list <../../apt/dtee-debian-bookworm.list>`
+to ``/etc/apt/sources.list.d/dtee.list``::
+
+    deb https://dtee.bin.uuid.uk/debian/ bookworm main
+
+Run the following commands::
+
+    apt update
+    apt install dtee
+
 Debian 11 (bullseye)
 --------------------
 
