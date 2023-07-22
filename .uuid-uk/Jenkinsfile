@@ -184,6 +184,7 @@ pipeline {
 					stage("Checkout") {
 						steps {
 							sh "git clean -fdx"
+							sh "git fetch --tags"
 						}
 					}
 					stage("Prepare") {
