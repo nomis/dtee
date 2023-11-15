@@ -70,6 +70,8 @@ dtee = executable('dtee',
 		'-DGETTEXT_LOCALEDIR="' + join_paths(get_option('prefix'), get_option('localedir')) + '"',
 		# threads are not used, remove these if they are otherwise the asio signal handler will not work correctly
 		'-DBOOST_ASIO_DISABLE_THREADS',
+		# this makes testing more difficult and any exceptions from asio are already identified
+		'-DBOOST_ASIO_DISABLE_ERROR_LOCATION',
 	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
 	dependencies: [boost] + gettext_deps,
 	build_rpath: rpath,

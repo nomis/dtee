@@ -9,6 +9,8 @@ Changed
 
 * Use the new Boost.Asio interface for setting the ``SA_RESTART`` flag on signal
   handlers when using Boost 1.82+.
+* Disable "error location" in exception messages when building with Boost.Asio
+  1.79 because these exceptions are already caught and properly identified.
 
 Fixed
 ~~~~~
