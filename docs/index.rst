@@ -46,7 +46,7 @@ Resources
    :maxdepth: 1
 
    Source code <https://github.com/nomis/dtee>
-   Releases <https://github.com/nomis/dtee/releases>
+   Releases <https://github.com/nomis/dtee/tags>
    changelog
    packages
    Issue tracker <https://github.com/nomis/dtee/issues>
