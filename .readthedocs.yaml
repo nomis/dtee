@@ -3,4 +3,7 @@ build:
  os: ubuntu-lts-latest
  tools:
   python: latest
+python:
+ install:
+  - requirements: .readthedocs/requirements.txt
 formats: all

@@ -3,13 +3,14 @@
 import os
 
 travis_ci = os.environ.get("TRAVIS") == 'true'
+rtd = os.environ.get("READTHEDOCS") == 'True'
 
 needs_sphinx = '1.3'
 extensions = []
 source_suffix = ['.rst']
 
 project = u'dtee'
-copyright = u'2018-2023, Simon Arlott'
+copyright = u'2018-2024, Simon Arlott'
 author = u'Simon Arlott'
 
 master_doc = 'index'
@@ -22,6 +23,9 @@ language = 'en'
 exclude_patterns = ['build', 'Thumbs.db', '.DS_Store']
 pygments_style = 'sphinx'
 todo_include_todos = False
+
+if rtd:
+	html_theme = 'sphinx_rtd_theme'
 
 man_pages = [
 	(manual_doc, 'dtee', u'Run a program with standard output and standard error copied to files', [author], 1)
