@@ -4,17 +4,29 @@ environment:
     CYG_ARCH: x86_64
     CYG_BASE: 'C:\cygwin64'
     CYGWIN_MIRROR: https://cygwin.mirror.constant.com
+    CYGWIN_PACKAGES: 'bash,binutils,cygutils,cygutils-extra,cygwin,cygwin-devel,gettext-devel,git,gcc-core,gcc-g++,libboost-devel,libgcc1,libintl8,libintl-devel,libstdc++6,make,meson,ninja,python3,windows-default-manifest'
 
 init:
   - 'FOR /F "tokens=* USEBACKQ" %%F IN (`%CYG_BASE%\bin\cygpath -u %APPVEYOR_BUILD_FOLDER%`) DO SET BUILD_FOLDER=%%F'
 
+# There is no way to get Cygwin to "install or upgrade" a list of packages
+#   --packages: will only install packages, not upgrade them
+#   --upgrade-also: will upgrade everything that is already installed
+#   --prune-install: will remove everything that is already installed excluding --packages but including required dependencies of --packages
+#
+# Uninstall everything except the packages that are required, but then install those ones again to get their dependencies
+# This is required otherwise it'll install "python3" and "ninja" but not upgrade "cygwin" to a version that can actually run them
+#
+# https://cygwin.com/faq.html#faq.setup.cli
 install:
   - 'curl -qsS --fail --retry 5 --max-time 300 --compressed https://cygwin.com/setup-%CYG_ARCH%.exe -o "%CYG_BASE%\setup-%CYG_ARCH%.exe"'
-  - '"%CYG_BASE%\setup-%CYG_ARCH%.exe" --quiet-mode --no-shortcuts --packages bash,binutils,cygutils-extra,cygwin-devel,gettext-devel,git,gcc-core,gcc-g++,libboost-devel,libgcc1,libintl8,libintl-devel,libstdc++6,make,meson,ninja,python3,windows-default-manifest'
+  - '"%CYG_BASE%\setup-%CYG_ARCH%.exe" --quiet-mode --no-shortcuts --prune-install --packages "%CYGWIN_PACKAGES%"'
+  - '"%CYG_BASE%\setup-%CYG_ARCH%.exe" --quiet-mode --no-shortcuts --upgrade-also --packages "%CYGWIN_PACKAGES%"'
   - '"%CYG_BASE%\bin\cygcheck" -dc'
   - '"%CYG_BASE%\bin\bash" -lc "id"'
   - '"%CYG_BASE%\bin\bash" -lc "cygdrop id"'
   - '"%CYG_BASE%\bin\bash" -lc "mount"'
+  - '"%CYG_BASE%\bin\bash" -lc "pip3 install -U Sphinx"'
 
 build_script:
   - '"%CYG_BASE%\bin\bash" -lc "git config --global --add safe.directory \"$BUILD_FOLDER\""'
@@ -29,4 +41,5 @@ test_script:
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && cygdrop make check"'
 
 on_failure:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && cd build/release && cat meson-logs/testlog.txt"'
