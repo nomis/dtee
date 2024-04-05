@@ -107,7 +107,11 @@ function is_acl_override() {
 
 		*)
 			# Running as root
-			return [ "$(id -u)" -eq 0 ]
+			if [ "$(id -u)" = "0" ]; then
+				return 0
+			else
+				return 1
+			fi
 			;;
 	esac
 }
