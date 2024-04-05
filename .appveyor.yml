@@ -37,8 +37,8 @@ build_script:
   - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && make DESTDIR=\"`pwd`/build/install\" install"'
 
 test_script:
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && make check"'
-  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER\" && cygdrop make check"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER/build/release\" && meson test --no-rebuild --print-errorlogs --num-processes 1"'
+  - '"%CYG_BASE%\bin\bash" -lc "cd \"$BUILD_FOLDER/build/release\" && cygdrop meson test --no-rebuild --print-errorlogs --num-processes 1"'
 
 on_failure:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
