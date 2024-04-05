@@ -105,6 +105,12 @@ function is_acl_override() {
 			return $?
 			;;
 
+		Linux)
+			# Running with CAP_DAC_OVERRIDE
+			grep -E '^CapEff:\s+.+[2367abef]$' /proc/self/status >/dev/null
+			return $?
+			;;
+
 		*)
 			# Running as root
 			if [ "$(id -u)" = "0" ]; then
@@ -121,6 +127,12 @@ function is_acl_directory_traversal_override() {
 	case "$UNAME" in
 		CYGWIN_*)
 			return 0
+			;;
+
+		Linux)
+			# Running with CAP_DAC_OVERRIDE or CAP_DAC_READ_SEARCH
+			grep -E '^CapEff:\s+.+[234567abcdef]$' /proc/self/status >/dev/null
+			return $?
 			;;
 
 		*)
