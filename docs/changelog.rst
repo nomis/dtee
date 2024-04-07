@@ -16,6 +16,7 @@ Fixed
 ~~~~~
 
 * Error message checks in tests when building with Boost 1.78.
+* Locale handling in i18n tests when running on glibc 2.39.
 
 1.1.0_ |--| 2021-05-30
 ----------------------
