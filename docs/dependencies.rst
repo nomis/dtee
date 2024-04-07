@@ -56,7 +56,7 @@ Runtime
 
 Documentation
 -------------
-  * `Sphinx <https://www.sphinx-doc.org/>`_ 1.3+
+  * `Sphinx <https://www.sphinx-doc.org/>`_ 2.0+
 
   ..
      Upgrade when this issue is fixed:
