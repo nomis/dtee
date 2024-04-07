@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021  Simon Arlott
+	Copyright 2018,2021,2024  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ namespace dtee {
 // Ensure the receive buffer is large enough; at least as large as both
 // PIPE_BUF (for pipe writes) and BUFSIZ (for file writes)
 constexpr const int MINIMUM_RCVBUF_SIZE = std::max(PIPE_BUF,
-	std::max(BUFSIZ, platform::MINIMUM_RCVBUF_SIZE));
+	std::max(BUFSIZ, platform::os::MINIMUM_RCVBUF_SIZE));
 
 class Input {
 public:

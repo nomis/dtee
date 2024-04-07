@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021  Simon Arlott
+	Copyright 2018,2021,2024  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ bool Input::open_input(TempDirectory &temp_dir,
 		input_.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 		input_.bind(input_ep);
 
-		if (!platform::hurd) {
+		if (platform::have::so_rcvbuf) {
 			input_.get_option(so_rcvbuf);
 
 			if (so_rcvbuf.value() < MINIMUM_RCVBUF_SIZE) {
@@ -131,7 +131,7 @@ bool Input::open_outputs(TempDirectory &temp_dir,
 		return false;
 	}
 
-	if (platform::openbsd || platform::hurd || platform::cygwin) {
+	if (platform::hack::modified_endpoint_paths) {
 		if (out_path_ == err_path_) {
 			// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
 			// so they both look the same.
@@ -154,29 +154,20 @@ void Input::open_output(const datagram_protocol::endpoint &input_ep,
 	output.open(); // Boost (1.62) has no support for SOCK_CLOEXEC
 	output.bind(output_path);
 
-	if (platform::openbsd || platform::hurd) {
-		// Workaround Boost.Asio (1.66.0) bug on OpenBSD 6.4
-		// Endpoint paths can't be compared correctly if they weren't both
-		// constructed by the application or both returned by the OS.
-		// https://github.com/chriskohlhoff/asio/issues/649
-		//
-		// The addresses of Unix sockets are not stored on GNU (Hurd 0.9, Mach 1.8),
-		// so they both look the same. Retrieve the address after binding so that
-		// this can be checked.
+	if (platform::hack::read_back_endpoint_path) {
+		// Retrieve the address after binding so that it matches received
+		// messages.
 		output_path = output.local_endpoint().path();
 	}
 
 	output.connect(input_ep);
 	output.shutdown(datagram_protocol::socket::shutdown_receive);
 
-	if (!platform::hurd) {
-		// Not supported on GNU (Hurd 0.9, Mach 1.8)
+	if (platform::have::so_sndbuf) {
 		output.set_option(so_sndbuf);
 	}
 
-	if (platform::cygwin) {
-		// On Cygwin, getsockname() does not return the same value as
-		// recvfrom() or getpeername() does for the other socket.
+	if (platform::hack::loopback_endpoint_path) {
 		// Send an empty message to obtain the real socket address.
 		vector<char> empty;
 		datagram_protocol::endpoint output_ep;
@@ -192,16 +183,16 @@ void Input::prepare_buffer(
 		const datagram_protocol::socket::receive_buffer_size &so_rcvbuf) {
 	int buffer_size = so_rcvbuf.value();
 
-	if (platform::linux) {
-		// From SOCKET(7): "The kernel doubles this value (to allow space for bookkeeping overhead)"
-		// From Boost (1.62): "Linux puts additional stuff into the
-		//     buffers so that only about half is actually available to the application.
-		//     The retrieved value is divided by 2 here to make it appear as though the
-		//     correct value has been set."
+	if (platform::hack::socket_buffer_size_doubled) {
+		// From Boost (1.62): "Linux puts additional stuff into the buffers so
+		//     that only about half is actually available to the application.
+		//     The retrieved value is divided by 2 here to make it appear as
+		//     though the correct value has been set."
 		//
-		// Boost is wrong because the kernel is not specified as using half the buffer size.
-		// It would be simpler if the kernel didn't return its doubled value either.
-		// For a 208KB receive buffer, Linux (4.13) uses less than 1KB on x86_64.
+		// Boost is wrong because the kernel is not specified as using half the
+		// buffer size. It would be simpler if the kernel didn't return its
+		// doubled value either. For a 208KB receive buffer, Linux (4.13) uses
+		// less than 1KB on x86_64.
 		buffer_size *= 2;
 	}
 
