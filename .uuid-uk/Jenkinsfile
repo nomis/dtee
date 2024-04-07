@@ -248,9 +248,11 @@ pipeline {
 						}
 						post {
 							success {
-								publishCoverage(
-									adapters: [cobertura("build/meson-logs/coverage.xml")],
-									sourceFileResolver: sourceFiles("NEVER_STORE"),
+								discoverGitReferenceBuild()
+								recordCoverage(
+									/* Meson uses gcovr to convert lcov output to cobertura format */
+									tools: [[parser: "COBERTURA", pattern: "build/meson-logs/coverage.xml"]],
+									sourceCodeRetention: "NEVER",
 								)
 								publishHTML([
 									allowMissing: false,
