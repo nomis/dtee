@@ -43,3 +43,7 @@ texinfo_show_urls = 'inline'
 
 linkcheck_timeout = 60
 linkcheck_ignore = [r'https://github.com/.+/.+/(compare|commits)/.+']
+linkcheck_allowed_redirects = {
+	'https://dtee.readthedocs.io/': 'https://dtee.readthedocs.io/en/latest/',
+	'https://www.sphinx-doc.org/': 'https://www.sphinx-doc.org/en/master/'
+}

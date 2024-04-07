@@ -59,30 +59,6 @@ RUN \
 ADD https://pypi.org/pypi/Sphinx/json /dev/shm/Sphinx.json
 
 
-FROM dtee-ubuntu-focal-base AS dtee-ubuntu-focal-sphinx-2
-
-RUN \
-	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=ubuntu-focal-root-cache-pip \
-	python3 --version && \
-	pip3 --version && \
-	pip3 install -U "Sphinx~=2.0" \
-		"sphinxcontrib-applehelp<1.0.5" "sphinxcontrib-devhelp<1.0.3" \
-		"sphinxcontrib-htmlhelp<2.0.2" "sphinxcontrib-jsmath<1.0.2" \
-		"sphinxcontrib-qthelp<1.0.4" "sphinxcontrib-serializinghtml<1.1.6" \
-		"alabaster<0.7.14" "docutils<0.18" "Jinja2<3.1"
-
-FROM dtee-ubuntu-focal-base AS dtee-ubuntu-focal-sphinx-3
-
-RUN \
-	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=ubuntu-focal-root-cache-pip \
-	python3 --version && \
-	pip3 --version && \
-	pip3 install -U "Sphinx~=3.0" \
-		"sphinxcontrib-applehelp<1.0.5" "sphinxcontrib-devhelp<1.0.3" \
-		"sphinxcontrib-htmlhelp<2.0.2" "sphinxcontrib-jsmath<1.0.2" \
-		"sphinxcontrib-qthelp<1.0.4" "sphinxcontrib-serializinghtml<1.1.6" \
-		"Jinja2<3.1"
-
 FROM dtee-ubuntu-focal-base AS dtee-ubuntu-focal-sphinx-4
 
 RUN \
