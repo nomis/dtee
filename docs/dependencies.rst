@@ -25,9 +25,6 @@ Compile
   * `GNU Make <https://www.gnu.org/software/make/>`_ 3.80+ (optional)
   * `Meson <https://mesonbuild.com/>`_ 0.61+
 
-    ..
-       Upgrade when Meson can install symlinks.
-
     * `Ninja <https://ninja-build.org/>`_
     * `Python 3 <https://www.python.org/>`_
 
