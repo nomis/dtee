@@ -21,7 +21,7 @@ import uk.uuid.jenkins.pipeline.Email
 
 def application_matrix_main() {
 	/* See also: excludes */
-	return COMPILER == "GCC-14"
+	return COMPILER == "GCC-12"
 }
 
 def docs_matrix_main() {
@@ -96,7 +96,7 @@ pipeline {
 						axis {
 							/* See also: application_matrix_main() */
 							name "COMPILER"
-							notValues "GCC-14", "Clang-17"
+							notValues "GCC-12", "Clang-17"
 						}
 					}
 				}
@@ -114,8 +114,6 @@ pipeline {
 					CXX = "${cxx_compiler()}"
 					GCOV = "${gcov_compiler()}"
 					DESTDIR = "${WORKSPACE_TMP}/DESTDIR"
-
-					SH = "PATH=\"${WORKSPACE_TMP}/PATH:\${PATH}\""
 				}
 				stages {
 					stage("Checkout") {
@@ -128,16 +126,10 @@ pipeline {
 						steps {
 							sh "python3 --version"
 							sh "pip3 freeze"
+							sh '[ -z "${PYTHON}" ] || ${PYTHON} --version'
+							sh '[ -z "${PIP}" ] || ${PIP} freeze'
 
-							script {
-								if (GCOV != "gcov") {
-									writeFile(
-										file: "${WORKSPACE_TMP}/PATH/gcov",
-										text: '#!/bin/sh\nexec "$GCOV" "$@"\n',
-									)
-									sh "chmod a+x \"${WORKSPACE_TMP}/PATH/gcov\""
-								}
-							}
+							sh "echo \"geninfo_gcov_tool = ${GCOV}\" >>.lcovrc"
 
 							dir(DESTDIR) {
 								deleteDir()
@@ -146,8 +138,8 @@ pipeline {
 					}
 					stage("Build") {
 						steps {
-							sh "${env.SH} meson setup --buildtype=${BUILD_TYPE} build/ -Db_lto=${BUILD_TYPE == 'release'} -Db_coverage=${application_with_coverage()} -Dtest_expect_fail=true --unity on --unity-size 10000"
-							sh "${env.SH} ninja -C build/ -j 1"
+							sh "meson setup --buildtype=${BUILD_TYPE} build/ -Db_lto=${BUILD_TYPE == 'release'} -Db_coverage=${application_with_coverage()} -Dtest_expect_fail=true --unity on --unity-size 10000"
+							sh "ninja -C build/ -j 1"
 						}
 						post {
 							failure {
@@ -158,7 +150,7 @@ pipeline {
 					stage("Test") {
 						steps {
 							dir("build") {
-								sh "${env.SH} meson test --no-rebuild --print-errorlogs --num-processes 1"
+								sh "meson test --no-rebuild --print-errorlogs --num-processes 1"
 							}
 						}
 						post {
@@ -176,8 +168,8 @@ pipeline {
 							expression { application_with_coverage() }
 						}
 						steps {
-							sh "${env.SH} ninja -C build/ -j 1 coverage-html"
-							sh "${env.SH} ninja -C build/ -j 1 coverage-xml"
+							sh "ninja -C build/ -j 1 coverage-html"
+							sh "ninja -C build/ -j 1 coverage-xml"
 						}
 						post {
 							success {
@@ -201,7 +193,7 @@ pipeline {
 					}
 					stage("Install") {
 						steps {
-							sh "${env.SH} ninja -C build/ -j 1 install"
+							sh "ninja -C build/ -j 1 install"
 						}
 					}
 				}
@@ -245,6 +237,8 @@ pipeline {
 							script {
 								sh "python3 --version"
 								sh "pip3 freeze"
+								sh '[ -z "${PYTHON}" ] || ${PYTHON} --version'
+								sh '[ -z "${PIP}" ] || ${PIP} freeze'
 							}
 						}
 					}

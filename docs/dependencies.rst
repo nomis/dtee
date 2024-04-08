@@ -23,7 +23,7 @@ Compile
 
   * `GNU gettext <https://www.gnu.org/software/gettext/>`_
   * `GNU Make <https://www.gnu.org/software/make/>`_ 3.80+ (optional)
-  * `Meson <https://mesonbuild.com/>`_ 0.61+
+  * `Meson <https://mesonbuild.com/>`_ 0.63+
 
     * `Ninja <https://ninja-build.org/>`_
     * `Python 3 <https://www.python.org/>`_

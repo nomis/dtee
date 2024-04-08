@@ -8,7 +8,7 @@ project('dtee',
 	],
 	version: '1.1.0',
 	license: 'GPL3+',
-	meson_version: '>=0.61.0',
+	meson_version: '>=0.63.0',
 )
 
 c = meson.get_compiler('c')
