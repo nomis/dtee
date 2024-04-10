@@ -32,7 +32,7 @@ RUN \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=debian-bookworm-var-lib-apt \
 	apt-get install -y locales
 
-RUN sed -E 's/^# (en_AU\.UTF-8 .+)$/\1/' -i /etc/locale.gen
+RUN sed -E 's/^# (en_AU.+ UTF-8)$/\1/' -i /etc/locale.gen
 RUN locale-gen
 
 ADD https://pypi.org/pypi/gcovr/json /dev/shm/gcovr.json
