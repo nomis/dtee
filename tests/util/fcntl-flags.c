@@ -86,7 +86,9 @@ TEST_FCN_REPL(int, fcntl, (int fd, int cmd, ...)) {
 	}
 
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wcast-function-type"
+#if __GNUC__ >= 8
+# pragma GCC diagnostic ignored "-Wcast-function-type"
+#endif
 	void *ret = __builtin_apply((void (*)())next_fcntl, args, 1024);
 #pragma GCC diagnostic pop
 	__builtin_return(ret);
