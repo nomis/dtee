@@ -34,6 +34,12 @@ else # freebsd, openbsd, netbsd, dragonfly, darwin, cygwin
 	has_generic_sendfile = false
 endif
 
+if c.get_id() == 'gcc'
+	has_builtin_apply = true
+else
+	has_builtin_apply = false
+endif
+
 has_boost_asio_1_27_0 = boost.version().version_compare('>=1.82')
 test_env += 'DTEE_HAS_BOOST_ASIO_1_27_0=' + (has_boost_asio_1_27_0 ? '1' : '0')
 
@@ -52,7 +58,6 @@ testlib_all_libraries = [
 	shared_library('test-fake-getuid', ['fake-getuid.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-fake-strerror', ['fake-strerror.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-fake-strsignal', ['fake-strsignal.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
-	shared_library('test-fcntl-flags', ['fcntl-flags.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-fork-failure', ['fork-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-fork-sigchld-check', ['fork-sigchld-check.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-file-write-failure', ['file-write-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
@@ -87,6 +92,10 @@ testlib_all_libraries = [
 	shared_library('test-write-truncate-cron', ['write-truncate-cron.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-write-truncate-stdout', ['write-truncate-stdout.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 ]
+
+if has_builtin_apply
+	testlib_all_libraries += shared_library('test-fcntl-flags', ['fcntl-flags.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir())
+endif
 
 generate_boost_error_code_what_txt = executable('test-boost-error_code-what-txt', ['boost-error_code-what.cpp'], cpp_args: test_cpp_args, dependencies: [boost])
 executable('test-closed-pipe-reader', ['closed-pipe-reader.c'], c_args: test_c_args)
