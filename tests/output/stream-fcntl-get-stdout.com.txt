@@ -1,0 +1,1 @@
+./dtee: stdout: fcntl: EINVAL
