@@ -92,10 +92,10 @@ executable('test-closed-pipe-reader', ['closed-pipe-reader.c'], c_args: test_c_a
 default_signal_handlers = executable('test-default-signal-handlers', ['default-signal-handlers.c'], c_args: test_c_args)
 executable('test-closed-pipe-writer', ['closed-pipe-writer.c'], c_args: test_c_args)
 executable('test-fifo-write-interrupt', ['fifo-write-interrupt.c'] , c_args: test_c_args)
-executable('test-lorem-ipsum-late-exit', ['lorem-ipsum-late-exit.c'], c_args: test_c_args)
-executable('test-lorem-ipsum-wait-exit', ['lorem-ipsum-wait-exit.c'], c_args: test_c_args)
 executable('test-kill-pid', ['kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['kill-ppid.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
+executable('test-lorem-ipsum-late-exit', ['lorem-ipsum-late-exit.c'], c_args: test_c_args)
+executable('test-lorem-ipsum-wait-exit', ['lorem-ipsum-wait-exit.c'], c_args: test_c_args)
 executable('test-report', ['report.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])
 executable('test-security-recreate-input-socket', ['security-recreate-input-socket.c'], c_args: test_c_args)
 if has_generic_sendfile
