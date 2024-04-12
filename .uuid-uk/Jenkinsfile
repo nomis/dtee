@@ -129,6 +129,9 @@ pipeline {
 							sh '[ -z "${PYTHON}" ] || ${PYTHON} --version'
 							sh '[ -z "${PIP}" ] || ${PIP} freeze'
 
+							sh "make po pot"
+							sh "git diff --exit-code"
+
 							sh "echo \"geninfo_gcov_tool = ${GCOV}\" >>.lcovrc"
 
 							dir(DESTDIR) {
