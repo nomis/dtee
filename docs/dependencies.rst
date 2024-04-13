@@ -15,12 +15,7 @@ Compile
        Upgrade when this issue is fixed:
        https://github.com/chriskohlhoff/asio/issues/646
 
-  * `Clang <https://clang.llvm.org/>`_ 3.9+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 5+
-
-    ..
-       Upgrade when C++17 can be relied upon, dropping the boost::filesystem
-       dependency.
-
+  * `Clang <https://clang.llvm.org/>`_ 5+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 5+
   * `GNU gettext <https://www.gnu.org/software/gettext/>`_
   * `GNU Make <https://www.gnu.org/software/make/>`_ 3.80+ (optional)
   * `Meson <https://mesonbuild.com/>`_ 0.63+

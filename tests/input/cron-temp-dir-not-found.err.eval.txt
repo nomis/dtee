@@ -1,5 +1,5 @@
-./dtee: unable to create temporary file: boost::filesystem::temp_directory_path: $BOOST_ERROR_CODE_ENOTDIR: \"./dtee@test/input/cron-temp-dir-not-found.tmp/not-found\"
-./dtee: unable to create temporary directory: boost::filesystem::temp_directory_path: $BOOST_ERROR_CODE_ENOTDIR: \"./dtee@test/input/cron-temp-dir-not-found.tmp/not-found\"
+$(echo -n "./dtee: unable to create temporary file: filesystem error: temp_directory_path: ENOENT"; [ $STD_FILESYSTEM_ERROR_HAS_PATH -eq 1 ] && echo -n " [./dtee@test/input/cron-temp-dir-not-found.tmp/not-found]"; echo)
+$(echo -n "./dtee: unable to create temporary directory: filesystem error: temp_directory_path: ENOENT"; [ $STD_FILESYSTEM_ERROR_HAS_PATH -eq 1 ] && echo -n " [./dtee@test/input/cron-temp-dir-not-found.tmp/not-found]"; echo)
 Bacon ipsum dolor amet laborum sirloin bresaola beef ham hock et venison
 frankfurter andouille enim jerky pastrami cow. Jerky beef dolor commodo,
 pancetta dolore dolore. Consectetur aliqua dolor frankfurter, sed laboris

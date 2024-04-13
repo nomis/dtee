@@ -1,1 +1,1 @@
-./dtee: unable to create temporary directory: boost::filesystem::temp_directory_path: $BOOST_ERROR_CODE_ENOTDIR: \"./dtee@test/input/temp-dir-not-found.tmp/not-found\"
+$(echo -n "./dtee: unable to create temporary directory: filesystem error: temp_directory_path: ENOENT"; [ $STD_FILESYSTEM_ERROR_HAS_PATH -eq 1 ] && echo -n " [./dtee@test/input/temp-dir-not-found.tmp/not-found]"; echo)

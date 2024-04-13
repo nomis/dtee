@@ -98,6 +98,7 @@ if has_builtin_apply
 endif
 
 generate_boost_error_code_what_txt = executable('test-boost-error_code-what-txt', ['boost-error_code-what.cpp'], cpp_args: test_cpp_args, dependencies: [boost])
+generate_std_filesystem_error_has_path_txt = executable('test-std-filesystem-error-has-path-txt', ['std-filesystem-error-has-path.cpp'], cpp_args: test_cpp_args, dependencies: cpp_filesystem_deps)
 executable('test-closed-pipe-reader', ['closed-pipe-reader.c'], c_args: test_c_args)
 default_signal_handlers = executable('test-default-signal-handlers', ['default-signal-handlers.c'], c_args: test_c_args)
 executable('test-closed-pipe-writer', ['closed-pipe-writer.c'], c_args: test_c_args)
@@ -122,6 +123,9 @@ executable('test-writes-of-n-bytes', ['writes-of-n-bytes.c'], c_args: test_c_arg
 boost_error_code_what_txt = custom_target('boost-error_code-what.txt', output: 'boost-error_code-what.txt',
 	command: [bash, files('run-with-preload.sh'), generate_boost_error_code_what_txt, '../@OUTPUT@'],
 	env: test_env, depends: testlib_all_libraries)
+std_filesystem_error_has_path_txt = custom_target('std-filesystem-error-has-path.txt',
+	output: 'std-filesystem-error-has-path.txt',
+	command: [generate_std_filesystem_error_has_path_txt, '@OUTPUT@'])
 signal_txt = custom_target('signal.txt', output: 'signal.txt',
 	command: [generate_signal_txt, '@OUTPUT@'])
 sysexits_txt = custom_target('sysexits.txt', output: 'sysexits.txt',
@@ -130,6 +134,7 @@ version_txt = vcs_tag(input: 'version.txt.in', output: 'version.txt')
 
 all_test_txt = [
 	boost_error_code_what_txt,
+	std_filesystem_error_has_path_txt,
 	signal_txt,
 	sysexits_txt,
 	version_txt,

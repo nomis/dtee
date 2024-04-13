@@ -20,26 +20,23 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#if __cplusplus >= 201703L
+#if __has_include(<filesystem>)
 # include <filesystem>
+#else
+# include <experimental/filesystem>
 #endif
 #include <string>
 
-#if __cplusplus < 201703L
-# include <boost/filesystem.hpp>
-#endif
 #include <boost/format.hpp>
 
 #include "command_line.h"
 
-#if __cplusplus < 201703L
-using ::boost::filesystem::temp_directory_path;
-#endif
-
 using ::boost::format;
 
-#if __cplusplus >= 201703L
+#if __has_include(<filesystem>)
 using ::std::filesystem::temp_directory_path;
+#else
+using ::std::experimental::filesystem::temp_directory_path;
 #endif
 
 using ::std::string;

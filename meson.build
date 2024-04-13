@@ -2,7 +2,7 @@ project('dtee',
 	['c', 'cpp'],
 	default_options: [
 		'c_std=c11',
-		'cpp_std=c++14',
+		'cpp_std=c++17',
 		'warning_level=3',
 		'werror=true',
 	],
@@ -57,8 +57,19 @@ endif
 subdir('src')
 subdir('i18n')
 
+if cpp.get_id() == 'gcc' and cpp.version().version_compare('<9.1')
+	cpp_filesystem_deps = [cpp.find_library('stdc++fs')]
+elif cpp.get_id() == 'clang' and cpp.version().version_compare('<9')
+	cpp_fs = cpp.find_library('stdc++fs', required: false)
+	if not cpp_fs.found()
+		cpp_fs = cpp.find_library('c++fs')
+	endif
+	cpp_filesystem_deps = [cpp_fs]
+else
+	cpp_filesystem_deps = []
+endif
+
 boost = dependency('boost', modules: [
-		'filesystem',
 		'program_options',
 		'system',
 	], include_type: 'system')
@@ -73,7 +84,7 @@ dtee = executable('dtee',
 		# this makes testing more difficult and any exceptions from asio are already identified
 		'-DBOOST_ASIO_DISABLE_ERROR_LOCATION',
 	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
-	dependencies: [boost] + gettext_deps,
+	dependencies: cpp_filesystem_deps + [boost] + gettext_deps,
 	build_rpath: rpath,
 	install_rpath: rpath,
 	install: true)

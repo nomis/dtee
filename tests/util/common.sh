@@ -78,6 +78,9 @@ export TMPDIR="./$TESTDIR/$NAME.tmp"
 # boost::system::error_code.what()
 . ./util/boost-error_code-what.txt
 
+# !std::filesystem::filesystem_error.path1().empty()
+. ./util/std-filesystem-error-has-path.txt
+
 # /usr/include/sysexits.h
 . ./util/sysexits.txt
 
