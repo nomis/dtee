@@ -58,6 +58,7 @@ subdir('src')
 subdir('i18n')
 
 if cpp.get_id() == 'gcc' and cpp.version().version_compare('<9.1')
+	# On DragonFlyBSD 6.4 this is in the "cxxfs_gcc8" package and you need LDFLAGS=-L/usr/local/cxxfs_gcc8
 	cpp_filesystem_deps = [cpp.find_library('stdc++fs')]
 elif cpp.get_id() == 'clang' and cpp.version().version_compare('<9')
 	cpp_fs = cpp.find_library('stdc++fs', required: false)
