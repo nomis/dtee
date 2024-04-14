@@ -25,7 +25,11 @@
 #include <string>
 #include <vector>
 
+// https://github.com/chriskohlhoff/asio/issues/721
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wshadow"
 #include <boost/asio.hpp>
+#pragma GCC diagnostic pop
 #include <boost/system/error_code.hpp>
 
 #include "dispatch.h"

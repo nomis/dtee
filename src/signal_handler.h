@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018-2019,2021  Simon Arlott
+	Copyright 2018-2019,2021,2024  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -22,7 +22,11 @@
 #include <cstddef>
 #include <memory>
 
+// https://github.com/chriskohlhoff/asio/issues/721
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wshadow"
 #include <boost/asio.hpp>
+#pragma GCC diagnostic pop
 
 #include "command_line.h"
 #include "result_handler.h"
