@@ -91,7 +91,7 @@ uninstall: | $(RELEASE_DIR)/
 	$(NINJA) -C $(RELEASE_DIR)/ uninstall
 
 potfiles:
-	ls -1 src/*.cc >i18n/POTFILES
+	ls -1 src/*.cpp >i18n/POTFILES
 
 pot: potfiles | $(RELEASE_DIR)/
 	$(NINJA) -C $(RELEASE_DIR)/ dtee-pot

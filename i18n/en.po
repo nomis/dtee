@@ -26,52 +26,52 @@ msgstr ""
 #. i18n: %1 = command name; %2 = errno message
 #. i18n: %1 = filename; %2 = errno message
 #. i18n: %1 = system call name; %2 = errno message
-#: src/application.cc src/file_output.cc src/signal_handler.cc
+#: src/application.cpp src/file_output.cpp src/signal_handler.cpp
 #, boost-format
 msgid "%1%: %2%"
 msgstr "%1%: %2%"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "Output files"
 msgstr "Output files"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "FILE"
 msgstr "FILE"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "append standard output to FILE"
 msgstr "append standard output to FILE"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "copy standard output to FILE"
 msgstr "copy standard output to FILE"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "append standard error to FILE"
 msgstr "append standard error to FILE"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "copy standard error to FILE"
 msgstr "copy standard error to FILE"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "append standard output and error to FILE"
 msgstr "append standard output and error to FILE"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "copy standard output and error to FILE"
 msgstr "copy standard output and error to FILE"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "Options"
 msgstr "Options"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "ignore interrupt signals"
 msgstr "ignore interrupt signals"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid ""
 "operate in cron mode (suppress output unless the process outputs an error "
 "message or has a non-zero exit status)"
@@ -79,32 +79,32 @@ msgstr ""
 "operate in cron mode (suppress output unless the process outputs an error "
 "message or has a non-zero exit status)"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "Miscellaneous"
 msgstr "Miscellaneous"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "display this help and exit"
 msgstr "display this help and exit"
 
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "output version information and exit"
 msgstr "output version information and exit"
 
 #. i18n: %1 = program name; %2 = help argument
-#: src/command_line.cc
+#: src/command_line.cpp
 #, boost-format
 msgid "Try '%1% %2%' for more information.\n"
 msgstr "Try '%1% %2%' for more information.\n"
 
 #. i18n: %1 = program name
-#: src/command_line.cc
+#: src/command_line.cpp
 #, boost-format
 msgid "Usage: %1% [OPTION]... COMMAND [ARG]...\n"
 msgstr "Usage: %1% [OPTION]... COMMAND [ARG]...\n"
 
 #. i18n: Line wrap to a maximum of 79 characters.
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid ""
 "Run COMMAND with standard output and standard error copied to each FILE\n"
 "suppressing all output unless the process outputs an error message or has a\n"
@@ -119,7 +119,7 @@ msgstr ""
 "and the exit code will be appended to standard error.\n"
 
 #. i18n: Line wrap to a maximum of 79 characters.
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid ""
 "Run COMMAND with standard output and standard error copied to each FILE\n"
 "while maintaining the original standard output and standard error as "
@@ -130,14 +130,14 @@ msgstr ""
 "normal.\n"
 
 #. i18n: %1 = list of years; %2 = name
-#: src/command_line.cc
+#: src/command_line.cpp
 #, boost-format
 msgid "Copyright %1%  %2%\n"
 msgstr "Copyright %1%  %2%\n"
 
 #. i18n: %1 = licence URL
 #. i18n: Line wrap to a maximum of 79 characters.
-#: src/command_line.cc
+#: src/command_line.cpp
 #, boost-format
 msgid ""
 "Licence GPLv3+: GNU GPL version 3 or later <%1%>.\n"
@@ -151,75 +151,75 @@ msgstr ""
 "This is free software: you are free to change and redistribute it.\n"
 
 #. i18n: Prefix credits with "Translation: xx_XX\n"
-#: src/command_line.cc
+#: src/command_line.cpp
 msgid "translator-credits"
 msgstr "Translation: en_GB"
 
 #. i18n: %1 = filename; %2 = errno message
-#: src/cron.cc
+#: src/cron.cpp
 #, boost-format
 msgid "error writing to buffer file %1%: %2%"
 msgstr "error writing to buffer file %1%: %2%"
 
 #. i18n: %1 = filename; %2 = errno message
-#: src/cron.cc
+#: src/cron.cpp
 #, boost-format
 msgid "error seeking to start of buffer file %1%: %2%"
 msgstr "error seeking to start of buffer file %1%: %2%"
 
 #. i18n: %1 = filename; %2 = errno message
-#: src/cron.cc
+#: src/cron.cpp
 #, boost-format
 msgid "error reading buffer file %1%: %2%"
 msgstr "error reading buffer file %1%: %2%"
 
 #. i18n: %1 = signal number; %2 = signal name
-#: src/cron.cc
+#: src/cron.cpp
 #, boost-format
 msgid "received signal %1%: %2%"
 msgstr "received signal %1%: %2%"
 
 #. i18n: %1 = command name; %2 = exit code
-#: src/cron.cc
+#: src/cron.cpp
 #, boost-format
 msgid "%1%: exited with status %2%"
 msgstr "%1%: exited with status %2%"
 
 #. i18n: %1 = command name; %2 = signal number; %3 = signal name
-#: src/cron.cc
+#: src/cron.cpp
 #, boost-format
 msgid "%1%: process terminated by signal %2%: %3% (core dumped)"
 msgstr "%1%: process terminated by signal %2%: %3% (core dumped)"
 
 #. i18n: %1 = command name; %2 = signal number; %3 = signal name
-#: src/cron.cc
+#: src/cron.cpp
 #, boost-format
 msgid "%1%: process terminated by signal %2%: %3%"
 msgstr "%1%: process terminated by signal %2%: %3%"
 
 #. i18n: %1 = exception message
 #. i18n: %1 = Boost.Asio error message
-#: src/input.cc
+#: src/input.cpp
 #, boost-format
 msgid "input socket: %1%"
 msgstr "input socket: %1%"
 
 #. i18n: %1 = Boost.Asio error message
 #. i18n: %1 = exception message
-#: src/input.cc
+#: src/input.cpp
 #, boost-format
 msgid "stdout socket: %1%"
 msgstr "stdout socket: %1%"
 
 #. i18n: %1 = Boost.Asio error message
 #. i18n: %1 = exception message
-#: src/input.cc
+#: src/input.cpp
 #, boost-format
 msgid "stderr socket: %1%"
 msgstr "stderr socket: %1%"
 
 #. i18n: %1 = socket path; %2 = socket path
-#: src/input.cc
+#: src/input.cpp
 #, boost-format
 msgid ""
 "output socket endpoints are indistinguishable:\n"
@@ -231,55 +231,55 @@ msgstr ""
 "\tstderr socket: %2%"
 
 #. i18n: %1 = system call name; %2 = errno message
-#: src/input.cc src/stream_output.cc
+#: src/input.cpp src/stream_output.cpp
 #, boost-format
 msgid "stdout: %1%: %2%"
 msgstr "stdout: %1%: %2%"
 
 #. i18n: %1 = system call name; %2 = errno message
-#: src/input.cc src/stream_output.cc
+#: src/input.cpp src/stream_output.cpp
 #, boost-format
 msgid "stderr: %1%: %2%"
 msgstr "stderr: %1%: %2%"
 
 #. i18n: %1 = program name; %2 = error message
-#: src/print_error.cc
+#: src/print_error.cpp
 #, boost-format
 msgid "%1%: %2%\n"
 msgstr "%1%: %2%\n"
 
 #. i18n: %3 = Boost.Asio error message; %1 = signal number; %2 = signal name
-#: src/signal_handler.cc
+#: src/signal_handler.cpp
 #, boost-format
 msgid "signal handler: %3% (signal %1%: %2%)"
 msgstr "signal handler: %3% (signal %1%: %2%)"
 
 #. i18n: %1 = system call name; %4 = errno message; %2 = signal number; %3 = signal name
-#: src/signal_handler.cc
+#: src/signal_handler.cpp
 #, boost-format
 msgid "%1%: %4% (signal %2%: %3%)"
 msgstr "%1%: %4% (signal %2%: %3%)"
 
 #. i18n: %1 = filename; %2 = errno message
-#: src/temp_directory.cc
+#: src/temp_directory.cpp
 #, boost-format
 msgid "unable to create temporary directory %1%: %2%"
 msgstr "unable to create temporary directory %1%: %2%"
 
 #. i18n: %1 = exception message
-#: src/temp_directory.cc
+#: src/temp_directory.cpp
 #, boost-format
 msgid "unable to create temporary directory: %1%"
 msgstr "unable to create temporary directory: %1%"
 
 #. i18n: %1 = filename; %2 = errno message
-#: src/temp_file.cc
+#: src/temp_file.cpp
 #, boost-format
 msgid "unable to create temporary file %1%: %2%"
 msgstr "unable to create temporary file %1%: %2%"
 
 #. i18n: %1 = exception message
-#: src/temp_file.cc
+#: src/temp_file.cpp
 #, boost-format
 msgid "unable to create temporary file: %1%"
 msgstr "unable to create temporary file: %1%"
