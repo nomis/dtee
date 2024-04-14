@@ -1,1 +1,0 @@
-$(echo -n "./dtee: unable to create temporary directory: filesystem error: temp_directory_path: EACCES"; [ $STD_FILESYSTEM_ERROR_HAS_PATH -eq 1 ] && echo -n " [./dtee@test/input/temp-dir-permission-denied.tmp/permission-denied/tmp]"; echo)

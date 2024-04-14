@@ -78,9 +78,6 @@ export TMPDIR="./$TESTDIR/$NAME.tmp"
 # boost::system::error_code.what()
 . ./util/boost-error_code-what.txt
 
-# !std::filesystem::filesystem_error.path1().empty()
-. ./util/std-filesystem-error-has-path.txt
-
 # /usr/include/sysexits.h
 . ./util/sysexits.txt
 
@@ -158,8 +155,10 @@ function cmp_files() {
 	set +x
 	EXPECTED_TEXT="$BASEDIR/$NAME.$1.txt"
 	EXPECTED_EVAL="$BASEDIR/$NAME.$1.eval.txt"
+	EXPECTED_REGEX="$BASEDIR/$NAME.$1.regex.txt"
 	EXPECTED_TEXT_UNAME="$BASEDIR/$NAME.$1.$SHORT_UNAME.txt"
 	EXPECTED_EVAL_UNAME="$BASEDIR/$NAME.$1.eval.$SHORT_UNAME.txt"
+	EXPECTED_REGEX_UNAME="$BASEDIR/$NAME.$1.regex.$SHORT_UNAME.txt"
 	ACTUAL="$TESTDIR/$NAME.$1.txt"
 
 	if [ -e "$EXPECTED_TEXT_UNAME" ]; then
@@ -167,6 +166,9 @@ function cmp_files() {
 	fi
 	if [ -e "$EXPECTED_EVAL_UNAME" ]; then
 		EXPECTED_EVAL="$EXPECTED_EVAL_UNAME"
+	fi
+	if [ -e "$EXPECTED_REGEX_UNAME" ]; then
+		EXPECTED_REGEX="$EXPECTED_REGEX_UNAME"
 	fi
 
 	if [ -e "$EXPECTED_TEXT" ]; then
@@ -181,8 +183,30 @@ function cmp_files() {
 			eval echo "$line" || return 1
 		done < "$EXPECTED_EVAL" > "$EXPECTED"
 		IFS="$OLD_IFS"
+	elif [ -e "$EXPECTED_REGEX" ]; then
+		EXPECTED="$TESTDIR/$NAME.$1.expected.txt"
+
+		rm -f "$EXPECTED"
+		OLD_IFS="$IFS"
+		IFS=""
+		exec {actual_fd}<"$ACTUAL"
+		while read -r regex_line; do
+			actual_line=
+			read -r actual_line <&${actual_fd}
+			if [ $? -eq 0 ]; then
+				if [[ "$actual_line" =~ ^${regex_line}$ ]]; then
+					echo "$actual_line"
+				else
+					echo "$regex_line"
+				fi
+			else
+				echo "$regex_line"
+			fi
+		done < "$EXPECTED_REGEX" > "$EXPECTED"
+		exec {actual_fd}>&-
+		IFS="$OLD_IFS"
 	else
-		echo "Missing file $EXPECTED_TEXT or $EXPECTED_EVAL or $EXPECTED_TEXT_UNAME or $EXPECTED_EVAL_UNAME"
+		echo "Missing file $EXPECTED_TEXT or $EXPECTED_EVAL or $EXPECTED_REGEX or $EXPECTED_TEXT_UNAME or $EXPECTED_EVAL_UNAME or $EXPECTED_REGEX_UNAME"
 		diff -U4 /dev/null "$ACTUAL"
 		set -x
 		return 1
