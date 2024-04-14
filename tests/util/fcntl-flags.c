@@ -110,6 +110,15 @@ TEST_FCN_REPL(int, fcntl, (int fd, int cmd, ...)) {
 #ifdef F_GET_SEALS
 	case F_GET_SEALS:
 #endif
+#ifdef F_CLOSEM
+	case F_CLOSEM:
+#endif
+#ifdef F_MAXFD
+	case F_MAXFD:
+#endif
+#ifdef F_GETNOSIGPIPE
+	case F_GETNOSIGPIPE:
+#endif
 		ret = next_fcntl(fd, cmd);
 		break;
 
@@ -137,6 +146,9 @@ TEST_FCN_REPL(int, fcntl, (int fd, int cmd, ...)) {
 #endif
 #ifdef F_ADD_SEALS
 	case F_ADD_SEALS:
+#endif
+#ifdef F_SETNOSIGPIPE
+	case F_SETNOSIGPIPE:
 #endif
 		ret = next_fcntl(fd, cmd, va_arg(ap, int));
 		break;
@@ -171,6 +183,9 @@ TEST_FCN_REPL(int, fcntl, (int fd, int cmd, ...)) {
 #endif
 #ifdef F_SET_FILE_RW_HINT
 	case F_SET_FILE_RW_HINT:
+#endif
+#ifdef F_GETPATH
+	case F_GETPATH:
 #endif
 		ret = next_fcntl(fd, cmd, va_arg(ap, void *));
 		break;

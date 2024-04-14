@@ -1,3 +1,4 @@
+#define __sigaction_siginfo __dtee__hide____sigaction_siginfo
 #define __sigaction14 __dtee__hide____sigaction14
 #define sigaction __dtee__hide__sigaction
 
@@ -10,6 +11,7 @@
 
 #undef sigaction
 #undef __sigaction14
+#undef __sigaction_siginfo
 
 typedef struct __dtee__hide__sigaction dtee_sigaction_t;
 
@@ -99,5 +101,46 @@ TEST_FCN_REPL(int, __sigaction14, (int signum, const dtee_sigaction_t *act, dtee
 	}
 
 	return (*next___sigaction14)(signum, act, oldact);
+}
+
+static int dtee_test___sigaction_siginfo_restart_already_set(int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact) {
+	int (*next___sigaction_siginfo)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = TEST_FCN_NEXT(__sigaction_siginfo);
+
+	if (act == NULL && oldact != NULL) {
+		int ret = (*next___sigaction_siginfo)(signum, act, oldact);
+		if (ret == -1) {
+			abort();
+		}
+
+		// Set SA_RESTART if it's not already set
+		if ((oldact->sa_flags & SA_RESTART) == 0) {
+			oldact->sa_flags |= SA_RESTART;
+
+			errno = 0;
+			ret = (*next___sigaction_siginfo)(signum, oldact, NULL);
+			if (ret == -1) {
+				abort();
+			}
+		}
+	}
+
+	return (*next___sigaction_siginfo)(signum, act, oldact);
+}
+
+TEST_FCN_REPL(int, __sigaction_siginfo, (int signum, const dtee_sigaction_t *act, dtee_sigaction_t *oldact)) {
+	int (*next___sigaction_siginfo)(int, const dtee_sigaction_t *, dtee_sigaction_t *) = TEST_FCN_NEXT(__sigaction_siginfo);
+	static __thread bool active = false;
+
+	if (!active) {
+		active = true;
+
+		if (dtee_test_is_dtee()) {
+			next___sigaction_siginfo = dtee_test___sigaction_siginfo_restart_already_set;
+		}
+
+		active = false;
+	}
+
+	return (*next___sigaction_siginfo)(signum, act, oldact);
 }
 #endif
