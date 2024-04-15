@@ -45,7 +45,7 @@ elif host_machine.system() == 'darwin'
 elif host_machine.system() == 'cygwin'
 	c_args = ['-D_POSIX_C_SOURCE=200809L', '-D_GNU_SOURCE']
 else # linux
-	c_args = ['-D_POSIX_C_SOURCE=200809L']
+	c_args = ['-D_POSIX_C_SOURCE=200809L', '-Ulinux', '-Uunix']
 endif
 
 if host_machine.system() == 'netbsd'
