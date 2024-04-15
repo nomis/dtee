@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021-2022  Simon Arlott
+	Copyright 2018,2021-2022,2024  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -48,14 +48,13 @@ void Process::fork_child() {
 }
 
 void Process::exit_by_interrupt() const {
-	coverage_dump(); // LCOV_EXCL_LINE
-
 	switch (interrupt_signum_) {
 		// Replicate these signals that caused us to terminate.
 	case SIGHUP:
 	case SIGINT:
 	case SIGPIPE:
 	case SIGTERM:
+		coverage_dump(); // LCOV_EXCL_LINE
 		raise(interrupt_signum_);
 		break;
 	}
@@ -64,6 +63,7 @@ void Process::exit_by_interrupt() const {
 		// Replicate interrupted signal status so that shells
 		// behave correctly if the command is interrupted.
 	case SIGINT:
+		coverage_dump(); // LCOV_EXCL_LINE
 		raise(exit_signum_);
 		break;
 	}
