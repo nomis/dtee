@@ -54,7 +54,7 @@ void Process::exit_by_interrupt() const {
 	case SIGINT:
 	case SIGPIPE:
 	case SIGTERM:
-		coverage_dump(); // LCOV_EXCL_LINE
+		coverage_finish(); // LCOV_EXCL_LINE
 		raise(interrupt_signum_);
 		break;
 	}
@@ -63,7 +63,7 @@ void Process::exit_by_interrupt() const {
 		// Replicate interrupted signal status so that shells
 		// behave correctly if the command is interrupted.
 	case SIGINT:
-		coverage_dump(); // LCOV_EXCL_LINE
+		coverage_finish(); // LCOV_EXCL_LINE
 		raise(exit_signum_);
 		break;
 	}

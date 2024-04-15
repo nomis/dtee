@@ -236,7 +236,7 @@ void Application::execute(const vector<string> &command) {
 	}
 	argv.push_back(nullptr);
 
-	coverage_dump(); // LCOV_EXCL_LINE
+	coverage_finish(); // LCOV_EXCL_LINE
 
 	errno = 0;
 	execvp(argv[0], &argv.data()[1]);
