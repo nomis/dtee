@@ -1,1 +1,1 @@
-./dtee: stdout: fcntl: EINVAL
+./dtee: stdout: fcntl(F_GETFL): EINVAL

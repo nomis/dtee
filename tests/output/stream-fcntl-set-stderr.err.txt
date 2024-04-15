@@ -1,1 +1,1 @@
-./dtee: stderr: fcntl: EINVAL
+./dtee: stderr: fcntl(F_SETFL): EINVAL

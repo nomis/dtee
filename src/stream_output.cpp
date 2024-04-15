@@ -77,7 +77,7 @@ bool StreamOutput::set_blocking(int fd, const char *name_fmt) {
 
 	if (flags == -1) {
 		auto errno_copy = errno;
-		print_system_error(format(_(name_fmt)) % "fcntl", errno_copy);
+		print_system_error(format(_(name_fmt)) % "fcntl(F_GETFL)", errno_copy);
 		return false;
 	}
 
@@ -86,7 +86,7 @@ bool StreamOutput::set_blocking(int fd, const char *name_fmt) {
 
 		if (::fcntl(fd, F_SETFL, flags) == -1) {
 			auto errno_copy = errno;
-			print_system_error(format(_(name_fmt)) % "fcntl", errno_copy);
+			print_system_error(format(_(name_fmt)) % "fcntl(F_SETFL)", errno_copy);
 			return false;
 		}
 	}
