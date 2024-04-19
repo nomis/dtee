@@ -30,6 +30,8 @@ public:
 	StreamOutput() = default;
 	~StreamOutput() override = default;
 
+	static bool create_missing_fds();
+
 	bool open() override;
 	bool output(OutputType type, const std::vector<char> &buffer, size_t len) override;
 

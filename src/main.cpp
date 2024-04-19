@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018  Simon Arlott
+	Copyright 2018,2024  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,11 +16,19 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include <libintl.h>
+#include <sysexits.h>
+#include <unistd.h>
 
 #include "application.h"
+#include "stream_output.h"
 
 int main(int argc, char *argv[]) {
 	try {
+		// This has to happen before any new file descriptors are opened
+		if (!dtee::StreamOutput::create_missing_fds()) {
+			return EX_OSERR;
+		}
+
 		::setlocale(LC_ALL, "");
 		::bindtextdomain(GETTEXT_PACKAGE, GETTEXT_LOCALEDIR);
 		::textdomain(GETTEXT_PACKAGE);

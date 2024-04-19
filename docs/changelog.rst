@@ -13,6 +13,7 @@ Changed
   1.79 because these exceptions are already caught and properly identified.
 * Configure standard output and standard error to be blocking.
 * Use ``std::filesystem`` from C++17 instead of ``boost::filesystem``.
+* Ensure that standard output and standard error exist.
 
 Fixed
 ~~~~~

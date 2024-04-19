@@ -35,11 +35,13 @@ TEST_FCN_DECL(int, openat, (int dirfd, const char *pathname, int flags, mode_t m
 TEST_FCN_DECL(int, open64, (const char *pathname, int flags, mode_t mode));
 TEST_FCN_DECL(int, openat64, (int dirfd, const char *pathname, int flags, mode_t mode));
 #endif
+TEST_FCN_DECL(ssize_t, write, (int fd, const void *buf, size_t count));
+TEST_FCN_DECL(int, close, (int fd));
 
 // When dtee opens the target file, store the fd
 static bool dtee_test_match_open(const char *pathname) {
 	if (dtee_test_is_dtee() && fail_fd < 0) {
-		const char *fail_name = getenv("DTEE_TEST_FILE_WRITE_FAIL_NAME");
+		const char *fail_name = getenv("DTEE_TEST_FILE_FAIL_NAME");
 
 		if (fail_name != NULL && !strcmp(pathname, fail_name)) {
 			return true;
@@ -57,17 +59,23 @@ static int dtee_test_return_open(int ret) {
 	return ret;
 }
 
+static int dtee_test_fail_open(const char *pathname __attribute__((unused)),
+		int flags __attribute__((unused)), mode_t mode __attribute__((unused))) {
+	errno = ENOENT;
+	return -1;
+}
+
+static int dtee_test_fail_openat(int dirfd __attribute__((unused)),
+		const char *pathname __attribute__((unused)),
+		int flags __attribute__((unused)), mode_t mode __attribute__((unused))) {
+	errno = ENOENT;
+	return -1;
+}
+
 static int dtee_test_capture_open(const char *pathname, int flags, mode_t mode) {
 	int (*next_open)(const char *, int, mode_t) = TEST_FCN_NEXT(open);
 	return dtee_test_return_open((*next_open)(pathname, flags, mode));
 }
-
-#if defined(__linux__)
-static int dtee_test_capture_open64(const char *pathname, int flags, mode_t mode) {
-	int (*next_open64)(const char *, int, mode_t) = TEST_FCN_NEXT(open64);
-	return dtee_test_return_open((*next_open64)(pathname, flags, mode));
-}
-#endif
 
 static int dtee_test_capture_openat(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat);
@@ -75,6 +83,11 @@ static int dtee_test_capture_openat(int dirfd, const char *pathname, int flags, 
 }
 
 #if defined(__linux__)
+static int dtee_test_capture_open64(const char *pathname, int flags, mode_t mode) {
+	int (*next_open64)(const char *, int, mode_t) = TEST_FCN_NEXT(open64);
+	return dtee_test_return_open((*next_open64)(pathname, flags, mode));
+}
+
 static int dtee_test_capture_openat64(int dirfd, const char *pathname, int flags, mode_t mode) {
 	int (*next_openat64)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat64);
 	return dtee_test_return_open((*next_openat64)(dirfd, pathname, flags, mode));
@@ -89,13 +102,42 @@ TEST_FCN_REPL(int, open, (const char *pathname, int flags, mode_t mode)) {
 		active = true;
 
 		if (dtee_test_match_open(pathname)) {
-			next_open = dtee_test_capture_open;
+			const char *fail_open = getenv("DTEE_TEST_FILE_OPEN_FAIL");
+
+			if (fail_open && strtoul(fail_open, NULL, 10) == 1) {
+				next_open = dtee_test_fail_open;
+			} else {
+				next_open = dtee_test_capture_open;
+			}
 		}
 
 		active = false;
 	}
 
 	return (*next_open)(pathname, flags, mode);
+}
+
+TEST_FCN_REPL(int, openat, (int dirfd, const char *pathname, int flags, mode_t mode)) {
+	int (*next_openat)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat);
+	static __thread bool active = false;
+
+	if (!active) {
+		active = true;
+
+		if (dtee_test_match_open(pathname)) {
+			const char *fail_open = getenv("DTEE_TEST_FILE_OPEN_FAIL");
+
+			if (fail_open && strtoul(fail_open, NULL, 10) == 1) {
+				next_openat = dtee_test_fail_openat;
+			} else {
+				next_openat = dtee_test_capture_openat;
+			}
+		}
+
+		active = false;
+	}
+
+	return (*next_openat)(dirfd, pathname, flags, mode);
 }
 
 #if defined(__linux__)
@@ -107,7 +149,13 @@ TEST_FCN_REPL(int, open64, (const char *pathname, int flags, mode_t mode)) {
 		active = true;
 
 		if (dtee_test_match_open(pathname)) {
-			next_open64 = dtee_test_capture_open64;
+			const char *fail_open = getenv("DTEE_TEST_FILE_OPEN_FAIL");
+
+			if (fail_open && strtoul(fail_open, NULL, 10) == 1) {
+				next_open64 = dtee_test_fail_open;
+			} else {
+				next_open64 = dtee_test_capture_open64;
+			}
 		}
 
 		active = false;
@@ -115,35 +163,22 @@ TEST_FCN_REPL(int, open64, (const char *pathname, int flags, mode_t mode)) {
 
 	return (*next_open64)(pathname, flags, mode);
 }
-#endif
 
-TEST_FCN_REPL(int, openat, (int dirfd, const char *pathname, int flags, mode_t mode)) {
-	int (*next_openat)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat);
-	static __thread bool active = false;
-
-	if (!active) {
-		active = true;
-
-		if (dtee_test_match_open(pathname)) {
-			next_openat = dtee_test_capture_openat;
-		}
-
-		active = false;
-	}
-
-	return (*next_openat)(dirfd, pathname, flags, mode);
-}
-
-#if defined(__linux__)
 TEST_FCN_REPL(int, openat64, (int dirfd, const char *pathname, int flags, mode_t mode)) {
-	int (*next_openat64)(int, const char *, int, mode_t) = TEST_FCN_NEXT(openat64);
+	int (*next_openat64)(int dirfd, const char *, int, mode_t) = TEST_FCN_NEXT(openat64);
 	static __thread bool active = false;
 
 	if (!active) {
 		active = true;
 
 		if (dtee_test_match_open(pathname)) {
-			next_openat64 = dtee_test_capture_openat64;
+			const char *fail_open = getenv("DTEE_TEST_FILE_OPEN_FAIL");
+
+			if (fail_open && strtoul(fail_open, NULL, 10) == 1) {
+				next_openat64 = dtee_test_fail_openat;
+			} else {
+				next_openat64 = dtee_test_capture_openat64;
+			}
 		}
 
 		active = false;
@@ -152,6 +187,18 @@ TEST_FCN_REPL(int, openat64, (int dirfd, const char *pathname, int flags, mode_t
 	return (*next_openat64)(dirfd, pathname, flags, mode);
 }
 #endif
+
+static int dtee_test_fail_close(int fd) {
+	int (*next_close)(int) = TEST_FCN_NEXT(close);
+	int ret = (*next_close)(fd);
+
+	if (ret != -1) {
+		errno = EIO;
+		ret = -1;
+	}
+
+	return ret;
+}
 
 // If dtee closes the target file, unset the fd
 TEST_FCN_REPL(int, close, (int fd)) {
@@ -163,6 +210,12 @@ TEST_FCN_REPL(int, close, (int fd)) {
 
 		if (dtee_test_is_dtee()) {
 			if (fail_fd == fd) {
+				const char *fail_close = getenv("DTEE_TEST_FILE_CLOSE_FAIL");
+
+				if (fail_close && strtoul(fail_close, NULL, 10) == 1) {
+					next_close = dtee_test_fail_close;
+				}
+
 				fail_fd = -1;
 			}
 		}
@@ -173,26 +226,51 @@ TEST_FCN_REPL(int, close, (int fd)) {
 	return (*next_close)(fd);
 }
 
-// Cause intermittent write failures to the file
 static bool dtee_test_allow_write(void) {
-	if (successes >= DO_N_SUCCESS) {
-		++failures;
+	const char *fail_mode = getenv("DTEE_TEST_FILE_WRITE_FAIL");
 
-		if (failures >= DO_N_FAILURE) {
-			successes = 0;
-			failures = 0;
-		}
+	if (!fail_mode) {
+		return true;
+	}
 
+	if (!strcmp(fail_mode, "all")) {
 		return false;
-	} else {
-		++successes;
+	} else if (!strcmp(fail_mode, "intermittent")) {
+		// Cause intermittent write failures to the file
+		if (successes >= DO_N_SUCCESS) {
+			++failures;
 
+			if (failures >= DO_N_FAILURE) {
+				successes = 0;
+				failures = 0;
+			}
+
+			return false;
+		} else {
+			++successes;
+
+			return true;
+		}
+	} else {
 		return true;
 	}
 }
 
 static ssize_t dtee_test_write_failure(int fd __attribute__((unused)), const void *buf __attribute__((unused)), size_t count __attribute__((unused))) {
-	errno = ENOSPC;
+	const char *fail_mode = getenv("DTEE_TEST_FILE_WRITE_FAIL");
+
+	if (!fail_mode) {
+		abort();
+	}
+
+	if (!strcmp(fail_mode, "all")) {
+		errno = EINVAL;
+	} else if (!strcmp(fail_mode, "intermittent")) {
+		errno = ENOSPC;
+	} else {
+		abort();
+	}
+
 	return -1;
 }
 
@@ -206,9 +284,12 @@ TEST_FCN_REPL(ssize_t, write, (int fd, const void *buf, size_t count)) {
 		// Boost.Asio (1.62) communicates signals from the
 		// handler to the I/O service using a pipe with
 		// reads/writes of the signal number as an int.
-		// This also implies we're in a signal handler,
-		// so don't do anything unsafe.
-		if (count != sizeof(int)) {
+		//
+		// It may also use eventfd (8 bytes).
+		//
+		// This implies we're in a signal handler, so don't
+		// do anything unsafe.
+		if (count != sizeof(int) || count == 8) {
 			if (dtee_test_is_dtee()) {
 				if (fail_fd >= 0 && fd == fail_fd) {
 					if (!dtee_test_allow_write()) {

@@ -7,7 +7,7 @@ export DTEE_TEST_FCNTL_SETFL_FAILURE_FD=2
 
 no_ld_preload "test-execvp-fd-check"
 
-TEST_LD_PRELOAD=(test-fcntl-flags)
+TEST_LD_PRELOAD=(test-fcntl-failures-flags)
 run_test "$RUN"
 RET=$?
 

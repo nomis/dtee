@@ -27,6 +27,12 @@ static bool dtee_test_fcntl_match_failure(int fd, int cmd) {
 		if (failure_fd != NULL && failure_fd[0] && fd == atoi(failure_fd)) {
 			return true;
 		}
+	} else if (cmd == F_GETFD) {
+		const char *failure_fd = getenv("DTEE_TEST_FCNTL_GETFD_FAILURE_FD");
+
+		if (failure_fd != NULL && failure_fd[0] && fd == atoi(failure_fd)) {
+			return true;
+		}
 	}
 
 	return false;

@@ -4,9 +4,12 @@ function test_prepare() {
 	rm -f "$TESTDIR/$NAME.file.com-append.txt"
 }
 
-export DTEE_TEST_FILE_WRITE_FAIL_NAME="$TESTDIR/$NAME.file.com-append.txt"
+export DTEE_TEST_FILE_FAIL_NAME="$TESTDIR/$NAME.file.com-append.txt"
+export DTEE_TEST_FILE_OPEN_FAIL=0
+export DTEE_TEST_FILE_WRITE_FAIL=all
+export DTEE_TEST_FILE_CLOSE_FAIL=0
 
-TEST_LD_PRELOAD=(test-file-write-failure)
+TEST_LD_PRELOAD=(test-file-failures)
 run_test -c "$TESTDIR/$NAME.file.com-append.txt" "$RUN"
 RET=$?
 

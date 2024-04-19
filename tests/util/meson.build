@@ -52,11 +52,10 @@ testlib_all_libraries = [
 	shared_library('test-fake-getuid', ['fake-getuid.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-fake-strerror', ['fake-strerror.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-fake-strsignal', ['fake-strsignal.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
-	shared_library('test-fcntl-flags', ['fcntl-flags.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
+	shared_library('test-fcntl-failures-flags', ['fcntl-failures-flags.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
+	shared_library('test-file-failures', ['file-failures.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-fork-failure', ['fork-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-fork-sigchld-check', ['fork-sigchld-check.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
-	shared_library('test-file-write-failure', ['file-write-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
-	shared_library('test-file-write-failure-recovery', ['file-write-failure-recovery.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-lseek-failure', ['lseek-failure.c'], c_args: dlfcn_args + ['-D_LARGEFILE64_SOURCE'], dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-mkdtemp-consistent', ['mkdtemp-consistent.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
 	shared_library('test-mkdtemp-failure', ['mkdtemp-failure.c'], c_args: dlfcn_args, dependencies: dlfcn_deps, link_with: [testlib_is_dtee], build_rpath: meson.current_build_dir()),
@@ -92,6 +91,7 @@ generate_boost_error_code_what_txt = executable('test-boost-error_code-what-txt'
 executable('test-closed-pipe-reader', ['closed-pipe-reader.c'], c_args: test_c_args)
 default_signal_handlers = executable('test-default-signal-handlers', ['default-signal-handlers.c'], c_args: test_c_args)
 executable('test-closed-pipe-writer', ['closed-pipe-writer.c'], c_args: test_c_args)
+executable('test-execvp-without-stdio', ['execvp-without-stdio.c'], c_args: test_c_args)
 executable('test-fifo-write-interrupt', ['fifo-write-interrupt.c'] , c_args: test_c_args)
 executable('test-kill-pid', ['kill-pid.c'], c_args: test_c_args)
 executable('test-kill-ppid', ['kill-ppid.c'], c_args: test_c_args, link_with: [testlib_is_fd_unix_socket])

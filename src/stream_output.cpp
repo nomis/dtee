@@ -17,6 +17,8 @@
 */
 #include "stream_output.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -36,6 +38,52 @@ using ::std::string;
 using ::std::vector;
 
 namespace dtee {
+
+bool StreamOutput::create_missing_fds() {
+	// Everything depends on providing replacement stdout/stderr file
+	// descriptors to the child process. That can't happen properly if those
+	// file descriptor numbers are already in use by something else (internal to
+	// Boost.Asio or the input and output replacements themselves, which need to
+	// remain present until after they are duplicated into the correct position).
+	//
+	// The easiest way to achieve this is to open them if they're missing, which
+	// also helps with output going to unexpected places when these numbers
+	// would otherwise get reused.
+	//
+	// The stdio fd is not a problem because it's never read by dtee itself and
+	// would be closed when executing the child process (if that number gets
+	// reused).
+	for (int fd : {STDOUT_FILENO, STDERR_FILENO}) {
+		errno = 0;
+		if (::fcntl(fd, F_GETFD) != -1) {
+			continue;
+		}
+
+		if (errno != EBADF) {
+			return false;
+		}
+
+		int dev_null = ::open("/dev/null", O_WRONLY);
+		if (dev_null == -1) {
+			return false;
+		}
+
+		if (dev_null != fd) {
+			bool duplicated = ::dup2(dev_null, fd) != -1;
+
+			// Always close the fd, even if dup2() failed
+			if (::close(dev_null) == -1) {
+				return false;
+			}
+
+			if (!duplicated) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
 
 bool StreamOutput::open() {
 	// Non-blocking output streams cause all kinds of obscure problems and

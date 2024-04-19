@@ -58,7 +58,6 @@ using ::std::make_unique;
 using ::std::raise;
 using ::std::shared_ptr;
 using ::std::string;
-using ::std::unique_ptr;
 using ::std::vector;
 
 namespace dtee {
