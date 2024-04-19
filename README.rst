@@ -39,5 +39,4 @@ the docs_ directory.
 
 .. _docs: docs/
 
-.. |Build Status| image:: https://travis-ci.org/nomis/dtee.svg?branch=main
-   :target: https://travis-ci.org/nomis/dtee
+.. |Build Status| image:: https://jenkins.uuid.uk/buildStatus/icon?job=dtee%2Fmain
