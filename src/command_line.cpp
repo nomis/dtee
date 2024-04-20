@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021  Simon Arlott
+	Copyright 2018,2021,2024  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 
 #include "i18n.h"
 #include "print_error.h"
+#include "src/copyright.h"
 #include "src/version.h"
 
 using ::boost::format;
@@ -246,7 +247,7 @@ void CommandLine::display_usage(const po::options_description &options) const {
 void CommandLine::display_version() const {
 	cout << DEFAULT_PROGRAM_NAME << " " << VERSION << "\n";
 	// i18n: %1 = list of years; %2 = name
-	cout << format(_("Copyright %1%  %2%\n")) % "2018-2021" % "Simon Arlott";
+	cout << format(_("Copyright %1%  %2%\n")) % COPYRIGHT_YEARS % "Simon Arlott";
 	// i18n: %1 = licence URL
 	cout << format(_( // i18n: Line wrap to a maximum of 79 characters.
 		"Licence GPLv3+: GNU GPL version 3 or later <%1%>.\n"

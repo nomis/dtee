@@ -1,4 +1,10 @@
-version_check = run_command(import('python').find_installation(), [files('version_check.py'), files('changelog.rst'), meson.project_version()], check: false)
+version_check = run_command(import('python').find_installation(), [
+		files('version_check.py'),
+		files('changelog.rst'),
+		files('conf.py'),
+		meson.project_version(),
+		copyright_years
+	], check: false)
 if version_check.returncode() != 0
 	error(version_check.stderr())
 endif
