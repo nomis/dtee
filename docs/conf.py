@@ -5,7 +5,7 @@ import os
 travis_ci = os.environ.get("TRAVIS") == 'true'
 rtd = os.environ.get("READTHEDOCS") == 'True'
 
-needs_sphinx = '1.3'
+needs_sphinx = '4.1'
 extensions = []
 source_suffix = ['.rst']
 
