@@ -4,6 +4,12 @@ Change log
 Unreleased_
 -----------
 
+1.1.1_ |--| 2024-04-20
+----------------------
+
+Standard I/O checks, fixes for tests, and use of newer Boost.Asio (1.79 and 1.82)
+and C++17 features.
+
 Changed
 ~~~~~~~
 
@@ -122,7 +128,8 @@ Added
 .. |sigaction(2)| replace:: ``sigaction(2)``
 .. _sigaction(2): https://man7.org/linux/man-pages/man2/sigaction.2.html
 
-.. _Unreleased: https://github.com/nomis/dtee/compare/1.1.0...HEAD
+.. _Unreleased: https://github.com/nomis/dtee/compare/1.1.1...HEAD
+.. _1.1.1: https://github.com/nomis/dtee/compare/1.1.0...1.1.1
 .. _1.1.0: https://github.com/nomis/dtee/compare/1.0.1...1.1.0
 .. _1.0.1: https://github.com/nomis/dtee/compare/1.0.0...1.0.1
 .. _1.0.0: https://github.com/nomis/dtee/compare/0.0.1...1.0.0
