@@ -9,12 +9,7 @@ Build
 
 Compile
 ~~~~~~~
-  * `Boost <https://www.boost.org/>`_ 1.56+
-
-    ..
-       Upgrade when this issue is fixed:
-       https://github.com/chriskohlhoff/asio/issues/646
-
+  * `Boost <https://www.boost.org/>`_ 1.56+ (1.82+ preferred)
   * `Clang <https://clang.llvm.org/>`_ 5+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 5.3+
   * `GNU gettext <https://www.gnu.org/software/gettext/>`_
   * `GNU Make <https://www.gnu.org/software/make/>`_ 3.80+ (optional)
@@ -33,7 +28,7 @@ Static Analysis
 
 Test
 ~~~~
-  * `GNU Bash <https://www.gnu.org/software/bash/>`_
+  * `GNU Bash <https://www.gnu.org/software/bash/>`_ 4.1+
   * `GNU Core Utilities <https://www.gnu.org/software/coreutils/>`_
   * `GNU Diff Utilities <https://www.gnu.org/software/diffutils/>`_
   * `GNU Find Utilities <https://www.gnu.org/software/findutils/>`_
