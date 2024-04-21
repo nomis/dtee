@@ -63,24 +63,20 @@ The source address of each message is provided by the operating system on every
 read so it is possible to identify which output stream was used by binding to
 different paths for each stream.
 
-It would be preferable to use sequenced-packet sockets instead but that would
-require two pairs of sockets because it is not possible to have one socket
-connected to two peers. Perhaps there will be a ``sockettriple`` function in the
-future that can do this.
-
 Alternatives
 ~~~~~~~~~~~~
 
-It could be possible to use |sctp(7)|_ instead but that may not be available on
-all platforms and would require using the local network interface for
-communication.
-
+A new flag ``O_SYNCPIPE`` for |pipe2(2)|_ that creates a pair of pipes (4 file
+descriptors in total) where the read order of data is linked across the pair.
+This would  have behaviour like ``O_DIRECT`` when transitioning from one stream
+to the other and only one of the pipes would be available for reading at any one
+time.
 
 .. |cron(8)| replace:: ``cron(8)``
 .. _cron(8): https://man7.org/linux/man-pages/man8/cron.8.html
 
-.. |sctp(7)| replace:: ``sctp(7)``
-.. _sctp(7): https://man7.org/linux/man-pages/man7/sctp.7.html
+.. |pipe2(2)| replace:: ``pipe2(2)``
+.. _pipe2(2): https://man7.org/linux/man-pages/man2/pipe2.2.html
 
 .. |unix(7)| replace:: ``unix(7)``
 .. _unix(7): https://man7.org/linux/man-pages/man7/unix.7.html
