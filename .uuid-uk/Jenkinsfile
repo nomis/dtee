@@ -66,10 +66,6 @@ pipeline {
 	options {
 		disableConcurrentBuilds()
 	}
-	environment {
-		PIPENV_VENV_IN_PROJECT = "1"
-		PIPENV_SKIP_LOCK = "1"
-	}
 	stages {
 		stage("Application") {
 			matrix {
