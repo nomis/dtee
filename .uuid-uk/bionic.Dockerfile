@@ -34,6 +34,14 @@ RUN \
 ENV PYTHON=python3.7
 ENV PIP="python3.7 -m pip"
 
+# Upgrade pip because it's too old to install ninja 1.11.1.2
+ADD https://pypi.org/pypi/pip/json /dev/shm/pip.json
+RUN \
+	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=ubuntu-bionic-root-cache-pip \
+	python3.7 --version && \
+	python3.7 -m pip --version && \
+	python3.7 -m pip install -U pip
+
 # A non-C locale is required for testing gettext()
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-bionic-var-cache-apt \
