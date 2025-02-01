@@ -8,19 +8,15 @@ RUN echo 'APT::Keep-Downloaded-Packages "true";' >/etc/apt/apt.conf.d/keep-downl
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-bionic-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-bionic-var-lib-apt \
-	apt-get update
+	apt-get update && apt-get install -y build-essential git procps python3-pip
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-bionic-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-bionic-var-lib-apt \
-	apt-get install -y build-essential git procps python3-pip
+	apt-get update && apt-get install -y libboost-all-dev gettext lcov
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-bionic-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-bionic-var-lib-apt \
-	apt-get install -y libboost-all-dev gettext lcov
-RUN \
-	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-bionic-var-cache-apt \
-	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-bionic-var-lib-apt \
-	apt-get install -y \
+	apt-get update && apt-get install -y \
 		gcc-5 gcc-6 \
 		g++-5 g++-6 \
 		clang-5.0 libc++abi-dev
@@ -29,7 +25,7 @@ RUN \
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-bionic-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-bionic-var-lib-apt \
-	apt-get install -y python3.7-dev gcovr
+	apt-get update && apt-get install -y python3.7-dev gcovr
 
 ENV PYTHON=python3.7
 ENV PIP="python3.7 -m pip"
@@ -46,7 +42,7 @@ RUN \
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-bionic-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-bionic-var-lib-apt \
-	apt-get install -y locales
+	apt-get update && apt-get install -y locales
 
 RUN sed -E 's/^# (en_AU.+ UTF-8)$/\1/' -i /etc/locale.gen
 RUN locale-gen

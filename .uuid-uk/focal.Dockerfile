@@ -9,19 +9,15 @@ RUN echo 'APT::Keep-Downloaded-Packages "true";' >/etc/apt/apt.conf.d/keep-downl
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-focal-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-focal-var-lib-apt \
-	apt-get update
+	apt-get update && apt-get install -y build-essential git procps python3-pip
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-focal-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-focal-var-lib-apt \
-	apt-get install -y build-essential git procps python3-pip
+	apt-get update && apt-get install -y libboost-all-dev gettext lcov
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-focal-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-focal-var-lib-apt \
-	apt-get install -y libboost-all-dev gettext lcov
-RUN \
-	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-focal-var-cache-apt \
-	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-focal-var-lib-apt \
-	apt-get install -y \
+	apt-get update && apt-get install -y \
 		gcc-7 gcc-8 gcc-9 gcc-10 \
 		g++-7 g++-8 g++-9 g++-10 \
 		clang-6.0 clang-7 clang-8 clang-9 clang-10 clang-11 clang-12 libc++abi-dev
@@ -30,7 +26,7 @@ RUN \
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=ubuntu-focal-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=ubuntu-focal-var-lib-apt \
-	apt-get install -y locales
+	apt-get update && apt-get install -y locales
 
 RUN sed -E 's/^# (en_AU.+ UTF-8)$/\1/' -i /etc/locale.gen
 RUN locale-gen

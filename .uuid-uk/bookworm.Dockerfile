@@ -9,19 +9,15 @@ RUN echo 'APT::Keep-Downloaded-Packages "true";' >/etc/apt/apt.conf.d/keep-downl
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=debian-bookworm-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=debian-bookworm-var-lib-apt \
-	apt-get update
+	apt-get update && apt-get install -y build-essential git procps python3-pip
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=debian-bookworm-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=debian-bookworm-var-lib-apt \
-	apt-get install -y build-essential git procps python3-pip
+	apt-get update && apt-get install -y libboost-all-dev gettext lcov
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=debian-bookworm-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=debian-bookworm-var-lib-apt \
-	apt-get install -y libboost-all-dev gettext lcov
-RUN \
-	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=debian-bookworm-var-cache-apt \
-	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=debian-bookworm-var-lib-apt \
-	apt-get install -y \
+	apt-get update && apt-get install -y \
 		gcc-11 gcc-12 \
 		g++-11 g++-12 \
 		clang-13 clang-14 clang-15 clang-16 libc++abi-dev
@@ -30,7 +26,7 @@ RUN \
 RUN \
 	--mount=type=cache,sharing=locked,target=/var/cache/apt,id=debian-bookworm-var-cache-apt \
 	--mount=type=cache,sharing=locked,target=/var/lib/apt,id=debian-bookworm-var-lib-apt \
-	apt-get install -y locales
+	apt-get update && apt-get install -y locales
 
 RUN sed -E 's/^# (en_AU.+ UTF-8)$/\1/' -i /etc/locale.gen
 RUN locale-gen
