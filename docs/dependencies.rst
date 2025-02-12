@@ -10,7 +10,7 @@ Build
 Compile
 ~~~~~~~
   * `Boost <https://www.boost.org/>`_ 1.66+ (1.82+ preferred)
-  * `Clang <https://clang.llvm.org/>`_ 5+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 5.3+
+  * `Clang <https://clang.llvm.org/>`_ 6+ or `GNU GCC <https://www.gnu.org/software/gcc/>`_ 7+
   * `GNU gettext <https://www.gnu.org/software/gettext/>`_
   * `GNU Make <https://www.gnu.org/software/make/>`_ 3.80+ (optional)
   * `Meson <https://mesonbuild.com/>`_ 0.63+
