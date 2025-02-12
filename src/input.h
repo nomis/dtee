@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021,2024  Simon Arlott
+	Copyright 2018,2021,2024-2025  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ constexpr const int MINIMUM_RCVBUF_SIZE = std::max(PIPE_BUF,
 
 class Input {
 public:
-	Input(std::shared_ptr<boost::asio::io_service> io, std::shared_ptr<Dispatch> output);
+	Input(std::shared_ptr<boost::asio::io_context> io, std::shared_ptr<Dispatch> output);
 	~Input() = default;
 
 	bool open();
@@ -75,7 +75,7 @@ private:
 
 	void handle_receive_from(const boost::system::error_code &ec, size_t len);
 
-	std::shared_ptr<boost::asio::io_service> io_;
+	std::shared_ptr<boost::asio::io_context> io_;
 	boost::asio::local::datagram_protocol::socket input_; //!< Incoming socket for data from child process
 	boost::asio::local::datagram_protocol::socket out_; //!< Standard output of child process
 	boost::asio::local::datagram_protocol::socket err_; //!< Standard error of child process

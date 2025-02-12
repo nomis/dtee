@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018-2019,2021,2024  Simon Arlott
+	Copyright 2018-2019,2021,2024-2025  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ namespace dtee {
 
 class SignalHandler {
 public:
-	SignalHandler(const CommandLine &command_line, std::shared_ptr<boost::asio::io_service> io, std::shared_ptr<ResultHandler> output);
+	SignalHandler(const CommandLine &command_line, std::shared_ptr<boost::asio::io_context> io, std::shared_ptr<ResultHandler> output);
 
 	bool open();
 	void start(pid_t pid);
@@ -52,7 +52,7 @@ private:
 	void handle_interrupt_signals(const boost::system::error_code &ec, int signal_number);
 	void handle_pipe_signal(const boost::system::error_code &ec, int signal_number);
 
-	std::shared_ptr<boost::asio::io_service> io_;
+	std::shared_ptr<boost::asio::io_context> io_;
 
 	pid_t child_ = -1;
 

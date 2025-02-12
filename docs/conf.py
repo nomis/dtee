@@ -10,7 +10,7 @@ extensions = []
 source_suffix = ['.rst']
 
 project = u'dtee'
-copyright = u'2018-2024, Simon Arlott'
+copyright = u'2018-2025, Simon Arlott'
 author = u'Simon Arlott'
 
 master_doc = 'index'

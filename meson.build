@@ -11,7 +11,7 @@ project('dtee',
 	meson_version: '>=0.63.0',
 )
 
-copyright_years = '2018-2024'
+copyright_years = '2018-2025'
 
 c = meson.get_compiler('c')
 cpp = meson.get_compiler('cpp')

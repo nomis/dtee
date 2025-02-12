@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021,2024  Simon Arlott
+	Copyright 2018,2021,2024-2025  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #include "temp_directory.h"
 
 using ::boost::asio::buffer;
-using ::boost::asio::io_service;
+using ::boost::asio::io_context;
 using ::boost::asio::local::datagram_protocol;
 using ::boost::format;
 using ::boost::system::error_code;
@@ -58,7 +58,7 @@ namespace p = ::std::placeholders;
 
 namespace dtee {
 
-Input::Input(shared_ptr<boost::asio::io_service> io, shared_ptr<Dispatch> output)
+Input::Input(shared_ptr<boost::asio::io_context> io, shared_ptr<Dispatch> output)
 		: io_(io),
 		  input_(*io_),
 		  out_(*io_),

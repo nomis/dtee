@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018-2019,2021,2023-2024  Simon Arlott
+	Copyright 2018-2019,2021,2023-2025  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@
 
 static_assert(BOOST_ASIO_HAS_SIGACTION, "Boost must use sigaction() so that the SA_RESTART flag can be used");
 
-using ::boost::asio::io_service;
+using ::boost::asio::io_context;
 using ::boost::format;
 using ::boost::system::error_code;
 using ::std::bind;
@@ -53,7 +53,7 @@ namespace p = ::std::placeholders;
 
 namespace dtee {
 
-SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::asio::io_service> io, shared_ptr<ResultHandler> output)
+SignalHandler::SignalHandler(const CommandLine &command_line, shared_ptr<boost::asio::io_context> io, shared_ptr<ResultHandler> output)
 		: io_(io),
 		  child_exited_(*io_),
 		  interrupt_signals_(*io_),

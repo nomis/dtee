@@ -29,7 +29,7 @@ for line in open(changelog, "rt"):
 		if match["version"] != build_version:
 			print("Latest release is " + match["version"] + " but build version is " + build_version, file=sys.stderr)
 			sys.exit(1)
-		elif not match["date"].startswith(copyright_year):
+		elif int(match["date"].split("-")[0]) > int(copyright_year):
 			print("Latest release is on " + match["date"] + " but copyright year is " + copyright_year, file=sys.stderr)
 			sys.exit(1)
 		else:

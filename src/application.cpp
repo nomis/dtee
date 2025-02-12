@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021-2022,2024  Simon Arlott
+	Copyright 2018,2021-2022,2024-2025  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@
 #include "signal_handler.h"
 #include "stream_output.h"
 
-using ::boost::asio::io_service;
+using ::boost::asio::io_context;
 using ::boost::core::demangled_name;
 using ::boost::format;
 using ::std::make_shared;
@@ -65,7 +65,7 @@ namespace dtee {
 int Application::run(int argc, const char* const argv[]) {
 	command_line_.parse(argc, argv);
 
-	auto io = make_shared<io_service>();
+	auto io = make_shared<io_context>();
 	auto output = create_dispatch();
 	auto input = make_unique<Input>(io, output);
 	auto signal_handler = make_unique<SignalHandler>(command_line_, io, output);
@@ -173,21 +173,21 @@ vector<shared_ptr<ResultHandler>> Application::create_result_handlers() {
 	return result_handlers;
 }
 
-bool Application::fork(boost::asio::io_service &io, pid_t &pid) {
-	io.notify_fork(io_service::fork_event::fork_prepare);
+bool Application::fork(boost::asio::io_context &io, pid_t &pid) {
+	io.notify_fork(io_context::fork_event::fork_prepare);
 
 	errno = 0;
 	pid = ::fork();
 	if (pid > 0) {
-		io.notify_fork(io_service::fork_event::fork_parent);
+		io.notify_fork(io_context::fork_event::fork_parent);
 		return true;
 	} else if (pid == 0) {
-		io.notify_fork(io_service::fork_event::fork_child);
+		io.notify_fork(io_context::fork_event::fork_child);
 		return true;
 	} else {
 		auto errno_copy = errno;
 
-		io.notify_fork(io_service::fork_event::fork_parent);
+		io.notify_fork(io_context::fork_event::fork_parent);
 
 		// i18n: %1 = function call name; %2 = errno message
 		print_system_error(format(_("%1%: %2%")) % "fork", errno_copy);
@@ -197,7 +197,7 @@ bool Application::fork(boost::asio::io_service &io, pid_t &pid) {
 	}
 }
 
-void Application::main_loop(boost::asio::io_service &io, ResultHandler &output) {
+void Application::main_loop(boost::asio::io_context &io, ResultHandler &output) {
 	try {
 		// Wait for events until the I/O service is explicitly stopped
 		do {

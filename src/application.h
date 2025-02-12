@@ -1,6 +1,6 @@
 /*
 	dtee - run a program with standard output and standard error copied to files
-	Copyright 2018,2021,2024  Simon Arlott
+	Copyright 2018,2021,2024-2025  Simon Arlott
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -50,14 +50,14 @@ public:
 	Application& operator=(const Application&) = delete;
 
 private:
-	static void main_loop(boost::asio::io_service &io, ResultHandler &output);
+	static void main_loop(boost::asio::io_context &io, ResultHandler &output);
 
 	void create_file_outputs(std::vector<std::shared_ptr<Output>> &outputs,
 			const std::string &name, FileOutputType type, bool append);
 	std::shared_ptr<Dispatch> create_dispatch();
 	std::vector<std::shared_ptr<Output>> create_outputs();
 	std::vector<std::shared_ptr<ResultHandler>> create_result_handlers();
-	bool fork(boost::asio::io_service &io, pid_t &pid);
+	bool fork(boost::asio::io_context &io, pid_t &pid);
 	void execute(const std::vector<std::string> &command);
 
 	CommandLine command_line_;
