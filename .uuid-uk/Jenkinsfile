@@ -149,6 +149,8 @@ pipeline {
 					stage("Test") {
 						steps {
 							dir("build") {
+								// https://mesonbuild.com/Release-notes-for-1-7-0.html#test-targets-no-longer-built-by-default
+								sh "ninja meson-test-prereq meson-benchmark-prereq -j 1"
 								sh "meson test --no-rebuild --print-errorlogs --num-processes 1"
 							}
 						}
