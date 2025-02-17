@@ -7,6 +7,7 @@ Unreleased_
 Fixed
 ~~~~~
 
+* Copyright years in the version information are now inserted automatically.
 * Use ``boost::asio::io_context`` instead of ``boost::asio::io_service`` which
   has been removed from Boost.Asio 1.87.
 
