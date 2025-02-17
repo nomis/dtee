@@ -86,7 +86,8 @@ dtee = executable('dtee',
 		'-DBOOST_ASIO_DISABLE_THREADS',
 		# this makes testing more difficult and any exceptions from asio are already identified
 		'-DBOOST_ASIO_DISABLE_ERROR_LOCATION',
-	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : []),
+	] + (get_option('b_coverage') ? ['-DGCOV_ENABLED'] : [])
+	+ (get_option('buildtype') == 'debug' ? ['-DBOOST_ASIO_NO_DEPRECATED'] : []),
 	dependencies: cpp_filesystem_deps + [boost] + gettext_deps,
 	build_rpath: rpath,
 	install_rpath: rpath,

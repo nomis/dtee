@@ -206,7 +206,7 @@ void Application::main_loop(boost::asio::io_context &io, ResultHandler &output) 
 
 		// Poll until there are no more events
 		do {
-			io.reset();
+			io.restart();
 		} while (io.poll() > 0);
 	} catch (const std::exception &e) {
 		// i18n: %1 = exception type name; %2 = exception message
