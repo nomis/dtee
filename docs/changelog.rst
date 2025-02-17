@@ -4,11 +4,17 @@ Change log
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Use ``boost::asio::io_context`` instead of ``boost::asio::io_service`` which
+  has been removed from Boost.Asio 1.87.
+
 1.1.1_ |--| 2024-04-20
 ----------------------
 
-Standard I/O checks, fixes for tests, and use of newer Boost.Asio (1.79 and 1.82)
-and C++17 features.
+Standard I/O checks, fixes for tests, and use of newer Boost.Asio (1.79 and
+1.82) and C++17 features.
 
 Changed
 ~~~~~~~
