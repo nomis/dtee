@@ -4,6 +4,11 @@ Change log
 Unreleased_
 -----------
 
+1.1.2_ |--| 2025-02-17
+----------------------
+
+Bug fix to support building with Boost.Asio 1.87.
+
 Fixed
 ~~~~~
 
@@ -137,7 +142,8 @@ Added
 .. |sigaction(2)| replace:: ``sigaction(2)``
 .. _sigaction(2): https://man7.org/linux/man-pages/man2/sigaction.2.html
 
-.. _Unreleased: https://github.com/nomis/dtee/compare/1.1.1...HEAD
+.. _Unreleased: https://github.com/nomis/dtee/compare/1.1.2...HEAD
+.. _1.1.2: https://github.com/nomis/dtee/compare/1.1.1...1.1.2
 .. _1.1.1: https://github.com/nomis/dtee/compare/1.1.0...1.1.1
 .. _1.1.0: https://github.com/nomis/dtee/compare/1.0.1...1.1.0
 .. _1.0.1: https://github.com/nomis/dtee/compare/1.0.0...1.0.1
