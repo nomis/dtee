@@ -40,23 +40,4 @@ Run the following commands to install the :download:`repository public key
     apt update
     apt install dtee
 
-Debian 10 (buster)
-------------------
-
-Run the following commands to install the :download:`repository public key
-<repo-key-rsa.gpg>`, APT_ data source :download:`dtee-debian-buster.list
-<../../apt/dtee-debian-buster.list>` and then ``dtee``::
-
-    mkdir -m 0755 -p /etc/apt/keyrings
-
-    wget https://dtee.bin.uuid.uk/debian/repo-key.gpg \
-        -O /etc/apt/keyrings/dtee.gpg
-
-    echo "deb [signed-by=/etc/apt/keyrings/dtee.gpg]" \
-        "https://dtee.bin.uuid.uk/debian/ buster main" \
-        >/etc/apt/sources.list.d/dtee.list
-
-    apt update
-    apt install dtee
-
 .. _APT: https://en.wikipedia.org/wiki/APT_(Debian)
