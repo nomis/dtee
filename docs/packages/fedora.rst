@@ -1,7 +1,7 @@
 Fedora
 ======
 
-Supported versions: 40 and 41.
+Supported versions: 40, 41 and 42.
 
 Save the repository configuration file
 :download:`dtee-fedora.repo <../../yum/dtee-fedora.repo>`
