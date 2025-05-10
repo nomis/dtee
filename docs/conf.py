@@ -41,9 +41,11 @@ texinfo_documents = [
 
 texinfo_show_urls = 'inline'
 
+linkcheck_workers = 1
 linkcheck_timeout = 60
 linkcheck_ignore = [r'https://github\.com/.+/.+/(compare|commits)/.+']
 linkcheck_allowed_redirects = {
 	'https://dtee.readthedocs.io/': 'https://dtee.readthedocs.io/en/latest/',
 	'https://www.sphinx-doc.org/': 'https://www.sphinx-doc.org/en/master/'
 }
+linkcheck_report_timeouts_as_broken = True
