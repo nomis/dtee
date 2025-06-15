@@ -10,14 +10,16 @@ Description
 -----------
 
 Run a program with standard output and standard error copied to files while
-maintaining the original standard output and standard error as normal.
+maintaining the original standard output and standard error in the original
+order.
 
 Purpose
 -------
 
 To run programs from cron, suppressing all output unless the process outputs an
 error message or has a non-zero exit status whereupon the original output will
-be written as normal and the exit code will be appended to standard error.
+be written in the original order and the exit code will be appended to standard
+error.
 
 It will do this by default when invoked as ``cronty``, providing an alternative
 to |cronic|_ but without splitting up the output.

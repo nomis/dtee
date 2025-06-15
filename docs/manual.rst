@@ -12,7 +12,8 @@ Description
 -----------
 
 Run *command* with standard output and standard error copied to files while
-maintaining the original standard output and standard error as normal.
+maintaining the original standard output and standard error in the original
+order.
 
 Options
 -------
@@ -52,8 +53,8 @@ General options
                             as **cronty**). Suppresses all output unless the
                             process outputs an error message or has a non-zero
                             exit status whereupon the original output will be
-                            written as normal and the exit code will be
-                            appended to standard error.
+                            written in the original order and the exit code
+                            will be appended to standard error.
 
 Miscellaneous
 ~~~~~~~~~~~~~
