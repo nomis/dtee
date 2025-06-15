@@ -14,7 +14,7 @@ Run the following commands to install the :download:`repository public key
     wget https://dtee.bin.uuid.uk/debian/repo-key.gpg \
         -O /etc/apt/keyrings/dtee.gpg
 
-    echo "deb [signed-by=/etc/apt/keyrings/dtee.gpg]" \
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/dtee.gpg]" \
         "https://dtee.bin.uuid.uk/debian/ bookworm main" \
         >/etc/apt/sources.list.d/dtee.list
 
@@ -33,7 +33,7 @@ Run the following commands to install the :download:`repository public key
     wget https://dtee.bin.uuid.uk/debian/repo-key.gpg \
         -O /etc/apt/keyrings/dtee.gpg
 
-    echo "deb [signed-by=/etc/apt/keyrings/dtee.gpg]" \
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/dtee.gpg]" \
         "https://dtee.bin.uuid.uk/debian/ bullseye main" \
         >/etc/apt/sources.list.d/dtee.list
 
