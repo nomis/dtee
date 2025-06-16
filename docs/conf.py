@@ -7,7 +7,7 @@ rtd = os.environ.get("READTHEDOCS") == 'True'
 
 needs_sphinx = '4.1'
 extensions = []
-source_suffix = ['.rst']
+source_suffix = {'.rst': 'restructuredtext'}
 
 project = u'dtee'
 copyright = u'2018-2025, Simon Arlott'

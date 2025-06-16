@@ -4,6 +4,24 @@ Change log
 Unreleased_
 -----------
 
+Added
+~~~~~
+
+* Build script ``release_date.py`` to get the date of release for
+  ``SOURCE_DATE_EPOCH`` in reproducible builds as a workaround for
+  `sphinx-doc/sphinx issue #13231
+  <https://github.com/sphinx-doc/sphinx/issues/13231>`_.
+
+Changed
+~~~~~~~
+
+* Executables and libraries for tests are now only built when required.
+
+Fixed
+~~~~~
+
+* Location of ``bash`` in one of the test cases.
+
 1.1.2_ |--| 2025-02-17
 ----------------------
 
