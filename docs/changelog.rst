@@ -1,8 +1,14 @@
 Change log
 ==========
 
-Unreleased_
------------
+..
+   Unreleased_
+   -----------
+
+1.1.3_ |--| 2025-06-16
+----------------------
+
+Enhancements to build processes and bug fixes in test cases.
 
 Added
 ~~~~~
@@ -163,7 +169,8 @@ Added
 .. |sigaction(2)| replace:: ``sigaction(2)``
 .. _sigaction(2): https://man7.org/linux/man-pages/man2/sigaction.2.html
 
-.. _Unreleased: https://github.com/nomis/dtee/compare/1.1.2...HEAD
+.. _Unreleased: https://github.com/nomis/dtee/compare/1.1.3...HEAD
+.. _1.1.3: https://github.com/nomis/dtee/compare/1.1.2...1.1.3
 .. _1.1.2: https://github.com/nomis/dtee/compare/1.1.1...1.1.2
 .. _1.1.1: https://github.com/nomis/dtee/compare/1.1.0...1.1.1
 .. _1.1.0: https://github.com/nomis/dtee/compare/1.0.1...1.1.0

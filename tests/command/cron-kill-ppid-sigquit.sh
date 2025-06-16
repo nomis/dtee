@@ -6,7 +6,7 @@ function test_prepare() {
 	rm -f "$DTEE_TEST_MONITOR_OUTPUT"
 }
 
-# Disable core dumps (this may not have the desired effect on Linux
+# Disable core dumps (this may not have the desired effect on Linux if
 # a program handles core dumps, but this won't affect the test script)
 ulimit -S -c 0 || exit $TEST_EX_SKIP
 ulimit -H -c 0 || exit $TEST_EX_SKIP
