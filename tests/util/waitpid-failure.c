@@ -1,6 +1,5 @@
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <dlfcn.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>

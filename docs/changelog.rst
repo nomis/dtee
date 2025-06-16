@@ -21,6 +21,9 @@ Fixed
 ~~~~~
 
 * Location of ``bash`` in one of the test cases.
+* Deadlock in test cases that wrap the ``write()`` function when ``dlsym()``
+  calls ``pthread_mutex_lock()`` and it's interrupted by a signal handler
+  that makes a re-entrant call to ``write()``.
 
 1.1.2_ |--| 2025-02-17
 ----------------------

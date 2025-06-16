@@ -5,7 +5,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <assert.h>
-#include <dlfcn.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdlib.h>

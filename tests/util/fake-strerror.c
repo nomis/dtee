@@ -3,7 +3,6 @@
 #define strerror __dtee__hide__strerror__
 
 #include <errno.h>
-#include <dlfcn.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>

@@ -6,7 +6,6 @@
 #if !defined(__OpenBSD__) && !defined(__NetBSD__)
 # include <sys/user.h>
 #endif
-#include <dlfcn.h>
 #include <fcntl.h>
 #include <kvm.h>
 #include <libgen.h>

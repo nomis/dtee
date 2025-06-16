@@ -5,7 +5,6 @@
 # include <libgen.h>
 #endif
 
-#include <dlfcn.h>
 #include <libintl.h>
 #include <stdbool.h>
 #include <stddef.h>

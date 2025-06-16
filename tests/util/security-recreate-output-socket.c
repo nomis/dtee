@@ -5,7 +5,6 @@
 #include <sys/wait.h>
 #include <assert.h>
 #include <errno.h>
-#include <dlfcn.h>
 #include <libgen.h>
 #include <signal.h>
 #include <stdbool.h>

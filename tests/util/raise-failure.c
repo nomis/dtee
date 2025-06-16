@@ -1,4 +1,3 @@
-#include <dlfcn.h>
 #include <errno.h>
 #include <signal.h>
 

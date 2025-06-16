@@ -2,7 +2,6 @@
 #define lseek __dtee__hide__lseek__
 
 #include <sys/types.h>
-#include <dlfcn.h>
 #include <errno.h>
 #include <unistd.h>
 

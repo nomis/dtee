@@ -5,7 +5,6 @@
 
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <dlfcn.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdbool.h>

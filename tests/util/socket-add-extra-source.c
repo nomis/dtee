@@ -1,7 +1,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/un.h>
-#include <dlfcn.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdlib.h>

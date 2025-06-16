@@ -2,7 +2,6 @@
 #define __sigaction14 __dtee__hide____sigaction14
 #define sigaction __dtee__hide__sigaction
 
-#include <dlfcn.h>
 #include <errno.h>
 #include <signal.h>
 #include <stdbool.h>

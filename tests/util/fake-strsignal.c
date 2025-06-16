@@ -1,5 +1,4 @@
 #include <errno.h>
-#include <dlfcn.h>
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>

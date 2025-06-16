@@ -1,6 +1,5 @@
 #include <sys/types.h>
 #include <assert.h>
-#include <dlfcn.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>

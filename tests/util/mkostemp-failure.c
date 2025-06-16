@@ -1,7 +1,6 @@
 #define mkostemp64 __dtee__hide__mkostemp64__
 #define mkostemp __dtee__hide__mkostemp__
 
-#include <dlfcn.h>
 #include <errno.h>
 #include <stdlib.h>
 

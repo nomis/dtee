@@ -1,5 +1,4 @@
 #include <sys/types.h>
-#include <dlfcn.h>
 #include <unistd.h>
 
 #include "is-dtee.h"
