@@ -15,7 +15,7 @@ source_files = files([
 		'temp_file.cpp',
 		'temp_filename_pattern.cpp',
 	]) + [
-		custom_target(input: 'copyright.h.in', output: 'copyright.h', capture: true,
+		custom_target('copyright.h', input: 'copyright.h.in', output: 'copyright.h', capture: true,
 			command: [find_program('sed'), 's/@COPYRIGHT_YEARS@/' + copyright_years + '/', files('copyright.h.in')]),
 		vcs_tag(input: 'version.h.in', output: 'version.h'),
 	]
