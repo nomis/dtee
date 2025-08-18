@@ -19,7 +19,7 @@ RUN \
 	apt-get update && apt-get install -y \
 		gcc-13 gcc-14 \
 		g++-13 g++-14 \
-		clang-17 libc++abi-dev
+		clang-17 clang-18 clang-19 libc++abi-dev
 
 # A non-C locale is required for testing gettext()
 RUN \

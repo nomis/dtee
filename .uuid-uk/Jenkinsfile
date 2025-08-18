@@ -1,5 +1,5 @@
 /*
-Copyright 2021-2024  Simon Arlott
+Copyright 2021-2025  Simon Arlott
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@ import uk.uuid.jenkins.pipeline.Email
 
 def application_matrix_main() {
 	/* See also: excludes */
-	return COMPILER == "GCC-12"
+	return COMPILER == "GCC-14"
 }
 
 def docs_matrix_main() {
-	return SPHINX == "7"
+	return SPHINX == "8"
 }
 
 def application_with_coverage() {
@@ -76,7 +76,7 @@ pipeline {
 					}
 					axis {
 						name "COMPILER"
-						values "GCC-7", "GCC-8", "GCC-9", "GCC-10", "GCC-11", "GCC-12", "GCC-13", "GCC-14", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang-12", "Clang-13", "Clang-14", "Clang-15", "Clang-16", "Clang-17"
+						values "GCC-7", "GCC-8", "GCC-9", "GCC-10", "GCC-11", "GCC-12", "GCC-13", "GCC-14", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang-12", "Clang-13", "Clang-14", "Clang-15", "Clang-16", "Clang-17", "Clang-18", "Clang-19"
 					}
 					axis {
 						name "BUILD_TYPE"
@@ -92,7 +92,7 @@ pipeline {
 						axis {
 							/* See also: application_matrix_main() */
 							name "COMPILER"
-							notValues "GCC-12", "Clang-17"
+							notValues "GCC-14", "Clang-19"
 						}
 					}
 				}
@@ -215,7 +215,7 @@ pipeline {
 					axis {
 						/* 4.x, 5.x require Python [3.6, 3.10) */
 						name "SPHINX"
-						values "4", "5", "6", "7"
+						values "4", "5", "6", "7", "8"
 					}
 				}
 				agent {

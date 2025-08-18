@@ -1,5 +1,5 @@
 # Debian 12
-ARG SPHINX=7
+ARG SPHINX=8
 FROM debian:bookworm AS dtee-debian-bookworm-base
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -78,5 +78,13 @@ RUN \
 	python3 --version && \
 	pip3 --version && \
 	pip3 install --break-system-packages -U "Sphinx~=7.0"
+
+FROM dtee-debian-bookworm-base AS dtee-debian-bookworm-sphinx-8
+
+RUN \
+	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-bookworm-root-cache-pip \
+	python3 --version && \
+	pip3 --version && \
+	pip3 install --break-system-packages -U "Sphinx~=8.0"
 
 FROM dtee-debian-bookworm-sphinx-${SPHINX} AS dtee-debian-bookworm-final
