@@ -21,7 +21,7 @@ import uk.uuid.jenkins.pipeline.Email
 
 def application_matrix_main() {
 	/* See also: excludes */
-	return COMPILER == "GCC-14"
+	return COMPILER == "GCC-12"
 }
 
 def docs_matrix_main() {
@@ -92,7 +92,7 @@ pipeline {
 						axis {
 							/* See also: application_matrix_main() */
 							name "COMPILER"
-							notValues "GCC-14", "Clang-19"
+							notValues "GCC-12", "Clang-19"
 						}
 					}
 				}
