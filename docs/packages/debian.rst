@@ -4,6 +4,23 @@ Debian
 Follow the instructions for your release. If you are using a newer release than
 the ones listed then use the builds for the most recent prior version.
 
+Debian 13 (trixie)
+------------------
+
+Run the following commands to install the :download:`repository public key
+<repo-key-rsa.gpg>`, APT_ data source :download:`dtee-debian-trixie.list
+<../../apt/dtee-debian-trixie.list>` and then ``dtee``::
+
+    wget https://dtee.bin.uuid.uk/debian/repo-key.gpg \
+        -O /etc/apt/keyrings/dtee.gpg
+
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/dtee.gpg]" \
+        "https://dtee.bin.uuid.uk/debian/ trixie main" \
+        >/etc/apt/sources.list.d/dtee.list
+
+    apt update
+    apt install dtee
+
 Debian 12 (bookworm)
 --------------------
 
