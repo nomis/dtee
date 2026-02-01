@@ -45,7 +45,8 @@ linkcheck_workers = 1
 linkcheck_timeout = 60
 linkcheck_ignore = [
 	r'https://github\.com/.+/.+/(compare|commits)/.+',
-	r'https://www\.gnu\.org/.+',
+	r'https://www\.gnu\.org/.*',
+	r'https://cppcheck\.sourceforge\.io/.*',
 ]
 linkcheck_allowed_redirects = {
 	'https://dtee.readthedocs.io/': 'https://dtee.readthedocs.io/en/latest/',
