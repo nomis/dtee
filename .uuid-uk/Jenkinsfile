@@ -1,5 +1,5 @@
 /*
-Copyright 2021-2025  Simon Arlott
+Copyright 2021-2026  Simon Arlott
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import uk.uuid.jenkins.pipeline.Email
 
 def application_matrix_main() {
 	/* See also: excludes */
+	/* GCC 13-16 produce buggy coverage output */
 	return COMPILER == "GCC-12"
 }
 
@@ -76,7 +77,7 @@ pipeline {
 					}
 					axis {
 						name "COMPILER"
-						values "GCC-7", "GCC-8", "GCC-9", "GCC-10", "GCC-11", "GCC-12", "GCC-13", "GCC-14", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang-12", "Clang-13", "Clang-14", "Clang-15", "Clang-16", "Clang-17", "Clang-18", "Clang-19"
+						values "GCC-7", "GCC-8", "GCC-9", "GCC-10", "GCC-11", "GCC-12", "GCC-13", "GCC-14", "GCC-15", "GCC-16", "Clang-6.0", "Clang-7", "Clang-8", "Clang-9", "Clang-10", "Clang-11", "Clang-12", "Clang-13", "Clang-14", "Clang-15", "Clang-16", "Clang-17", "Clang-18", "Clang-19", "Clang-20", "Clang-21", "Clang-22"
 					}
 					axis {
 						name "BUILD_TYPE"
@@ -92,7 +93,7 @@ pipeline {
 						axis {
 							/* See also: application_matrix_main() */
 							name "COMPILER"
-							notValues "GCC-12", "Clang-19"
+							notValues "GCC-12", "Clang-22"
 						}
 					}
 				}
@@ -125,13 +126,21 @@ pipeline {
 							sh '[ -z "${PYTHON}" ] || ${PYTHON} --version'
 							sh '[ -z "${PIP}" ] || ${PIP} freeze'
 
-							sh "make po pot"
+							sh "make potfiles"
+							sh "meson setup --buildtype=release build-i18n/"
+							sh "ninja -C build-i18n/ -j 1 dtee-pot dtee-update-po"
 							sh "git diff --exit-code"
 
 							sh "echo \"geninfo_gcov_tool = ${GCOV}\" >>.lcovrc"
 
 							dir(DESTDIR) {
 								deleteDir()
+							}
+						}
+						post {
+							failure {
+								sh "cat build-i18n/meson-logs/meson-log.txt"
+								sh "sleep 3600"
 							}
 						}
 					}
