@@ -9,7 +9,7 @@ to ``/etc/yum.repos.d/dtee-fedora.repo``.
 
 Run the following command::
 
-    yum install dtee
+    dnf install dtee
 
 Yum will prompt to confirm the repository
 :download:`public key <repo-key-rsa.asc>`:
