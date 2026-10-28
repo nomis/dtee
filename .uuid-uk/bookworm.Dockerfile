@@ -36,21 +36,21 @@ RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-bookworm-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U gcovr
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U gcovr
 
 ADD https://pypi.org/pypi/ninja/json /dev/shm/ninja.json
 RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-bookworm-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U ninja
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U ninja
 
 ADD https://pypi.org/pypi/meson/json /dev/shm/meson.json
 RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-bookworm-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U meson
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U meson
 
 ADD https://pypi.org/pypi/Sphinx/json /dev/shm/Sphinx.json
 
@@ -61,7 +61,7 @@ RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-bookworm-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U "Sphinx~=5.0"
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U "Sphinx~=5.0"
 
 FROM dtee-debian-bookworm-base AS dtee-debian-bookworm-sphinx-6
 
@@ -69,7 +69,7 @@ RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-bookworm-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U "Sphinx~=6.0"
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U "Sphinx~=6.0"
 
 FROM dtee-debian-bookworm-base AS dtee-debian-bookworm-sphinx-7
 
@@ -77,7 +77,7 @@ RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-bookworm-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U "Sphinx~=7.0"
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U "Sphinx~=7.0"
 
 FROM dtee-debian-bookworm-base AS dtee-debian-bookworm-sphinx-8
 
@@ -85,6 +85,6 @@ RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-bookworm-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U "Sphinx~=8.0"
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U "Sphinx~=8.0"
 
 FROM dtee-debian-bookworm-sphinx-${SPHINX} AS dtee-debian-bookworm-final

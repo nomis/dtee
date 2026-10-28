@@ -35,25 +35,25 @@ RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-trixie-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U gcovr
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U gcovr
 
 ADD https://pypi.org/pypi/Sphinx/json /dev/shm/Sphinx.json
 RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-trixie-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U Sphinx
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U Sphinx
 
 ADD https://pypi.org/pypi/ninja/json /dev/shm/ninja.json
 RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-trixie-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U ninja
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U ninja
 
 ADD https://pypi.org/pypi/meson/json /dev/shm/meson.json
 RUN \
 	--mount=type=cache,target=/root/.cache/pip,sharing=locked,id=debian-trixie-root-cache-pip \
 	python3 --version && \
 	pip3 --version && \
-	pip3 install --break-system-packages -U meson
+	pip3 install --root-user-action ignore --break-system-packages --ignore-installed -U meson
